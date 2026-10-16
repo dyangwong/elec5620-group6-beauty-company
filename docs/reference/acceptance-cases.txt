@@ -1,0 +1,199 @@
+13.3.1 BA acceptance cases 
+Case Input and observable expected result 
+BA-T-01 Clarification: Supply a request missing a decision-relevant constraint. Expect a focused 
+question, no guessed value, then re-evaluation after the Customer responds (BA-AC-01). 
+BA-T-02 
+Grounded success: Supply a sufficient request and a matching authorised in-stock product. 
+Expect its ID, availability evidence, linked reason and saved outcome; no order/payment call 
+(BA-AC-02; BA-NFR-01/02). 
+BA-T-03 
+No match and service failures: Repeat with no matching product, unavailable stock, missing 
+stock status, catalogue timeout and inventory error. Expect an explicit incomplete outcome 
+without an available-product claim; retry refreshes evidence (BA-AC-03/06). 
+BA-T-04 
+Unreliable generation: Inject an invented product ID, unsupported product claim, conflicting 
+evidence and malformed/failed LLM response. Expect validation to withhold the output and 
+clarification, review offer or safe stop (BA-AC-04). 
+BA-T-05 
+Scope and review: Submit a diagnosis request; expect no diagnosis. For an unresolved 
+product question, exercise acknowledged review, unavailable review service, pending 
+decision and rejection. No branch invents approval or treats pending review as success (BA-
+AC-05/06). 
+56 
+Case Input and observable expected result 
+BA-T-06 
+Optional alternatives: With BA-F-03 enabled, request an alternative to an unavailable 
+preferred item; expect verified availability and explicit differences. With it disabled, expect a 
+safe no-match result or ordinary matching recommendation without dependence on 
+alternatives (BA-O-01). 
+BA-T-07 
+Revision, cancellation and persistence: Revise/cancel while results are pending; old results 
+must not be delivered. Inject repository failure; completion must not be claimed. Inspect 
+LLM/review payloads for unrelated data or credentials (BA-AC-06; BA-NFR-04). 
+ 
+13.3.2 CS acceptance cases 
+Case Input and observable expected result 
+CS-T-01 
+Identity and intake (CS-AC-01): Supply a matching order and then a mismatched 
+identity/order. Expect permitted intake in the first case; no protected disclosure or resolution 
+call in the second. Inspect request and service-call records. 
+CS-T-02 
+Policy evidence (CS-AC-02): Exercise sufficient policy, missing return window and 
+contradictory policy evidence. Expect referenced eligibility only with sufficient evidence; 
+otherwise clarification or escalation without an invented rule. 
+CS-T-03 
+Routine resolution (CS-AC-03): Supply authorised evidence and Customer confirmation. 
+Expect only the permitted service call, a saved confirmed result and remaining steps. An 
+acknowledgement or mock refund must not be described as settled funds. 
+CS-T-04 
+Exchange availability (CS-AC-04): Exercise AVAILABLE, UNAVAILABLE and UNKNOWN 
+service results. Expect no successful-exchange claim for the latter two and no unconfirmed 
+substitute. 
+CS-T-05 
+Human checkpoint (CS-AC-05): Exercise disputed/high-impact cases with acknowledged 
+pending review, approval, rejection, revision request and failed review service. Expect no 
+restricted action without a valid decision; revalidate the proposed action after approval. 
+CS-T-06 
+Failure and reconciliation (CS-AC-06): Inject read failure, post-write timeout and audit failure. 
+Expect an explicit unresolved/recording-failure outcome; inspect that no blind duplicate action 
+occurs and no rollback is invented. 
+CS-T-07 
+Optional notifications (CS-AC-07): Enable and disable the feature; inject missing recipient 
+permission and delivery failure. Expect permitted notifications only, with the core recorded 
+resolution still accessible and unchanged. 
+ 
+13.3.3 MC acceptance cases 
+Case Input and observable expected result 
+MC-T-01 
+Campaign preparation: Supply a clear objective and sufficient authorised product information. 
+Expect saved brief and grounded script/storyboard; inspect claims/source references for 
+traceability (MC-AC-01). 
+MC-T-02 
+Missing/conflicting information: Remove, contradict or leave unsupported required product 
+information. Expect clarification, available authorised retrieval or incomplete outcome; no 
+invented claim (MC-AC-02). 
+MC-T-03 
+Unsupported generation: Inject invented facts, unsupported claims or contradictions. Expect 
+withheld output and revision/regeneration/clarification, never a valid forwarded draft (MC-AC-
+02). 
+MC-T-04 
+Media: Use validated script/storyboard with available, unavailable, failed and timed-out 
+services. Success saves draft media/generation result; failure is explicit. Any permitted 
+mock/fallback is labelled simulated (MC-AC-03/04). 
+57 
+Case Input and observable expected result 
+MC-T-05 
+Checks: Inject a failing script, storyboard or media content/quality check. Expect recorded 
+issue and revision, never approval-ready status. Use configured/reviewer-identified criteria; 
+invent no numerical threshold. 
+MC-T-06 
+Review: Exercise valid Founder approval, rejection, revision, pending/missing decision and 
+service failure. Only recorded valid approval establishes approved state; every other outcome 
+remains unapproved for publication (MC-AC-06/07). 
+MC-T-07 
+Variants: With MC-F-03 ON, expect campaign/source traceability and no unsupported claims. 
+The new draft variant needs its own covering Founder approval; no inheritance. With it OFF, 
+MC-F-01/02 remain usable. 
+ 
+13.3.4 AP acceptance cases 
+Case Input and observable expected result 
+AP-T-01 
+Valid submission/risk: Submit a declared restricted action with authorised evidence; expect 
+persisted PENDING request/accepted ID, Founder queue notification and no dispatch. 
+Repeat with missing/unauthorised context and unknown risk; expect explicit 
+blocked/clarification outcome (AP-AC-01; AP-NFR-02). 
+AP-T-02 Pending/invalid decision: Inject absent, rejected, mismatched and unauthorised decisions; 
+expect no restricted execution and truthful distinct states (AP-AC-02; AP-NFR-02). 
+AP-T-03 
+Recorded decision: Authorised Founder decides on current exact scope; expect atomic 
+decision/request/audit commit with actor, reason, IDs and revision before event delivery (AP-
+AC-03; AP-NFR-01). 
+AP-T-04 Revision/stale context: Request revision or alter action/context after decision; expect 
+preserved history and fresh linked review, never inherited approval (AP-AC-04; AP-NFR-02). 
+AP-T-05 Recording failure: Fail decision commit; expect RECORDING_FAILED, no approval 
+event/action and storage-only same-decision retry (AP-AC-05; AP-NFR-03). 
+AP-T-06 
+Delivery recovery: Fail queue/recorded-event delivery; distinguish persisted request from 
+committed decision. Retry same event/lookup; ignore duplicate/stale decision IDs without 
+repeated business execution (AP-AC-06; AP-NFR-03/04). 
+AP-T-07 
+Independent constraints: Record approval, then make stock unavailable, policy ineligible, 
+Customer confirmation absent or execution uncertain; expect the requesting role to 
+block/reconcile, never infer business success (AP-AC-07). 
+AP-T-08 
+Optional OFF: Disable assisted resubmission; expect core 
+APPROVE/REJECT/REQUEST_REVISION and manual fresh corrected request to work. 
+Enable it and verify linked history, fresh approval and identical safety gates (AP-AC-08). 
+ 
+13.3.5 CO acceptance cases 
+Case Input and observable expected result 
+CO-T-01 Valid hand-off: Supply sufficient authorised context. Expect the appropriate receiving role, 
+minimal permitted transfer, saved hand-off/status and a Founder-visible trace (CO-AC-01). 
+CO-T-02 Invalid context: Remove/invalidate decision-relevant fields. Expect clarification or safe 
+incomplete record, with no silent inference or completed hand-off claim (CO-AC-02). 
+CO-T-03 Unavailable role: Expect recorded failed/unavailable hand-off and applicable 
+recovery/escalation/cancellation, never COMPLETED (CO-AC-03). 
+CO-T-04 Tool failure: Inject timeout, service unavailability and failed tool results. Expect recorded 
+visible failure/uncertainty; dependent work cannot complete (CO-AC-04). 
+58 
+Case Input and observable expected result 
+CO-T-05 
+Automatic retry: With CO-F-03 ON, inject eligible failure; expect controlled retry and saved 
+state/attempt. With it OFF, core escalation/safe cancellation remain usable (CO-AC-05; CO-
+O-01). 
+CO-T-06 Exhaustion/uncertainty: Exhausted retry escalates to Founder or safely cancels. Unknown 
+prior execution must be reconciled before duplicative retry or COMPLETED (CO-AC-05/07). 
+CO-T-07 
+Review boundary: Exercise approved, pending, rejected and unavailable review. Restricted 
+action proceeds only with recorded valid approval; all other outcomes grant no authority (CO-
+AC-06). 
+CO-T-08 Recording: Fail persistence/audit of required workflow evidence. Expect visible recording 
+failure and no fully traceable completion claim (CO-UC-01 E6; CO-NFR-01/03). 
+ 
+13.3.6 GR acceptance cases 
+Case Input and observable expected result 
+GR-T-01 Coverage: Verify five owned chains, three business services, five primary UC specifications 
+and 15 features; disabling all five optional features preserves mandatory safe outcomes. 
+GR-T-02 
+Correlation: Walk GR-S-01 across CS, CO, BA and AP using synthetic IDs; prove hand-off 
+receipt, completed recommendation, pending AP review and CS business result remain 
+distinct. 
+GR-T-03 
+Failure boundaries: Inject review commit/delivery and after-sales uncertain-execution failures; 
+require no action on uncommitted approval, same-event redelivery and actionRef lookup 
+before any repeat. 
+GR-T-04 
+Structural/runtime consistency: Type each composite/object participant against GR-CL-01 or 
+preserved local class model; check each communication/sequence receiver and adapter 
+map; reject stale scope and duplicated business dispatch. Verify the MC/CO local contracts 
+and state vocabularies against their use cases and current group adapters. 
+ 
+The traceability table and planned cases link requirement coverage to structure, behaviour and 
+observable outcomes. Stage 2 supplies implementation and execution evidence; Section 15 records 
+the contribution evidence boundary. 
+14 Assumptions Risks and Open Decisions 
+Open decision or risk Safe design treatment and evidence gap 
+Requirement approval and tutor 
+interpretation 
+The design is proposed. CS review covers the modelling basis only; 
+requirements approval and review by all affected module owners remain 
+unconfirmed. Tutor clarification of requirement-view notation is pending. 
+Shared schema/provider 
+capability 
+This report specifies proposed adapter operations/results. External 
+atomicity, lookup, idempotency and availability must be verified or supplied 
+by explicit controlled mocks. 
+Order policy, risk thresholds 
+and expiry 
+No real return window, monetary threshold, risk rule or validity period is 
+invented. Declared fixtures control the PoC; missing/unknown policy blocks 
+restricted action. 
+Stock freshness and evidence 
+quality 
+Record authorised references/observations and recheck before action; 
+absence/conflict prevents supported success. Freshness duration needs 
+agreement. 
+LLM claims and media 
+quality/provider 
+Validate factual claims and agreed criteria, label mocks and expose failure. 
+Provider cost/performance and any quantitative quality threshold are open. 

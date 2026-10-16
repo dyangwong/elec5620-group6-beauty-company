@@ -1,0 +1,1462 @@
+Public reading derivative: student IDs redacted; requirement/model wording retained.
+Extracted source text; original PDF remains authoritative, especially for diagrams.
+Original: 02 Stage 1 Report/ELEC5620 Group 6 Stage 1 Report.pdf
+
+=== Original PDF page 3 ===
+2 
+ELEC5620 Stage 1 Report  
+Requirements Architecture and System Modelling  
+AI-Powered One-Person Beauty Commerce and Content Company 
+No. Registered name SID Owned capability 
+1 Danyang Wang [STUDENT_ID_REDACTED] BA  Beauty Advisor 
+2 Siyuan Lei [STUDENT_ID_REDACTED] CS  Customer Service and Order 
+3 Zhengdu Wei [STUDENT_ID_REDACTED] MC  Marketing Content 
+4 Jiaxuan Ren [STUDENT_ID_REDACTED] AP  Approval and Governance 
+5 Guiyu Liu [STUDENT_ID_REDACTED] CO  Coordination and Recovery 
+ 
+Design status: PROPOSED. Formal requirement approval, affected-owner acceptance and Stage 2 
+implementation/testing remain separate. Runtime values are synthetic; acceptance cases are 
+planned, not executed. 
+1 Executive Summary 
+The proposed One-Person AI Company modernises a cosmetics/skincare WeChat commerce 
+prototype. One Human Founder / Operator supervises three AI business roles: Beauty Advisor (BA), 
+Customer Service and Order Agent (CS), and Marketing Content Agent (MC). They provide grounded 
+recommendations, bounded after-sales handling and reviewable promotional-video drafts. Approval 
+and Governance (AP) and Coordination and Recovery (CO) are shared controls. 
+Five requirement/use-case chains connect features, structure, runtime and behaviour. Deterministic 
+evidence, authority and persistence checks constrain large language model (LLM) proposals; 
+clarification, failure, uncertain execution and pending review are explicit outcomes. The proof of 
+concept (PoC) uses controlled mocks and excludes production settlement and autonomous public 
+posting. 
+ 
+
+=== Original PDF page 4 ===
+3 
+2 Project Background and Scope 
+2.1 Problem and meaningful improvement 
+A small beauty retailer needs product advice, routine after-sales support and marketing material 
+under one accountable operator. The existing mini-program supplies feasibility evidence, but does 
+not establish requirements or demonstrate the proposed agent behaviour. 
+The improvement combines specialised agents, traceable hand-offs and recovery. Agents interpret 
+requests and generate explanations/drafts; controlled services enforce evidence, authority and 
+human checkpoints. This coordinated workflow provides the meaningful improvement over the legacy 
+shop. 
+2.2 Scope and demonstration boundary 
+In scope Excluded from this proof of concept 
+Clarification, authorised product/stock retrieval and 
+explainable recommendations 
+Medical diagnosis, treatment advice and virtual try-on 
+platform 
+Order enquiry and policy-supported 
+return/exchange/refund-request handling 
+Production payment or bank settlement; complete 
+logistics platform 
+Campaign brief, script, storyboard and draft 
+promotional media with founder review 
+Autonomous public posting; training a 
+foundation/video model 
+Traceable multi-agent hand-offs, approval, 
+uncertainty and safe recovery 
+Modelling every legacy administrator page or 
+commerce feature 
+ 
+Demonstrations cover consultation, after-sales handling and marketing drafts. GR-S-01 combines 
+existing BA/CS/AP/CO goals. Labelled controlled adapters may replace LLM, media and commerce 
+services; live availability, policy thresholds and production security are not assumed. 
+3 Stakeholders and Responsibilities 
+Role or capability Goal and authority 
+Customer 
+Provides consultation/after-sales intent, clarifies constraints and confirms 
+a current proposed action. Receives grounded advice, recorded 
+outcomes and remaining obligations. 
+Human Founder / Operator 
+Owns company accountability; initiates campaigns/coordination and 
+makes exact-scope consequential decisions. Human approval cannot 
+create missing stock, policy eligibility or clinical authority. 
+AI Beauty Advisor 
+Clarifies beauty needs and explains authorised available products. May 
+write consultation evidence; cannot create orders, change prices, settle 
+payments or diagnose. 
+AI Customer Service and Order 
+Agent 
+Verifies order association and policy evidence, proposes supported 
+resolutions and executes only permitted PoC service actions after current 
+confirmation and required approval. 
+AI Marketing Content Agent 
+Interprets authorised campaign context, prepares script/storyboard/media 
+drafts and seeks founder review. No autonomous external publication or 
+unsupported factual claims. 
+Approval and Governance Controls risk-based human review, committed decisions, audit and 
+delivery. It never executes the requesting role's business action. 
+Coordination and Recovery 
+Transfers authorised minimal context, records work/hand-offs and 
+manages safe recovery. It adds no authority to a receiving role and is not 
+an AI business role. 
+ 
+
+=== Original PDF page 5 ===
+4 
+4 Requirements Specification 
+4.1 Agreement and common requirements 
+These proposed common requirements apply to all five chains. Agreement is a requirement 
+classification, not evidence of formal approval. 
+ID Common requirement Acceptance basis 
+GR-C-01 One accountable Human Founder / Operator and three 
+distinct AI business roles; AP/CO remain controls. 
+Inspect role, feature and 
+composite models; GR-T-01. 
+GR-C-02 All factual advice/content uses authorised evidence and 
+identifies missing, conflicting or unsupported data. 
+BA/CS/MC evidence and invalid-
+output scenarios. 
+GR-C-03 Keep role authority, Customer confirmation, human approval 
+and successful execution distinct. 
+AP-T-02/03/07; CS-T-05; GR-T-
+02. 
+GR-C-04 Transfer only authorised decision-relevant context with 
+origin/revision correlation. 
+Payload inspection and CO-T-
+01/02; GR-T-02. 
+GR-C-05 Expose failure and uncertain outcomes; reconcile before 
+potentially duplicate execution. 
+CS-T-06, CO-T-06/08 and GR-T-
+03. 
+GR-C-06 
+Mocks are labelled; optional features do not control 
+mandatory success; no production settlement or 
+autonomous posting. 
+Optional-OFF tests and 
+inspection of service calls. 
+ 
+4.2 Mandatory and optional capability catalogue 
+Mandatory 
+ID Owned goal Core features Optional feature 
+BA-M-01 Explainable personalised product 
+recommendation BA-F-01 / BA-F-02 BA-F-03 
+CS-M-01 Routine return, exchange or refund request CS-F-01 / CS-F-02 CS-F-03 
+MC-M-01 Approval-controlled promotional-video draft MC-F-01 / MC-F-02 MC-F-03 
+AP-M-01 Founder control of consequential agent 
+actions AP-F-01 / AP-F-02 AP-F-03 
+CO-M-01 Traceable cross-agent hand-offs and 
+recovery CO-F-01 / CO-F-02 CO-F-03 
+ 
+Each chain has two core features and one optional feature. All five optional features may be OFF 
+while core success and safe incomplete outcomes remain usable. Revision, rejection and safe 
+recovery remain core obligations. 
+4.3 Nonfunctional requirements 
+ID Requirement and verification 
+BA-NFR-01 
+Evidence integrity: Each displayed recommendation retains product ID, catalogue 
+reference/version, inventory observation and addressed Customer constraint. Verify every 
+factual claim against the saved references. 
+BA-NFR-02 
+Least authority: BA has read-only catalogue/inventory access, with no 
+order/payment/refund/publication capability. Test prohibited requests for zero corresponding 
+writes; consultation/review records remain permitted. 
+
+=== Original PDF page 6 ===
+5 
+ID Requirement and verification 
+BA-NFR-03 
+Failure transparency: Failed/missing/conflicting required service results produce explicit 
+incomplete outcomes, with no invented facts or available-stock claim. Inject each failure; 
+inspect response and saved outcome. 
+BA-NFR-04 
+Data minimisation: Forward only consultation-relevant Customer input to LLM/review; 
+exclude unrelated profile fields and credentials. Inspect allowlisted payloads. Retention, 
+production access and performance targets remain unagreed. 
+CS-NFR-01 Evidence integrity: Saved eligibility/resolution records retain request, authorised order and 
+applicable policy references. Verify against these sources. 
+CS-NFR-02 
+Least authority/privacy: Failed identity/order verification blocks protected disclosure. 
+LLM/review receive only required permitted context. Inspect payloads and absence of 
+prohibited calls. 
+CS-NFR-03 Failure/duplicate protection: Expose uncertain writes; reconcile by actionRef before another 
+execution. Inject post-write timeout; inspect traces for duplicates. 
+CS-NFR-04 
+Audit/optional independence: Distinguish confirmed execution from evidence-save failure. 
+Inspect state/result with notification ON, OFF and failed; notification cannot reverse the core 
+result. 
+MC-NFR-01 
+Claim integrity: Every factual claim in script, storyboard and content draft traces to 
+authorised product information/source references. Verify generated claims against recorded 
+evidence. 
+MC-NFR-02 
+Authority separation: LLM/media generation and checks cannot establish approval or 
+publication readiness. Exercise successful generation without a valid Founder decision 
+through AP; the draft remains unapproved. 
+MC-NFR-03 
+Failure transparency: Explicitly represent missing information, unsupported content, media 
+unavailability, failed persistence and pending/failed review. Inject each; inspect state and 
+visible outcome for no false completion. 
+MC-NFR-04 Traceability: Retain campaign identity, authorised sources, draft revision, generation and 
+review outcomes. Inspect stored evidence to reconstruct the source/revision/decision path. 
+CO-NFR-01 Traceability: Hand-offs and significant status changes retain the work request, participating 
+roles and recorded outcome. 
+CO-NFR-02 Authority: Coordination cannot expand a business role's authority; restricted actions remain 
+blocked until valid Founder approval is recorded. 
+CO-NFR-03 Transparency: Explicitly represent failed, unavailable and uncertain coordination; never 
+report these as completion. 
+CO-NFR-04 Recovery: Avoid uncontrolled duplicate execution; reconcile uncertain prior outcomes before 
+a potentially duplicative retry. 
+AP-NFR-01 
+Decision traceability: Retain origin/request, exact action/context revision, evidence, 
+authorised decision maker, decision, reason and recording outcome. Retention/access 
+remain unagreed; no production tamper-proof guarantee. 
+AP-NFR-02 Authority: Invalid/pending/absent/rejected/stale/unrecorded decisions grant no restricted 
+authority. Unknown risk blocks action for clarification/review. 
+AP-NFR-03 Transparency: Distinguish receipt, notification, recording and delivery failures. Failed 
+delivery preserves a committed decision; failed recording remains unapproved. 
+AP-NFR-04 Duplicate delivery: Reuse committed decisionId and exact scope. Receivers reject 
+duplicate/stale correlation; repeated approval delivery cannot repeat business execution. 
+ 
+
+=== Original PDF page 7 ===
+6 
+Security/access, retention, stock freshness, latency, review expiry and external reliability values need 
+agreement. Explicit fixtures and failure injection replace unagreed production thresholds; Section 13 
+supplies observable checks. 
+4.4 Individual ad hoc requirements 
+4.4.1 BA-M-01 Danyang Wang 
+Owner Danyang Wang [STUDENT_ID_REDACTED]. Mandatory; priority Must. Status PROPOSED. 
+Informal requirement The system shall provide the Customer with an explainable product 
+recommendation that reflects their stated beauty needs and constraints and is supported by 
+authorised product and availability evidence. 
+Rationale Routine consultation should help the Customer make an informed choice while reducing 
+the Human Founder's need to handle every enquiry personally. 
+Stakeholder need Customer product advice and scalable routine consultation. Related use case BA-
+UC-01; feature definitions are in Section 5.2. 
+Criterion Observable acceptance condition 
+BA-AC-01 Given a request missing information needed to distinguish suitable products, ask a focused 
+clarification question and do not silently infer the missing constraint. 
+BA-AC-02 Given sufficient information and matching products, present at least one authorised, 
+available product with a reason linked to the Customer's input and catalogue evidence. 
+BA-AC-03 
+Given no suitable product, unavailable stock or unknown availability, state that no reliable 
+available match can be offered; never label an unknown or unavailable item immediately 
+purchasable. 
+BA-AC-04 Given an unsupported generated claim or conflicting evidence, withhold that claim, explain 
+the limitation and offer clarification or human review where appropriate. 
+BA-AC-05 Given a medical-diagnosis or treatment request, stop that part of the consultation and state 
+the scope limit. Founder review cannot authorise medical advice. 
+BA-AC-06 Given cancellation, service failure or human review pending, expose that outcome and retain 
+a traceable outcome record without executing a purchase or claiming review is complete. 
+ 
+Detailed refinements BA-FR-01 clarification; BA-FR-02 catalogue/stock retrieval; BA-FR-03 
+validation/explanation; BA-FR-04 incomplete outcomes. Optional BA-O-01 adds verified alternatives. 
+BA-T-01–07 cover these refinements. 
+4.4.2 CS-M-01 Siyuan Lei 
+Owner Siyuan Lei [STUDENT_ID_REDACTED]. Mandatory; priority Must. Status PROPOSED. 
+Informal requirement The system shall process a Customer's return, exchange or refund request 
+against authorised order evidence and applicable after-sales policy, providing a recorded resolution 
+or a traceable escalation when resolution is unsupported or outside the agent's authority. 
+Rationale Routine after-sales handling should reduce the Human Founder / Operator's workload 
+while preserving Customer visibility and human control over disputed or high-impact decisions. 
+Stakeholder need Supported after-sales outcomes with bounded founder workload. Related use 
+case CS-UC-01; feature definitions are in Section 5.2. 
+Criterion Observable acceptance condition 
+CS-AC-01 Given an identity/order mismatch, withhold protected order details and do not execute a 
+resolution; request correction or offer an authorised human-review path. 
+CS-AC-02 
+Sufficient authorised order/policy evidence produces referenced eligibility and relevant order 
+facts. Missing/conflicting policy leaves an unresolved outcome; invent no window, threshold 
+or rule. 
+
+=== Original PDF page 8 ===
+7 
+Criterion Observable acceptance condition 
+CS-AC-03 
+With routine policy authority and Customer confirmation, execute only the permitted action, 
+save its service-confirmed outcome and explain remaining steps. Label simulation; 
+acknowledgement is not settlement/physical completion. 
+CS-AC-04 
+Given an unavailable or unknown replacement, do not confirm a successful exchange; 
+explain the constraint and request Customer selection of a policy-supported alternative or 
+escalate. 
+CS-AC-05 
+Disputed, exceptional, high-risk, financially significant or approval-controlled actions need a 
+valid recorded human decision. Absent approval, rejection and review-service failure remain 
+distinct. 
+CS-AC-06 Timeout/uncertain writes require visible uncertainty and outcome lookup before duplicative 
+retry. Failed evidence saving cannot be reported as fully recorded success. 
+CS-AC-07 
+With optional status notifications disabled or delivery failing, the core request remains 
+accessible through its recorded status; notification failure does not reverse a confirmed 
+resolution. 
+ 
+4.4.3 MC-M-01 Zhengdu Wei 
+Owner Zhengdu Wei [STUDENT_ID_REDACTED]. Mandatory; priority Must. Status PROPOSED. 
+Informal requirement The system shall enable the AI Marketing Content Agent to produce a 
+promotional-video draft from an authorised campaign brief and product information, while ensuring 
+that the resulting promotional content is reviewed by the Human Founder / Operator before any 
+external publication. 
+Rationale Marketing-content preparation can require substantial manual effort from the Human 
+Founder / Operator. Automating routine campaign interpretation, script and storyboard preparation, 
+and draft-media generation can reduce this workload while preserving human control over externally 
+published promotional content. 
+Stakeholder need Scalable content preparation with human publication control. Related use case 
+MC-UC-01; feature definitions are in Section 5.2. 
+Criterion Observable acceptance condition 
+MC-AC-01 With sufficient authorised campaign/product input, save the brief and produce 
+script/storyboard linked to authorised evidence. 
+MC-AC-02 Missing/conflicting/unsupported information requires clarification, available authorised 
+retrieval or an incomplete outcome; invent no claims. 
+MC-AC-03 An available media service may generate draft media from validated script/storyboard; 
+record its result. 
+MC-AC-04 Expose media unavailability/failure. Clearly label any permitted PoC mock/fallback; never 
+call it real external generation success. 
+MC-AC-05 Failed content/quality checks block approval-ready completion; record the issue for revision. 
+MC-AC-06 Save Founder rejection/revision decisions and route to the appropriate revision path; do not 
+mark approved. 
+MC-AC-07 No external publication or publication-approved claim without recorded valid Founder 
+approval; this PoC remains draft-only. 
+ 
+4.4.4 AP-M-01 Jiaxuan Ren 
+Owner Jiaxuan Ren [STUDENT_ID_REDACTED]. Mandatory; priority Must. Status PROPOSED. 
+Informal requirement The system shall require a recorded, valid Human Founder / Operator 
+decision before a requesting role executes an agent action classified as high-impact, externally 
+
+=== Original PDF page 9 ===
+8 
+published, financially significant or disputed. Review acceptance is not approval. A decision applies 
+only to its recorded action/context revision and cannot override other business eligibility checks. 
+Rationale The founder must control consequential actions while the three business agents handle 
+bounded work. AP manages approval requests, decisions and audit/delivery; it does not execute 
+exchanges, settle payments or publish content. Risk categories/thresholds and decision expiry are 
+proposed policies requiring human agreement; the PoC may use declared fixtures. 
+Stakeholder need Founder control and traceable consequential decisions. Related use case AP-UC-
+01; feature definitions are in Section 5.2. 
+Criterion Observable acceptance condition 
+AP-AC-01 
+A valid restricted action creates a traceable PENDING approval request and returns a 
+request receipt only after request persistence; missing/unauthorised context or uncertain risk 
+blocks the action. 
+AP-AC-02 Pending, missing, invalid, rejected or unrecorded approval never enables a restricted action; 
+show the actual review state. 
+AP-AC-03 An authorised Founder decision is correlated to the exact request, action and context 
+revision, and is committed with the request state and audit record before delivery. 
+AP-AC-04 Rejection stops the proposed restricted action; REQUEST_REVISION returns it for 
+correction. A changed action/revision requires fresh review and retains the prior history. 
+AP-AC-05 Recording failure leaves approval unavailable and permits storage-only recovery of the 
+same decision; it cannot cause business dispatch. 
+AP-AC-06 Notification/delivery failure is visible. Recovery queries or redelivers the same committed 
+decision; duplicate/stale events cause no repeated action. 
+AP-AC-07 Approval cannot create stock, policy eligibility, Customer confirmation, publication authority 
+beyond the agreed scope or a successful execution result. 
+AP-AC-08 Disabling AP-F-03 assisted revision/resubmission leaves all core review decisions usable. A 
+manually corrected new request still needs fresh review. 
+ 
+4.4.5 CO-M-01 Guiyu Liu 
+Owner Guiyu Liu [STUDENT_ID_REDACTED]. Mandatory; priority Must. Status PROPOSED. 
+Informal requirement The system shall coordinate traceable task hand-offs among authorised AI 
+business roles when a workflow requires work to pass between roles, while preserving required 
+context, workflow status, authority boundaries and safe failure handling. 
+Rationale Cross-agent workflows require a controlled mechanism for transferring work between AI 
+business roles. Coordination should reduce the Human Founder / Operator's need to manually relay 
+routine information while ensuring that hand-offs, failures and recovery outcomes remain observable 
+and traceable. 
+Stakeholder need Collaboration without lost context, authority or workflow visibility. Related use 
+case CO-UC-01; feature definitions are in Section 5.2. 
+Criterion Observable acceptance condition 
+CO-AC-01 
+Given a valid cross-agent work request with sufficient authorised context, the system shall 
+identify the receiving AI business role, transfer the required context and record the hand-off 
+and resulting workflow status. 
+CO-AC-02 
+Given missing or invalid decision-relevant hand-off context, the system shall not silently infer 
+the missing information or represent the hand-off as successfully completed; it shall request 
+clarification or record a safe incomplete outcome. 
+CO-AC-03 
+Given an unavailable receiving AI business role, the system shall record the failed or 
+unavailable hand-off and follow an applicable recovery, escalation or cancellation path rather 
+than report successful completion. 
+
+=== Original PDF page 10 ===
+9 
+Criterion Observable acceptance condition 
+CO-AC-04 Given a supporting tool or service failure, the system shall expose and record the failure or 
+uncertainty and shall not treat the dependent task as successfully completed. 
+CO-AC-05 
+Given a retry-eligible failure when controlled automatic retry is enabled, the system may 
+retry the failed operation in a bounded and traceable manner. Exhausted or unavailable retry 
+shall lead to safe escalation or cancellation. 
+CO-AC-06 
+Given an action requiring Human Founder / Operator approval, the restricted action shall not 
+proceed while valid approval is absent. Pending, rejected and unavailable approval 
+outcomes shall remain distinct from approval. 
+CO-AC-07 
+Given a duplicate or uncertain execution outcome, the system shall reconcile the existing 
+recorded outcome before a retry that could duplicate the action or before marking the 
+workflow Completed. 
+ 
+Detailed refinements CO-FR-01 context validation; CO-FR-02 authorised transfer; CO-FR-03 
+status/failure recording; CO-FR-04 safe recovery. Optional CO-O-01 adds bounded retry. CO-T-01–
+08 cover these refinements. 
+4.5 User requirement view 
+GR-RQ-01 maps Customer and Founder needs to the five mandatory requirements and their 
+observable responses. The view connects stakeholder needs to BA/CS/MC services and AP/CO 
+controls. 
+ 
+Figure 1  GR-RQ-01  Customer and Founder needs refine into three business capabilities and two shared controls. 
+
+
+=== Original PDF page 11 ===
+10 
+5 Feature Modelling 
+5.1 Comprehensive feature model 
+ 
+Figure 2  GR-FD-01  All five mandatory capability branches and fifteen features; filled circles are mandatory and open 
+circles optional. 
+Constraints: BA-F-02 requires BA-F-01; CS-F-02 requires CS-F-01; MC-F-02 requires MC-F-01; CO-
+F-02 requires CO-F-01. Each corresponding F-03 requires its F-02 and is optional. AP-F-02 requires 
+AP-F-01; AP-F-03 requires AP-F-02. Restricted actions in CS, MC or CO require a valid AP-F-02 
+decision. AP-F-03 provides assisted linked resubmission; REQUEST_REVISION itself remains a 
+core AP-F-02 decision. No XOR/OR feature group or unregistered fourth business agent is 
+introduced. 
+5.2 Feature descriptions and constraints 
+ID and type Feature and user value Constraints and planned evidence 
+BA-F-01 
+Core Customer Need Clarification 
+Capture and correct decision-relevant needs; ask focused 
+questions, avoid diagnosis/unrelated data and permit 
+cancellation. 
+Evidence: BA-FR-01; BA-NFR-04; BA-T-01/07 
+BA-F-02 
+Core 
+Explainable Product 
+Recommendation 
+Validate authorised product IDs, explicit needs, stock and 
+factual reasons; record and deliver grounded choices or an 
+explicit incomplete result. Requires BA-F-01. 
+Evidence: BA-FR-02/03/04; BA-T-02/03/04/05 
+
+
+=== Original PDF page 12 ===
+11 
+ID and type Feature and user value Constraints and planned evidence 
+BA-F-03 
+Optional 
+Alternative Product 
+Recommendation 
+On Customer request, show verified available alternatives 
+and differences; never relax a constraint silently. Requires 
+BA-F-02; no-match remains safe when OFF. 
+Evidence: BA-O-01; BA-T-06 
+CS-F-01 
+Core 
+After-Sales Request Intake and 
+Eligibility Check 
+Verify identity/order association before protected 
+disclosure; retrieve policy evidence and clarify without 
+inventing rules. 
+Evidence: CS-AC-01/02; CS-T-01/02 
+CS-F-02 
+Core 
+Routine Resolution and 
+Exception Escalation 
+Requires eligibility, current Customer confirmation and any 
+exact-scope approval; recheck stock/policy, persist 
+actionRef, execute and reconcile/save actual outcome. 
+Evidence: CS-AC-03/04/05/06; CS-T-03/04/05/06 
+CS-F-03 
+Optional After-Sales Status Notification 
+Notify only an authorised recipient about recorded status. 
+Delivery failure or OFF leaves core resolution accessible; 
+channel/permission policy is configurable. 
+Evidence: CS-AC-07; CS-T-07 
+MC-F-01 
+Core 
+Campaign Brief Script and 
+Storyboard Generation 
+Interpret authorised objective/product evidence and 
+validate generated claims. Missing/conflicting information 
+leads to clarification; script/storyboard remain drafts. 
+Evidence: MC-AC-01/02; MC-T-01/02/03 
+MC-F-02 
+Core 
+Draft Media Generation and 
+Founder Review 
+Generate and check real or labelled mock draft media, 
+save exact revision/evidence and obtain a committed 
+applicable Founder decision. Generation or checking 
+cannot grant approval. 
+Evidence: MC-AC-03 through MC-AC-07; MC-T-04/05/06 
+MC-F-03 
+Optional 
+Approved Content Variant 
+Generation 
+Generate a traceable variant from an approved campaign 
+concept. Each new variant remains draft and receives 
+fresh review; inheritance is not assumed. Mandatory 
+workflow works when OFF. 
+Evidence: MC-T-07 
+AP-F-01 
+Core Risk-Based Approval Routing 
+Validate authorised action/context and declared risk policy. 
+Persist required review before receipt; unknown 
+classification blocks action for clarification/review. 
+Evidence: AP-AC-01/02; AP-T-01/02 
+AP-F-02 
+Core 
+Approval Decision and Audit 
+Record 
+Founder selects APPROVE, REJECT or 
+REQUEST_REVISION; commit exact 
+decision/request/audit before correlated delivery. Separate 
+recording, delivery and execution outcomes. 
+Evidence: AP-AC-02 through AP-AC-07; AP-T-02 through 
+AP-T-07 
+AP-F-03 
+Optional 
+Revision Request and 
+Resubmission 
+Assist a linked successor request preserving history; fresh 
+review is required. With OFF, core REQUEST_REVISION 
+and manual corrected submission remain available. 
+Evidence: AP-AC-04/08; AP-T-04/08 
+CO-F-01 
+Core 
+Agent Task Hand-off and 
+Context Transfer 
+Validate target/context, transfer only authorised fields and 
+retain intent/actionRef and acknowledgement. A receipt is 
+not completed work; target authority remains unchanged. 
+Evidence: CO-FR-01/02; CO-T-01/02/03 
+CO-F-02 
+Core 
+Workflow Status Failure 
+Recording and Recovery 
+Record actual outcome, failure and escalation; reconcile 
+uncertainty before repeat. Save failure and unapproved 
+work cannot become COMPLETED. 
+Evidence: CO-FR-03/04; CO-T-03/04/06/07/08 
+
+=== Original PDF page 13 ===
+12 
+ID and type Feature and user value Constraints and planned evidence 
+CO-F-03 
+Optional Controlled Automatic Retry 
+Retry only a declared eligible, bounded, authorised read or 
+proven-not-executed operation. Retain attempt history; 
+OFF/exhaustion still permits escalation or safe 
+cancellation. 
+Evidence: CO-O-01; CO-T-05/06 
+ 
+6 Use Case Modelling 
+6.1 Overall use case diagram 
+GR-UCD-01 bounds the complete company application. Customer initiates BA-UC-01/CS-UC-01; 
+Human Founder / Operator initiates MC-UC-01/AP-UC-01/CO-UC-01. Internal agents, repositories 
+and adapters are not external actors. Sections 6.2.1–5 specify these five goals; approval/coordination 
+are conditional dependencies, not unconditional include relationships. 
+ 
+Figure 3  GR-UCD-01  Whole-system actor and five-goal view; internal business roles and adapters remain inside the 
+application boundary. 
+6.2 Five principal use case specifications 
+6.2.1 BA-UC-01 Obtain Personalised Product Recommendation 
+Owner and status Danyang Wang [STUDENT_ID_REDACTED]. PROPOSED; formal approval/submission remains 
+pending. 
+Goal: Obtain an understandable product recommendation reflecting the Customer's stated needs and 
+supported availability. 
+Level: User-goal level 
+Primary actor: Customer 
+Supporting actors: Founder reviews only escalated advice. Beauty Advisor, Catalogue, Inventory, 
+LLM and Approval services are internal participants. 
+
+
+=== Original PDF page 14 ===
+13 
+Related requirements: BA-M-01; BA-FR-01/02/03/04; BA-NFR-01/02/03/04; optional BA-O-01. 
+Authority: Read authorised catalogue/stock and relevant Customer input; record consultation and 
+minimal audit/review context; advise the requesting Customer. No orders, payments, refunds, 
+inventory/price changes or public posting. Product selection is not purchase authorisation. 
+Preconditions: Customer access and service interfaces/labelled mocks are configured. Successful 
+service responses are checked during the flow. 
+Trigger: The Customer submits a beauty consultation request containing a goal, preference or 
+constraint. 
+Main success scenario  
+1. The Customer submits the request. 
+2. Create/resume the consultation and record relevant input. 
+3. Extract needs; clarify missing information through A1. 
+4. Retrieve authorised catalogue evidence. 
+5. Check availability against the retrieved product IDs. 
+6. Propose candidates with reasons and supporting evidence. 
+7. Validate product IDs, constraints, facts and availability; unsupported output follows E3. 
+8. Save the validated result; present at least one available recommendation with evidence-backed 
+reasons and limitations. 
+9. Customer reviews the advice; consultation success ends here. Purchasing requires a separate 
+Customer-initiated workflow. 
+Alternative flows  
+A1 at step 3: Ask a focused question and return to step 3. If Customer declines, record an incomplete 
+outcome without guessing. 
+A2 at steps 4–5: If no product matches, invite revised needs and return to step 3; otherwise record a 
+safe incomplete outcome. 
+A3 at step 5: With BA-F-03 ON and Customer requesting alternatives, retrieve fresh evidence, 
+validate alternatives and explain differences; otherwise follow A2. 
+A4: Customer correction invalidates the prior recommendation and requires re-evaluation. 
+Cancellation stops processing, suppresses late output and is recorded. 
+Failure and uncertainty flows  
+E1: Catalogue/stock error, timeout or missing availability produces an explicit incomplete outcome. 
+Do not invent stock; Customer-initiated retry refreshes both sources. 
+E2: Stop diagnosis/treatment advice; Founder review cannot override this medical boundary. 
+E3: Withhold failed, malformed, unsupported or contradictory LLM output, or advice not justified by 
+evidence. Clarify, seek human review or remain incomplete; do not invent a confidence threshold. 
+E4: With Customer consent, submit minimal context and the issue for Founder review. 
+REVIEW_PENDING requires an acknowledged receipt; unavailable review is not submitted. 
+Rejection or no decision grants no approval. Later advice repeats fresh validation; pending review is 
+not success. 
+E5: Required recording failure remains incomplete. Deliberate retry creates no financial effect. 
+Success postcondition: Available, validated advice is delivered; input, evidence, stock observation 
+and outcome are recorded. 
+Failure postcondition: Unsupported, cancelled or pending advice is not success; no order/unrelated 
+write occurs. Record the reason when storage is available; otherwise expose recording failure. 
+Data used or changed: Relevant input, optional authorised profile subset, product/stock evidence, 
+recommendation, outcome and minimal audit/review context. Retention remains unagreed. 
+
+=== Original PDF page 15 ===
+14 
+Tool/service dependencies: Product Catalogue Service, Inventory Service, LLM gateway, 
+consultation repository and Founder Approval Service for the conditional review branch; 
+implementations or controlled mocks are interchangeable through explicit interfaces. 
+Stop or hand-off: Routine advice only; review cannot override medical/unsupported-output 
+boundaries. GR-S-01 transfers minimal context without purchase authority. 
+6.2.2 CS-UC-01 Request Return Exchange or Refund 
+Owner and status Siyuan Lei [STUDENT_ID_REDACTED]. PROPOSED; formal approval/submission remains 
+pending. 
+Goal: Obtain a supported after-sales resolution or a traceable referral for human decision. 
+Level: User-goal level 
+Primary actor: Customer 
+Supporting actors: Founder handles exceptions; internal CS, identity/order, after-sales, stock, 
+approval, LLM and audit services remain within the overall system boundary. 
+Related requirements: CS-M-01; CS-AC-01 through CS-AC-07. 
+Authority: Read authorised Customer/order, policy and stock evidence; record the request, eligibility, 
+routine outcome and audit. Restricted actions require human review. No policy changes, unrelated-
+account access, public posting, purchasing or real settlement. LLM classification grants no authority. 
+Preconditions: Customer access and service interfaces/labelled mocks are configured. Identity, 
+eligibility and successful replies are verified during the flow. 
+Trigger: The Customer submits a return, exchange or refund request. 
+Main success scenario  
+1. The Customer supplies the order reference, requested resolution and reason. 
+2. Create/resume the request; verify Customer/order association before protected disclosure. 
+3. Clarify missing details and retrieve authorised order/policy evidence. 
+4. Check eligibility and routine authority; unknown rules follow E2/E4. 
+5. Check exchange availability; missing/unavailable stock follows A2. 
+6. Explain the resolution and obligations; obtain current Customer confirmation. 
+7. Recheck evidence and applicable approval before invoking the permitted service action. 
+8. Confirm the service outcome; record evidence and actionRef. 
+9. Show the outcome and next steps. Optional notifications do not control core success. 
+Alternative flows  
+A1: Clarify missing/corrected details, then repeat verification and eligibility. If Customer declines, 
+remain unresolved without guessing. 
+A2: For unavailable/unknown exchange stock, offer policy-supported alternatives. Customer selection 
+repeats eligibility/authority checks; otherwise seek review or remain unresolved. 
+A3: Record pre-action cancellation when storage permits. After known/unknown execution, report 
+actual status; cancellation does not imply rollback. 
+A4: CS-F-03 requires recipient/channel permission and recorded delivery status. OFF or failed 
+notification does not block the core outcome. 
+Failure and uncertainty flows  
+E1: Identity mismatch/unavailability blocks disclosure and action; use correction/support with minimal 
+context. 
+E2: Missing/conflicting/unknown policy, ineligibility, dispute, low confidence or unsupported LLM 
+output blocks automation. Clarify or seek review; invent no threshold. 
+E3: Read failure remains unresolved. After write timeout, look up the same actionRef before retry; if 
+still unknown, stop execution and escalate. Do not assume no effect. 
+
+=== Original PDF page 16 ===
+15 
+E4: Send AP minimal evidence, proposed action and issue. Pending status requires receipt; service 
+failure is not confirmed submission. Applicable approval permits exact-scope re-evaluation only; 
+rejection stops, revision requires clarification, and absent/invalid approval remains pending. Member 
+4 owns the review contract. 
+E5: Recording failure retains known receipt via an available permitted mechanism. Do not claim 
+rollback or repeat execution before reconciliation. 
+Success postcondition: Record the resolution, order/policy evidence and Customer/AP decisions; 
+show next steps. Physical-return acknowledgement or mock refund does not prove settlement. 
+Failure postcondition: Preserve unresolved, rejected, cancelled or pending status, reasons/references 
+when storage permits, and visible uncertainty. 
+Data used or changed: Reason/resolution, authorised identity/order association, order/policy/stock 
+evidence, Customer confirmation, applicable review/decision, service reference/outcome and audit. 
+Retention/access remain unagreed. 
+Tool or service dependencies: Identity/order verification, after-sales, Inventory, Founder Approval, 
+LLM and audit storage. Production APIs/schemas remain unagreed; labelled mocks imply no financial 
+execution. 
+Stop or hand-off: Reverify Customer/order after transfer. Restricted action requires current 
+confirmation and exact-scope decision; unknown execution remains unresolved. 
+6.2.3 MC-UC-01 Generate and Review Promotional Video 
+Owner and status Zhengdu Wei [STUDENT_ID_REDACTED]. PROPOSED. MC-M-01; MC-F-01/02 and optional MC-
+F-03. 
+Goal and actors Founder obtains a grounded, reviewable promotional-video draft and recorded 
+exact-revision decision. Internal participants: MarketingContentService, authorised catalogue, 
+LLM/media adapters, ReviewGateway/AP and MarketingRepository. 
+Authority Read authorised campaign/product context; generate, revise, store and submit 
+drafts/evidence. No product-fact changes, inherited approval or autonomous publication. 
+Preconditions and trigger Founder has workflow access and submits a campaign objective through 
+configured interfaces/labelled mocks. Evidence sufficiency, successful responses and valid approval 
+are checked during the flow. 
+Main success scenario  
+1. Founder supplies the brief, objectives, constraints and products. 
+2. Save campaign/context and identify its revision. 
+3. Retrieve authorised product evidence; clarify missing facts. 
+4. Propose an evidence-linked script/storyboard with the LLM. 
+5. Validate IDs, facts and criteria; withhold invalid content. 
+6. Generate media via the real adapter or a permitted labelled mock. 
+7. Validate media; save the exact draft revision and generation evidence. 
+8. Submit that revision for review; retain its request/receipt ID. 
+9. Founder reviews the draft and selects APPROVE. 
+10. AP validates current scope/Founder authority and commits decision, request state and audit 
+before delivery. 
+11. MC validates correlation and saves its local APPROVED view. 
+12. Return the approved draft and recorded decision; do not publish. 
+Alternatives A1: Founder correction repeats evidence/claim checks. A2: REQUEST_REVISION 
+records reasons and revises the draft for fresh generation, validation and review. A3: REJECT 
+records a stop. A4: Optional variants retain campaign traceability and receive individual exact-
+revision review; OFF preserves the core flow. 
+Failure and uncertainty E1: Missing/conflicting evidence → clarify or INCOMPLETE. E2: Invalid 
+LLM output → withhold, revise/regenerate or CONTENT_REJECTED. E3: Media failure → permitted 
+
+=== Original PDF page 17 ===
+16 
+labelled fallback or GENERATION_FAILED. E4: Failed/undefined criterion → record and revalidate; 
+invent no pass threshold. E5: Receipt without decision → REVIEW_PENDING. E6: Rejection/revision 
+→ A3/A2. E7: Unconfirmed/failed review grants no approval. E8: Draft/evidence/local-decision save 
+failure → RECORDING_FAILED; recover the same record without a new decision. Suppress 
+stale/duplicate callbacks and cancelled output. 
+Success postconditions The grounded exact draft revision and authorised Founder decision are 
+recorded and returned. No publication has occurred; an approved draft is not evidence of external 
+execution. 
+Minimum guarantee and data Label unapproved/incomplete content accurately. Retain 
+campaign/brief, product sources, script/storyboard, media/mock outcome, revision and 
+review/committed-decision references. Expose storage failure; retention/access remain open. 
+6.2.4 AP-UC-01 Review and Decide an Agent Action 
+Owner: Jiaxuan Ren [STUDENT_ID_REDACTED]. Status PROPOSED. AP-M-01; core AP-F-01/02; optional AP-F-03. 
+Integration attribution is in Section 15. 
+System boundary: Beauty Commerce and Content Company. Primary actor: Human Founder / 
+Operator. Requesting role/coordination adapter, risk policy, audit, notification and delivery services 
+are internal participants. 
+Goal: Record a consequential-action decision for the exact current scope. Pending review is not 
+execution authority. 
+Trigger: A role submits minimal action context; Founder opens the review request. 
+Preconditions: Authenticated/authorised Founder; identifiable action/request and risk evidence; 
+permission to transfer minimal context; consequential action not yet executed. Unknown risk grants 
+no permission. 
+Authority: Read review context; persist requests, decisions, audit and delivery status. No business 
+execution, policy rewrite or expanded rights. 
+Main success scenario  
+1. The requesting role submits origin ID, proposed action, context revision, evidence references and 
+applicable actionRef through its local review interface. 
+2. Validate context/authority/risk; persist PENDING without business dispatch. 
+3. Return receipt; notify Founder and report ReviewPending to the requester. 
+4. Founder examines the action, evidence, reason and conditions. 
+5. Founder chooses APPROVE, REJECT or REQUEST_REVISION with a reason under the declared 
+fixture policy. 
+6. Recheck authority/current revision; atomically commit decision, request state and audit. 
+7. Record delivery and return the correlated decision. Delivery failure does not erase the commit. 
+8. Requester checks fresh eligibility/scope: APPROVE permits re-evaluation, not execution by AP; 
+rejection stops; revision requires correction. 
+Success postcondition: Exact-scope decision/audit committed; delivery status distinguished. 
+Business success is not implied. 
+Minimum guarantee: Without a committed applicable decision, restricted action remains blocked. 
+Report accepted/failed submission truthfully; retain identifiers where stored. 
+A1: A clearly unrestricted action may use existing authority without AP; invent no approval. 
+Unknown/disputed authority remains blocked for review or clarification. 
+A2: REQUEST_REVISION grants no permission. Optional AP-F-03 assists a linked successor 
+request; otherwise correction is manual. Both require fresh review and retained history. 
+A3: No decision remains pending. Eligible pre-decision cancellation/expiry suppresses late results; 
+expiry duration remains unagreed. 
+E1: Missing/unauthorised context or risk-check failure prevents acceptance or requires clarification; 
+restricted action remains blocked. 
+
+=== Original PDF page 18 ===
+17 
+E2: Reject stale, conflicting or unauthorised decisions; approval is not carried forward. 
+E3: Commit failure → RECORDING_FAILED, without authority. Retry only storage of the same 
+decision. 
+E4: Notification failure leaves the persisted request pending. Delivery failure preserves the commit; 
+retry/lookup the same decision ID. Duplicate/stale delivery never executes business work. 
+Models: AP-CL-01 A/B, AP-OBJ-01, AP-ACT-01, AP-SEQ-01 A/B and AP-STM-01. 
+REQUEST_REVISION is core; assisted resubmission is optional. 
+6.2.5 CO-UC-01 Coordinate a Cross Agent Work Request 
+Owner and status Guiyu Liu [STUDENT_ID_REDACTED]. PROPOSED. CO-M-01; CO-FR-01 through CO-FR-04; 
+CO-NFR-01 through CO-NFR-04; optional CO-O-01. 
+Goal and actors: Founder initiates/monitors authorised BA/CS/MC work. Internal participants: 
+coordinator, role adapters, persistence and conditional ReviewGateway/AP. 
+Authority: Route minimal authorised context; record status/failures and recover safely. No new role 
+authority or approval. 
+Preconditions and trigger Founder initiates cross-agent work through configured controlled 
+adapters. Context validity, target availability and successful results are checked during the flow. 
+Main success scenario  
+1. Founder starts the work request. 
+2. Save CrossAgentWorkRequest and its context. 
+3. Validate context and allowed scope. 
+4. Select the target role. 
+5. Check role authority and conditional AP review. 
+6. Prepare minimal permitted context. 
+7. Persist intent/actionRef before transfer. 
+8. Receive acknowledgement; the role works within its own authority. Receipt is not success. 
+9. Reconcile unknown effects by actionRef; record confirmed result and trace. 
+10. Coordinate the next required authorised, traceable hand-off with the same control checks. 
+11. Mark COMPLETED only after all required work succeeds and outcomes are saved. 
+12. Founder observes completed workflow status and trace. 
+Alternative flows A1: Missing/invalid context → CLARIFICATION_REQUIRED; correction repeats 
+validation, otherwise remain safely incomplete/cancelled. A2: Cancellation stops further hand-offs 
+without hiding pending/unknown effects or reversing known execution. A3: Optional CO-F-03 permits 
+bounded eligible retry only for read-only work or proven no prior effect. 
+Failure and uncertainty flows E1: Unavailable target → record failure and recover/escalate. E2: 
+Supporting-service failure → truthful incomplete outcome. E3: Review receipt → 
+AWAITING_APPROVAL; current APPROVE repeats validation, REQUEST_REVISION needs 
+correction/fresh review, REJECT stops dispatch. E4: Retry OFF/exhausted/unsafe → ESCALATED 
+or safe CANCELLED. E5: Unknown effect → RECONCILING by actionRef; stillUnknown escalates, 
+confirmed results are recorded, notExecuted permits reassessment. E6: Save failure → 
+RECORDING_FAILED; retain actual result and retry storage only. 
+Success postconditions All required cross-agent work has confirmed successful results and the 
+relevant hand-offs/context/outcome evidence is saved. Only then is the request COMPLETED and its 
+trace visible to the Founder. 
+Minimum guarantee and data Never mark failed, uncertain, unapproved or cancelled work 
+completed. Retain context/revision/scope, roles, intent/actionRef, hand-
+off/outcome/failure/retry/escalation and applicable AP references. AP owns authoritative decisions; 
+CO holds ApprovalReference views. 
+
+=== Original PDF page 19 ===
+18 
+6.3 Integrated cross agent scenario 
+Scenario GR-S-01 combines existing use cases. Customer requests an authorised exchange and 
+product advice; Founder initiates coordination. CS verifies order/policy and sends only permitted 
+needs/product context through CO to BA. BA-F-03 must be ON for optional alternatives; the core path 
+allows verified advice or a safe no-match outcome. 
+BA returns grounded advice; CO records the hand-off without declaring CS resolution. CS rechecks 
+policy, stock and Customer confirmation. Consequential/disputed exchange enters AP-UC-01: receipt 
+grants no authority; applicable recorded approval returns to verification/confirmation. CS saves 
+intent/actionRef before AfterSalesPort execution, records actual outcome and looks up uncertain 
+effects before repeating. Storage recovery never repeats execution. 
+GR-S-01 covers BA/CS/AP/CO. MC is an independent Founder campaign path with shared approval 
+rules. GR-OBJ-01 is a partial synthetic pre-decision snapshot; GR-COL-01 shows numbered 
+messages; GR-CMP-01 contains all six typed parts, including MC. No executed result is claimed. 
+7 Architecture Analysis and Design 
+7.1 Drivers principles and viewpoints 
+The event-driven design separates three specialised business services through ports/adapters. 
+Deterministic logic checks identity, evidence, policy, scope and persistence; LLMs propose 
+language/content. Adapters distinguish live/mock results and expose failures. Revisions suppress 
+stale results; human review is durable. 
+Viewpoint Evidence and design question 
+Logical GR-CL-01 and complete member class slices: which entities, ownership, 
+associations and receiver contracts realise each requirement? 
+Process and runtime GR-S-01, object/composite/communication and individual behaviour models: how do 
+work, decisions, uncertainty and recording progress? 
+Development Presentation, application/domain services and provider adapters: how can live and 
+controlled mock components be replaced without changing authority? 
+Scenario Five use cases and GR-S-01 expose both success and safe incomplete paths; 
+Section 13 links acceptance evidence. 
+Physical deployment Not selected as a formal deployment model. Hosting technology and production 
+availability/access guarantees remain open. 
+ 
+4+1 organises the selected views; full physical coverage is not claimed. BA: evidence/minimal data. 
+CS: eligibility/actionRef/reconciliation. MC: grounded media/exact-draft review. AP: commit versus 
+delivery. CO: acknowledgement versus outcome/recovery. 
+7.2 Alternatives and tradeoffs 
+Discarded choice Reason and retained tradeoff 
+Unrestricted single LLM with 
+direct commerce/publication 
+writes 
+Conflicts with role differentiation, evidence checks and human control. 
+Bounded services require more orchestration and contracts. 
+Peer-to-peer autonomous 
+negotiation for every workflow 
+Weakens shared trace/status/recovery and adds complexity to routine 
+single-role tasks. Central coordination is used when a handoff is required. 
+Form-only/catalogue-filter system 
+or fully manual content creation 
+Useful deterministic baseline, but inadequate natural-language 
+clarification and draft-production value. Deterministic validation remains 
+alongside LLM assistance. 
+Direct coupling to one media 
+provider 
+Availability/cost/schema dependence would weaken demonstration. 
+Adapters permit labelled mocks but cannot promise production 
+performance. 
+
+=== Original PDF page 20 ===
+19 
+Discarded choice Reason and retained tradeoff 
+Automatic approval after 
+successful generation/quality 
+check 
+Capability and authority differ. Founder review adds delay, while 
+preserving explicit exact-scope control. 
+Blind retry or assumed distributed 
+rollback 
+Could duplicate actions or misrepresent service effects. Persist 
+references, perform read-only lookup and recover storage/delivery 
+separately. 
+Approval service executes 
+requester actions or one globally 
+renamed ReviewPort 
+Mixes business eligibility/recovery with governance and conceals 
+incompatible local signatures. Explicit typed adapters add integration 
+work. 
+ 
+The narrow use cases do not require unrestricted ReAct or Planner-Executor loops. Future 
+autonomous planning needs justified use cases and revised authority, tool, cancellation and 
+duplicate-effect analysis. 
+7.3 Supporting architecture slices 
+ 
+Figure 4  BA-ARCH-01  BA control and tool boundaries; no commerce execution capability. 
+ 
+Figure 5  AP-ARCH-01  Review routing, committed decision and delivery boundaries; execution remains with the 
+requester. 
+GR-CMP-01 (Section 9.2) shows overall typed parts. The BA/AP slices explain local control, without 
+claiming deployment or replacing individual behaviour models. 
+8 Elementary Structure Modelling 
+8.1 Integrated and complete local class models 
+The Unified Modeling Language (UML) class views define entities, service operations, interfaces and 
+relationships. GR-CL-01 A–D combines the five local models; BA::/CS::/MC::/AP::/CO:: qualify same-
+named types. Multiplicities constrain links. Composition denotes exclusive ownership and shared 
+model lifetime; retained history uses associations without prescribing database deletion. 
+
+
+=== Original PDF page 28 ===
+27 
+ 
+Figure 19  CO-CL-01B  Coordination facade and proposed role, repository, review and recovery contracts. 
+8.2 Responsibilities and shared contracts 
+CompanyWorkflow has exactly one ba, cs, mc, co, approval and review part. BA/CS/MC are business 
+roles; CoordinationService and ReviewGateway are proposed integration facades. Local signatures 
+retain their distinct meanings; a shared provider may realise several adapters without making those 
+interfaces identical. 
+Role Receiver operations and result meaning 
+BA 
+BeautyAdvisorService submit/revise/cancel/acceptReview; CataloguePort.search(context); 
+InventoryPort.check(productIds); LlmPort.propose(context,evidence); ReviewPort.request(context); 
+ConsultationRepository.save(session). Proposal is validated, stock UNKNOWN is not available, 
+receipt is not approval. 
+CS 
+CustomerServiceAgent submitRequest/confirmResolution/reviewDecision; OrderPolicyPort 
+verifyOrder/getPolicyEvidence; InventoryPort.checkAvailability; LlmPort.classifyIntent; 
+AfterSalesPort.executeResolution(requestId,actionRef,action)/lookupOutcome(actionRef); 
+OutcomeRepository.saveActionIntent/saveOutcome. NotificationPort is optional. 
+MC 
+MarketingContentService submitCampaign/requestRevision/submitForReview/acceptDecision; 
+CataloguePort.getProductEvidence; LlmPort.generateScript; MediaGenerationPort.generate; 
+ReviewPort.requestReview/lookup; MarketingRepository.saveCampaign/saveDraft/saveDecision. 
+These proposed adapter contracts do not establish provider API capabilities. 
+AP 
+FounderApprovalService.receiveRequest/processDecision/getDecision; 
+AuditLogService.appendDecision/query; NotificationService alerts Founder; 
+DecisionDeliveryPort.notifyRecordedDecision. Commit decision/request/audit before event 
+delivery; failed commit grants no authority. 
+CO 
+CoordinationService.handoff/recordResult/reconcile; 
+AI_Business_Role.canReceive/execute/lookupOutcome; 
+CoordinationRepository.saveIntent/saveOutcome/saveFailure; 
+RecoveryPolicy.retryAllowed/chooseRecovery. Role adapters preserve business-level checks and 
+action-reference correlation. 
+ 
+
+
+=== Original PDF page 29 ===
+28 
+Integration value Fields or outcomes 
+ReviewSubmission Origin role and originId; exact proposedAction; contextRevision; minimal 
+authorisedContext/evidenceRefs; actionRef when applicable. 
+ReviewReceipt accepted plus persisted requestId, or explicit failureReason. Accepted 
+establishes a submitted request only. 
+RecordedDecisionEnvelope AP requestId, originId, decisionId, DecisionKind, contextRevision and optional 
+actionRef; retained mapping includes MC draftId/revision or CO/CS origin. 
+DecisionKind APPROVE | REJECT | REQUEST_REVISION. PENDING is request state, not 
+a committed decision. 
+DecisionLookupResult pending, committed(envelope), missing, unavailable or invalid. AP getDecision 
+and ReviewGateway.lookup return this type; querying creates no approval. 
+RecordResult / SaveResult RecordResult: committed | invalid | recordingFailure. SaveResult: saved | 
+invalid | recordingFailure. A committed failed business result is still failure. 
+HandoffReceipt / 
+DeliveryReceipt 
+acknowledged | unavailable. Neither means completed execution. Role 
+canReceive additionally exposes invalid/unauthorised inputs. 
+ExecutionResult / 
+LookupResult 
+confirmed(result), notExecuted or stillUnknown/unknown. A confirmed result 
+explicitly distinguishes successful and failed work; lookup performs no 
+execution. 
+MC generator results 
+EvidenceResult returns authorised references/facts or 
+missing/unavailable/invalid. ScriptResult returns proposed script/storyboard or 
+failure. MediaResult distinguishes real success, labelled permitted mock and 
+failure. 
+RecoveryPolicy results 
+PolicyResult explicitly permits or blocks bounded retry; RecoveryResult 
+chooses clarification, read-only reconciliation, storage recovery, escalation or 
+safe cancellation. No numeric retry/expiry threshold is implied. 
+CS action identity ActionRef is a String alias for correlated action identity. confirmedAction 
+retains the selected action reference; review and execution records retain the 
+same identity. 
+ 
+8.2.1 Role adapter mappings 
+CS::ReviewPort.requestReview maps its exact request/action/revision into ReviewSubmission and 
+retains the AP requestId as its reviewId correlation. Committed 
+APPROVE/REJECT/REQUEST_REVISION map to CS 
+APPROVED/REJECTED/REVISION_REQUESTED only after scope validation. CS independently 
+rechecks order/policy, stock and Customer confirmation, then persists action intent before its own 
+after-sales execution. 
+BA::ReviewPort.request retains the session and context revision. The adapter invokes 
+BeautyAdvisorService.acceptReview(envelope), validating origin/session/context revision and 
+decisionId. Current APPROVE resumes ACTIVE evidence validation, REJECT records 
+INCOMPLETE, and REQUEST_REVISION requires correction. Failed recording is exposed; absent, 
+stale or duplicate results grant no authority. The callback never jumps directly to COMPLETED. The 
+existing BA CataloguePort, InventoryPort and LlmPort signatures remain unchanged. 
+MC::ReviewPort.requestReview maps campaign/draftId and exact revision to AP submission. The 
+adapter retains origin-to-AP mapping and invokes acceptDecision only for committed correlated 
+envelopes. MC saves ReviewDecision as a local view before APPROVED. New/revised variants get 
+fresh review; stale approval is retained historically but cannot cover new content. 
+CO ApprovalReference history observes authoritative AP requests/decisions. Current approval 
+resumes target/context/authority checks, never direct completion. CO::ReviewGateway is the local 
+contract implemented by the group ReviewGateway facade. AI_Business_Role adapters preserve 
+
+=== Original PDF page 30 ===
+29 
+BA/CS/MC checks and CO-to-role request/actionRef correlation; CO gains no settlement/publication 
+access. 
+ReviewGateway.submit invokes AP receiveRequest; lookup forwards AP getDecision as 
+DecisionLookupResult. routeRecordedDecision validates origin/revision mapping and delivers 
+committed envelopes only. Stale/mismatched/duplicate decisionId grants no authority or repeated 
+dispatch; AP retains authoritative decisions. 
+8.2.2 State and value vocabularies 
+Type Declared values and invariants 
+BA ConsultationStatus 
+ACTIVE, CLARIFYING, REVIEW_PENDING, COMPLETED, INCOMPLETE, 
+CANCELLED. Inventory AvailabilityStatus: AVAILABLE, UNAVAILABLE, 
+UNKNOWN. 
+CS RequestState 
+CS-STM-01 A/B define one lifecycle covering assessment, clarification, 
+confirmation/review, execution, recording and reconciliation. RequestState = 
+ASSESSING, NEEDS_INFORMATION, AWAITING_CONFIRMATION, 
+REVIEW_REQUESTED, REVIEW_PENDING, EXECUTING, RECONCILING, 
+RECORDING, RECORDING_FAILED, RESOLVED, UNRESOLVED, REJECTED, 
+CANCELLED. CS ReviewDecision tracks PENDING, APPROVED, REJECTED or 
+REVISION_REQUESTED; PENDING has no committed AP decision. The adapter 
+maps committed DecisionKind values separately. 
+MC DraftStatus 
+DRAFTING, VALIDATING, GENERATING, REVIEW_PENDING, 
+REVISION_REQUIRED, CONTENT_REJECTED, GENERATION_FAILED, 
+INCOMPLETE, RECORDING_FAILED, APPROVED, REJECTED, CANCELLED, 
+SUPERSEDED. MarketingCampaign.status is a string projection of the current 
+owned workflow, not an independent approval. 
+AP ApprovalStatus 
+PENDING, RECORDING, RECORDING_FAILED, APPROVED, REJECTED, 
+REVISION_REQUESTED, CANCELLED, EXPIRED, SUPERSEDED. One request 
+has at most one committed decision; changed scope creates a linked new request. 
+CO WorkflowStatus 
+PENDING_VALIDATION, CLARIFICATION_REQUIRED, 
+AWAITING_APPROVAL, HANDOFF_SENT, EXECUTING, COMPLETED, 
+FAILED, RETRYING, RECONCILING, RECORDING_FAILED, ESCALATED, 
+CANCELLED. RETRYING, RECONCILING and RECORDING_FAILED distinguish 
+execution retry, outcome lookup and storage recovery. 
+CO record values 
+RequestType: CONSULTATION, ORDER_SUPPORT, MARKETING_CONTENT, 
+OTHER. HandOffStatus: PENDING, SENT, ACKNOWLEDGED, EXECUTING, 
+COMPLETED, FAILED. FailureType: VALIDATION_ERROR, 
+ROLE_UNAVAILABLE, SERVICE_FAILURE, APPROVAL_UNAVAILABLE, 
+UNCERTAIN_OUTCOME, OTHER. FailureStatus: RECORDED, RESOLVED, 
+OPEN; RetryResult: SUCCESS, FAILED, UNKNOWN; EscalationStatus: OPEN, 
+RESOLVED; RoleStatus: AVAILABLE, UNAVAILABLE, UNKNOWN. 
+CO links and optionality 
+Each FailureRecord may link zero/one HandOffRecord, and may have zero/more 
+RetryRecords; each RetryRecord refers to one FailureRecord. RetryRecord may 
+link zero/one EscalationRecord. EscalationReason includes 
+APPROVAL_REQUIRED, RETRY_EXHAUSTED, UNCERTAIN_EXECUTION, 
+ROLE_UNAVAILABLE, SERVICE_FAILURE, OTHER. Retry records exist only if 
+selected/attempted; unresolved escalation is resumable. 
+ 
+9 Complex Structure Modelling 
+9.1 Runtime object snapshots 
+Object diagrams instantiate the class models with underlined names, typed slots and links at defined 
+synthetic instants. BA-OBJ-01 precedes GR-OBJ-01; the other snapshots show their respective 
+scenarios. Communication and sequence views specify message order. 
+
+=== Original PDF page 55 ===
+54 
+11 Supporting Components 
+Supporting component Purpose and future implementation boundary 
+Product Catalogue and 
+Inventory Services 
+Read authorised facts and availability/version/observation evidence. Shared 
+providers implement distinct role-local adapters; UNKNOWN never 
+becomes available. 
+Customer/profile and 
+identity/order services 
+Supply only authorised minimal context. CS verifies Customer/order 
+association before protected disclosure; BA does not infer credentials or 
+unrelated profile fields. 
+After-sales and order adapters 
+Execute only scoped PoC actions and provide actionRef outcome lookup. 
+Real settlement/physical completion is separate from acknowledgement or 
+simulated processing. 
+LLM Gateway 
+Bounded need/intent interpretation, explanations and script/storyboard 
+proposals. Validate schema/facts and handle failure; tool results do not 
+grant additional rights. 
+Media Generation Adapter 
+Real or labelled controlled mock image/speech/video generation. Reports 
+result reference, simulation flag and failure; provider 
+technology/cost/performance remain open. 
+Founder Approval Service and 
+ReviewGateway 
+AP authoritative requests/decisions/audit; gateway origin/revision mapping 
+and recorded delivery/lookup. Authentication and exact-scope checks 
+surround access. 
+Repositories and audit 
+Retain request/context/source revisions, intent/actionRef, actual result and 
+decision evidence. Storage-only retry is separate from execution. AP atomic 
+commit is a proposed implementation obligation. 
+Notification and recovery policy 
+Queue/status delivery exposes failures without reversing committed 
+outcomes. Retry/expiry/freshness values are explicit fixture configuration; 
+optional automation does not replace safe manual recovery. 
+ 
+12 Lifecycle and Optional Views 
+Requirements/acceptance criteria drive feature/use-case, structure/runtime and behaviour models. 
+Iteration remains subject to review against an identified approved requirement revision. 
+Implementation adds adapters, persisted correlation and observable tests before 
+demonstration/acceptance. Stage 1 models and planned cases do not prove implementation. 
+Package/deployment diagrams are not selected optional outputs. Sections 7/11 explain development 
+boundaries; GR-CMP-01 shows interconnections. Future deployment must use agreed hosting, 
+access and provider constraints. 
+13 Traceability and Acceptance 
+13.1 End to end traceability 
+Chain Feature and use case path Structure behaviour and planned acceptance 
+BA-M-01 
+BA-FR-01 -> BA-F-01 -> BA-UC-01 
+intake/clarification; BA-FR-02/03/04 -> BA-
+F-02 evidence/validation/failures; BA-O-01 
+-> optional BA-F-03. 
+ConsultationSession/Context, 
+Recommendation/evidence and BA service/ports -
+> BA-OBJ/ACT/SEQ/STM -> BA-T-01 through BA-
+T-07. 
+CS-M-01 
+CS-F-01 -> CS-UC-01 verification/eligibility; 
+CS-F-02 -> confirmation, review, 
+execution/recovery; optional CS-F-03 -> 
+notification. 
+AfterSalesRequest, 
+evidence/review/resolution/actionRef -> CS-
+CL/OBJ/CMP and ACT/SEQ/STM -> CS-T-01 
+through CS-T-07. 
+
+=== Original PDF page 56 ===
+55 
+Chain Feature and use case path Structure behaviour and planned acceptance 
+MC-M-01 
+MC-F-01 -> MC-UC-01 steps 1-5; MC-F-02 
+-> steps 6-12 and review/failure; optional 
+MC-F-03 -> fresh variant review. 
+MarketingCampaign/drafts, exact revision, MC 
+ports/local decision view -> MC-CL/OBJ/CMP and 
+ACT/SEQ/STM -> MC-T-01 through MC-T-07. 
+AP-M-01 
+AP-F-01 -> AP-UC-01 submission/risk; AP-
+F-02 -> decision, commit/delivery and 
+failures; optional AP-F-03 -> assisted 
+successor request. 
+ApprovalRequest, ApprovalDecision, AuditRecord 
+and FounderApprovalService -> AP-
+CL/OBJ/ACT/SEQ/STM -> AP-T-01 through AP-T-
+08. 
+CO-M-01 
+CO-FR-01/02 -> CO-F-01 -> CO-UC-01 
+validation/handoff; CO-FR-03/04 -> CO-F-
+02 result/recovery; CO-O-01 -> optional 
+CO-F-03. 
+Work/context/hand-off/failure/retry/escalation, 
+ApprovalReference and role adapters -> CO-
+CL/OBJ/CMP and ACT/SEQ/STM -> CO-T-01 
+through CO-T-08. 
+Group and 
+NFRs 
+GR-C-01 through GR-C-06 and twenty role 
+NFRs govern all five chains. GR-S-01 
+combines existing UCs rather than creating 
+a sixth. 
+GR-RQ/FD/UCD/CL/OBJ/CMP/COL and shared 
+adapter invariants -> GR-T-01 through GR-T-04. 
+Stage 2 adds code, fixture, transcript and 
+execution evidence. 
+ 
+13.2 Change assessment basis 
+Action/context changes affect requirements/use cases, evidence, Customer confirmation, review 
+envelopes and dependent classes/interaction/state guards. Revised MC media/variants need fresh 
+exact-scope review; CO/CS reassess authority and uncertain effects. Preserve history without 
+inheriting permission. 
+Signature/result changes update callers, receivers, adapters and 
+class/composite/communication/sequence views together. Retry changes preserve actionRef lookup 
+and separate execution, storage and delivery. Optional changes cannot create core dependencies; 
+Section 13.3 supplies regression specifications. 
+13.3 Planned acceptance specifications 
+These cases are planned, not executed. Use synthetic/anonymised fixtures, labelled mocks and 
+injected failures; inspect outputs, records and call traces. Formal approval and execution evidence 
+remain separate. 
+13.3.1 BA acceptance cases 
+Case Input and observable expected result 
+BA-T-01 Clarification: Supply a request missing a decision-relevant constraint. Expect a focused 
+question, no guessed value, then re-evaluation after the Customer responds (BA-AC-01). 
+BA-T-02 
+Grounded success: Supply a sufficient request and a matching authorised in-stock product. 
+Expect its ID, availability evidence, linked reason and saved outcome; no order/payment call 
+(BA-AC-02; BA-NFR-01/02). 
+BA-T-03 
+No match and service failures: Repeat with no matching product, unavailable stock, missing 
+stock status, catalogue timeout and inventory error. Expect an explicit incomplete outcome 
+without an available-product claim; retry refreshes evidence (BA-AC-03/06). 
+BA-T-04 
+Unreliable generation: Inject an invented product ID, unsupported product claim, conflicting 
+evidence and malformed/failed LLM response. Expect validation to withhold the output and 
+clarification, review offer or safe stop (BA-AC-04). 
+BA-T-05 
+Scope and review: Submit a diagnosis request; expect no diagnosis. For an unresolved 
+product question, exercise acknowledged review, unavailable review service, pending 
+decision and rejection. No branch invents approval or treats pending review as success (BA-
+AC-05/06). 
+
+=== Original PDF page 57 ===
+56 
+Case Input and observable expected result 
+BA-T-06 
+Optional alternatives: With BA-F-03 enabled, request an alternative to an unavailable 
+preferred item; expect verified availability and explicit differences. With it disabled, expect a 
+safe no-match result or ordinary matching recommendation without dependence on 
+alternatives (BA-O-01). 
+BA-T-07 
+Revision, cancellation and persistence: Revise/cancel while results are pending; old results 
+must not be delivered. Inject repository failure; completion must not be claimed. Inspect 
+LLM/review payloads for unrelated data or credentials (BA-AC-06; BA-NFR-04). 
+ 
+13.3.2 CS acceptance cases 
+Case Input and observable expected result 
+CS-T-01 
+Identity and intake (CS-AC-01): Supply a matching order and then a mismatched 
+identity/order. Expect permitted intake in the first case; no protected disclosure or resolution 
+call in the second. Inspect request and service-call records. 
+CS-T-02 
+Policy evidence (CS-AC-02): Exercise sufficient policy, missing return window and 
+contradictory policy evidence. Expect referenced eligibility only with sufficient evidence; 
+otherwise clarification or escalation without an invented rule. 
+CS-T-03 
+Routine resolution (CS-AC-03): Supply authorised evidence and Customer confirmation. 
+Expect only the permitted service call, a saved confirmed result and remaining steps. An 
+acknowledgement or mock refund must not be described as settled funds. 
+CS-T-04 
+Exchange availability (CS-AC-04): Exercise AVAILABLE, UNAVAILABLE and UNKNOWN 
+service results. Expect no successful-exchange claim for the latter two and no unconfirmed 
+substitute. 
+CS-T-05 
+Human checkpoint (CS-AC-05): Exercise disputed/high-impact cases with acknowledged 
+pending review, approval, rejection, revision request and failed review service. Expect no 
+restricted action without a valid decision; revalidate the proposed action after approval. 
+CS-T-06 
+Failure and reconciliation (CS-AC-06): Inject read failure, post-write timeout and audit failure. 
+Expect an explicit unresolved/recording-failure outcome; inspect that no blind duplicate action 
+occurs and no rollback is invented. 
+CS-T-07 
+Optional notifications (CS-AC-07): Enable and disable the feature; inject missing recipient 
+permission and delivery failure. Expect permitted notifications only, with the core recorded 
+resolution still accessible and unchanged. 
+ 
+13.3.3 MC acceptance cases 
+Case Input and observable expected result 
+MC-T-01 
+Campaign preparation: Supply a clear objective and sufficient authorised product information. 
+Expect saved brief and grounded script/storyboard; inspect claims/source references for 
+traceability (MC-AC-01). 
+MC-T-02 
+Missing/conflicting information: Remove, contradict or leave unsupported required product 
+information. Expect clarification, available authorised retrieval or incomplete outcome; no 
+invented claim (MC-AC-02). 
+MC-T-03 
+Unsupported generation: Inject invented facts, unsupported claims or contradictions. Expect 
+withheld output and revision/regeneration/clarification, never a valid forwarded draft (MC-AC-
+02). 
+MC-T-04 
+Media: Use validated script/storyboard with available, unavailable, failed and timed-out 
+services. Success saves draft media/generation result; failure is explicit. Any permitted 
+mock/fallback is labelled simulated (MC-AC-03/04). 
+
+=== Original PDF page 58 ===
+57 
+Case Input and observable expected result 
+MC-T-05 
+Checks: Inject a failing script, storyboard or media content/quality check. Expect recorded 
+issue and revision, never approval-ready status. Use configured/reviewer-identified criteria; 
+invent no numerical threshold. 
+MC-T-06 
+Review: Exercise valid Founder approval, rejection, revision, pending/missing decision and 
+service failure. Only recorded valid approval establishes approved state; every other outcome 
+remains unapproved for publication (MC-AC-06/07). 
+MC-T-07 
+Variants: With MC-F-03 ON, expect campaign/source traceability and no unsupported claims. 
+The new draft variant needs its own covering Founder approval; no inheritance. With it OFF, 
+MC-F-01/02 remain usable. 
+ 
+13.3.4 AP acceptance cases 
+Case Input and observable expected result 
+AP-T-01 
+Valid submission/risk: Submit a declared restricted action with authorised evidence; expect 
+persisted PENDING request/accepted ID, Founder queue notification and no dispatch. 
+Repeat with missing/unauthorised context and unknown risk; expect explicit 
+blocked/clarification outcome (AP-AC-01; AP-NFR-02). 
+AP-T-02 Pending/invalid decision: Inject absent, rejected, mismatched and unauthorised decisions; 
+expect no restricted execution and truthful distinct states (AP-AC-02; AP-NFR-02). 
+AP-T-03 
+Recorded decision: Authorised Founder decides on current exact scope; expect atomic 
+decision/request/audit commit with actor, reason, IDs and revision before event delivery (AP-
+AC-03; AP-NFR-01). 
+AP-T-04 Revision/stale context: Request revision or alter action/context after decision; expect 
+preserved history and fresh linked review, never inherited approval (AP-AC-04; AP-NFR-02). 
+AP-T-05 Recording failure: Fail decision commit; expect RECORDING_FAILED, no approval 
+event/action and storage-only same-decision retry (AP-AC-05; AP-NFR-03). 
+AP-T-06 
+Delivery recovery: Fail queue/recorded-event delivery; distinguish persisted request from 
+committed decision. Retry same event/lookup; ignore duplicate/stale decision IDs without 
+repeated business execution (AP-AC-06; AP-NFR-03/04). 
+AP-T-07 
+Independent constraints: Record approval, then make stock unavailable, policy ineligible, 
+Customer confirmation absent or execution uncertain; expect the requesting role to 
+block/reconcile, never infer business success (AP-AC-07). 
+AP-T-08 
+Optional OFF: Disable assisted resubmission; expect core 
+APPROVE/REJECT/REQUEST_REVISION and manual fresh corrected request to work. 
+Enable it and verify linked history, fresh approval and identical safety gates (AP-AC-08). 
+ 
+13.3.5 CO acceptance cases 
+Case Input and observable expected result 
+CO-T-01 Valid hand-off: Supply sufficient authorised context. Expect the appropriate receiving role, 
+minimal permitted transfer, saved hand-off/status and a Founder-visible trace (CO-AC-01). 
+CO-T-02 Invalid context: Remove/invalidate decision-relevant fields. Expect clarification or safe 
+incomplete record, with no silent inference or completed hand-off claim (CO-AC-02). 
+CO-T-03 Unavailable role: Expect recorded failed/unavailable hand-off and applicable 
+recovery/escalation/cancellation, never COMPLETED (CO-AC-03). 
+CO-T-04 Tool failure: Inject timeout, service unavailability and failed tool results. Expect recorded 
+visible failure/uncertainty; dependent work cannot complete (CO-AC-04). 
+
+=== Original PDF page 59 ===
+58 
+Case Input and observable expected result 
+CO-T-05 
+Automatic retry: With CO-F-03 ON, inject eligible failure; expect controlled retry and saved 
+state/attempt. With it OFF, core escalation/safe cancellation remain usable (CO-AC-05; CO-
+O-01). 
+CO-T-06 Exhaustion/uncertainty: Exhausted retry escalates to Founder or safely cancels. Unknown 
+prior execution must be reconciled before duplicative retry or COMPLETED (CO-AC-05/07). 
+CO-T-07 
+Review boundary: Exercise approved, pending, rejected and unavailable review. Restricted 
+action proceeds only with recorded valid approval; all other outcomes grant no authority (CO-
+AC-06). 
+CO-T-08 Recording: Fail persistence/audit of required workflow evidence. Expect visible recording 
+failure and no fully traceable completion claim (CO-UC-01 E6; CO-NFR-01/03). 
+ 
+13.3.6 GR acceptance cases 
+Case Input and observable expected result 
+GR-T-01 Coverage: Verify five owned chains, three business services, five primary UC specifications 
+and 15 features; disabling all five optional features preserves mandatory safe outcomes. 
+GR-T-02 
+Correlation: Walk GR-S-01 across CS, CO, BA and AP using synthetic IDs; prove hand-off 
+receipt, completed recommendation, pending AP review and CS business result remain 
+distinct. 
+GR-T-03 
+Failure boundaries: Inject review commit/delivery and after-sales uncertain-execution failures; 
+require no action on uncommitted approval, same-event redelivery and actionRef lookup 
+before any repeat. 
+GR-T-04 
+Structural/runtime consistency: Type each composite/object participant against GR-CL-01 or 
+preserved local class model; check each communication/sequence receiver and adapter 
+map; reject stale scope and duplicated business dispatch. Verify the MC/CO local contracts 
+and state vocabularies against their use cases and current group adapters. 
+ 
+The traceability table and planned cases link requirement coverage to structure, behaviour and 
+observable outcomes. Stage 2 supplies implementation and execution evidence; Section 15 records 
+the contribution evidence boundary. 
+14 Assumptions Risks and Open Decisions 
+Open decision or risk Safe design treatment and evidence gap 
+Requirement approval and tutor 
+interpretation 
+The design is proposed. CS review covers the modelling basis only; 
+requirements approval and review by all affected module owners remain 
+unconfirmed. Tutor clarification of requirement-view notation is pending. 
+Shared schema/provider 
+capability 
+This report specifies proposed adapter operations/results. External 
+atomicity, lookup, idempotency and availability must be verified or supplied 
+by explicit controlled mocks. 
+Order policy, risk thresholds 
+and expiry 
+No real return window, monetary threshold, risk rule or validity period is 
+invented. Declared fixtures control the PoC; missing/unknown policy blocks 
+restricted action. 
+Stock freshness and evidence 
+quality 
+Record authorised references/observations and recheck before action; 
+absence/conflict prevents supported success. Freshness duration needs 
+agreement. 
+LLM claims and media 
+quality/provider 
+Validate factual claims and agreed criteria, label mocks and expose failure. 
+Provider cost/performance and any quantitative quality threshold are open. 
+
+=== Original PDF page 60 ===
+59 
+Open decision or risk Safe design treatment and evidence gap 
+Privacy, retention and 
+production security 
+Minimum authorised context and role checks apply. Deployment access-
+control policy, retention duration and production assurance need separate 
+evidence. 
+Unknown effects and 
+recording/delivery failure 
+Persist correlated intent before dispatch; reconcile uncertainty; 
+storage/delivery retry does not repeat business work. Escalation remains 
+resumable; cancellation cannot imply rollback. 
+Independent contribution and 
+ownership 
+Module responsibilities are summarised in Section 15. Independent 
+completion, attribution details and participation in all group tasks remain 
+subject to member confirmation. 
+Presentation/interview and 
+Stage 2 
+The presentation is limited to eight minutes. Presentation and interview 
+readiness, prototype implementation and executed test results require 
+separate evidence. 
+ 
+15 Contributions and Evidence 
+15.1 Member contributions 
+Member Module responsibility and source contribution 
+Danyang Wang 
+[STUDENT_ID_REDACTED] 
+BA (Beauty Advisor): requirements, core/optional features and consultation use 
+case; architecture, class/object and behaviour models, with acceptance 
+specifications and traceability. 
+Siyuan Lei [STUDENT_ID_REDACTED] 
+CS (Customer Service and Order): requirements, features and after-sales use 
+case; architecture, structural/runtime and behaviour drafts, with non-functional 
+requirements, supporting components and acceptance specifications. 
+Zhengdu Wei [STUDENT_ID_REDACTED] 
+MC (Marketing Content): requirements, features and promotional-content use 
+case; architecture, structural/runtime and behaviour models, with supporting 
+components, traceability and acceptance specifications. 
+Jiaxuan Ren [STUDENT_ID_REDACTED] 
+AP (Approval and Governance): requirements, approval-routing and 
+decision/audit features; use-case concepts and architecture, class/object and 
+behaviour descriptions used in the integrated approval module. 
+Guiyu Liu [STUDENT_ID_REDACTED] 
+CO (Coordination and Recovery): requirements, features and 
+coordination/recovery use case; architecture, structural/runtime and behaviour 
+material, with supporting components, traceability and planned acceptance 
+scenarios. 
+ 
+Danyang Wang handled report integration and consistency revisions; model sources are recorded in 
+Appendix A. 
+15.2 Group-model contribution basis 
+Group model Attributed input used in the integrated model 
+GR-RQ / GR-FD Five requirement/feature chains: BA Danyang, CS Siyuan, MC Zhengdu, AP 
+Jiaxuan source text and CO Guiyu. 
+GR-UCD Five member use-case inputs; AP specification completed during 
+integration. 
+GR-CL BA/CS, MC and CO/AP structure inputs with shared adapters. Appendix A 
+records source attribution and local revisions. 
+GR-OBJ / GR-CMP / GR-COL BA consultation, CS after-sales, CO hand-off and AP review inputs; MC in 
+the overall part model. Figures assembled during integration. 

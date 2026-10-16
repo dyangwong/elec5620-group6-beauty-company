@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+!.env.example
+.DS_Store
+var/
+output/
+*.db
+*.db-*
+*.sqlite*
+*.log
+*.pem
+*.p12
+*.key
+node_modules/
+coverage/
+
+# Unredacted local source evidence must never enter a public repository.
+docs/reference/stage1-final-report.pdf

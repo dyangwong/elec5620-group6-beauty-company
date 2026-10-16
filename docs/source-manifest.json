@@ -1,0 +1,112 @@
+{
+  "prepared": "2026-10-16",
+  "authority": "Final local Stage 1 report plus official Stage 2 rubric; Drive and legacy prototype are not requirements authority.",
+  "sources": [
+    {
+      "id": "stage1",
+      "original_file": "02 Stage 1 Report/ELEC5620 Group 6 Stage 1 Report.pdf",
+      "original_sha256": "b4c2030ca6f6c9f2605ba8f3711e70799a3e9d98acf676783b3ad36e3c8aaffa",
+      "original_page_count": 63,
+      "included_pdf_pages": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        28,
+        29,
+        30,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60
+      ],
+      "excerpt_file": "docs/reference/stage1-baseline.txt",
+      "excerpt_sha256": "ee4c3ace0fb2c4438b480ecd80c581e42ace4c6fede987e6843b79af79da4426",
+      "reference_pdf": "docs/reference/stage1-report-public.pdf",
+      "reference_pdf_sha256": "444817e65449ac1d894e050314e7037e62596f072dfa78cc93df6f33b58b2779",
+      "reference_kind": "privacy_redacted",
+      "derived_from_sha256": "b4c2030ca6f6c9f2605ba8f3711e70799a3e9d98acf676783b3ad36e3c8aaffa",
+      "redacted_fields": [
+        "student_ids",
+        "pdf_metadata"
+      ],
+      "redaction_log": [
+        {
+          "pdf_page": 1,
+          "student_id_occurrences": 5
+        },
+        {
+          "pdf_page": 3,
+          "student_id_occurrences": 5
+        },
+        {
+          "pdf_page": 7,
+          "student_id_occurrences": 2
+        },
+        {
+          "pdf_page": 8,
+          "student_id_occurrences": 2
+        },
+        {
+          "pdf_page": 9,
+          "student_id_occurrences": 1
+        },
+        {
+          "pdf_page": 13,
+          "student_id_occurrences": 1
+        },
+        {
+          "pdf_page": 15,
+          "student_id_occurrences": 1
+        },
+        {
+          "pdf_page": 16,
+          "student_id_occurrences": 1
+        },
+        {
+          "pdf_page": 17,
+          "student_id_occurrences": 1
+        },
+        {
+          "pdf_page": 18,
+          "student_id_occurrences": 1
+        },
+        {
+          "pdf_page": 60,
+          "student_id_occurrences": 5
+        }
+      ],
+      "excerpt_kind": "privacy_redacted"
+    },
+    {
+      "id": "stage2",
+      "original_file": "03 Project Documents/ELEC5620 Project Stage 2 Marking Criteria.pdf",
+      "original_sha256": "21b40026f135debeac05c411440bdb2710ba00616198f6106d0aaf748e8083ea",
+      "original_page_count": 2,
+      "included_pdf_pages": [
+        1,
+        2
+      ],
+      "excerpt_file": "docs/reference/stage2-rubric.txt",
+      "excerpt_sha256": "51aacf3753d0cef527ccf33de8f41b1d96f80ecc03f45cf8f916788d49e5a7b0"
+    }
+  ],
+  "handoff_prepared": "2026-10-16",
+  "public_reference_prepared": "2026-10-16"
+}

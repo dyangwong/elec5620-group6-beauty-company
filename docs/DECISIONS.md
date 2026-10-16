@@ -1,0 +1,53 @@
+# Provisional implementation decisions
+
+English is the maintained primary version. [中文阅读副本](zh-CN/DECISIONS.md).
+
+16 October 2026. Local implementation was authorised by Danny. These technical
+choices do not assert team/tutor approval of the original PROPOSED design.
+
+| Decision | Rationale and limit |
+|---|---|
+| New isolated project; legacy reference only | Keeps credentials/data and unrelated commercial scope outside the repository. No legacy files were copied. |
+| One modular application, one local database | Keeps the five chain boundaries while reducing initial integration/setup cost. Logical modules are not five deployable microservices. |
+| Buildless HTML/CSS/JS and Python standard library | Existing Python 3.9 can run offline immediately, without installing dependencies. This is an initial local delivery choice, not a claim to the advanced-technology marks. Framework migration stays open. |
+| Browser Customer/Founder workspaces | Makes human review and cross-role evidence visible. Stage 1 leaves physical hosting open; WeChat-specific delivery is not implemented. Team acceptance is pending. |
+| Server-side demo sessions and ownership guards | Avoids legacy client-supplied user/administrator identity. Shared local passwords and loopback HTTP are not production identity. |
+| Deterministic mock model/media/commerce adapters | Permits reproducible initial wiring and failure injection. Does not establish live LLM/agent capabilities or a video-generation result. |
+| Separate commit for AP decision versus delivery | Failed delivery cannot erase a committed decision; duplicate delivery does not execute business work. |
+| Separate commit for simulated external effect versus CS outcome | Exercises write-timeout/storage-recovery boundaries. Real external-service semantics remain unverified. |
+| Optional features not implemented/OFF | Initial focus is core integration/safety. All five optional IDs remain tracked; they have not been removed from scope. |
+| Stage 1 ownership is the default onboarding map | Danny requested that members continue their Stage 1 parts. Five member-specific starter briefs are prepared; no individual claim/acceptance or completion is inferred. |
+| Public privacy derivative of the complete report | Supersedes the original byte-identical packaging choice for public publication. All 63 pages/models remain; student IDs and PDF metadata are removed. Original PDF stays unchanged locally/ignored. Original and derivative hashes are recorded separately. |
+| Defer real/local model setup | Danny asked not to rush that work. Starter tasks use deterministic injected fixtures; no model download, provider choice, key or hardware setup is required. |
+
+English is the maintained documentation primary at Danny's request. Root
+`*.zh-CN.md` and `docs/zh-CN/` provide corresponding Chinese reading copies;
+update both together. IDs, task/status data and original evidence remain shared.
+
+## Decisions still needing the team or additional evidence
+
+- Adoption/revision of the final Stage 1 baseline and acceptance of affected owners.
+- Individual acceptance/claims of the default Stage 1 ownership map, actual GitHub
+  accounts, Jira setup, tool-specific instruction loading and GitHub audience.
+- Whether to retain this initial web stack, add a frontend/backend framework, or
+  retain WeChat delivery. Record costs to existing APIs/models before migration.
+- Live LLM provider, tools, funding/keys and guard/claim-validation approach.
+- Actual video/media approach and permitted labelled fallback; storyboard cards
+  alone must not be reported as a completed generated-video feature.
+- Explicit PoC policy/risk/freshness/expiry/quality criteria and their approval.
+- Production identity/retention and any hosted demo; neither is in initial scope.
+- Remaining requirements, all optional ON behaviour, complete acceptance, genuine
+  Agile evidence and clean Canvas package/on-site deployment rehearsal.
+
+No policy return window, confidence cutoff, monetary risk threshold or review expiry
+has been inferred from the old prototype. Catalogue values and eligibility are
+synthetic fixture inputs.
+
+## Public Git collaboration · 16 October 2026
+
+Danny explicitly requested a public GitHub repository without Pro and a relaxed
+review policy. Require PRs and passing CI for main, with zero mandatory outside
+approvals; authors can self-check and merge. Shared contract/schema/authority
+changes should seek relevant teammate review. Do not infer a review from a
+self-merge. No open-source licence is assigned merely by making the repo public.
+Original student identifiers and local credentials/runtime data are excluded.
