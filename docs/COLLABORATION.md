@@ -3,8 +3,9 @@
 English is the maintained primary version. [中文阅读副本](zh-CN/COLLABORATION.md).
 
 Prepared for onboarding at Danny's request, using the Stage 1 ownership map. This
-is not evidence all members have adopted it. No Jira project, remote repository,
-issue, review, sprint or human contribution was created here. START_HERE.md,
+is not evidence all members have adopted it. The public GitHub baseline and
+protected main are now live; Jira, teammate invitations and actual member work
+remain unestablished. START_HERE.md,
 team.json, tasks.json, task briefs and SHARED_FILES.md define the entry process.
 
 ## Trace one unit of work
@@ -25,7 +26,8 @@ silently claim their work. The starter helper only prepares a local packet.
 The maintainer publishes one common initial commit before teammates clone. A
 downloaded source folder and a local repository with no HEAD are not a common
 branch baseline. Check branch and dirty state, preserve unrelated work and use
-the selected task branch. No initial commit or remote was made by onboarding.
+the selected task branch. The common initial commit has now been published;
+earlier onboarding preparation did not itself publish it.
 
 If Jira is not connected, an authorised person may claim/update it manually.
 Until shared tracking exists, member-local work may proceed on isolated task

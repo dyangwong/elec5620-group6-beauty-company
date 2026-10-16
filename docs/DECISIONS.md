@@ -28,7 +28,8 @@ update both together. IDs, task/status data and original evidence remain shared.
 
 - Adoption/revision of the final Stage 1 baseline and acceptance of affected owners.
 - Individual acceptance/claims of the default Stage 1 ownership map, actual GitHub
-  accounts, Jira setup, tool-specific instruction loading and GitHub audience.
+  accounts, Jira setup and tool-specific instruction loading. Public GitHub
+  visibility was subsequently selected by Danny.
 - Whether to retain this initial web stack, add a frontend/backend framework, or
   retain WeChat delivery. Record costs to existing APIs/models before migration.
 - Live LLM provider, tools, funding/keys and guard/claim-validation approach.

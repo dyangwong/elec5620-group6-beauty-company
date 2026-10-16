@@ -84,8 +84,12 @@ python3 scripts/start_work.py --list
 
 Tests use temporary databases, never the running demo data. They cover selected
 conditions from Stage 1, not all 41 case groups. Read `docs/traceability.csv` for
-partial coverage and remaining conditions. CI configuration is prepared; it has
-not run on GitHub and no GitHub repository/remote has been created by this setup.
+partial coverage and remaining conditions. The public
+[GitHub repository](https://github.com/dyangwong/elec5620-group6-beauty-company)
+is live. The [initial GitHub CI run](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/38865450983)
+passed on Python 3.9 and 3.13, including all 37 tests, provenance checks and JS
+syntax. Main requires PRs and passing checks; authors may self-merge without an
+external approval. Team invitations await verified usernames; Jira is not set up.
 
 ## Start here when contributing
 

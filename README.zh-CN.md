@@ -67,7 +67,9 @@ python3 scripts/start_work.py --list
 ```
 
 测试使用临时数据库，不触碰运行中的演示数据。只覆盖部分 Stage 1 条件，未完成全部 41 组。
-以 `docs/traceability.csv` 了解覆盖缺口。CI 配置已准备，尚未在 GitHub 执行；未建立远端仓库。
+以 `docs/traceability.csv` 了解覆盖缺口。[公开仓库](https://github.com/dyangwong/elec5620-group6-beauty-company)已建立，
+[首次 CI](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/38865450983)在 Python 3.9/3.13 均通过 37 项测试、来源检查和 JS 语法检查。
+main 必须 PR/检查，作者可自行合并，不强制外部批准。队友邀请待核实用户名，Jira 未建立。
 
 ## 阅读目录
 

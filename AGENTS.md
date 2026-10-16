@@ -100,6 +100,7 @@ Follow `docs/GIT_WORKFLOW.md`: use a task branch and a PR to main; required chec
 must pass. The author may self-check and merge their own PR, with zero mandatory
 external approvals. This is not a self-Approve review. Seek a relevant teammate's
 review for shared contracts/schema/authority changes, but do not claim it happened.
-Never push directly, force-push or delete main. Do not enable automatic agent merges
-unless the human explicitly authorises merging the concrete PR. Protect the local
+Never push directly, force-push or delete main. Repository writes and PR merges
+follow the current human task authorisation; a local feature task does not by
+itself authorise external publication or merging. Protect the local
 unredacted report; never add ignored files with git add -f.

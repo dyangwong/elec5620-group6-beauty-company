@@ -1,0 +1,28 @@
+{
+  "verified_date": "2026-10-16",
+  "repository": "dyangwong/elec5620-group6-beauty-company",
+  "url": "https://github.com/dyangwong/elec5620-group6-beauty-company",
+  "visibility": "public",
+  "default_branch": "main",
+  "initial_commit": "570ebc3adc948ff54523920cb93b5092a2013956",
+  "initial_ci_run": 38865450983,
+  "initial_ci_conclusion": "success",
+  "required_checks": [
+    "Python 3.9 checks",
+    "Python 3.13 checks"
+  ],
+  "protection_readback": {
+    "pull_request_required": true,
+    "required_external_approvals": 0,
+    "strict_status_checks": true,
+    "enforce_admins": true,
+    "allow_force_pushes": false,
+    "allow_deletions": false,
+    "conversation_resolution": true,
+    "linear_history": true,
+    "squash_only": true
+  },
+  "teammate_invitations": "NOT_SENT_AWAITING_VERIFIED_USERNAMES",
+  "jira": "NOT_CREATED",
+  "real_model": "DEFERRED"
+}

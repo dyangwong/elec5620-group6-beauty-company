@@ -100,3 +100,22 @@ GitHub repository, invitation, Jira task or source publication was performed.
   A committed payload alone does not prove GitHub settings have been activated.
 - Live GitHub publication, CI and protection results are recorded separately
   after execution. Jira, real-model deployment and starter-task claims are unchanged.
+
+## Executed GitHub publication · 16 October 2026
+
+- Published public `dyangwong/elec5620-group6-beauty-company`, initial commit
+  `570ebc3adc948ff54523920cb93b5092a2013956` with 84 source files. Unredacted original,
+  runtime data, previews and credentials are not in that commit.
+- [Initial CI run](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/38865450983)
+  succeeded on Python 3.9 and 3.13: 37 tests, provenance/41-case tracking and JS syntax.
+- Applied main protection and read it back through GitHub: PR required, zero outside
+  approvals, both observed check names from github-actions, current-main checks,
+  conversation resolution, admins included, no force push/deletion, linear history.
+  Repository allows squash only and deletes merged task branches.
+- Independently extracted the public source archive without the original course
+  folder: source checks, all 37 tests and the CS member entry passed. Neither the
+  private original nor ignored runtime/previews were present in that archive.
+- The publication handoff update uses a PR after protection was activated; its
+  actual check/merge outcome is recorded in GitHub rather than invented here.
+- No Jira setup, starter claim, real model or teammate invitation was performed;
+  invitation recipients still need verified GitHub usernames.
