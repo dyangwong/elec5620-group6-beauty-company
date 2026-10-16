@@ -68,3 +68,15 @@ GitHub 仓库/邀请、Jira 任务、源码发布。
 - 已准备 main 保护配置与对应 CI 名：必须 PR、检查通过后可自行合并，0 个外部强制批准。
   提交配置文件本身不代表已启用 GitHub 设置。
 - 实际发布、CI、规则结果在执行后另记。Jira、真实模型、首批认领未变。
+
+## 实际 GitHub 发布 · 2026-10-16
+
+- 已发布公开 `dyangwong/elec5620-group6-beauty-company`，初始提交
+  `570ebc3adc948ff54523920cb93b5092a2013956`，84 个源码文件，不含未脱敏原件、运行数据、预览、凭据。
+- [首次 CI](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/38865450983)
+  在 Python 3.9/3.13 成功：37 项测试、来源/41 组追踪、JS 语法。
+- 已应用并经 GitHub API 读回 main 保护：必须 PR，0 个外部批准，两项实际 github-actions 检查、
+  更新到 main、讨论处理、管理员也遵守、禁强推/删除、线性历史；仅 squash，合并后删任务分支。
+- 公开源码包独立解压，不用原课程目录仍通过来源检查、37 项测试、CS 身份入口；不含原件/运行数据/预览。
+- 保护启用后的发布交接走 PR，实际检查/合并结果保存在 GitHub，不在此编造。
+- 未做 Jira、首批认领、真实模型或队友邀请，邀请待核实 GitHub 用户名。

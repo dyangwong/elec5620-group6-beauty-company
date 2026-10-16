@@ -40,8 +40,8 @@ configuration, but committing it alone does not activate protection.
 7. The author may inspect the final diff and **Squash and merge their own PR**.
    No outside approval is mandatory. GitHub does not permit self-Approve reviews;
    self-checking and self-merging must not be recorded as another person's review.
-   A coding agent prepares code/PRs; merging a concrete PR still needs the human's
-   explicit instruction. After merging, update main and delete the finished branch.
+   A coding agent follows the human's current task authorisation; an ordinary
+   local implementation task does not itself authorise remote publication/merging. After merging, update main and delete the finished branch.
 
 ## main protection
 

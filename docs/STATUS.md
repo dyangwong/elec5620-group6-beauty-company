@@ -28,12 +28,14 @@ Created 16 October 2026. Initial local foundation, not a final submission.
 - Report-grounded five-member map, one scoped READY/UNCLAIMED starter per member,
   per-task acceptance/source/model references and shared-file boundaries.
 - Read-only task packet helper; optional ignored local profile, no shared claim.
-- Byte-identical complete final Stage 1 PDF, including models missing from excerpts.
+- Complete privacy-redacted Stage 1 PDF, including models missing from excerpts;
+  unredacted original unchanged locally/ignored, with distinct source/reference hashes.
 - Remaining core/optional features and shared integration work kept in BACKLOG.
 
-No starter implementation was executed as part of this onboarding update. All five
-remain unclaimed; no member endorsement, real-model setup, initial Git commit,
-GitHub/Jira write or human contribution percentage has been established.
+No starter implementation was executed as part of onboarding/publication. All five
+remain unclaimed; no member endorsement, real-model setup, Jira claim or human
+contribution percentage is inferred. A shared initial commit and public GitHub
+repository have now been published; see the collaboration status below.
 
 ## Not implemented or not yet established
 
@@ -53,8 +55,9 @@ GitHub/Jira write or human contribution percentage has been established.
 - Production security, retention rules, rate limiting, TLS or public deployment.
 - Full 41-case acceptance, full UML implementation audit and clean-machine/Canvas
   rehearsal. See the traceability file rather than inferring full case completion.
-- Jira project/history, GitHub remote/PR/CI execution, team approval, human work
-  attribution or contribution percentages. No external write was performed.
+- Jira project/history, completed teammate invitations, team approval, human work
+  attribution or contribution percentages. GitHub publication is recorded separately;
+  it does not establish those outcomes.
 
 ## Honest demonstration boundary
 
@@ -67,3 +70,14 @@ demo session lifetime are explicit synthetic choices, not approved business poli
 The same local SQLite store holds control records and a separately committed
 simulated service-effect table. This models independent effect/receipt outcomes;
 it does not prove atomicity/idempotency of any real external provider.
+
+## Published collaboration baseline · 16 October 2026
+
+[Public repository](https://github.com/dyangwong/elec5620-group6-beauty-company),
+initial commit `570ebc3adc948ff54523920cb93b5092a2013956`. The initial CI run passed
+on Python 3.9/3.13 with all 37 tests, source checks and JS syntax checks. Main
+protection was applied and read back: PR required, zero required outside approvals,
+both CI jobs/current-main/conversation checks, administrator enforcement, no force
+push or deletion, squash-only merge. `docs/repository.json` records the setup receipt.
+The maintainer handoff is updated through a task branch/PR after enabling protection.
+No teammate has yet been invited because their GitHub usernames are not provided.
