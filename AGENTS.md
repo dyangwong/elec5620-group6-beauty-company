@@ -119,3 +119,11 @@ sprint, set deadlines, enable agents, invite guessed accounts or auto-complete w
 GitHub for Jira exposes development links; it does not grant a coding agent Jira
 read/write access. Use an authorised Jira connection/browser or give the human
 precise updates to record; never claim an unsent Jira update happened.
+
+Apply the progress checkpoints in docs/JIRA.md before implementation, at PR
+handoff and after merge. Fill the PR template's Jira progress handoff with the
+observed status/date, applied or pending update and next owner/action. Update
+affected module/traceability/implementation gaps in the implementation PR. Preserve
+setup snapshots; do not mirror every Jira move into JSON or infer live status from
+STATUS.md. Without authorised Jira access, supply exact pending updates and state
+the limitation; never report the workflow as synchronised until it was observed.

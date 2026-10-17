@@ -19,21 +19,26 @@ configuration, but committing it alone does not activate protection.
 
 2. Identify yourself and read START_HERE/AGENTS, your task and its report models.
    Check the actual shared task claim. GitHub access does not establish member
-   identity or automatically claim a prepared task. Jira setup remains separate.
+   identity or automatically claim a prepared task. Check the live KAN task using
+   [Jira progress checkpoints](JIRA.md#required-progress-checkpoints).
 3. Start a task branch from current main, preserving any unrelated dirty work:
 
    ```sh
    git switch main
    git pull --ff-only
-   git switch -c work/cs-start-01
+   git switch -c KAN-11-cs-start-01
    ```
 
-   Substitute your own prepared branch name; do not reuse a teammate's branch.
+   Substitute your own real Jira-key branch; include the key in commit and PR
+   titles too. Do not reuse a teammate's branch.
 4. Implement only the task scope, run relevant checks, and inspect the diff before
    committing. Add explicit source paths; never force-add ignored report/data/key
    files. Include both English and Chinese documentation when guidance changes.
 5. Push the task branch and open a PR into main. Use the template with actual task,
    requirement/case IDs, verification, shared impact and remaining limitations.
+   Complete its Jira progress handoff: actual observed state/date, applied or
+   pending update, blockers and who will reconcile acceptance after merge. Use
+   Verification when ready; do not claim an update that was not sent.
 6. Required CI must pass against current main. Fetch/merge current main into the
    task branch if needed, resolve conflicts without overwriting teammates, and
    rerun checks. Resolve review discussions before merging.
@@ -41,7 +46,10 @@ configuration, but committing it alone does not activate protection.
    No outside approval is mandatory. GitHub does not permit self-Approve reviews;
    self-checking and self-merging must not be recorded as another person's review.
    A coding agent follows the human's current task authorisation; an ordinary
-   local implementation task does not itself authorise remote publication/merging. After merging, update main and delete the finished branch.
+   local implementation task does not itself authorise remote publication/merging.
+   After merging, update main and delete the finished branch. Reconcile Jira with
+   merged evidence; Done requires all task conditions, otherwise record remaining
+   work. The parent epic stays open until its own scope is complete.
 
 ## main protection
 

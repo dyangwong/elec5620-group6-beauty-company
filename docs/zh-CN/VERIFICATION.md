@@ -100,3 +100,12 @@ GitHub 仓库/邀请、Jira 任务、源码发布。
 - PR #2 初次 CI [39032162481](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/39032162481)
   与 [39032164622](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/39032164622)
   的 Python 3.9/3.13 均通过；最终检查和合并凭据以 PR 记录为准。
+
+## Jira 进度节点规范 · 2026-10-17
+
+- JIRA、Agent／开工／Git 指南和 PR 模板明确开工、验证、合并验收、阻塞／重开节点，
+  同步中文副本。Jira 管实时工作流，设置字段保留历史，不暗示自动同步或已改状态。
+- 清理建立 Jira 前的过时文字和旧分支示例；STATUS 记录所在版本的实现，认领字段是记录。
+- 调整原开工回归，先给其他成员任务设置已有认领，再验证准备／保存 CS 包保留该认领
+  及任务表原字节；不再要求全员永远 UNCLAIMED，允许后续真实认领。
+- Python 3.9.6 下 38 项测试通过，来源／41 组追踪检查通过。未实现或认领任何成员首批功能。

@@ -3,6 +3,9 @@
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
 
 Created 16 October 2026. Initial local foundation, not a final submission.
+This file describes implementation at its repository revision, not live task
+progress. Use Jira for current claims/status; the dated setup sections below are
+historical. Update affected behaviour/gaps here in the implementation PR.
 
 ## Working slices
 
@@ -33,7 +36,7 @@ Created 16 October 2026. Initial local foundation, not a final submission.
 - Remaining core/optional features and shared integration work kept in BACKLOG.
 
 No starter implementation was executed as part of onboarding/publication. All five
-remain unclaimed; no member endorsement, real-model setup, Jira claim or human
+were UNCLAIMED in the onboarding snapshot; no member endorsement, real-model setup, Jira claim or human
 contribution percentage is inferred. A shared initial commit and public GitHub
 repository have now been published; see the collaboration status below.
 

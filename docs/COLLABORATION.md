@@ -30,8 +30,8 @@ the selected task branch. The common initial commit has now been published;
 earlier onboarding preparation did not itself publish it.
 
 If Jira is not connected, an authorised person may claim/update it manually.
-Until shared tracking exists, member-local work may proceed on isolated task
-branches, with the missing shared claim recorded honestly; before shared PR
+If shared tracking is inaccessible, member-local work may proceed on isolated
+task branches, with the missing shared claim recorded honestly; before shared PR
 integration link the actual work item and reconcile duplicate claims. Do not
 fabricate IDs or retroactively invent iteration history.
 
@@ -79,3 +79,9 @@ must not be hidden runtime dependencies.
 The current Git policy is [GIT_WORKFLOW.md](GIT_WORKFLOW.md): required PR/checks, zero mandatory outside approvals, no direct/force pushes to main. Earlier onboarding statements above describe preparation, not current hosting evidence.
 
 Current Jira configuration is [JIRA.md](JIRA.md). Planned assignment does not prove an explicit personal claim or completed work. Earlier disconnected-tracker guidance applies only when a member lacks a working Jira connection.
+
+Use the [required progress checkpoints](JIRA.md#required-progress-checkpoints) at
+start, PR verification, merge/acceptance and material blockers. The worker owns
+Jira updates, or supplies exact pending instructions when the agent lacks access
+or authorisation. PRs record actual observed state, not a promised update; module
+and traceability changes accompany implementation. Setup JSON is historical.
