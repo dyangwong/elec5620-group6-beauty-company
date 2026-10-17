@@ -55,7 +55,7 @@ repository have now been published; see the collaboration status below.
 - Production security, retention rules, rate limiting, TLS or public deployment.
 - Full 41-case acceptance, full UML implementation audit and clean-machine/Canvas
   rehearsal. See the traceability file rather than inferring full case completion.
-- Jira project/history, completed teammate invitations, team approval, human work
+- Full Jira iteration/claim/review history, completed teammate invitations, team approval, human work
   attribution or contribution percentages. GitHub publication is recorded separately;
   it does not establish those outcomes.
 
@@ -81,3 +81,15 @@ both CI jobs/current-main/conversation checks, administrator enforcement, no for
 push or deletion, squash-only merge. `docs/repository.json` records the setup receipt.
 The maintainer handoff is updated through a task branch/PR after enabling protection.
 No teammate has yet been invited because their GitHub usernames are not provided.
+
+## Jira configuration · 17 October 2026
+
+The human-created team-managed KAN space now has six epics (KAN-4..9) and five
+scoped starter tasks (KAN-10..14), all created To Do/Medium with starter labels and
+correct parents. BA/CS/MC are assigned to verified displayed member accounts;
+AP/CO remain unassigned after full-name searches found no existing matching user.
+Backlog is enabled, the review column is Verification and Bug was added. KAN-1/2
+remain intact. No sprint, deadline, reminder, model service, agent delegation or
+personal claim was created. See JIRA.md for current workflow and jira.json for the
+setup snapshot. This supersedes earlier no-Jira setup statements, not evidence of
+any starter implementation or full module completion.

@@ -108,3 +108,11 @@ their own PRs; no outside approval is mandatory. Seek affected teammates' review
 for shared contracts/schema/authority changes. An agent's completion statement alone
 does not justify replacing main. Real LLM
 setup can happen later. See [BACKLOG.md](docs/BACKLOG.md) for remaining work.
+
+## Current Jira entry
+
+Read [JIRA.md](docs/JIRA.md). BA/CS/MC/AP/CO starters map to KAN-10/11/12/13/14.
+Use the actual key in branch/commit/PR names, retaining the internal START ID.
+The helper prints the versioned mapping and suggested branch, not live Jira state.
+Three verified members are assigned; AP/CO remain unassigned pending real accounts.
+Check actual claims before work. Sprint planning and model deployment are separate.

@@ -119,3 +119,34 @@ GitHub repository, invitation, Jira task or source publication was performed.
   actual check/merge outcome is recorded in GitHub rather than invented here.
 - No Jira setup, starter claim, real model or teammate invitation was performed;
   invitation recipients still need verified GitHub usernames.
+
+## Jira configuration and mapping · 17 October 2026
+
+- Configured the existing team-managed KAN space through its authenticated UI.
+  Renamed In Review to Verification, enabled Backlog and added Bug; existing
+  KAN-1/2, Story/Subtask and due dates were preserved. No sprint was started.
+- Created six epics KAN-4..9 and five scoped starter tasks KAN-10..14, then refreshed
+  the backlog and verified To Do, Medium, correct epic names and assignments.
+  BA/CS/MC match existing displayed accounts; AP/CO full-name searches produced
+  no existing matching account, so tasks remain unassigned. No guessed invite sent.
+- Each task retains the original brief's source/acceptance IDs, allowed files,
+  observable conditions, English/Chinese links and service-slice completion limit.
+  Assignment is not recorded as a personal work claim or completed feature.
+- The space automation Flows list showed No flows created yet. No automatic Done,
+  coding-agent delegation, deadline, reminder, estimate or sprint history was added.
+- Bound the actual keys/links/parents/suggested branches into the versioned registry.
+  The local helper prints them without claiming a live sync. Added a regression for
+  duplicate cross-member Jira keys and mismatched task URLs. Python 3.9.6 passed
+  all 38 tests; provenance/41-case checks and local Markdown links passed.
+- The KAN-9 maintenance PR exercises GitHub-for-Jira linkage; its actual development
+  panel/CI/merge result is recorded after observation, not inferred from app installation.
+
+- Moved only the five selected starters to Board and observed Board 7 / Backlog 0;
+  all five remained To Do. The board displays To Do / In Progress / Verification /
+  Done with correct starter parents and assignments. Original KAN-1/2 stay intact.
+- In KAN-9 Development, observed one commit and one OPEN pull request, then opened
+  its pull-request detail row: actual repository, PR #2, KAN-9-jira-onboarding → main
+  and correct GitHub URL. This is observed linkage, not a claim of feature work.
+- PR #2 initial CI runs [39032162481](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/39032162481)
+  and [39032164622](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/39032164622)
+  passed Python 3.9 and 3.13 checks. Final checks and merge receipt remain on the PR.

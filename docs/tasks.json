@@ -13,16 +13,31 @@
       "readiness": "READY",
       "claim_state": "UNCLAIMED",
       "claimed_by": null,
-      "jira_key": null,
+      "jira_key": "KAN-10",
       "pr_url": null,
       "brief": "docs/tasks/BA-START-01.md",
-      "suggested_branch": "work/ba-start-01",
-      "features": ["BA-F-01", "BA-F-02"],
-      "acceptance_cases": ["BA-T-01", "BA-T-04", "BA-T-07"],
+      "suggested_branch": "KAN-10-ba-start-01",
+      "features": [
+        "BA-F-01",
+        "BA-F-02"
+      ],
+      "acceptance_cases": [
+        "BA-T-01",
+        "BA-T-04",
+        "BA-T-07"
+      ],
       "depends_on": [],
-      "primary_files": ["beauty_company/modules/beauty_advisor.py", "tests/test_ba.py", "docs/modules/BA.md"],
+      "primary_files": [
+        "beauty_company/modules/beauty_advisor.py",
+        "tests/test_ba.py",
+        "docs/modules/BA.md"
+      ],
       "shared_change_scope": [],
-      "completion_boundary": "Service-level lifecycle and evidence tests. HTTP/UI integration and the full BA feature set remain separate."
+      "completion_boundary": "Service-level lifecycle and evidence tests. HTTP/UI integration and the full BA feature set remain separate.",
+      "jira_url": "https://uni-team6-elec5620.atlassian.net/browse/KAN-10",
+      "jira_epic": "KAN-4",
+      "jira_assignee_display_name": "Danyang Wang",
+      "jira_status_at_setup": "To Do"
     },
     {
       "id": "CS-START-01",
@@ -32,16 +47,33 @@
       "readiness": "READY",
       "claim_state": "UNCLAIMED",
       "claimed_by": null,
-      "jira_key": null,
+      "jira_key": "KAN-11",
       "pr_url": null,
       "brief": "docs/tasks/CS-START-01.md",
-      "suggested_branch": "work/cs-start-01",
-      "features": ["CS-F-01", "CS-F-02"],
-      "acceptance_cases": ["CS-T-01", "CS-T-02", "CS-T-04", "CS-T-06"],
+      "suggested_branch": "KAN-11-cs-start-01",
+      "features": [
+        "CS-F-01",
+        "CS-F-02"
+      ],
+      "acceptance_cases": [
+        "CS-T-01",
+        "CS-T-02",
+        "CS-T-04",
+        "CS-T-06"
+      ],
       "depends_on": [],
-      "primary_files": ["beauty_company/modules/customer_service.py", "beauty_company/adapters/after_sales.py", "tests/test_cs.py", "docs/modules/CS.md"],
+      "primary_files": [
+        "beauty_company/modules/customer_service.py",
+        "beauty_company/adapters/after_sales.py",
+        "tests/test_cs.py",
+        "docs/modules/CS.md"
+      ],
       "shared_change_scope": [],
-      "completion_boundary": "Eligibility and read-failure service slice. No real refunds, routine return/refund expansion, shared HTTP/UI rewrite or AP redesign."
+      "completion_boundary": "Eligibility and read-failure service slice. No real refunds, routine return/refund expansion, shared HTTP/UI rewrite or AP redesign.",
+      "jira_url": "https://uni-team6-elec5620.atlassian.net/browse/KAN-11",
+      "jira_epic": "KAN-5",
+      "jira_assignee_display_name": "Siyuan Lei",
+      "jira_status_at_setup": "To Do"
     },
     {
       "id": "MC-START-01",
@@ -51,16 +83,33 @@
       "readiness": "READY",
       "claim_state": "UNCLAIMED",
       "claimed_by": null,
-      "jira_key": null,
+      "jira_key": "KAN-12",
       "pr_url": null,
       "brief": "docs/tasks/MC-START-01.md",
-      "suggested_branch": "work/mc-start-01",
-      "features": ["MC-F-01", "MC-F-02"],
-      "acceptance_cases": ["MC-T-02", "MC-T-03", "MC-T-04", "MC-T-05", "MC-T-06"],
+      "suggested_branch": "KAN-12-mc-start-01",
+      "features": [
+        "MC-F-01",
+        "MC-F-02"
+      ],
+      "acceptance_cases": [
+        "MC-T-02",
+        "MC-T-03",
+        "MC-T-04",
+        "MC-T-05",
+        "MC-T-06"
+      ],
       "depends_on": [],
-      "primary_files": ["beauty_company/modules/marketing.py", "tests/test_mc.py", "docs/modules/MC.md"],
+      "primary_files": [
+        "beauty_company/modules/marketing.py",
+        "tests/test_mc.py",
+        "docs/modules/MC.md"
+      ],
       "shared_change_scope": [],
-      "completion_boundary": "Service-level mocked failure/revision lifecycle. No live model/media install and no generated-video completion claim."
+      "completion_boundary": "Service-level mocked failure/revision lifecycle. No live model/media install and no generated-video completion claim.",
+      "jira_url": "https://uni-team6-elec5620.atlassian.net/browse/KAN-12",
+      "jira_epic": "KAN-6",
+      "jira_assignee_display_name": "ZHENGDU WEI",
+      "jira_status_at_setup": "To Do"
     },
     {
       "id": "AP-START-01",
@@ -70,20 +119,45 @@
       "readiness": "READY",
       "claim_state": "UNCLAIMED",
       "claimed_by": null,
-      "jira_key": null,
+      "jira_key": "KAN-13",
       "pr_url": null,
       "brief": "docs/tasks/AP-START-01.md",
-      "suggested_branch": "work/ap-start-01",
-      "features": ["AP-F-02"],
-      "acceptance_cases": ["AP-T-02", "AP-T-03", "AP-T-04", "AP-T-05", "AP-T-06"],
-      "depends_on": [],
-      "primary_files": ["beauty_company/modules/approval.py", "tests/test_ap.py", "docs/modules/AP.md"],
-      "shared_change_scope": [
-        {"path": "beauty_company/store.py", "limit": "Additive approval-decision-intent persistence/migration only; do not change other chains or fixtures."},
-        {"path": "beauty_company/application.py", "limit": "Decision/recovery facade only; do not deliver an uncommitted intent or change other module wiring."},
-        {"path": "tests/test_workflows.py", "limit": "Only adapt the existing AP atomic-audit-failure regression to retain or strengthen its assertions; do not remove it."}
+      "suggested_branch": "KAN-13-ap-start-01",
+      "features": [
+        "AP-F-02"
       ],
-      "completion_boundary": "AP recording-failure recovery and existing delivery regression. New HTTP/UI recovery controls require a shared integration task."
+      "acceptance_cases": [
+        "AP-T-02",
+        "AP-T-03",
+        "AP-T-04",
+        "AP-T-05",
+        "AP-T-06"
+      ],
+      "depends_on": [],
+      "primary_files": [
+        "beauty_company/modules/approval.py",
+        "tests/test_ap.py",
+        "docs/modules/AP.md"
+      ],
+      "shared_change_scope": [
+        {
+          "path": "beauty_company/store.py",
+          "limit": "Additive approval-decision-intent persistence/migration only; do not change other chains or fixtures."
+        },
+        {
+          "path": "beauty_company/application.py",
+          "limit": "Decision/recovery facade only; do not deliver an uncommitted intent or change other module wiring."
+        },
+        {
+          "path": "tests/test_workflows.py",
+          "limit": "Only adapt the existing AP atomic-audit-failure regression to retain or strengthen its assertions; do not remove it."
+        }
+      ],
+      "completion_boundary": "AP recording-failure recovery and existing delivery regression. New HTTP/UI recovery controls require a shared integration task.",
+      "jira_url": "https://uni-team6-elec5620.atlassian.net/browse/KAN-13",
+      "jira_epic": "KAN-7",
+      "jira_assignee_display_name": null,
+      "jira_status_at_setup": "To Do"
     },
     {
       "id": "CO-START-01",
@@ -93,16 +167,37 @@
       "readiness": "READY",
       "claim_state": "UNCLAIMED",
       "claimed_by": null,
-      "jira_key": null,
+      "jira_key": "KAN-14",
       "pr_url": null,
       "brief": "docs/tasks/CO-START-01.md",
-      "suggested_branch": "work/co-start-01",
-      "features": ["CO-F-01", "CO-F-02"],
-      "acceptance_cases": ["CO-T-01", "CO-T-02", "CO-T-03", "CO-T-04", "CO-T-08"],
+      "suggested_branch": "KAN-14-co-start-01",
+      "features": [
+        "CO-F-01",
+        "CO-F-02"
+      ],
+      "acceptance_cases": [
+        "CO-T-01",
+        "CO-T-02",
+        "CO-T-03",
+        "CO-T-04",
+        "CO-T-08"
+      ],
       "depends_on": [],
-      "primary_files": ["beauty_company/modules/coordination.py", "tests/test_co.py", "docs/modules/CO.md"],
+      "primary_files": [
+        "beauty_company/modules/coordination.py",
+        "tests/test_co.py",
+        "docs/modules/CO.md"
+      ],
       "shared_change_scope": [],
-      "completion_boundary": "CS-to-BA coordination service slice with fixture failures; no optional automatic retry or broad business dispatch."
+      "completion_boundary": "CS-to-BA coordination service slice with fixture failures; no optional automatic retry or broad business dispatch.",
+      "jira_url": "https://uni-team6-elec5620.atlassian.net/browse/KAN-14",
+      "jira_epic": "KAN-8",
+      "jira_assignee_display_name": null,
+      "jira_status_at_setup": "To Do"
     }
-  ]
+  ],
+  "jira_project_key": "KAN",
+  "jira_project_url": "https://uni-team6-elec5620.atlassian.net/jira/software/projects/KAN/boards/2",
+  "jira_mapping_verified": "2026-10-17",
+  "semantics": "READY means a scoped brief is prepared. Jira assignment records default responsibility only; UNCLAIMED/claimed_by refer to explicit human work claims, not assignment or ticket creation. Actual Jira is authoritative for live workflow status. The local helper reads this versioned mapping without a live Jira check."
 }

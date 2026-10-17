@@ -52,3 +52,13 @@ approvals; authors can self-check and merge. Shared contract/schema/authority
 changes should seek relevant teammate review. Do not infer a review from a
 self-merge. No open-source licence is assigned merely by making the repo public.
 Original student identifiers and local credentials/runtime data are excluded.
+
+## Jira setup · 17 October 2026
+
+Danny requested configuration of the existing team-managed KAN space and repository
+mapping. Keep one board/backlog and six epics, retain bounded starters, add Bug,
+use Verification for self-check/testing without a mandatory outside Approve.
+Default assignment follows verified displayed report names; unmatched AP/CO remain
+unassigned. Assignment is not a personal claim. Do not start a sprint or invent
+iterations/estimates/deadlines. Actual work/status remains in Jira; repository JSON
+is a mapping/snapshot. GitHub for Jira does not grant coding-agent API access.

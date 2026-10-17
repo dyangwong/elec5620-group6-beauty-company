@@ -14,7 +14,7 @@ repository maintenance/integration task does not automatically claim a member's
 starter or implement their feature.
 
 Read `docs/STATUS.md`, `docs/REQUIREMENTS.md`, `docs/CONTRACTS.md`,
-`docs/COLLABORATION.md`, `docs/SHARED_FILES.md`, the relevant module guide and
+`docs/COLLABORATION.md`, `docs/JIRA.md`, `docs/SHARED_FILES.md`, the relevant module guide and
 the selected task brief. `python3 scripts/start_work.py --member <declared-member>`
 prints the reading/scope packet; it performs no shared claim or external action.
 The optional saved profile is ignored local session data, never identity proof.
@@ -104,3 +104,18 @@ Never push directly, force-push or delete main. Repository writes and PR merges
 follow the current human task authorisation; a local feature task does not by
 itself authorise external publication or merging. Protect the local
 unredacted report; never add ignored files with git add -f.
+
+## Jira handoff
+
+The team-managed KAN space and real starter tasks are recorded in docs/JIRA.md,
+docs/jira.json and each task's jira_key/jira_url. Prefer the actual Jira key in
+branch/commit/PR names, keeping START IDs for requirement traceability. Jira is
+current workflow authority; the registry is a versioned mapping/snapshot and the
+local helper does not query it live. Assignment is planned responsibility, not a
+personal claim or completed work. Confirm actual claim/status without overwriting
+other members. Use To Do → In Progress → Verification → Done; Done requires the
+declared task conditions and evidence, not only a merged PR. Do not auto-start a
+sprint, set deadlines, enable agents, invite guessed accounts or auto-complete work.
+GitHub for Jira exposes development links; it does not grant a coding agent Jira
+read/write access. Use an authorised Jira connection/browser or give the human
+precise updates to record; never claim an unsent Jira update happened.

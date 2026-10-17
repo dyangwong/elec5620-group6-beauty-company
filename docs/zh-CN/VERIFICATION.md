@@ -80,3 +80,23 @@ GitHub 仓库/邀请、Jira 任务、源码发布。
 - 公开源码包独立解压，不用原课程目录仍通过来源检查、37 项测试、CS 身份入口；不含原件/运行数据/预览。
 - 保护启用后的发布交接走 PR，实际检查/合并结果保存在 GitHub，不在此编造。
 - 未做 Jira、首批认领、真实模型或队友邀请，邀请待核实 GitHub 用户名。
+
+## Jira 配置与映射 · 2026-10-17
+
+- 通过已登录 UI 配置现有 team-managed KAN：In Review 改 Verification，启用 Backlog，添加 Bug。
+  保留 KAN-1/2、Story/Subtask 和原截止日，未启动 Sprint。
+- 建立六个 Epic KAN-4..9、五份任务 KAN-10..14，刷新后核实 To Do、Medium、正确父项和分配。
+  BA/CS/MC 匹配现有显示名；AP/CO 完整姓名未匹配现有账号，暂未分配，未发猜测邀请。
+- 每份保留原任务书来源/验收、文件、条件、中英文链接和服务范围边界。计划分配不记为本人认领或完成。
+- 空间自动化 Flows 显示 No flows created yet，未加自动 Done、Agent 委派、截止日、提醒、估计或迭代历史。
+- 真实编号/链接/父项/建议分支写回版本化任务表；工具打印但不假称实时同步。
+  新回归防跨成员重复 Jira key 和错误任务 URL；Python 3.9.6 下 38 项通过，来源/41 组/本地链接检查通过。
+- 使用 KAN-9 维护 PR 测 GitHub-for-Jira，实际开发面板/CI/合并结果观察后另记，不从安装 app 推断成功。
+
+- 仅将选中的五份首批任务移入 Board，观察到 Board 7 / Backlog 0，五项仍为 To Do；
+  看板四列正确，父项和分配正确，原 KAN-1/2 保留。
+- KAN-9 Development 实际显示 1 commit、1 OPEN PR；打开详情看到正确仓库、
+  PR #2、KAN-9-jira-onboarding → main 和 GitHub 链接。开发链接不代表功能已完成。
+- PR #2 初次 CI [39032162481](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/39032162481)
+  与 [39032164622](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/39032164622)
+  的 Python 3.9/3.13 均通过；最终检查和合并凭据以 PR 记录为准。

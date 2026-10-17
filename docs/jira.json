@@ -1,0 +1,74 @@
+{
+  "verified_date": "2026-10-17",
+  "site": "https://uni-team6-elec5620.atlassian.net",
+  "space_name": "elec5620_team6",
+  "project_key": "KAN",
+  "project_type": "team-managed software",
+  "board_id": 2,
+  "board_url": "https://uni-team6-elec5620.atlassian.net/jira/software/projects/KAN/boards/2",
+  "backlog_enabled": true,
+  "workflow_columns": [
+    "To Do",
+    "In Progress",
+    "Verification",
+    "Done"
+  ],
+  "epics": {
+    "BA": "KAN-4",
+    "CS": "KAN-5",
+    "MC": "KAN-6",
+    "AP": "KAN-7",
+    "CO": "KAN-8",
+    "GR": "KAN-9"
+  },
+  "starter_tasks": {
+    "BA": {
+      "key": "KAN-10",
+      "parent": "KAN-4",
+      "assignee": "Danyang Wang"
+    },
+    "CS": {
+      "key": "KAN-11",
+      "parent": "KAN-5",
+      "assignee": "Siyuan Lei"
+    },
+    "MC": {
+      "key": "KAN-12",
+      "parent": "KAN-6",
+      "assignee": "ZHENGDU WEI"
+    },
+    "AP": {
+      "key": "KAN-13",
+      "parent": "KAN-7",
+      "assignee": null
+    },
+    "CO": {
+      "key": "KAN-14",
+      "parent": "KAN-8",
+      "assignee": null
+    }
+  },
+  "starter_status_at_setup": "To Do",
+  "claim_note": "Assignment is planned responsibility, not an explicit personal claim, work performed or completion. Query Jira for current state.",
+  "existing_items_preserved": [
+    "KAN-1",
+    "KAN-2"
+  ],
+  "sprint_started": false,
+  "real_model": "DEFERRED",
+  "verification_state": "CONFIGURED_UI_AND_GITHUB_LINKAGE_VERIFIED",
+  "bug_work_type_enabled": true,
+  "space_automation_flows_at_setup": 0,
+  "automatic_done_rule_created": false,
+  "starter_board_placement_at_setup": "Board",
+  "board_item_count_at_setup": 7,
+  "backlog_item_count_at_setup": 0,
+  "github_linkage_verification": {
+    "pull_request": "https://github.com/dyangwong/elec5620-group6-beauty-company/pull/2",
+    "jira_issue": "KAN-9",
+    "observed_in_jira_development_panel": true,
+    "observed_commit_count_before_final_update": 1,
+    "observed_pull_request_state": "OPEN",
+    "note": "Setup observation, not a live sync; merge outcome is authoritative on GitHub. Mentioned keys may also gain development links without implying feature work."
+  }
+}
