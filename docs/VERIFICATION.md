@@ -164,3 +164,13 @@ GitHub repository, invitation, Jira task or source publication was performed.
   bytes. This allows real future claims without assuming perpetual UNCLAIMED.
 - Python 3.9.6 passed all 38 tests. Repository source/41-case tracking checks passed.
   This maintenance work does not implement or claim any member's starter.
+
+## Member intake and collaboration visibility · 17 October 2026
+
+- Added missing-information-only intake, concise start/progress/handoff reports
+  and task-boundary checks to AGENTS/START_HERE, with Chinese copies. Existing
+  explicit identity/authorisation is reused; unavailable Jira remains unverified.
+- PRs now explain why changed areas belong to the task and identify authorised
+  deviations/affected owners. Shared-file guidance uses the real Jira-key branch.
+- All 38 existing tests and repository provenance/41-case checks pass locally on
+  Python 3.9.6. No application change, new personal claim or feature completion.
