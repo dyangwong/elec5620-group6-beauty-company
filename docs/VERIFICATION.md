@@ -140,3 +140,13 @@ GitHub repository, invitation, Jira task or source publication was performed.
   all 38 tests; provenance/41-case checks and local Markdown links passed.
 - The KAN-9 maintenance PR exercises GitHub-for-Jira linkage; its actual development
   panel/CI/merge result is recorded after observation, not inferred from app installation.
+
+- Moved only the five selected starters to Board and observed Board 7 / Backlog 0;
+  all five remained To Do. The board displays To Do / In Progress / Verification /
+  Done with correct starter parents and assignments. Original KAN-1/2 stay intact.
+- In KAN-9 Development, observed one commit and one OPEN pull request, then opened
+  its pull-request detail row: actual repository, PR #2, KAN-9-jira-onboarding → main
+  and correct GitHub URL. This is observed linkage, not a claim of feature work.
+- PR #2 initial CI runs [39032162481](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/39032162481)
+  and [39032164622](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/39032164622)
+  passed Python 3.9 and 3.13 checks. Final checks and merge receipt remain on the PR.

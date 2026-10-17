@@ -52,3 +52,8 @@ Jira 管当前状态；docs/tasks.json 管版本化的成员/需求/文件/Jira 
 GitHub for Jira 需要实际编号才能关联开发信息，不实现/验证业务功能。
 
 本次用 KAN-9 仓库维护 PR 验证关联，实际结果记 VERIFICATION；集成 Epic 不会因该 PR 合并就全部完成。
+
+首批五项已从 Backlog 移入 Board，状态仍为 To Do。配置时 Board 共 7 项
+（含原 KAN-1/2），Backlog 为 0；后续待规划工作可放 Backlog。
+KAN-9 的 Development 已显示维护 [PR #2](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/2)、
+仓库、来源分支与 main 目标。维护更新中提及的编号也可能产生开发链接，不能据此认定功能已开工或通过。

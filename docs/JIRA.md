@@ -50,7 +50,9 @@ remains deferred. Six epics are not six business agents; BA/CS/MC remain the thr
    integration gaps. One service slice does not complete a module or acceptance group.
    Failed/unmerged PRs and receipts are not completion. Do not auto-Done on merge.
 
-Backlog is enabled. Sprint dates/goals and work commitment require actual team
+Backlog is enabled. The five starters were moved into Board, retaining To Do.
+The setup snapshot has seven board items (including preserved KAN-1/2) and an
+empty backlog; future work can be planned in Backlog. Sprint dates/goals and work commitment require actual team
 planning; no sprint is started and no new due date, recurring reminder or work log
 is fabricated. Bug is available for discovered defects; existing Story/Subtask
 work types remain. Blocked work needs a clear flag/reason, not a false success.
@@ -65,6 +67,8 @@ honestly rather than inventing a live sync. Do not make duplicate GitHub issues 
 routine Jira tasks. GitHub for Jira links development data only when real work keys
 are included; it does not implement or validate the feature.
 
-The KAN-9 repository-maintenance PR verifies development linkage for this setup;
-actual results belong in VERIFICATION. The integration epic remains broader work,
+The KAN-9 repository-maintenance [PR #2](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/2)
+appeared in KAN-9 Development with its repository, branch and main target; actual
+results are recorded in VERIFICATION. Keys mentioned by maintenance work may also
+show development links; that does not mean their feature has started or passed. The integration epic remains broader work,
 not complete merely because this configuration PR merges.

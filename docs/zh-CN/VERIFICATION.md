@@ -92,3 +92,11 @@ GitHub 仓库/邀请、Jira 任务、源码发布。
 - 真实编号/链接/父项/建议分支写回版本化任务表；工具打印但不假称实时同步。
   新回归防跨成员重复 Jira key 和错误任务 URL；Python 3.9.6 下 38 项通过，来源/41 组/本地链接检查通过。
 - 使用 KAN-9 维护 PR 测 GitHub-for-Jira，实际开发面板/CI/合并结果观察后另记，不从安装 app 推断成功。
+
+- 仅将选中的五份首批任务移入 Board，观察到 Board 7 / Backlog 0，五项仍为 To Do；
+  看板四列正确，父项和分配正确，原 KAN-1/2 保留。
+- KAN-9 Development 实际显示 1 commit、1 OPEN PR；打开详情看到正确仓库、
+  PR #2、KAN-9-jira-onboarding → main 和 GitHub 链接。开发链接不代表功能已完成。
+- PR #2 初次 CI [39032162481](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/39032162481)
+  与 [39032164622](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/39032164622)
+  的 Python 3.9/3.13 均通过；最终检查和合并凭据以 PR 记录为准。

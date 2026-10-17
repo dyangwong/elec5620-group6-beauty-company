@@ -56,8 +56,19 @@
   ],
   "sprint_started": false,
   "real_model": "DEFERRED",
-  "verification_state": "CONFIGURED_UI_INTEGRATION_CHECK_PENDING",
+  "verification_state": "CONFIGURED_UI_AND_GITHUB_LINKAGE_VERIFIED",
   "bug_work_type_enabled": true,
   "space_automation_flows_at_setup": 0,
-  "automatic_done_rule_created": false
+  "automatic_done_rule_created": false,
+  "starter_board_placement_at_setup": "Board",
+  "board_item_count_at_setup": 7,
+  "backlog_item_count_at_setup": 0,
+  "github_linkage_verification": {
+    "pull_request": "https://github.com/dyangwong/elec5620-group6-beauty-company/pull/2",
+    "jira_issue": "KAN-9",
+    "observed_in_jira_development_panel": true,
+    "observed_commit_count_before_final_update": 1,
+    "observed_pull_request_state": "OPEN",
+    "note": "Setup observation, not a live sync; merge outcome is authoritative on GitHub. Mentioned keys may also gain development links without implying feature work."
+  }
 }
