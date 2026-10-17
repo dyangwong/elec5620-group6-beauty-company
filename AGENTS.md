@@ -21,6 +21,33 @@ The optional saved profile is ignored local session data, never identity proof.
 Inspect the task's model pages in the privacy-redacted `docs/reference/stage1-report-public.pdf`;
 text excerpts do not preserve every diagram. Source hashes are in the manifest.
 
+## Member intake, visibility and scope
+
+Follow the intake and reporting protocol in START_HERE.md. Read the repository
+before asking questions. Obtain only missing identity, task/continuation intent,
+known concurrent work and action authorisation that cannot be inferred from the
+current human instructions or inspected state. A matching name/member/module
+already declared is sufficient; do not ask for the name again. Use the mapped
+starter by default, without asking the human to redesign the project or restate
+the report. Ask one concise bundled clarification only for actual ambiguities.
+
+Before edits, state the resolved member/task/Jira key, observed or unverified
+claim, branch/baseline, bounded files and acceptance target. Then proceed with
+authorised work. Report material findings, scope/shared-contract risks and blockers
+as they arise; finish with actual changes, test results, remaining conditions and
+applied/pending Jira/PR actions. Keep reports concise and distinguish observed,
+proposed and unverified information. Do not expose credentials or customer data.
+
+Keep each change tied to the selected Stage 1/task acceptance conditions. Do not
+pick up a teammate's module, redesign shared UI/architecture, connect models or
+add unrelated features because they look useful. For work outside the brief or
+its explicit shared exceptions, explain the exact need/impact and obtain a bounded
+human instruction before those edits; continue independent in-scope work. Record
+authorised deviations and seek affected-owner review without inventing approval.
+Reconcile actual task claims and current main before implementation/integration;
+never erase a teammate's changes to resolve a conflict. The PR must expose scope
+changes, shared-file exceptions and incomplete acceptance, not just green tests.
+
 ## Authority and evidence
 
 1. Explicit current human instructions and official course requirements.

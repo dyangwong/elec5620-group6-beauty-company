@@ -9,6 +9,7 @@ Describe the concrete trigger, resulting behaviour and reason for the change.
 - Stage 1 requirement / feature / use case:
 - Relevant model / state / contract:
 - Acceptance case and conditions covered:
+- Why each changed area belongs to this task; any authorised scope deviation and affected owners:
 
 ## Verification
 

@@ -29,6 +29,68 @@ web-app roles do not establish contributor identity. The machine-readable map is
 
 ## 2. Give your coding agent a clear instruction
 
+### What the agent obtains from the human
+
+Read the mapping/brief and inspect the checkout first. Reuse information already
+given in this conversation; do not turn onboarding into a questionnaire.
+
+| Information | Agent behaviour |
+|---|---|
+| Declared contributor | Ask once for a report name, M1–M5 or the module the human explicitly owns, only if missing/ambiguous. Show the matched name/module/task. A Git login or ticket number alone is not contributor identity. |
+| Work intent | Use that member's mapped starter when asked to start. Ask only if it is unclear whether to resume existing work, review, implement or switch tasks. A completed/claimed/conflicting ticket requires reconciliation, not automatic reuse. |
+| Existing work / overlap | Inspect branch, main baseline, dirty files, task/PR state where accessible. Ask about known unfinished work or another active agent only if it cannot be established and affects this task; preserve it. |
+| Action boundary | Reuse explicit authorisation for local work, Jira updates, branch push, PR creation and merge. Do not infer remote writes from local implementation. Clarify missing authorisation when the dependent action is needed; continue independent authorised work. |
+| Access needed | Inspect available tools without assuming access. Ask for a non-secret account identifier only when needed to match an account; missing access can use a human handoff. Never ask for passwords, tokens, student IDs or model keys to start a service task. Ask about OS/setup only when an actual setup problem cannot be resolved by inspection. |
+
+If only identity is missing, a suitable question is: "Which Stage 1 member are
+you? Please give your report name, member ID or module; I will resolve the task
+and read its scope from the repository." Once answered, do not ask again unless
+the declaration conflicts or the human explicitly changes role/task.
+
+The agent derives requirement IDs, model pages, acceptance conditions, allowed
+files, branch suggestion and completion boundary from the repository. Humans do
+not need to supply these again. A fresh agent/session still needs an explicit
+identity declaration if it has no trustworthy conversation context; an ignored
+saved profile is not a substitute.
+
+### What the agent makes visible
+
+Before edits, give a short start note: resolved member/module/task/Jira key;
+claim/status checked or unverified; current branch/baseline and relevant existing
+changes; acceptance target and allowed/shared file scope; immediate next action
+and any missing access. A clear existing instruction is not another approval gate.
+
+During work, report meaningful behaviour changes, discoveries affecting scope,
+test failures, dependencies and conflicts. Explain the affected requirement and
+people before proposing a shared change. Do not stream every command or repeatedly
+ask permission for routine in-scope edits. Keep Jira current at the checkpoints
+in [JIRA.md](docs/JIRA.md), using explicit pending instructions when unavailable.
+
+At handoff, report the task/key, changed files and behaviour, actual test/scenario
+results, acceptance conditions covered and still unverified, remaining integration
+gaps, branch/PR/commit references when created, and actual/pending Jira actions
+with the next responsible person/action. Report self-check and teammate review
+separately; record AI assistance without inventing human contribution.
+
+### How to keep parallel work on topic
+
+1. Tie planned edits to this task's requirement/acceptance conditions. Follow the
+   source authority order; do not replace Stage 1 with a new personal product idea.
+2. Check actual claims and current main, then use one scoped task branch. Respect
+   [file ownership](docs/SHARED_FILES.md); do not run two agents on the same task
+   or shared checkout without an explicit division of work.
+3. Treat other modules, new features, shared UI/contract/schema changes, framework
+   migration and model deployment as scope changes unless explicitly covered by
+   the brief. State the proposed change, reason, affected owners/files/conditions
+   and integration need; obtain a bounded human instruction for out-of-scope edits.
+   Record authorised deviations and seek affected-owner review. Continue safe
+   in-scope work instead of blocking the whole task on an unrelated improvement.
+4. Before PR/merge, reconcile current main and inspect the full diff for unrelated
+   files, changed contracts and acceptance gaps. Resolve conflicts purposefully;
+   do not overwrite teammate code/tests/claims or silently relax acceptance tests.
+5. A finished service slice may still need shared HTTP/UI integration. Record it
+   rather than expanding the task or marking the whole module/epic Done.
+
 For example, the CS member can paste:
 
 > I am Siyuan Lei, responsible for CS in Stage 1. Start with AGENTS.md and

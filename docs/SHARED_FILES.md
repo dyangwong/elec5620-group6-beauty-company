@@ -54,7 +54,9 @@ assumes success. New failed-state views need the shared integration task.
 
 ## Branches, claims and conflicts
 
-- Use the shared initial baseline, then a short `work/<module>-start-01` branch.
+- Start from current shared main, then use the real Jira-key branch suggested in
+  tasks.json (for example, `KAN-11-cs-start-01`). Follow START_HERE.md for member
+  intake, visible scope and reporting; each changed area must belong to the task.
 - Fetch/read current task claims before duplicate work; the local starter helper
   performs no network check and cannot guarantee a task is still unclaimed.
 - Do not claim other members' chains or expand the task because unrelated gaps
