@@ -79,6 +79,7 @@ def validate_handoff(root):
         if any(type(page) is not int or not 1 <= page <= source["original_page_count"] for page in member["reading_pdf_pages"]):
             failures.append("Invalid original PDF page locator: " + code)
     primary_owners = {}
+    jira_keys = set()
     for task in tasks:
         owner = by_id.get(task["owner_member_id"])
         if not owner or owner["module"] != task["module"] or owner["starter_task"] != task["id"]:
@@ -86,6 +87,17 @@ def validate_handoff(root):
             continue
         if not set(task["features"]).issubset(owner["features"]) or not set(task["acceptance_cases"]).issubset(owner["acceptance_cases"]):
             failures.append("Task feature/case scope crosses its member chain: " + task["id"])
+        jira_key = task.get("jira_key")
+        if jira_key:
+            project_key = registry.get("jira_project_key", "")
+            if not project_key or not re.fullmatch(re.escape(project_key) + r"-\d+", jira_key):
+                failures.append("Jira key does not match the declared project: " + task["id"])
+            if jira_key in jira_keys:
+                failures.append("A Jira task key is reused across member chains: " + jira_key)
+            jira_keys.add(jira_key)
+            expected_url = registry.get("jira_project_url", "").split("/jira/", 1)[0] + "/browse/" + jira_key
+            if task.get("jira_url") != expected_url or not expected_url.startswith("https://"):
+                failures.append("Jira task URL differs from its declared key/site: " + task["id"])
         if not (root / task["brief"]).is_file():
             failures.append("Missing task brief: " + task["id"])
         if not set(task["depends_on"]).issubset(task_ids):
@@ -129,7 +141,7 @@ def prepare_session(root, identity, task_id=None):
         "member": member,
         "task": task,
         "reading_order": ["AGENTS.md", "START_HERE.md", "docs/STATUS.md", "docs/REQUIREMENTS.md",
-                          "docs/CONTRACTS.md", "docs/COLLABORATION.md", "docs/SHARED_FILES.md",
+                          "docs/CONTRACTS.md", "docs/COLLABORATION.md", "docs/JIRA.md", "docs/SHARED_FILES.md",
                           member["module_guide"], task["brief"], "docs/reference/acceptance-cases.txt"],
         "report": {"path": source["reference_pdf"], "sha256": source["original_sha256"], "reference_sha256": source["reference_pdf_sha256"], "reference_kind": source.get("reference_kind", "byte_identical"), "pdf_pages": member["reading_pdf_pages"]},
         "shared_claim_verified": False,
@@ -193,6 +205,10 @@ def main():
         else:
             member, task = packet["member"], packet["task"]
             print(f"{member['name']} ({member['member_id']}) → {member['module']} / {task['id']}\n{task['title']}\n")
+            if task.get("jira_key"):
+                print("Jira task: " + task["jira_key"] + " / " + task["jira_url"])
+                print("Planned assignee: " + (task.get("jira_assignee_display_name") or "Unassigned; account not verified."))
+                print("Assignment is not a personal claim; check Jira for current state.\n")
             print("Read in order:\n" + "\n".join("  " + path for path in packet["reading_order"]))
             print("\nOriginal PDF pages: " + ", ".join(map(str, packet["report"]["pdf_pages"])))
             print("Primary files:\n" + "\n".join("  " + path for path in task["primary_files"]))

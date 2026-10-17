@@ -23,6 +23,8 @@
     "squash_only": true
   },
   "teammate_invitations": "NOT_SENT_AWAITING_VERIFIED_USERNAMES",
-  "jira": "NOT_CREATED",
-  "real_model": "DEFERRED"
+  "jira": "CONFIGURED_KAN_STARTERS_TO_DO",
+  "real_model": "DEFERRED",
+  "jira_mapping": "docs/jira.json",
+  "jira_verified_date": "2026-10-17"
 }

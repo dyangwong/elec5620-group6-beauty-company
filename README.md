@@ -89,7 +89,8 @@ partial coverage and remaining conditions. The public
 is live. The [initial GitHub CI run](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/38865450983)
 passed on Python 3.9 and 3.13, including all 37 tests, provenance checks and JS
 syntax. Main requires PRs and passing checks; authors may self-merge without an
-external approval. Team invitations await verified usernames; Jira is not set up.
+external approval. GitHub invitations await verified usernames. The [Jira KAN space](docs/JIRA.md)
+now has six epics and five scoped starter tasks; assignment is not a personal claim.
 
 ## Start here when contributing
 

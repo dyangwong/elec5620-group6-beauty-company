@@ -4,8 +4,8 @@ English is the maintained primary version. [中文阅读副本](zh-CN/COLLABORAT
 
 Prepared for onboarding at Danny's request, using the Stage 1 ownership map. This
 is not evidence all members have adopted it. The public GitHub baseline and
-protected main are now live; Jira, teammate invitations and actual member work
-remain unestablished. START_HERE.md,
+protected main are live. The Jira KAN space now has six epics/five scoped tasks;
+GitHub invitations and actual member work remain distinct. See docs/JIRA.md. START_HERE.md,
 team.json, tasks.json, task briefs and SHARED_FILES.md define the entry process.
 
 ## Trace one unit of work
@@ -77,3 +77,5 @@ teaching team; original files, external model availability and cached services
 must not be hidden runtime dependencies.
 
 The current Git policy is [GIT_WORKFLOW.md](GIT_WORKFLOW.md): required PR/checks, zero mandatory outside approvals, no direct/force pushes to main. Earlier onboarding statements above describe preparation, not current hosting evidence.
+
+Current Jira configuration is [JIRA.md](JIRA.md). Planned assignment does not prove an explicit personal claim or completed work. Earlier disconnected-tracker guidance applies only when a member lacks a working Jira connection.

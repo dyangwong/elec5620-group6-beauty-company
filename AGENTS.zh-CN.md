@@ -67,3 +67,13 @@
 不强制外部批准，但这不叫给自己点 Approve。共享接口、结构、权限变更请相关队友审阅，不虚构审阅。
 不直接 push、强推或删除 main。仓库写入/PR 合并依据当前用户任务授权；普通本地功能任务本身不授权外部发布或合并。
 不得用 git add -f 把被忽略的正式未脱敏报告加入公开仓库。
+
+## Jira 开工交接
+
+team-managed 的 KAN 空间及真实首批任务见 docs/JIRA.md、docs/jira.json 和任务 jira_key/jira_url。
+分支/commit/PR 使用实际 Jira 编号，保留 START 编号追踪需求。Jira 是当前状态依据，仓库是版本化映射/快照，
+本地工具不实时查询。分配是计划责任，不等于本人认领或完成；查当前状态并保留他人记录。
+使用 To Do → In Progress → Verification → Done，Done 须任务条件和证据齐全，不能只因 PR 合并。
+不自动启动 Sprint、设截止日、启用 Agent、邀请猜测账号或自动完成。
+GitHub for Jira 只显示开发关联，不给编程 Agent Jira 读写权。通过已授权连接/浏览器更新，
+或交给人明确记录；未实际更新不能说已同步。

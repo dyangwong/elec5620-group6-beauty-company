@@ -79,6 +79,24 @@ class OnboardingTests(unittest.TestCase):
         with self.assertRaises(HandoffError):
             prepare_session(root, "CS")
 
+    def test_jira_mapping_rejects_reused_keys_and_mismatched_links(self):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        root = Path(temp.name)
+        shutil.copytree(ROOT / "docs", root / "docs")
+        path = root / "docs/tasks.json"
+        registry = json.loads(path.read_text(encoding="utf-8"))
+        first, second = registry["tasks"][:2]
+        second["jira_key"] = first["jira_key"]
+        second["jira_url"] = first["jira_url"]
+        path.write_text(json.dumps(registry), encoding="utf-8")
+        self.assertTrue(any("reused across member chains" in e for e in validate_handoff(root)))
+        shutil.copyfile(ROOT / "docs/tasks.json", path)
+        registry = json.loads(path.read_text(encoding="utf-8"))
+        registry["tasks"][0]["jira_url"] = "https://example.invalid/browse/WRONG-1"
+        path.write_text(json.dumps(registry), encoding="utf-8")
+        self.assertTrue(any("differs from its declared key/site" in e for e in validate_handoff(root)))
+
     def test_public_reference_cannot_be_tampered_or_rebound(self):
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)

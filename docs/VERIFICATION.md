@@ -119,3 +119,24 @@ GitHub repository, invitation, Jira task or source publication was performed.
   actual check/merge outcome is recorded in GitHub rather than invented here.
 - No Jira setup, starter claim, real model or teammate invitation was performed;
   invitation recipients still need verified GitHub usernames.
+
+## Jira configuration and mapping · 17 October 2026
+
+- Configured the existing team-managed KAN space through its authenticated UI.
+  Renamed In Review to Verification, enabled Backlog and added Bug; existing
+  KAN-1/2, Story/Subtask and due dates were preserved. No sprint was started.
+- Created six epics KAN-4..9 and five scoped starter tasks KAN-10..14, then refreshed
+  the backlog and verified To Do, Medium, correct epic names and assignments.
+  BA/CS/MC match existing displayed accounts; AP/CO full-name searches produced
+  no existing matching account, so tasks remain unassigned. No guessed invite sent.
+- Each task retains the original brief's source/acceptance IDs, allowed files,
+  observable conditions, English/Chinese links and service-slice completion limit.
+  Assignment is not recorded as a personal work claim or completed feature.
+- The space automation Flows list showed No flows created yet. No automatic Done,
+  coding-agent delegation, deadline, reminder, estimate or sprint history was added.
+- Bound the actual keys/links/parents/suggested branches into the versioned registry.
+  The local helper prints them without claiming a live sync. Added a regression for
+  duplicate cross-member Jira keys and mismatched task URLs. Python 3.9.6 passed
+  all 38 tests; provenance/41-case checks and local Markdown links passed.
+- The KAN-9 maintenance PR exercises GitHub-for-Jira linkage; its actual development
+  panel/CI/merge result is recorded after observation, not inferred from app installation.
