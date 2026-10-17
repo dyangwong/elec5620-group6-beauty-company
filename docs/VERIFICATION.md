@@ -150,3 +150,17 @@ GitHub repository, invitation, Jira task or source publication was performed.
 - PR #2 initial CI runs [39032162481](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/39032162481)
   and [39032164622](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/39032164622)
   passed Python 3.9 and 3.13 checks. Final checks and merge receipt remain on the PR.
+
+## Jira progress checkpoint rules · 17 October 2026
+
+- Added explicit start / verification / merge-and-acceptance / blocked-or-reopened
+  responsibilities and evidence in JIRA, agent/onboarding/Git instructions and
+  the PR template, with Chinese reading copies. Jira remains live workflow authority;
+  setup fields remain historical. No automatic sync or status change is implied.
+- Removed obsolete pre-Jira wording and the old branch example; clarified that
+  STATUS describes implementation at a revision and claim fields are receipts.
+- Adjusted the existing preparation regression to include an already-claimed
+  teammate task: preparing/saving CS must preserve that claim and the registry
+  bytes. This allows real future claims without assuming perpetual UNCLAIMED.
+- Python 3.9.6 passed all 38 tests. Repository source/41-case tracking checks passed.
+  This maintenance work does not implement or claim any member's starter.

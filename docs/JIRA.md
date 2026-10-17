@@ -59,6 +59,54 @@ work types remain. Blocked work needs a clear flag/reason, not a false success.
 
 ## Keep one work tracker
 
+### Required progress checkpoints
+
+The person doing the work owns these updates. An authorised coding agent may
+perform them; otherwise the person records them manually. Check the current ticket
+at each checkpoint instead of trusting a local snapshot.
+
+| Checkpoint | Jira update | Repository / PR evidence |
+|---|---|---|
+| Before implementation | Verify identity, assignee, existing claim, scope and blockers. Record an explicit claim and move to In Progress when work actually starts. | Start from current main on the task-key branch. Record any evidenced claim in the task's own registry row; a local edit alone does not reserve shared work. |
+| Ready for verification | Move to Verification once the scoped work is ready for checks/review; link the PR and state what remains. | Update the affected module guide, relevant traceability rows and changed implementation gaps in STATUS; fill the PR template with actual tests, limitations and the observed Jira state. |
+| After merge and acceptance | Link the merged PR and acceptance evidence, then move to Done only if every condition of this task is met. Otherwise keep Verification or return to In Progress with a reason. | The merged change must contain accurate implementation/evidence records. A merge alone does not complete a module, full acceptance group or parent epic. |
+| Blocked, paused or reopened | Record the reason, dependency and next action; flag blocked work. Use In Progress for resumed implementation and explain reopening. | Preserve previous evidence, record the remaining gap and link any follow-up task/PR. Do not erase failed checks or expand the task silently. |
+
+Each progress update states the actual task key, date, actor, work completed,
+test/evidence or PR link, blockers and next action. Update at these checkpoints
+and when a material blocker/scope change occurs; no recurring schedule is required.
+For changed scope or ownership, reconcile Jira and the versioned brief/registry
+in the same work cycle, preserving the Stage 1 source and recording deviations.
+
+### File responsibilities and stale-state handling
+
+- Jira: live assignee, claim, workflow, blockers, planning and links to evidence.
+- docs/tasks.json: stable task/member/source/file mapping; claim_state, claimed_by
+  and pr_url are versioned receipts only. Update only the relevant row with real
+  evidence. READY is brief readiness, not workflow; jira_status_at_setup and the
+  setup assignee/date remain historical, not fields to rewrite for every move.
+- docs/jira.json: configuration/setup receipt. Do not edit it on each status move
+  or treat its verified_date as the date every ticket was last checked.
+- Module guides, docs/traceability.csv and docs/STATUS.md: implemented behaviour,
+  tested conditions and remaining technical gaps at a repository revision. Update
+  the affected records in the implementation PR; do not copy the whole live board.
+- PR template and Jira progress notes: connect the task, exact change and evidence.
+  Record Jira's observed status/date and distinguish applied updates from pending
+  instructions. Later checkpoints belong in Jira or the PR, without a new commit
+  merely to mirror a workflow move.
+
+If Jira is inaccessible, state "Jira update pending" and provide the exact task,
+requested transition, progress text and PR/evidence links for the human to apply.
+Never report a requested update as applied. Before shared integration, reconcile
+the actual claim and current status through an authorised person. Offline status
+or an old repository snapshot must not overwrite a newer Jira record. If Jira says
+Done but evidence is incomplete, flag the discrepancy and reconcile the ticket;
+do not manufacture tests or change Stage 1 requirements to make it look complete.
+
+These are checkpoint-based human/agent updates, not automatic two-way sync.
+GitHub CI checks repository behaviour and structure; it does not verify the live
+Jira workflow. No Jira credentials belong in the public repository.
+
 Jira owns current workflow. docs/tasks.json owns the versioned member/requirement/
 file-scope/Jira-key mapping, not a competing live board. Preserve others' records.
 Explicit personal claiming may update claim_state/claimed_by with evidence; planned

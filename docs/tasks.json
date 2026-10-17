@@ -3,7 +3,7 @@
   "prepared": "2026-10-16",
   "source_id": "stage1",
   "source_sha256": "b4c2030ca6f6c9f2605ba8f3711e70799a3e9d98acf676783b3ad36e3c8aaffa",
-  "status_meaning": "READY means the brief is prepared for the named member. UNCLAIMED means no actual shared claim is recorded. None of these fields prove work, approval, Jira activity or completion.",
+  "status_meaning": "READY means the brief is prepared. Claim fields and pr_url are versioned receipts, not live progress; verify current claim/status in Jira. jira_status_at_setup and setup assignment/date are historical and remain unchanged by ordinary workflow moves. None of these fields alone prove implementation, review or acceptance.",
   "tasks": [
     {
       "id": "BA-START-01",

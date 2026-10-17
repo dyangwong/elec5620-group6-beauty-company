@@ -91,15 +91,16 @@ do not silently change requirements to simplify implementation. If the tool cann
 inspect a diagram, record that as unverified and continue independent work that
 does not depend on it. Reading excerpts does not prove full-model verification.
 
-## 5. Collaborate once GitHub is established
+## 5. Collaborate through GitHub and Jira
 
 Use the published common repository baseline and create your own task branch.
 Do not create an independent root commit. Jira setup/claims remain separate and
 must be recorded honestly. See [Git workflow](docs/GIT_WORKFLOW.md).
 
 Check actual Jira claims and branch state before implementing. Members without a
-Jira connector can claim tasks manually. Until Jira exists, isolated local work may
-proceed with the missing shared claim recorded honestly. A local READY record does
+Jira connector can verify and update tasks manually. If access is unavailable,
+record the missing shared claim and give precise pending updates for the human;
+reconcile the actual claim before shared integration. A local READY record does
 not prove Jira synchronisation and must not overwrite another person's claim.
 
 Use the PR template with actual task IDs, requirement/case IDs, executed tests,
@@ -116,3 +117,9 @@ Use the actual key in branch/commit/PR names, retaining the internal START ID.
 The helper prints the versioned mapping and suggested branch, not live Jira state.
 Three verified members are assigned; AP/CO remain unassigned pending real accounts.
 Check actual claims before work. Sprint planning and model deployment are separate.
+
+Before work, at PR handoff and after merge, follow the [progress checkpoints](docs/JIRA.md#required-progress-checkpoints).
+Keep Jira current and include implementation/evidence changes in the same PR. The
+example prompt above authorises local work only: give the human the exact Jira
+transition/progress text/links when external updates are outside authorisation or
+access is unavailable. Label them `Jira update pending`, never already applied.

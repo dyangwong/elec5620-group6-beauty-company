@@ -43,13 +43,18 @@ class OnboardingTests(unittest.TestCase):
     def test_preparation_and_local_save_do_not_claim_shared_tasks(self):
         root = self.metadata_copy()
         registry = root / "docs/tasks.json"
+        existing = json.loads(registry.read_text(encoding="utf-8"))
+        existing["tasks"][0]["claim_state"] = "CLAIMED"
+        existing["tasks"][0]["claimed_by"] = "M1"
+        registry.write_text(json.dumps(existing), encoding="utf-8")
         before = registry.read_bytes()
         packet = prepare_session(root, "CS")
         self.assertFalse((root / "var/work-session.json").exists())
         saved = save_session(root, packet)
         self.assertEqual(json.loads(saved.read_text(encoding="utf-8"))["session_state"], "PREPARED_LOCALLY")
         self.assertEqual(registry.read_bytes(), before)
-        self.assertTrue(all(t["claim_state"] == "UNCLAIMED" for t in json.loads(before)["tasks"]))
+        # Existing teammate claims must survive preparation of another packet.
+        self.assertEqual(json.loads(registry.read_text())["tasks"][0]["claimed_by"], "M1")
         # A saved profile must never become implicit identity on a later task.
         with self.assertRaises(HandoffError):
             prepare_session(root, None)
