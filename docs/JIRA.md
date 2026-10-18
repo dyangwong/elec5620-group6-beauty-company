@@ -120,3 +120,12 @@ appeared in KAN-9 Development with its repository, branch and main target; actua
 results are recorded in VERIFICATION. Keys mentioned by maintenance work may also
 show development links; that does not mean their feature has started or passed. The integration epic remains broader work,
 not complete merely because this configuration PR merges.
+
+## Reserved shared LLM task · 18 October 2026
+
+[KAN-15 / GR-INT-02](https://uni-team6-elec5620.atlassian.net/browse/KAN-15)
+was created under KAN-9 and assigned to Danyang Wang at his explicit request.
+Ownership/contract preparation is separate from implementation; keep the task
+To Do until real implementation starts. Other members must not duplicate shared
+provider/deployment work. See [LLM_INTEGRATION.md](LLM_INTEGRATION.md). This does
+not claim the owner's default BA starter or complete the parent integration epic.

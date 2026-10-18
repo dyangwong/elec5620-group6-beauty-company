@@ -60,3 +60,7 @@ Run the full existing suite and the new BA tests. Update exact tested conditions
 remaining BA-T-07 branches and pending HTTP/UI wiring. Do not mark an entire case
 passed for a service-only subset. BA review and optional alternatives remain later
 work. Shared UI integration is GR-INT-01 in the backlog.
+
+LLM handoff: read [LLM_INTEGRATION.md](../LLM_INTEGRATION.md). Danyang Wang owns
+shared integration; preserve the existing module seam and supply the relevant
+injected fixtures/examples. Do not deploy or build a separate provider client.

@@ -2,8 +2,8 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/BACKLOG.md).
 
-These are planning records, not actual Jira issues, sprint commitments or completed
-features. START task IDs and GR-INT IDs are internal handoff labels, never invented
+These are planning records, not sprint commitments or completed features. Actual
+Jira mappings are identified explicitly; unmapped labels are not Jira issues. START task IDs and GR-INT IDs are internal handoff labels, never invented
 Jira keys. `tasks.json` currently contains only the five executable starter briefs.
 Finishing a starter does not automatically authorise every later item below.
 
@@ -28,7 +28,7 @@ outcomes as permission to leave all normal success behaviour unimplemented.
 | Internal label | Scope | Dependency / present state |
 |---|---|---|
 | GR-INT-01 | Wire reviewed service changes into shared HTTP/UI, visible error/recovery states, complete client/server contracts and browser tests | Prepared scope only; split by ready backend changes. Each owner supplies result examples and affected callers. Shared frontend is not assigned to five agents simultaneously. |
-| GR-INT-02 | Provider-neutral real model adapter/config, actual tool/schema/claim validation, model failure handling and evidence; preserve deterministic test mode | **DEFERRED**. Danny said not to rush local-model deployment. No model/provider/hardware selection, install, download or API-key request is part of onboarding. Revisit when explicitly requested. |
+| GR-INT-02 | Provider-neutral real model adapter/config, actual tool/schema/claim validation, model failure handling and evidence; preserve deterministic test mode | **RESERVED TO DANYANG WANG**, [KAN-15](https://uni-team6-elec5620.atlassian.net/browse/KAN-15). Contract/handoff prepared; deployment and implementation not started. Others preserve seams/fakes and do not duplicate provider work. See [LLM_INTEGRATION.md](LLM_INTEGRATION.md). |
 | GR-INT-03 | Full GR-S-01 and separate MC demonstration, GR-T-01..04 audit, full model/feature/NFR consistency, clean source delivery and Canvas/on-site rehearsal | Planned, owner(s) to confirm. Existing local tests/mock demo are baseline evidence only. |
 | GR-INT-04 | Publish a common initial Git baseline, invite verified accounts, create real Jira tasks/claims and record actual iteration/review/contribution evidence | Partially executed at Danny's later request: public repository, initial baseline, CI and main protection are live. GitHub invitations await usernames. Jira KAN epics/starters are now created and mapped in JIRA.md; two assignees, actual personal claims/iterations and human adoption remain pending. |
 

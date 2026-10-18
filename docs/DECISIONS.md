@@ -62,3 +62,13 @@ Default assignment follows verified displayed report names; unmatched AP/CO rema
 unassigned. Assignment is not a personal claim. Do not start a sprint or invent
 iterations/estimates/deadlines. Actual work/status remains in Jira; repository JSON
 is a mapping/snapshot. GitHub for Jira does not grant coding-agent API access.
+
+## Shared LLM reservation · 18 October 2026
+
+Danny explicitly reserved GR-INT-02 / KAN-15 shared LLM deployment and integration
+for himself. Preserve existing injected v1 BA/MC calls; CS intent extraction needs
+a later coordinated interface. Members implement scoped business slices/fakes,
+not independent providers. LLM_INTEGRATION.md defines the contract and gaming-
+laptop handoff. This supersedes unassigned future LLM ownership, while keeping
+actual deployment/provider choice deferred and BA-START-01 separate. It is not
+a claim of implementation, teammate endorsement or completion.

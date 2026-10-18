@@ -174,3 +174,17 @@ GitHub repository, invitation, Jira task or source publication was performed.
   deviations/affected owners. Shared-file guidance uses the real Jira-key branch.
 - All 38 existing tests and repository provenance/41-case checks pass locally on
   Python 3.9.6. No application change, new personal claim or feature completion.
+
+## Reserved shared LLM contract · 18 October 2026
+
+- Danny explicitly reserved shared GR-INT-02 to himself, separate from BA starter.
+  Created and observed KAN-15, parent KAN-9, assignee Danyang Wang, status To Do.
+  Provider/model selection, installation and implementation have not started.
+- Inspected current constructors/call sites and documented actual injected BA/MC
+  signatures/units. CS has no independent intent port; its future seam is explicit,
+  not falsely labelled implemented. Mode labels and transaction/network gaps are
+  future integration acceptance, not claims of existing live capability.
+- Added English/Chinese contract and gaming-laptop handoff, entry/brief/PR guidance,
+  shared-work registry reservation and helper reading order. Starter claims unchanged.
+- All 38 tests and 90-source-file provenance/41-case checks passed on Python 3.9.6.
+  CS helper includes the contract and still selects only CS-START-01 / KAN-11.
