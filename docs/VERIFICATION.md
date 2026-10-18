@@ -203,4 +203,5 @@ GitHub repository, invitation, Jira task or source publication was performed.
 - Updated English/Chinese agent/onboarding/Jira/Git guidance, default CODEOWNERS
   reviewer and PR review fields. Earlier zero-review policy is superseded.
 - This is configuration readback, not a test using a teammate's credentials or
-  evidence of any teammate review. Own maintenance PR uses the documented exception.
+  evidence of any teammate review. Danny chose to retain maintenance PR #6 for
+  teammate Approve; it remains open, not merged using the owner exception.
