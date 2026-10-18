@@ -102,3 +102,11 @@ any starter implementation or full module completion.
 Danyang Wang reserved GR-INT-02 / KAN-15. Contract/ownership and cross-machine
 handoff are prepared in LLM_INTEGRATION.md; runtime remains mock-only, deployment
 and CS intent port are not implemented. Member starter scopes/claims are unchanged.
+
+## Teammate review policy · 18 October 2026
+
+Teammate PRs now require at least one non-author Approve plus existing CI. The
+active review ruleset and own-PR exception for dyangwong are documented in
+GIT_WORKFLOW and repository.json. Earlier zero-review/no-invitation sections are
+dated history: two write collaborators were observed today. No application or
+member task/acceptance state changed as part of this policy update.

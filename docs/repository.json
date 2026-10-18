@@ -1,5 +1,5 @@
 {
-  "verified_date": "2026-10-16",
+  "verified_date": "2026-10-18",
   "repository": "dyangwong/elec5620-group6-beauty-company",
   "url": "https://github.com/dyangwong/elec5620-group6-beauty-company",
   "visibility": "public",
@@ -13,18 +13,45 @@
   ],
   "protection_readback": {
     "pull_request_required": true,
-    "required_external_approvals": 0,
+    "required_external_approvals": 1,
     "strict_status_checks": true,
     "enforce_admins": true,
     "allow_force_pushes": false,
     "allow_deletions": false,
     "conversation_resolution": true,
     "linear_history": true,
-    "squash_only": true
+    "squash_only": true,
+    "classic_required_external_approvals": 0,
+    "approval_scope": "Effective combined rule: at least one non-author approval for teammate PRs; dyangwong has a PR-only review-layer exception for own PRs by team workflow. Classic PR/CI still apply to all."
   },
-  "teammate_invitations": "NOT_SENT_AWAITING_VERIFIED_USERNAMES",
+  "teammate_invitations": "WRITE_COLLABORATORS_OBSERVED; invitation sender/history not inferred",
   "jira": "CONFIGURED_KAN_STARTERS_TO_DO",
   "real_model": "DEFERRED",
   "jira_mapping": "docs/jira.json",
-  "jira_verified_date": "2026-10-17"
+  "jira_verified_date": "2026-10-17",
+  "review_ruleset": {
+    "id": 25333272,
+    "name": "Teammate PR approval",
+    "url": "https://github.com/dyangwong/elec5620-group6-beauty-company/rules/25333272",
+    "enforcement": "active",
+    "branch": "main",
+    "required_approving_review_count": 1,
+    "dismiss_stale_reviews_on_push": true,
+    "bypass_user": "dyangwong",
+    "bypass_user_id": 226655466,
+    "bypass_mode": "pull_request",
+    "payload": ".github/teammate-review-ruleset.json",
+    "note": "Bypass acts on the merging account, not PR authorship. Policy permits it for dyangwong own PRs only. No exception to classic base protection."
+  },
+  "collaborators_readback": {
+    "verified_date": "2026-10-18",
+    "admin": [
+      "dyangwong"
+    ],
+    "write": [
+      "slei0644",
+      "ZhengduWei"
+    ],
+    "note": "Observed access only; report identity mapping and contribution are not inferred."
+  }
 }

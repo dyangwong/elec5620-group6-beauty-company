@@ -1,6 +1,6 @@
 # Beauty Company · ELEC5620 Stage 2
 
-中文阅读副本，依据 2026-10-16 英文主版同步。以[英文主版](README.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+中文阅读副本，依据 2026-10-18 英文主版同步。以[英文主版](README.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
 Group 6 的 **AI-Powered One-Person Beauty Commerce and Content Company** 初始本地原型。
 包含 BA/CS/MC 三个业务能力，以及 AP 人工审批和 CO 协调/恢复。旧原型仅供参考，
@@ -69,7 +69,8 @@ python3 scripts/start_work.py --list
 测试使用临时数据库，不触碰运行中的演示数据。只覆盖部分 Stage 1 条件，未完成全部 41 组。
 以 `docs/traceability.csv` 了解覆盖缺口。[公开仓库](https://github.com/dyangwong/elec5620-group6-beauty-company)已建立，
 [首次 CI](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/38865450983)在 Python 3.9/3.13 均通过 37 项测试、来源检查和 JS 语法检查。
-main 必须 PR/检查，作者可自行合并，不强制外部批准。GitHub 邀请待核实用户名。[Jira KAN 空间](docs/zh-CN/JIRA.md)现有六个 Epic 和五份首批任务；分配不等于本人认领。
+main 必须 PR／检查，队友 PR 至少一位非作者 Approve，仅 dyangwong 有自己 PR 例外。
+10 月 18 日核实 slei0644、ZhengduWei 已是 write 协作者；其他邀请待核实用户名。[Jira KAN 空间](docs/zh-CN/JIRA.md)现有六个 Epic 和五份首批任务；分配不等于本人认领。
 
 ## 阅读目录
 
@@ -82,7 +83,7 @@ main 必须 PR/检查，作者可自行合并，不强制外部批准。GitHub �
 - [协作流程](docs/zh-CN/COLLABORATION.md)、[决策](docs/zh-CN/DECISIONS.md)。
 - `docs/zh-CN/modules/`、`docs/zh-CN/tasks/`：五个模块说明与任务书中文副本。
 - `docs/reference/`：63 页脱敏报告（含模型）、对应摘录、评分标准与来源；未脱敏正式原件留本地并被忽略。
-- [Git 工作流](docs/zh-CN/GIT_WORKFLOW.md)：必须 PR 和检查通过，作者可自行合并，无强制他人批准。
+- [Git 工作流](docs/zh-CN/GIT_WORKFLOW.md)：必须 PR／检查、队友 PR 非作者批准，dyangwong 有明确的自己 PR 例外。
 
 本目录是预定仓库根目录，课程总目录和旧原型留在外面。源码包须能独立运行；
 原始报告是依据，不是应用运行时依赖。英文原路径是主要维护入口，中文副本方便阅读。

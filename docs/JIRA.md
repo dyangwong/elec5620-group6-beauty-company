@@ -43,8 +43,9 @@ remains deferred. Six epics are not six business agents; BA/CS/MC remain the thr
 
    The registry supplies a Jira-prefixed suggested branch for every starter.
 4. To Do → In Progress when actual work starts; Verification for self-check, tests,
-   PR and any relevant teammate review. The GitHub policy allows self-merge after
-   required checks and does not require an outside Approve.
+   PR and teammate review. Teammate PRs need at least one non-author Approve
+   plus required checks before merge. Only dyangwong has an own-PR exception;
+   see GIT_WORKFLOW. Review pending means Verification, not Done.
 5. Mark Done only when this task's declared conditions have evidence, the PR is
    merged, and module docs/traceability record the exact tested subset and remaining
    integration gaps. One service slice does not complete a module or acceptance group.

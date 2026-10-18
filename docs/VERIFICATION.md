@@ -188,3 +188,20 @@ GitHub repository, invitation, Jira task or source publication was performed.
   shared-work registry reservation and helper reading order. Starter claims unchanged.
 - All 38 tests and 90-source-file provenance/41-case checks passed on Python 3.9.6.
   CS helper includes the contract and still selects only CS-START-01 / KAN-11.
+
+## Enforced teammate approval · 18 October 2026
+
+- Read existing main protection and actual collaborators. Found only dyangwong
+  admin and slei0644 / ZhengduWei write; no account permissions changed.
+- Created and read back active main ruleset 25333272: one required approval,
+  stale-approval dismissal, resolved threads, squash; only dyangwong user
+  226655466 has pull_request-only bypass of this review layer. Policy limits
+  that exception to own PRs; GitHub itself applies it to the acting account.
+- Read back unchanged classic protection: required current-main Python 3.9/3.13
+  checks from github-actions, admins enforced, conversation resolution, no force
+  push/deletion. Review-layer bypass does not remove the base protections.
+- Updated English/Chinese agent/onboarding/Jira/Git guidance, default CODEOWNERS
+  reviewer and PR review fields. Earlier zero-review policy is superseded.
+- This is configuration readback, not a test using a teammate's credentials or
+  evidence of any teammate review. Danny chose to retain maintenance PR #6 for
+  teammate Approve; it remains open, not merged using the owner exception.

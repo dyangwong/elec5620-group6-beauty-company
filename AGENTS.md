@@ -124,8 +124,12 @@ not application UI or generated business-content language.
 ## Git workflow
 
 Follow `docs/GIT_WORKFLOW.md`: use a task branch and a PR to main; required checks
-must pass. The author may self-check and merge their own PR, with zero mandatory
-external approvals. This is not a self-Approve review. Seek a relevant teammate's
+must pass. Teammate PRs require at least one non-author Approve from a reviewer
+with write access; request dyangwong by default. New reviewable commits dismiss
+old approvals. Teammate agents must wait for actual approval, not bypass it or
+record a self-check as review. Only dyangwong retains the documented own-PR
+self-merge exception after checks; never use it to merge an unapproved teammate
+PR. This is not a self-Approve review. Seek a relevant teammate's
 review for shared contracts/schema/authority changes, but do not claim it happened.
 Never push directly, force-push or delete main. Repository writes and PR merges
 follow the current human task authorisation; a local feature task does not by

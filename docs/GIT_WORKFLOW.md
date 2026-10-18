@@ -2,11 +2,13 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/GIT_WORKFLOW.md).
 
-Danny requested a public course repository and a lightweight review process.
+Danny requested a public course repository and a lightweight review process,
+then required non-author approval for teammate PRs on 18 October 2026.
 Use GitHub Flow: one shared main branch and short task branches. A separate
 long-lived develop branch is not required. The repository's actual settings are
 the enforcement mechanism; `.github/main-protection.json` records the intended
-configuration, but committing it alone does not activate protection.
+base configuration. `.github/teammate-review-ruleset.json` adds the approval
+rule. Committing either file alone does not activate GitHub settings.
 
 ## Everyday work
 
@@ -42,8 +44,12 @@ configuration, but committing it alone does not activate protection.
 6. Required CI must pass against current main. Fetch/merge current main into the
    task branch if needed, resolve conflicts without overwriting teammates, and
    rerun checks. Resolve review discussions before merging.
-7. The author may inspect the final diff and **Squash and merge their own PR**.
-   No outside approval is mandatory. GitHub does not permit self-Approve reviews;
+7. Teammate PRs need at least one non-author **Approve** from someone with write
+   access, normally dyangwong; then an authorised person may Squash and merge.
+   Wait in Verification while review is pending. New reviewable commits dismiss
+   previous approval, so obtain renewed review after changes. Only dyangwong
+   retains an own-PR self-merge exception after all required checks pass.
+   GitHub does not permit self-Approve reviews;
    self-checking and self-merging must not be recorded as another person's review.
    A coding agent follows the human's current task authorisation; an ordinary
    local implementation task does not itself authorise remote publication/merging.
@@ -53,15 +59,19 @@ configuration, but committing it alone does not activate protection.
 
 ## main protection
 
-- Require a PR, with **0 required external approvals**.
+- Base classic protection requires a PR. Active ruleset **Teammate PR approval**
+  adds **at least 1 non-author approving review** for main, with stale approval
+  dismissal and resolved review threads. Do not mistake the base payload's zero
+  count for the effective combined rule.
 - Require `Python 3.9 checks` and `Python 3.13 checks`, and an up-to-date branch.
   These jobs run application/onboarding tests, repository provenance checks and
   JavaScript syntax checks. Passing them is not full Stage 1 acceptance coverage.
 - Require conversation resolution; enforce protection for administrators too.
 - Block force pushes and deletion of main; keep a linear history via squash merge.
 - No mandatory CODEOWNERS approval. Request relevant teammate review when changing
-  shared contracts, schema, authority checks or another member's module. Routine
-  scoped work need not wait for a second person. Do not invent review evidence.
+  shared contracts, schema, authority checks or another member's module.
+  CODEOWNERS requests dyangwong by default; any eligible non-author write reviewer
+  may satisfy the one-review gate. Do not invent review evidence.
 
 The maintainer publishes the first common baseline before protection exists.
 Once protection is active, later changes use PRs. Do not bypass it for ordinary
@@ -84,5 +94,27 @@ does not assign an open-source licence or permit invented contribution claims.
 After publication, verify actual CI runs and read back the protected-main settings.
 Select the observed CI contexts rather than relying on names that never ran. A
 setup PR can verify that merging is blocked while checks are pending and allowed
-after success without an outside approval. Record real results in VERIFICATION.
+after success with the applicable review. Record real results in VERIFICATION.
 Jira, real-model setup and teammate invitations remain distinct actions.
+
+## Owner exception and review responsibilities
+
+[Active review ruleset](https://github.com/dyangwong/elec5620-group6-beauty-company/rules/25333272)
+allows only user dyangwong (ID 226655466) to bypass this review layer on pull
+requests. This preserves Danny's earlier own-PR preference; the agent must use it
+only for his own PRs and record the exception, never describe it as an Approve.
+GitHub bypass is based on the acting account, not PR authorship: technically Danny
+could bypass a teammate PR too, but this workflow forbids that routine use.
+Teammate write accounts have no exception. No account/access change was made.
+
+The original classic protection still applies to everyone, including Danny: PR,
+current-main Python checks, conversation resolution, linear/squash history and
+no force push/deletion. The review-layer bypass does not waive that base.
+Never use an admin merge to skip CI or merge a teammate PR without approval.
+
+A reviewer checks requirement/task scope, actual diff, shared impact, executed
+verification and remaining acceptance conditions; request changes when needed.
+CI green alone is not review. Record the real reviewing account and distinguish
+human review from an explicitly authorised agent review; do not claim an unseen
+human endorsement. Branch authors request dyangwong, handle comments and keep
+Jira in Verification until review/acceptance and merge are complete.

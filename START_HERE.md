@@ -166,8 +166,11 @@ reconcile the actual claim before shared integration. A local READY record does
 not prove Jira synchronisation and must not overwrite another person's claim.
 
 Use the PR template with actual task IDs, requirement/case IDs, executed tests,
-and model/UI impacts. Required checks must pass. Authors may self-check and merge
-their own PRs; no outside approval is mandatory. Seek affected teammates' review
+and model/UI impacts. Required checks must pass. Teammate PRs require at least
+one actual non-author Approve from a write-access reviewer, normally dyangwong;
+new commits dismiss stale approvals. Agents wait for review rather than self-merge
+unapproved teammate work. Only dyangwong retains the own-PR exception described
+in GIT_WORKFLOW. Seek affected teammates' review
 for shared contracts/schema/authority changes. An agent's completion statement alone
 does not justify replacing main. Real LLM
 setup can happen later. See [BACKLOG.md](docs/BACKLOG.md) for remaining work.

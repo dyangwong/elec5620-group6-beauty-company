@@ -37,7 +37,8 @@
 
    任务表会给每人带实际 Jira 编号的建议分支。
 4. 实际开工后从 To Do 进入 In Progress；自检、测试、PR 和相关人工审阅放 Verification。
-   GitHub 检查通过后允许自己合并，不强制外部 Approve。
+   队友 PR 检查通过后还须至少一位非作者 Approve，等待审阅保持 Verification，不能 Done。
+   仅 dyangwong 有自己 PR 例外，见 GIT_WORKFLOW。
 5. 本任务条件有证据、PR 合并、模块/追踪表记清子集和待集成，才 Done。
    服务子任务不代表整模块/验收组完成；失败/未合并 PR、回执都不是完成，不按合并自动 Done。
 

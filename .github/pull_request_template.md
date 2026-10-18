@@ -42,3 +42,14 @@ work and appropriate state. Never equate a green CI or merged PR with full accep
 If model-related: confirm alignment with docs/LLM_INTEGRATION.md, identify any
 shared interface change coordinated with Danyang Wang, and distinguish preserved
 mock behaviour from actual live evidence. No duplicate provider client/deployment.
+
+## Required review
+
+- Requested reviewer (default @dyangwong):
+- Actual non-author Approve after latest reviewable changes, or pending:
+- Review comments resolved / remaining changes:
+
+Teammate PRs must wait for an actual eligible non-author approval and required CI.
+New reviewable commits dismiss old approval. Only dyangwong's own PR may use the
+review-layer exception after checks; record it as an owner exception, not review.
+Do not use that exception for teammate PRs. See docs/GIT_WORKFLOW.md.

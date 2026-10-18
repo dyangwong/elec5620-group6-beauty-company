@@ -88,8 +88,10 @@ partial coverage and remaining conditions. The public
 [GitHub repository](https://github.com/dyangwong/elec5620-group6-beauty-company)
 is live. The [initial GitHub CI run](https://github.com/dyangwong/elec5620-group6-beauty-company/actions/runs/38865450983)
 passed on Python 3.9 and 3.13, including all 37 tests, provenance checks and JS
-syntax. Main requires PRs and passing checks; authors may self-merge without an
-external approval. GitHub invitations await verified usernames. The [Jira KAN space](docs/JIRA.md)
+syntax. Main requires PRs and passing checks. Teammate PRs require at least one
+non-author Approve; only dyangwong retains the own-PR exception. On 18 October,
+GitHub showed slei0644 and ZhengduWei as write collaborators; remaining invitations
+need verified usernames. The [Jira KAN space](docs/JIRA.md)
 now has six epics and five scoped starter tasks; assignment is not a personal claim.
 
 ## Start here when contributing
@@ -107,7 +109,7 @@ now has six epics and five scoped starter tasks; assignment is not a personal cl
 - `docs/COLLABORATION.md`: proposed Jira/branch/PR workflow and done criteria.
 - `docs/DECISIONS.md`: provisional implementation choices and open decisions.
 - `docs/reference/`: privacy-redacted report PDF (all 63 pages/models), text/rubric excerpts and provenance. The unredacted original stays local and is ignored.
-- [Git workflow](docs/GIT_WORKFLOW.md): PRs and passing checks; authors may merge their own PRs without mandatory outside approval.
+- [Git workflow](docs/GIT_WORKFLOW.md): PRs, passing checks and non-author approval for teammates; documented own-PR exception for dyangwong.
 
 This is the intended Git repository root. Keep the course folder and old prototype
 outside it. The tracked archive must contain everything needed to run the app;

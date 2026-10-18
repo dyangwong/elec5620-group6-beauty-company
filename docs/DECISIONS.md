@@ -72,3 +72,15 @@ not independent providers. LLM_INTEGRATION.md defines the contract and gaming-
 laptop handoff. This supersedes unassigned future LLM ownership, while keeping
 actual deployment/provider choice deferred and BA-START-01 separate. It is not
 a claim of implementation, teammate endorsement or completion.
+
+## Teammate PR approval · 18 October 2026
+
+Danny now requires teammate PRs to have non-author Approve, superseding the earlier
+zero-external-review policy for teammates. Add active ruleset 25333272 on main:
+at least one approval, dismiss stale approval, resolve review threads; only user
+dyangwong has a PR-only review-layer exception, intended for his own PRs. Base
+classic PR/CI/admin/no-force/no-delete protections remain enforced unchanged.
+The exception is actor-based technically; agents must not use it on unapproved
+teammate PRs. CODEOWNERS requests dyangwong by default, not exclusively.
+The actual collaborator readback now shows slei0644 and ZhengduWei with write
+access; this does not establish identity/claims/contribution or who invited them.
