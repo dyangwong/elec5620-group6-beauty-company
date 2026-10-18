@@ -41,8 +41,10 @@ fabricate IDs or retroactively invent iteration history.
 - Contract changes update caller, receiver, persistence, fixtures, tests and docs.
 - AP/CO and database schema changes identify affected chains for review.
 - Preserve another member's work. Reconcile current branch changes before merging.
-- Authors may self-check and merge their PRs after required checks pass; no outside
-  approval is mandatory. Seek affected teammates' review for shared contracts,
+- Teammate PRs require passing checks and at least one non-author Approve from
+  a write-access reviewer (normally dyangwong). New commits invalidate stale
+  approvals; wait for renewed review. Only dyangwong retains an own-PR exception.
+  Seek affected teammates' review for shared contracts,
   schema or authority changes. AI generation alone is not review or contribution.
 - Changes need tests appropriate to the risk, not tests that merely repeat code.
 
@@ -76,7 +78,7 @@ that verification. Determine the on-site Python/install/network rules with the
 teaching team; original files, external model availability and cached services
 must not be hidden runtime dependencies.
 
-The current Git policy is [GIT_WORKFLOW.md](GIT_WORKFLOW.md): required PR/checks, zero mandatory outside approvals, no direct/force pushes to main. Earlier onboarding statements above describe preparation, not current hosting evidence.
+The current Git policy is [GIT_WORKFLOW.md](GIT_WORKFLOW.md): required PR/checks, non-author approval for teammate PRs with only dyangwong's own-PR exception, no direct/force pushes to main. Earlier onboarding statements above describe preparation, not current hosting evidence.
 
 Current Jira configuration is [JIRA.md](JIRA.md). Planned assignment does not prove an explicit personal claim or completed work. Earlier disconnected-tracker guidance applies only when a member lacks a working Jira connection.
 

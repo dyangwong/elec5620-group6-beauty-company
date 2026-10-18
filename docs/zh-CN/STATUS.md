@@ -73,3 +73,9 @@ Agent 委派或个人认领。JIRA.md 说明流程，jira.json 为设置快照�
 
 Danyang Wang 已保留 GR-INT-02／KAN-15，LLM_INTEGRATION.md 准备分工、接口和换机交接；
 运行仍全 mock，未部署模型，未实现 CS 意图接口。成员首批范围／认领未改。
+
+## 队友审阅政策 · 2026-10-18
+
+队友 PR 现须至少一位非作者 Approve 及原 CI；生效规则集、dyangwong 的自己 PR 例外见
+GIT_WORKFLOW 和 repository.json。早期零批准／未邀请段落为历史，今日已核实两个 write 协作者。
+本政策不改应用、成员任务或验收状态。
