@@ -154,3 +154,14 @@ affected module/traceability/implementation gaps in the implementation PR. Prese
 setup snapshots; do not mirror every Jira move into JSON or infer live status from
 STATUS.md. Without authorised Jira access, supply exact pending updates and state
 the limitation; never report the workflow as synchronised until it was observed.
+
+## Reserved shared LLM work
+
+Read docs/LLM_INTEGRATION.md before model-related changes. Danyang Wang alone
+owns GR-INT-02 shared deployment/adapter/configuration work by explicit request.
+Other members preserve injected BA/MC calls and module-local fakes, and document
+CS intent examples; they do not start duplicate provider/model integration.
+A need to change a shared signature is a bounded request to Danny, not a reason
+to implement a separate client. CS has no independent live intent port yet.
+For Danny explicitly continuing GR-INT-02, use that guide/shared task rather than
+automatically selecting BA-START-01. Runtime deployment remains deferred.

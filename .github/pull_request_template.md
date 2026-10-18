@@ -38,3 +38,7 @@ change; merging it does not complete the epic.
 Move to Verification when ready for verification. After merge, mark Done only
 with evidence for every condition of this task; otherwise record the remaining
 work and appropriate state. Never equate a green CI or merged PR with full acceptance.
+
+If model-related: confirm alignment with docs/LLM_INTEGRATION.md, identify any
+shared interface change coordinated with Danyang Wang, and distinguish preserved
+mock behaviour from actual live evidence. No duplicate provider client/deployment.

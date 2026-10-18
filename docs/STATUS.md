@@ -96,3 +96,9 @@ remain intact. No sprint, deadline, reminder, model service, agent delegation or
 personal claim was created. See JIRA.md for current workflow and jira.json for the
 setup snapshot. This supersedes earlier no-Jira setup statements, not evidence of
 any starter implementation or full module completion.
+
+## Shared LLM reservation · 18 October 2026
+
+Danyang Wang reserved GR-INT-02 / KAN-15. Contract/ownership and cross-machine
+handoff are prepared in LLM_INTEGRATION.md; runtime remains mock-only, deployment
+and CS intent port are not implemented. Member starter scopes/claims are unchanged.

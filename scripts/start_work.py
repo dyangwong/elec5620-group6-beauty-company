@@ -141,7 +141,7 @@ def prepare_session(root, identity, task_id=None):
         "member": member,
         "task": task,
         "reading_order": ["AGENTS.md", "START_HERE.md", "docs/STATUS.md", "docs/REQUIREMENTS.md",
-                          "docs/CONTRACTS.md", "docs/COLLABORATION.md", "docs/JIRA.md", "docs/SHARED_FILES.md",
+                          "docs/CONTRACTS.md", "docs/LLM_INTEGRATION.md", "docs/COLLABORATION.md", "docs/JIRA.md", "docs/SHARED_FILES.md",
                           member["module_guide"], task["brief"], "docs/reference/acceptance-cases.txt"],
         "report": {"path": source["reference_pdf"], "sha256": source["original_sha256"], "reference_sha256": source["reference_pdf_sha256"], "reference_kind": source.get("reference_kind", "byte_identical"), "pdf_pages": member["reading_pdf_pages"]},
         "shared_claim_verified": False,
@@ -152,6 +152,7 @@ def prepare_session(root, identity, task_id=None):
             "READY means the task brief is prepared, not that implementation has started or passed.",
             "Use the published common baseline and task branch; do not make independent root commits.",
             "Live/local model installation and external writes are outside these starter tasks.",
+            "Shared LLM integration GR-INT-02 is reserved to Danyang Wang; read docs/LLM_INTEGRATION.md. Do not duplicate provider work.",
         ],
     }
 

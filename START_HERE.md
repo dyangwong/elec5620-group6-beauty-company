@@ -185,3 +185,13 @@ Keep Jira current and include implementation/evidence changes in the same PR. Th
 example prompt above authorises local work only: give the human the exact Jira
 transition/progress text/links when external updates are outside authorisation or
 access is unavailable. Label them `Jira update pending`, never already applied.
+
+## Shared LLM ownership and gaming-laptop handoff
+
+[LLM_INTEGRATION.md](docs/LLM_INTEGRATION.md) reserves GR-INT-02 to Danyang Wang,
+separate from BA-START-01. Other members keep provider-neutral injected seams and
+deterministic fixtures; no duplicate model installs, SDKs or direct clients.
+Read the exact existing BA/MC signatures, the still-missing CS intent seam and
+per-module handoff requirements there. Deployment itself has not started.
+Danny's next-machine agent must explicitly select shared GR-INT-02 rather than
+relying on the member helper's default BA starter.

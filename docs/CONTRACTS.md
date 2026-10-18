@@ -91,3 +91,10 @@ EXECUTING request can be queried; an unresolved lookup escalates without retry.
 Do not add a new state casually: document its event/guard/effect and update callers,
 tests and the model deviation record. Live generated script/storyboard checking
 must inspect the actual output, not trust a model-provided list of its own claims.
+
+## Shared LLM seam and ownership
+
+See [LLM_INTEGRATION.md](LLM_INTEGRATION.md) for the preserved v1 Python calls,
+field units, module fixtures, error/mode gaps and later live acceptance. Shared
+LLM integration is reserved to Danyang Wang; current runtime remains mock-only.
+CS intent extraction is a future coordinated interface, not an implemented port.

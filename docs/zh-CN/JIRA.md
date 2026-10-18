@@ -1,6 +1,6 @@
 # Jira 工作与 GitHub 关联
 
-中文阅读副本，依据 2026-10-17 英文主版同步。以[英文主版](../JIRA.md)为维护依据。
+中文阅读副本，依据 2026-10-18 英文主版同步。以[英文主版](../JIRA.md)为维护依据。
 
 用户已建立 elec5620_team6 并连接 GitHub for Jira。2026-10-17 由 AI 辅助完成以下真实映射，
 此表是设置快照，当前分配/认领/状态仍以 Jira 为准。
@@ -92,3 +92,9 @@ GitHub for Jira 需要实际编号才能关联开发信息，不实现/验证业
 （含原 KAN-1/2），Backlog 为 0；后续待规划工作可放 Backlog。
 KAN-9 的 Development 已显示维护 [PR #2](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/2)、
 仓库、来源分支与 main 目标。维护更新中提及的编号也可能产生开发链接，不能据此认定功能已开工或通过。
+
+## 已保留的共享 LLM 任务 · 2026-10-18
+
+[KAN-15／GR-INT-02](https://uni-team6-elec5620.atlassian.net/browse/KAN-15) 已建于 KAN-9 下，
+按明确要求分配 Danyang Wang。分工／接口准备不等于开始实现，实现前保持 To Do；其他成员不重复
+做共享供应商／部署，见 [LLM_INTEGRATION.md](LLM_INTEGRATION.md)。不认领默认 BA 首批，也不完成父 Epic。

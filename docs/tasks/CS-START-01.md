@@ -59,3 +59,7 @@ are not part of this first task; document required integration instead.
 Record the precise tested subsets in CS traceability rows and a shared integration
 note if response views must expand. Do not claim full return/refund support,
 notification or all CS-T-06 conditions. Those remain backlog work.
+
+LLM handoff: read [LLM_INTEGRATION.md](../LLM_INTEGRATION.md). Danyang Wang owns
+shared integration; preserve the existing module seam and supply the relevant
+injected fixtures/examples. Do not deploy or build a separate provider client.

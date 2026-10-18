@@ -75,3 +75,12 @@ declared transformation and distinct hashes. Never replace a source hash with a
 derivative hash or publish the ignored original. A new official/local
 report revision requires an explicit source update and impact review, not editing
 the old report, its extracted text or stored hashes to make checks pass.
+
+## LLM reservation
+
+Danyang Wang owns shared GR-INT-02 (deployment, common adapter/configuration,
+provider prompts, future CS intent interface and mode reporting); see
+[LLM_INTEGRATION.md](LLM_INTEGRATION.md). Other members keep existing injected
+seams and provide local fakes/examples, preserving their original file scopes.
+Changes inside another member's module still require bounded coordination; this
+reservation does not transfer their business logic ownership to the integrator.

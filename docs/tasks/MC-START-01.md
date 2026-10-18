@@ -58,3 +58,7 @@ payloads to the existing browser renderer, which assumes a saved product/media.
 Leave real model/media deployment, actual video generation, optional variants and
 full review-decision-save recovery in the backlog. No external model download,
 credentials, posting or payment is part of this task.
+
+LLM handoff: read [LLM_INTEGRATION.md](../LLM_INTEGRATION.md). Danyang Wang owns
+shared integration; preserve the existing module seam and supply the relevant
+injected fixtures/examples. Do not deploy or build a separate provider client.

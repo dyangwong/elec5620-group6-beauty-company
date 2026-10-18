@@ -199,5 +199,20 @@
   "jira_project_key": "KAN",
   "jira_project_url": "https://uni-team6-elec5620.atlassian.net/jira/software/projects/KAN/boards/2",
   "jira_mapping_verified": "2026-10-17",
-  "semantics": "READY means a scoped brief is prepared. Jira assignment records default responsibility only; UNCLAIMED/claimed_by refer to explicit human work claims, not assignment or ticket creation. Actual Jira is authoritative for live workflow status. The local helper reads this versioned mapping without a live Jira check."
+  "semantics": "READY means a scoped brief is prepared. Jira assignment records default responsibility only; UNCLAIMED/claimed_by refer to explicit human work claims, not assignment or ticket creation. Actual Jira is authoritative for live workflow status. The local helper reads this versioned mapping without a live Jira check.",
+  "reserved_shared_work": [
+    {
+      "id": "GR-INT-02",
+      "jira_key": "KAN-15",
+      "jira_url": "https://uni-team6-elec5620.atlassian.net/browse/KAN-15",
+      "jira_epic": "KAN-9",
+      "owner_member_id": "M1",
+      "owner_name": "Danyang Wang",
+      "reservation_date": "2026-10-18",
+      "status_at_reservation": "To Do",
+      "implementation_started": false,
+      "guide": "docs/LLM_INTEGRATION.md",
+      "note": "Explicit owner reservation, separate from BA-START-01. Other members preserve injectable seams/fakes, without duplicate provider/deployment work. Use Jira for current status."
+    }
+  ]
 }
