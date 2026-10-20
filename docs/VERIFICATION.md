@@ -205,3 +205,58 @@ GitHub repository, invitation, Jira task or source publication was performed.
 - This is configuration readback, not a test using a teammate's credentials or
   evidence of any teammate review. Danny chose to retain maintenance PR #6 for
   teammate Approve; it remains open, not merged using the owner exception.
+
+## KAN-15 Windows checks · 21 October 2026 client work date
+
+Baseline e51dfc4: initial 38-test run failed with temporary-directory permissions;
+workspace TEMP/TMP rerun passed all 38. Initial provenance check failed on Git
+CRLF conversion; exact Git bytes restored, hashes unchanged, check passed.
+Added seven integration tests (45 total) and passed on Windows Python 3.14.5.
+Repository/JS syntax checks passed. Windows Setup/Start/mock HTTP probe/repeated
+Start/Stop ran successfully; configuration was preserved and the repeat-start
+alternate database was not created. Actual live-configured HTTP request without
+the model saved INCOMPLETE/LLM_TIMEOUT in about 2.1 s, and the probe exited 1.
+Strata Terminal archive hash and signed feed check passed; engine/model installation
+failed on restricted-process private directory access. Sandbox-external execution
+was rejected by approval policy. No successful real inference is claimed.
+The exact machine/versions, CLI commands, redacted failure evidence, remaining
+conditions and pending Jira handoff are in WINDOWS_LLM.md. Raw host evidence uses
+20 October UTC timestamps; client work date is 21 October, not a Jira observation.
+
+Additional local interpreter check: all 45 tests and repository checks also passed
+on Strata Terminal's bundled Python 3.12.15. These are local checks, not GitHub CI.
+Browser validation showed a completed mock recommendation and an INCOMPLETE model
+timeout record with separate configured mode labels. Windows native topology
+also confirmed 24 physical cores / 24 logical processors.
+
+## Runtime ACL repair and real BA · 21 October 2026
+
+Supersedes the earlier blocked-install/real-success-pending snapshot. Migration
+left runtime permissions inherited from D; the official owner-private ACL check
+now passes after a backed-up repair. Windows scripts support RepairModel and
+resume the installed saved profile, without duplicate download/start or config
+overwrite. Strata 0.1.46 CUDA 13 / Gyro-S is running at 8192 context, one request,
+MTP/vision off, VRAM reserve 1536 MiB. Exact model ID and actual evidence are in
+[WINDOWS_LLM_RUNTIME.md](WINDOWS_LLM_RUNTIME.md). Actual authenticated BA HTTP
+consultation passed (6.804 s, COMPLETED, simulated:false, grounded P-101 facts),
+then passed again; zero effects/approvals. All 45 offline tests, repository/JS
+checks and diff checks passed. Repeat repair preserved config/profile hashes;
+repeat StartModel/InstallModel retained the same engine process. MC remains mock,
+CS intent/live handoffs unconnected, broader acceptance/review pending. No Jira,
+commit, push, PR or merge action occurred.
+
+## Local review before the BA phase commit · 21 October 2026
+
+Reviewed the KAN-15 diff against fetched origin/main e51dfc4; no newer main or
+teammate implementation was incorporated. Two new regression tests first failed:
+a truncated chunked model response escaped as HTTP 500, and HTTPError response
+streams were not closed. Both are fixed: protocol exceptions save safe
+INCOMPLETE/LLM_INVALID_OUTPUT, and rejected response streams are closed without
+exposing provider bodies. External-directory Windows Setup also reproduced an
+incorrect configuration path; it now resolves relative LlmConfig against the repo
+and verifies the environment executable before reporting ready. Running that
+Setup twice from work/ created only var/setup-path-review.json and preserved its
+hash. All 47 tests passed on local Python 3.14.5 and 3.12.15, with repository and
+JS checks. These are local checks; remote CI, affected-owner approval and Jira
+claim/status remain unverified. The diff is prepared for a local phase commit
+and a PR-description draft; no publication or merge is implied.

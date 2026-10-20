@@ -16,6 +16,8 @@ output/
 *.key
 node_modules/
 coverage/
+*.gguf
+*.safetensors
 
 # Unredacted local source evidence must never enter a public repository.
 docs/reference/stage1-final-report.pdf

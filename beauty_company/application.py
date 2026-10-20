@@ -10,7 +10,7 @@ from .adapters.after_sales import MockAfterSales
 from .adapters.mock import MockLlm, MockMedia
 from .contracts import Actor, DomainError, require_role
 from .modules.approval import Approval
-from .modules.beauty_advisor import BeautyAdvisor, catalogue
+from .modules.beauty_advisor import BeautyAdvisor, catalogue, validated_needs
 from .modules.coordination import Coordination
 from .modules.customer_service import CustomerService
 from .modules.marketing import Marketing
@@ -39,6 +39,33 @@ class Company:
             # Eight hours is a declared local session fixture, not approval validity.
             db.execute("INSERT INTO sessions VALUES(?,?,?,?)", (hashlib.sha256(token.encode()).hexdigest(), username, csrf, time.time() + 28800))
             return token, csrf, Actor(row["id"], row["role"], row["name"])
+
+    def mode(self):
+        live = not self.ba.simulated
+        return {"simulated": not live, "model": "Local BA model" if live else "Deterministic mock",
+                "ba": "LIVE" if live else "MOCK", "mc": "MOCK", "csIntent": "NOT_CONNECTED",
+                "media": "Storyboard placeholder", "commerce": "SIMULATED",
+                "optionalFeatures": {"BA-F-03": False, "CS-F-03": False, "MC-F-03": False,
+                                     "AP-F-03": False, "CO-F-03": False}}
+
+    def consult(self, actor, data):
+        """BA first live slice: no write lock during inference; recheck before save."""
+        require_role(actor, "CUSTOMER")
+        try:
+            needs = validated_needs(data)
+        except DomainError as error:
+            with self.store.transaction() as db:
+                return self.ba._record(db, actor, "CLARIFYING", {"message": str(error), "simulated": True})
+        with self.store.read() as db:
+            result = self.ba.recommend(db, needs)
+        with self.store.transaction() as db:
+            if result["status"] == "COMPLETED":
+                current = next((p for p in catalogue(db) if p["id"] == result["product"]["id"]), None)
+                if current != result["product"]:
+                    result = {"status": "INCOMPLETE", "message": "Catalogue or stock changed during advice. Submit a fresh consultation.",
+                              "errorCode": "LLM_STALE_EVIDENCE", "simulated": self.ba.simulated}
+            return self.ba._record(db, actor, result["status"],
+                                   {"needs": needs, "result": result, "simulated": result["simulated"]})
 
     def session(self, cookie):
         jar = SimpleCookie()
@@ -78,8 +105,7 @@ class Company:
             faults = [r["name"] for r in db.execute("SELECT name FROM faults")] if actor.role == "FOUNDER" else []
             return {"actor": actor.__dict__, "products": catalogue(db), "orders": orders,
                     "records": records, "approvals": approvals, "events": events[:150], "faults": faults,
-                    "mode": {"simulated": True, "model": "Deterministic mock", "media": "Storyboard placeholder",
-                             "optionalFeatures": {"BA-F-03": False, "CS-F-03": False, "MC-F-03": False, "AP-F-03": False, "CO-F-03": False}}}
+                    "mode": self.mode()}
 
     def decide(self, actor, rid, data):
         with self.store.transaction() as db:

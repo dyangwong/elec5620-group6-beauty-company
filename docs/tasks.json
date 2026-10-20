@@ -210,9 +210,10 @@
       "owner_name": "Danyang Wang",
       "reservation_date": "2026-10-18",
       "status_at_reservation": "To Do",
-      "implementation_started": false,
+      "implementation_started": true,
       "guide": "docs/LLM_INTEGRATION.md",
-      "note": "Explicit owner reservation, separate from BA-START-01. Other members preserve injectable seams/fakes, without duplicate provider/deployment work. Use Jira for current status."
+      "note": "Danny continued KAN-15 locally, separate from BA-START-01. Strata/Gyro-S deployed after migrated runtime ACL repair; actual BA HTTP model path passed twice. MC remains mock; CS intent and broader acceptance/review pending. Jira live claim/status unverified, no update sent. See docs/WINDOWS_LLM_RUNTIME.md; reservation snapshot preserved.",
+      "local_branch": "KAN-15-shared-llm-windows"
     }
   ]
 }

@@ -57,7 +57,7 @@ def check():
         relative = path.relative_to(ROOT)
         if relative.as_posix() == "docs/reference/stage1-final-report.pdf":
             failures.append("Unredacted private report must not enter public source.")
-        if path.suffix.lower() in {".pem", ".p12", ".key", ".db", ".sqlite", ".sqlite3", ".log"} or path.name == ".env":
+        if path.suffix.lower() in {".pem", ".p12", ".key", ".db", ".sqlite", ".sqlite3", ".log", ".gguf", ".safetensors"} or path.name == ".env":
             failures.append("Runtime/credential file would enter source: " + str(relative))
         if path.suffix == ".py":
             ast.parse(path.read_text(encoding="utf-8"), filename=str(relative))

@@ -1,6 +1,6 @@
 # 当前实现状态
 
-中文阅读副本，依据 2026-10-18 英文主版同步。以[英文主版](../STATUS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+中文阅读副本，依据 2026-10-21 英文主版同步。以[英文主版](../STATUS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
 2026 年 10 月 16 日建立。初始本地基础，尚非最终提交。
 
@@ -79,3 +79,34 @@ Danyang Wang 已保留 GR-INT-02／KAN-15，LLM_INTEGRATION.md 准备分工、�
 队友 PR 现须至少一位非作者 Approve 及原 CI；生效规则集、dyangwong 的自己 PR 例外见
 GIT_WORKFLOW 和 repository.json。早期零批准／未邀请段落为历史，今日已核实两个 write 协作者。
 本政策不改应用、成员任务或验收状态。
+
+## KAN-15 本地 Windows 集成 · 2026-10-21
+
+仅本地分支取代此前“实现未开始”快照：新增可选共享 Strata BA adapter、最少证据／严格 JSON、
+安全失败映射、写事务外独立咨询／保存前商品复核、分能力与逐记录模式、可重复 Windows 命令。
+默认 mock 和队友实现／认领保留；MC 明确 mock，CS intent 未接，live HTTP CS 转交待协调。
+原有 38 和扩展 45 项离线测试在 Python 3.14.5 通过，来源／JS 检查、Windows mock HTTP／启停已测。
+Terminal／签名验证通过，引擎／模型安装被受限进程目录权限和执行策略阻止。
+实际 live 配置 HTTP 失败记录 INCOMPLETE/LLM_TIMEOUT，探针失败；真实成功、完整 GR-INT-02／Stage 1
+仍待验证。Jira 无访问／未核实，无 PR／远程写入。实测规格、版本、下载量与交接见 [WINDOWS_LLM.md](WINDOWS_LLM.md)。
+
+## runtime ACL 修复与真实 BA · 2026-10-21
+
+取代此前安装受阻／真实成功未验证快照。迁移继承 D 盘权限导致失败，已备份并通过官方私有 ACL
+修复检查。脚本新增 RepairModel，复用保存的 profile，不重复下载／启动或覆盖配置。
+Strata 0.1.46 CUDA 13／Gyro-S，8192 上下文、单并发、无 MTP／图像、显存预留 1536 MiB。
+精确 ID 和证据见 [WINDOWS_LLM_RUNTIME.md](WINDOWS_LLM_RUNTIME.md)。实际登录后 BA HTTP
+咨询通过（6.804 秒、COMPLETED、simulated:false、P-101 支持事实），随后再次通过；效果／审批均 0。
+45 项离线测试、来源／JS／差异检查通过；重复修复保留配置和 profile 哈希，重复启动保留同一进程。
+MC 仍 mock，CS intent／live 转交及更广验收／审阅待完成；没有 Jira、提交、推送、PR 或合并动作。
+
+## BA 阶段提交前本地审查 · 2026-10-21
+
+已对照 fetch 后 origin/main e51dfc4 审查 KAN-15 差异，没有引入更新 main 或队友实现。
+两个新增回归先复现失败：chunked 模型响应截断会变成 HTTP 500，HTTPError 响应流未关闭。
+现已分别修复为安全保存 INCOMPLETE/LLM_INVALID_OUTPUT 和及时关闭响应，不暴露供应商原文。
+还复现仓库外调用 Windows Setup 时配置路径解析错误，已改为相对仓库根解析 LlmConfig，
+并在报告就绪前检查环境解释器。由 work/ 连跑两次，只生成 var/setup-path-review.json，哈希不变。
+本地 Python 3.14.5 和 3.12.15 各通过 47 项测试，来源／JS 检查通过。
+这是本地验证；远程 CI、受影响负责人批准和 Jira 认领／状态仍未核实。
+差异准备作本地阶段提交及 PR 描述草稿，不代表发布或合并。

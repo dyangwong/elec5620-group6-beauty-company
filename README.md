@@ -13,7 +13,8 @@ your agent your full name/member ID/module; it can read the task packet and begi
 authorised local work. Real/local model setup is deferred and is not a prerequisite.
 
 **Current status: initial working simulation, not the completed Stage 2 submission.**
-All model responses are deterministic mocks. Media is a storyboard placeholder,
+Default model responses are deterministic mocks. KAN-15 adds opt-in standalone
+BA transport; one actual model-backed BA path now passes. See [runtime repair and evidence](docs/WINDOWS_LLM_RUNTIME.md) and [Windows setup](docs/WINDOWS_LLM.md). Media is a storyboard placeholder,
 not a video file. No production settlement, shipment or public posting exists.
 The implementation baseline remains PROPOSED until the team records acceptance.
 
@@ -29,7 +30,8 @@ python3 -m beauty_company
 Run that command **from this repository directory**. Open
 <http://127.0.0.1:5620>. Stop with Ctrl+C. Use `--port 5621` if the default is busy.
 On Windows, use `python` or `py -3` if `python3` is not available; keep the same
-remaining arguments. A native Windows run has not yet been verified here.
+remaining arguments. Native Windows app execution is now verified on Python
+3.14.5; use [repeatable Windows commands](docs/WINDOWS_LLM.md).
 Data persists in ignored `var/company.sqlite3` across restarts. To create a fresh
 isolated demo without deleting existing data:
 

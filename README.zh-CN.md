@@ -1,6 +1,6 @@
 # Beauty Company · ELEC5620 Stage 2
 
-中文阅读副本，依据 2026-10-18 英文主版同步。以[英文主版](README.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+中文阅读副本，依据 2026-10-21 英文主版同步。以[英文主版](README.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
 Group 6 的 **AI-Powered One-Person Beauty Commerce and Content Company** 初始本地原型。
 包含 BA/CS/MC 三个业务能力，以及 AP 人工审批和 CO 协调/恢复。旧原型仅供参考，
@@ -10,7 +10,8 @@ Group 6 的 **AI-Powered One-Person Beauty Commerce and Content Company** 初始
 说明自己的完整姓名、成员编号或模块后，Agent 可按任务包推进已授权的本地工作。
 真实/本地模型部署暂缓，不影响首批任务开工。
 
-**当前是能运行的初始模拟版本，尚非完整 Stage 2 提交。** 模型回复为确定性 mock；
+**当前是能运行的初始模拟版本，尚非完整 Stage 2 提交。** 默认模型回复为确定性 mock；
+KAN-15 新增可选独立 BA 传输，已验证一条真实模型 BA 路径，见 [运行修复与证据](docs/zh-CN/WINDOWS_LLM_RUNTIME.md)及 [Windows 安装](docs/zh-CN/WINDOWS_LLM.md)。
 媒体只是分镜占位，没有视频文件、真实结算、发货或公开发布。设计仍为 PROPOSED，
 须由团队记录是否采纳，不能把实现当成正式批准。
 
@@ -24,7 +25,8 @@ python3 -m beauty_company
 ```
 
 打开 <http://127.0.0.1:5620>，按 Ctrl+C 停止。端口占用时加 `--port 5621`。
-Windows 若没有 `python3`，换成 `python` 或 `py -3`；此处未验证原生 Windows 运行。
+Windows 若没有 `python3`，换成 `python` 或 `py -3`；已在原生 Windows / Python 3.14.5 验证应用，
+重复执行的命令见 [Windows 交接](docs/zh-CN/WINDOWS_LLM.md)。
 数据保存在被 Git 忽略的 `var/company.sqlite3`，重启保留。要独立演示而保留原数据：
 
 ```sh
