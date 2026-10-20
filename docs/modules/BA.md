@@ -23,3 +23,12 @@ factual validation, asynchronous revise/cancel/stale-output suppression, BA revi
 all provider failures and optional verified alternatives. Medical keyword blocking
 is a limited fixture, not a complete clinical-scope detector. A model-provided list
 of claims is insufficient to validate arbitrary generated prose.
+
+## Shared KAN-15 boundary update · 21 October 2026
+
+BA-START-01 remains separate/unclaimed by this work. The shared integrator added
+opt-in standalone BA transport, mode/error mapping and Company.consult with
+evidence recheck before save. No clarification/resumption/revision/cancellation
+starter lifecycle was implemented. tests/test_llm.py covers the bounded transport
+and HTTP slice. One actual BA model path now passes; see ../WINDOWS_LLM_RUNTIME.md.
+Full BA lifecycle/perception acceptance and the separate starter remain open.

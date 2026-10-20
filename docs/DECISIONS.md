@@ -84,3 +84,31 @@ The exception is actor-based technically; agents must not use it on unapproved
 teammate PRs. CODEOWNERS requests dyangwong by default, not exclusively.
 The actual collaborator readback now shows slei0644 and ZhengduWei with write
 access; this does not establish identity/claims/contribution or who invited them.
+
+## KAN-15 Windows BA slice · 21 October 2026
+
+Danny explicitly authorised local deployment/shared integration, separate from
+BA-START-01. Use the standard library OpenAI-compatible HTTP boundary instead of
+adding an SDK/framework. Default mock is unchanged; only standalone BA is opt-in
+live. Preserve v1 signatures, keep MC explicitly mock and block live HTTP CS
+handoffs until owner coordination. Select Strata v0.2.1 / Gyro-S / 8K / int8 KV /
+single request / no vision or MTP for the measured 32 GB RAM, 12 GB VRAM laptop;
+quality/fit/speed need real validation. The restricted install failed and no live
+success or team approval is inferred. WINDOWS_LLM.md records budgets, errors,
+scope, actual checks and next actions. No source/model diagram baseline changed.
+
+## Runtime ACL repair and real BA · 21 October 2026
+
+Supersedes the earlier blocked-install/real-success-pending snapshot. Migration
+left runtime permissions inherited from D; the official owner-private ACL check
+now passes after a backed-up repair. Windows scripts support RepairModel and
+resume the installed saved profile, without duplicate download/start or config
+overwrite. Strata 0.1.46 CUDA 13 / Gyro-S is running at 8192 context, one request,
+MTP/vision off, VRAM reserve 1536 MiB. Exact model ID and actual evidence are in
+[WINDOWS_LLM_RUNTIME.md](WINDOWS_LLM_RUNTIME.md). Actual authenticated BA HTTP
+consultation passed (6.804 s, COMPLETED, simulated:false, grounded P-101 facts),
+then passed again; zero effects/approvals. All 45 offline tests, repository/JS
+checks and diff checks passed. Repeat repair preserved config/profile hashes;
+repeat StartModel/InstallModel retained the same engine process. MC remains mock,
+CS intent/live handoffs unconnected, broader acceptance/review pending. No Jira,
+commit, push, PR or merge action occurred.

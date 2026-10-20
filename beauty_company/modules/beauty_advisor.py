@@ -3,6 +3,7 @@ import json
 import math
 
 from ..contracts import DomainError, text_value
+from ..adapters.llm import ModelError
 from ..store import Store, now
 
 
@@ -34,6 +35,10 @@ class BeautyAdvisor:
     def __init__(self, llm):
         self.llm = llm
 
+    @property
+    def simulated(self):
+        return getattr(self.llm, "ba_simulated", getattr(self.llm, "simulated", True))
+
     def recommend(self, db, needs):
         if any(word in needs["message"].lower() for word in ("diagnose", "diagnosis", "treat eczema", "诊断", "治疗")):
             return {"status": "INCOMPLETE", "message": "This consultation cannot provide medical diagnosis or treatment.", "simulated": True}
@@ -41,21 +46,25 @@ class BeautyAdvisor:
         candidates = [p for p in catalogue(db) if p["availability"] == "AVAILABLE"
                       and p["price"] <= needs["budget"] and required_fact in p["facts"]
                       and (not needs["fragranceFree"] or p["fragrance_free"])]
-        proposal = self.llm.propose(needs, candidates)
+        try:
+            proposal = self.llm.propose(needs, candidates)
+        except ModelError as error:
+            return {"status": "INCOMPLETE", "message": str(error), "errorCode": error.code,
+                    "simulated": self.simulated}
         if not isinstance(proposal, dict):
-            return {"status": "INCOMPLETE", "message": "The model returned malformed output; the proposal was withheld.", "simulated": True}
+            return {"status": "INCOMPLETE", "message": "The model returned malformed output; the proposal was withheld.", "simulated": self.simulated}
         selected = next((p for p in candidates if p["id"] == proposal.get("productId")), None)
         if not selected:
-            return {"status": "INCOMPLETE", "message": "No reliable available match can be offered for these constraints.", "simulated": True}
+            return {"status": "INCOMPLETE", "message": "No reliable available match can be offered for these constraints.", "simulated": self.simulated}
         claims = proposal.get("factRefs")
         if not isinstance(claims, list) or not claims or any(c not in selected["facts"] for c in claims):
-            return {"status": "INCOMPLETE", "message": "The proposed claims could not be verified; the output was withheld.", "simulated": True}
+            return {"status": "INCOMPLETE", "message": "The proposed claims could not be verified; the output was withheld.", "simulated": self.simulated}
         return {"status": "COMPLETED", "product": selected, "reasons": claims,
                 "evidence": {"catalogueRef": f"catalogue:{selected['id']}:v{selected['version']}",
                              "inventoryObservation": now(), "availability": selected["availability"],
                              "constraints": {k: v for k, v in needs.items() if k != "message"}},
                 "message": "Matched against the explicit need, budget and fragrance constraint. Selection does not authorise a purchase.",
-                "simulated": True}
+                "simulated": self.simulated}
 
     def submit(self, db, actor, data):
         # A missing decision-relevant field is an explicit clarification, not an inferred default.
@@ -64,10 +73,10 @@ class BeautyAdvisor:
         except DomainError as error:
             return self._record(db, actor, "CLARIFYING", {"message": str(error), "simulated": True})
         result = self.recommend(db, needs)
-        return self._record(db, actor, result["status"], {"needs": needs, "result": result, "simulated": True})
+        return self._record(db, actor, result["status"], {"needs": needs, "result": result, "simulated": result["simulated"]})
 
     @staticmethod
     def _record(db, actor, status, payload):
         rid = Store.create(db, "BA", actor.id, status, payload, "BA")
-        Store.event(db, rid, "BA", "CONSULTATION_RECORDED", {"status": status, "simulated": True})
+        Store.event(db, rid, "BA", "CONSULTATION_RECORDED", {"status": status, "simulated": payload["simulated"]})
         return Store.get(db, rid)

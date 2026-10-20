@@ -96,5 +96,8 @@ must inspect the actual output, not trust a model-provided list of its own claim
 
 See [LLM_INTEGRATION.md](LLM_INTEGRATION.md) for the preserved v1 Python calls,
 field units, module fixtures, error/mode gaps and later live acceptance. Shared
-LLM integration is reserved to Danyang Wang; current runtime remains mock-only.
+LLM integration is reserved to Danyang Wang; default runtime remains mock.
+Opt-in standalone BA transport and precise mode/error reporting are documented in
+[WINDOWS_LLM.md](WINDOWS_LLM.md). One actual BA model path is now verified; see
+[WINDOWS_LLM_RUNTIME.md](WINDOWS_LLM_RUNTIME.md).
 CS intent extraction is a future coordinated interface, not an implemented port.
