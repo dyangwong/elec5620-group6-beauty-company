@@ -205,3 +205,30 @@ GitHub repository, invitation, Jira task or source publication was performed.
 - This is configuration readback, not a test using a teammate's credentials or
   evidence of any teammate review. Danny chose to retain maintenance PR #6 for
   teammate Approve; it remains open, not merged using the owner exception.
+
+## AP recording recovery slice · 24 October 2026
+
+- Added `tests/test_ap.py` (15 cases) and adapted the existing AP atomic-audit-failure
+  regression in `tests/test_workflows.py`. The combined suite passes 53 tests on
+  Python 3.13.3 locally; `python3 scripts/check_repository.py` passes with 93 source
+  files and the 41 tracked case groups intact, and `node --check
+  beauty_company/web/app.js` passes. The Python 3.9/3.13 CI outcome is recorded on
+  the pull request rather than asserted here.
+- Verified against a temporary SQLite database: an injected decision-recording
+  failure leaves the approval at RECORDING_FAILED with no decision id, decision,
+  reason or founder, no delivered approval, no business effect and no
+  DECISION_COMMITTED audit. The intended Founder, kind, reason and exact scope
+  stay readable from storage.
+- Verified that a new service instance over the same database recovers the same
+  intended decision exactly once: one authoritative decision, one decision audit,
+  one delivery, and no duplicate business dispatch when the Customer confirms.
+- Verified that a conflicting kind or reason is refused, that a stale revision or
+  a superseded request is refused, that a non-Founder and a different Founder are
+  refused, and that a request receipt or a pending intent is never read back as
+  an approval.
+- Verified that a failed delivery after a recovery preserves the committed
+  decision and that redelivery reuses its decision id.
+- Not verified here: a real external storage outage (the failure is an injected
+  local fixture), the HTTP/UI recovery control and the demo fault dropdown option
+  (GR-INT-01 shared integration), expiry, notification/queue failure and risk
+  routing. AP-T-05 therefore stays PARTIAL rather than PASSED.
