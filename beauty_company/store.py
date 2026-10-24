@@ -57,6 +57,13 @@ class Store:
                     decision TEXT, reason TEXT, founder_id TEXT, delivery TEXT NOT NULL,
                     created TEXT NOT NULL, predecessor TEXT,
                     UNIQUE(origin_role, origin_id, revision));
+                CREATE TABLE IF NOT EXISTS approval_intents (
+                    id TEXT PRIMARY KEY, approval_id TEXT NOT NULL UNIQUE REFERENCES approvals(id),
+                    founder_id TEXT NOT NULL, kind TEXT NOT NULL, reason TEXT NOT NULL,
+                    origin_role TEXT NOT NULL, origin_id TEXT NOT NULL, revision INTEGER NOT NULL,
+                    action_ref TEXT, action TEXT NOT NULL, evidence TEXT NOT NULL,
+                    status TEXT NOT NULL, decision_id TEXT,
+                    created TEXT NOT NULL, updated TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS effects (
                     action_ref TEXT PRIMARY KEY, request_id TEXT NOT NULL,
                     revision INTEGER NOT NULL, product_id TEXT NOT NULL, result TEXT NOT NULL);

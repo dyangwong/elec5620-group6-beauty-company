@@ -216,14 +216,33 @@ class WorkflowTests(unittest.TestCase):
 
     def test_ap_t_03_decision_and_audit_roll_back_together(self):
         request = self.pending()
-        with patch.object(Store, "event", side_effect=RuntimeError("injected audit write failure")):
-            with self.assertRaises(RuntimeError):
-                self.decision(request["payload"]["approvalId"])
+        rid = request["payload"]["approvalId"]
+        real_event = Store.event
+
+        def fail_commit_audit(db, entity_id, role, event, detail):
+            # Only the authoritative decision audit fails; the intent is recorded first.
+            if event == "DECISION_COMMITTED":
+                raise RuntimeError("injected audit write failure")
+            return real_event(db, entity_id, role, event, detail)
+
+        with patch.object(Store, "event", side_effect=fail_commit_audit):
+            with self.assertRaises(DomainError) as caught:
+                self.decision(rid)
+        # The commit rolled back, so no committed decision and no authority exist.
+        self.assertEqual(caught.exception.code, "RECORDING_FAILED")
+        self.assertIsInstance(caught.exception.__cause__, RuntimeError)
         with self.company.store.read() as db:
-            review = self.company.ap.get(db, request["payload"]["approvalId"])
-        self.assertEqual(review["status"], "PENDING")
+            review = self.company.ap.get(db, rid)
+            intent = self.company.ap.intent(db, rid)
+            events = [row["event"] for row in db.execute("SELECT event FROM events WHERE entity_id=?", (rid,))]
+        self.assertEqual(review["status"], "RECORDING_FAILED")
         self.assertIsNone(review["decision_id"])
+        self.assertNotIn("DECISION_COMMITTED", events)
         self.assertEqual(self.effects(), 0)
+        # The intended decision identity stays recoverable from storage.
+        self.assertIsNotNone(intent)
+        self.assertEqual(intent["kind"], "APPROVE")
+        self.assertEqual(intent["status"], "RECORDING_FAILED")
 
     def test_ap_t_07_approval_cannot_create_stock(self):
         request = self.approved()

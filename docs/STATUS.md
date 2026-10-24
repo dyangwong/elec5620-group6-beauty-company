@@ -17,6 +17,8 @@ historical. Update affected behaviour/gaps here in the implementation PR.
   handoff to BA; current Customer confirmation and exact-scope AP review.
 - AP approve/reject/request-revision, atomic decision/request/audit commit, separate
   delivery and same-decision redelivery. Delivery never executes business work.
+- AP durable decision intent, RECORDING_FAILED on a failed decision commit and
+  storage-only same-decision recovery. A pending intent grants no authority.
 - CS persistent actionRef, simulated service effect, once-only stock decrement,
   post-write-timeout lookup and outcome-recording recovery without repeat effects.
 - MC deterministic script and three storyboard cards, labelled mock media;
@@ -49,9 +51,9 @@ repository have now been published; see the collaboration status below.
   failure modes. Initial fixture routes every exchange through human review.
 - General CO dispatch/role unavailability/cancellation, unknown external outcomes,
   independent distributed services and automatic retry.
-- AP decision-recording failure state machine with durable same-decision-intent
-  recovery, expiry and complete risk classification. Atomic rollback is tested,
-  but this is not full AP-T-05 implementation.
+- AP expiry, cancellation and complete risk/unknown-risk classification. The
+  decision-recording failure state machine and durable same-decision-intent recovery
+  are implemented and tested; the HTTP/UI recovery control is still GR-INT-01.
 - Real/generated mock video files, media failure/quality workflows, persistent MC
   failed-generation states, full generated-claim validation and review-save recovery.
 - All five optional features (OFF/not implemented); no enabled-mode claims.
@@ -110,3 +112,19 @@ active review ruleset and own-PR exception for dyangwong are documented in
 GIT_WORKFLOW and repository.json. Earlier zero-review/no-invitation sections are
 dated history: two write collaborators were observed today. No application or
 member task/acceptance state changed as part of this policy update.
+
+## AP recording recovery slice · 24 October 2026
+
+KAN-13 / AP-START-01 added a durable AP decision intent, the RECORDING_FAILED
+state machine and storage-only same-decision recovery. A failed decision commit
+leaves no committed envelope, no delivered approval and no business effect; the
+intended Founder, kind, reason and exact scope stay recoverable from storage, and
+a restarted service can commit that same intended decision exactly once. This is a
+local SQLite simulation of a storage failure, not a real provider outage, and it
+does not add the HTTP/UI recovery control (GR-INT-01), expiry or risk routing.
+
+The implementation is open as [PR #9](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/9)
+from branch `KAN-13-ap-start-01` into `main`. The Python 3.9/3.13 workflow runs
+succeeded on commit `c433ef0`; a non-author approval from a reviewer with write
+access is still pending, and the Jira KAN-13 workflow update is still pending for
+an authorised person.
