@@ -72,6 +72,12 @@ are not implemented or established by this task.
 
 ## Outcome · 24 October 2026 · KAN-13 · branch `KAN-13-ap-start-01`
 
+Pull request: [PR #9](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/9),
+opened on 24 October 2026 against `main`. Review is requested from @dyangwong and the
+Python 3.9/3.13 workflow runs completed successfully on commit `c433ef0`. No non-author
+approval has been observed yet and the Jira workflow update is still pending for an
+authorised person.
+
 Implemented as specified above. A durable decision intent (Founder, exact scope,
 kind, reason) is written in its own committed transaction before the decision
 commit. A failed commit exposes `RECORDING_FAILED` with no decision id, no

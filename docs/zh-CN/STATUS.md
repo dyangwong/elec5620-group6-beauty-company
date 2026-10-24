@@ -87,3 +87,7 @@ KAN-13／AP-START-01 增加可持久化的 AP 决定意图、RECORDING_FAILED �
 决定提交失败后没有已提交信封、没有已投递批准、没有业务效果；预期的 Founder、种类、理由和精确范围仍可恢复，
 重启后的服务可恰好一次提交同一预期决定。这是本地 SQLite 对存储失败的模拟，不是真实供应商故障，
 也未增加 HTTP/UI 恢复控制（GR-INT-01）、过期或风险分流。
+
+实现以 [PR #9](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/9) 开启，
+分支 `KAN-13-ap-start-01` 指向 `main`。Python 3.9/3.13 工作流在提交 `c433ef0` 上成功；
+仍缺有写权限者的非作者批准，Jira KAN-13 工作流更新仍待授权人员执行。

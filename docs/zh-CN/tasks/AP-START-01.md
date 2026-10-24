@@ -50,6 +50,10 @@ AP-AC-02/03/04/05/06；AP-NFR-01/02/03/04。主要目标 AP-T-05，回归 AP-T-0
 
 ## 结果 · 2026-10-24 · KAN-13 · 分支 `KAN-13-ap-start-01`
 
+拉取请求：[PR #9](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/9)，
+于 2026-10-24 针对 `main` 开启。已向 @dyangwong 请求评审，Python 3.9/3.13 工作流在提交
+`c433ef0` 上成功完成。尚未观察到非作者批准，Jira 工作流更新仍待授权人员执行。
+
 按上文实现。持久决定意图（Founder、精确范围、种类、理由）在决定提交之前写入独立已提交事务。
 提交失败暴露 `RECORDING_FAILED`，没有 decisionId、没有已投递批准、没有业务效果。
 `Company.recover_decision` 从存储读取意图，重新校验 Founder 与当前范围，并在任何投递前恰好一次提交同一预期决定。

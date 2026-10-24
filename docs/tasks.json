@@ -120,7 +120,7 @@
       "claim_state": "CLAIMED",
       "claimed_by": "M4",
       "jira_key": "KAN-13",
-      "pr_url": null,
+      "pr_url": "https://github.com/dyangwong/elec5620-group6-beauty-company/pull/9",
       "brief": "docs/tasks/AP-START-01.md",
       "suggested_branch": "KAN-13-ap-start-01",
       "features": [

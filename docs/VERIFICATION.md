@@ -232,3 +232,9 @@ GitHub repository, invitation, Jira task or source publication was performed.
   local fixture), the HTTP/UI recovery control and the demo fault dropdown option
   (GR-INT-01 shared integration), expiry, notification/queue failure and risk
   routing. AP-T-05 therefore stays PARTIAL rather than PASSED.
+- Observed on the pull request [PR #9](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/9):
+  the "Local prototype checks" workflow runs for the push event and the pull
+  request event both completed successfully on commit `c433ef0` (Python 3.9 and
+  Python 3.13 jobs). The branch protection requires one non-author Approve from a
+  reviewer with write access, so the pull request stays open and unmerged; no
+  approval was observed when it was opened.
