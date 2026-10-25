@@ -148,3 +148,23 @@ stop checks passed. No test listeners remain, and original config/database hashe
 and all 56 model-file size/mtime entries are unchanged. No remote publication or
 Jira write occurred during the regression run. Full evidence, local patch scope and limitations are in the
 25 October Windows checkpoint in [VERIFICATION.md](VERIFICATION.md).
+
+## Local model stability and restart · 25 October 2026
+
+At exact application commit dbb6662, a 319.467 s single-request local run passed:
+20 continuous BA calls, 180 s idle plus three calls, a safely saved unavailable
+result with the model stopped, and three calls after restarting the same saved
+profile. All 26 positive results were COMPLETED/simulated:false and independently
+validated; the stopped-provider result was INCOMPLETE/LLM_UNAVAILABLE, with no
+fallback. The 84 offline tests passed while the provider was stopped. Repeat
+StartModel reused its instance; restart readiness was 20.017 s. Both test attempts
+were cleaned up and original data/config/model inventory preserved.
+
+Free VRAM was 1957–2023 MiB while loaded, but system RAM reached only 2.35 GiB
+available. Keep the validated single-request configuration. This is a short fixture
+run, not overnight, sleep/reboot, multi-user, full-context or remote acceptance.
+An initial controller pipe-wait issue was fixed outside application code and its
+zero-call attempt excluded. See the same-date stability checkpoint in
+[VERIFICATION.md](VERIFICATION.md). Danny subsequently authorised publication
+of these bilingual evidence records to PR #8; the stability run itself made
+no remote write. No Jira update, merge or review bypass is included.

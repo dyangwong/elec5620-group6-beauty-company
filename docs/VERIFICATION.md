@@ -385,3 +385,52 @@ update, but the regression run did not independently verify Jira or perform any
 Jira/PR write. Danny subsequently authorised publication of this evidence and
 stop fix to PR #8. Fresh CI and actual review must apply to the publication commit;
 this self-check is not an Approve. No merge, review bypass or Jira write is included.
+
+## Local model stability and restart · 25 October 2026
+
+Danny / M1 continued KAN-15 / GR-INT-02 at exact commit
+`dbb6662fc1f71db9d40657bfa959cb712364b7bd`, using a new database on loopback
+port 5641 and the existing Strata/Gyro-S profile on 8080. No model/config/code
+change, dependency install, BA starter claim or CS/MC expansion was made.
+
+- Completed 20 serial actual authenticated HTTP BA requests (10 hydration,
+  10 cleansing), a measured 180 s idle interval, three post-idle calls, model
+  stop/start and three post-restart calls. All **26** succeeded as
+  COMPLETED/simulated:false. SQLite readback independently checked product,
+  literal facts, integer-cent price/budget, fragrance, stock and version.
+- Continuous-call min/median/max: 1.292/1.385/15.203 s; post-idle:
+  1.277/1.321/2.802 s; post-restart: 1.994/2.421/7.386 s. These include local
+  HTTP/persistence validation and are fixture timings, not general throughput.
+- Initial model readiness took 18.816 s, restart readiness 20.017 s. Repeated
+  StartModel retained the same instance/listener PID; after idle the same
+  instance stayed ready. Restart created a new instance from the same profile.
+- With the model actually stopped, a consultation saved
+  INCOMPLETE/LLM_UNAVAILABLE/simulated:false in 2.109 s, with no mock fallback.
+  All 84 offline tests passed during that stopped-provider interval (23.512 s).
+  The same application/database remained available across the model restart.
+- Final database: 26 COMPLETED, one expected INCOMPLETE, zero approvals and
+  zero commerce effects; catalogue stock remained 12/8/0. No OOM, fatal CUDA
+  error, traceback or crash marker was found in captured model logs.
+- Loaded/request/idle samples: free VRAM 1957–2023 MiB; available system RAM
+  2.35–11.16 GiB. RAM headroom is limited. No tuning or cache-clearing was done.
+- Captured original config/profile/database hashes and all 56 model-file
+  size/mtime entries stayed unchanged. All processes created by both attempts
+  were stopped by their owned receipts/instance identities; test ports ended.
+
+One initial controller attempt produced zero consultations: an inherited Windows
+output pipe kept the launcher waiting after the app was ready. Only its owned
+app/model were stopped. File-backed controller output resolved the wait; the
+completed run used a fresh database. This was not counted as a successful test.
+
+The successful window was 319.467 s (about 5.3 minutes), single request at a time,
+using short structured fixtures. It does not validate overnight operation,
+Windows reboot/sleep/resume, long prompts, concurrent users, broad advice quality,
+remote Mac/Windows access or real CS/MC. No memory-leak guarantee is inferred.
+This was actual HTTP automation, not a new manual browser acceptance run.
+Raw evidence stays ignored under
+`var/stability-20261025-dbb6662-20261025T053019994156Z/`. Bilingual evidence
+records were prepared locally without a remote write during the stability run. Danny then
+authorised publication of these four bilingual evidence documents to PR #8.
+The tested application remains the exact commit above; fresh CI must apply
+to the documentation publication commit. No model/config/code, SSH/firewall
+or Jira change, merge or review bypass is included.
