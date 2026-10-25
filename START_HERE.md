@@ -195,6 +195,7 @@ access is unavailable. Label them `Jira update pending`, never already applied.
 separate from BA-START-01. Other members keep provider-neutral injected seams and
 deterministic fixtures; no duplicate model installs, SDKs or direct clients.
 Read the exact existing BA/MC signatures, the still-missing CS intent seam and
-per-module handoff requirements there. Deployment itself has not started.
+per-module handoff requirements there. KAN-15 local adapter work has now begun;
+the local model and one actual BA path now pass. See [runtime evidence](docs/WINDOWS_LLM_RUNTIME.md).
 Danny's next-machine agent must explicitly select shared GR-INT-02 rather than
 relying on the member helper's default BA starter.

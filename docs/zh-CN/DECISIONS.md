@@ -1,6 +1,6 @@
 # 暂定实现决定
 
-中文阅读副本，依据 2026-10-18 英文主版同步。以[英文主版](../DECISIONS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+中文阅读副本，依据 2026-10-21 英文主版同步。以[英文主版](../DECISIONS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
 2026 年 10 月 16 日。Danny 已授权本地实现；这些技术选择不代表团队/老师批准原 PROPOSED 设计。
 
@@ -62,3 +62,21 @@ Danny 现要求队友 PR 非作者 Approve，替代早期队友无需外部批�
 原基础 PR／CI／管理员约束／禁强推删除保留。技术上按操作账号给例外，Agent 不得用于未批准队友 PR。
 CODEOWNERS 默认请求 dyangwong，不独占审阅。实际读回 slei0644、ZhengduWei 有 write，
 不推断身份／认领／贡献或谁发邀请。
+
+## KAN-15 Windows BA 切片 · 2026-10-21
+
+Danny 明确授权本地部署／共享集成，独立于 BA-START-01。标准库兼容 HTTP adapter，不加 SDK／框架；
+默认 mock 不变，只允许独立 BA 显式 live；v1 签名兼容，MC 明确 mock，live HTTP CS 转交等负责人协调。
+按实测 32 GB RAM、12 GB VRAM 先选 Strata v0.2.1／Gyro-S／8K／int8 KV／单并发／无图像或 MTP，
+质量、容量和速度仍待实测；受限安装失败，不推断真实成功或团队批准。预算、错误、范围、实际检查
+和后续动作见 WINDOWS_LLM.md。未改来源／模型图基线。
+
+## runtime ACL 修复与真实 BA · 2026-10-21
+
+取代此前安装受阻／真实成功未验证快照。迁移继承 D 盘权限导致失败，已备份并通过官方私有 ACL
+修复检查。脚本新增 RepairModel，复用保存的 profile，不重复下载／启动或覆盖配置。
+Strata 0.1.46 CUDA 13／Gyro-S，8192 上下文、单并发、无 MTP／图像、显存预留 1536 MiB。
+精确 ID 和证据见 [WINDOWS_LLM_RUNTIME.md](WINDOWS_LLM_RUNTIME.md)。实际登录后 BA HTTP
+咨询通过（6.804 秒、COMPLETED、simulated:false、P-101 支持事实），随后再次通过；效果／审批均 0。
+45 项离线测试、来源／JS／差异检查通过；重复修复保留配置和 profile 哈希，重复启动保留同一进程。
+MC 仍 mock，CS intent／live 转交及更广验收／审阅待完成；没有 Jira、提交、推送、PR 或合并动作。

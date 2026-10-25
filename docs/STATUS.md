@@ -11,8 +11,10 @@ historical. Update affected behaviour/gaps here in the implementation PR.
 
 - Loopback web app with Customer and Founder workspaces; same-origin JSON API.
 - Fictional accounts; server-created opaque sessions, role/ownership checks and CSRF.
-- BA mock advice from explicit structured constraints and catalogue/stock snapshots;
-  missing constraints, unsupported claimed facts and selected medical requests stop.
+- BA default mock advice plus opt-in standalone local Strata consultation;
+  explicit constraints and independent catalogue/fact checks remain in force.
+  One real BA HTTP path is verified in WINDOWS_LLM_RUNTIME.md; full natural-language
+  clarification and unrestricted generated-text grounding remain incomplete.
 - CS **exchange-only** intake with explicit synthetic policy; Founder-initiated CO
   handoff to BA; current Customer confirmation and exact-scope AP review.
 - CS service-level assess intake retains missing/conflicting/unavailable policy outcomes;
@@ -47,8 +49,8 @@ repository have now been published; see the collaboration status below.
 
 ## Not implemented or not yet established
 
-- Live LLM perception, natural-language planning or live tools; provider selection,
-  keys, costs and schema/claim validation for unrestricted live output.
+- Full natural-language perception/planning and live CS/MC tools beyond the verified
+  standalone BA slice; schema/claim validation for unrestricted live output.
 - Full BA revision/cancellation/review lifecycle and all medical/unsafe-language cases.
 - Returns/refunds, routine policy alternatives, full CS cancellation and evidence
   failure modes beyond the KAN-11 service subset; default HTTP/UI retained failed
@@ -71,8 +73,9 @@ repository have now been published; see the collaboration status below.
 ## Honest demonstration boundary
 
 Database persistence, authority guards, audit commit, action identity and recovery
-logic execute locally. Model interpretation and media generation do not. The
-mock adapter is an implementation aid, not evidence of the AI-capability marks.
+logic execute locally. Standalone BA can explicitly use the verified local model;
+MC/media remain mocks and CS intent is not connected. The default mock alone is
+not evidence of live AI capability or a completed multi-agent system.
 The policy eligibility flag, always-review fixture, prices, stock and eight-hour
 demo session lifetime are explicit synthetic choices, not approved business policy.
 
@@ -117,6 +120,55 @@ GIT_WORKFLOW and repository.json. Earlier zero-review/no-invitation sections are
 dated history: two write collaborators were observed today. No application or
 member task/acceptance state changed as part of this policy update.
 
+## KAN-15 local Windows integration · 21 October 2026
+
+Supersedes the earlier implementation-not-started snapshot only for this local
+branch. Added an opt-in shared Strata BA adapter, minimal evidence/strict JSON,
+typed safe failures, standalone consultation outside write transactions with
+catalogue recheck, capability/record mode labels and repeatable Windows commands.
+Default mock behaviour and teammate implementations/claims are preserved; MC is
+explicitly mock, CS intent is not connected and live HTTP CS handoffs are blocked
+pending coordination. Original 38 and expanded 45 offline tests pass on Python
+3.14.5, with repository/JS checks and Windows mock HTTP/start/stop validation.
+Strata Terminal/signature check passed; engine/model installation is blocked by
+restricted-process private-directory permissions and execution policy. Actual
+live-configured HTTP failure saved INCOMPLETE/LLM_TIMEOUT with a failing probe;
+successful real model BA inference, full GR-INT-02 and Stage 1 acceptance remain
+pending. Jira is inaccessible/unverified, no PR or remote write occurred. Exact
+machine, selected versions, download budget and handoff: [WINDOWS_LLM.md](WINDOWS_LLM.md).
+
+## Runtime ACL repair and real BA · 21 October 2026
+
+Supersedes the earlier blocked-install/real-success-pending snapshot. Migration
+left runtime permissions inherited from D; the official owner-private ACL check
+now passes after a backed-up repair. Windows scripts support RepairModel and
+resume the installed saved profile, without duplicate download/start or config
+overwrite. Strata 0.1.46 CUDA 13 / Gyro-S is running at 8192 context, one request,
+MTP/vision off, VRAM reserve 1536 MiB. Exact model ID and actual evidence are in
+[WINDOWS_LLM_RUNTIME.md](WINDOWS_LLM_RUNTIME.md). Actual authenticated BA HTTP
+consultation passed (6.804 s, COMPLETED, simulated:false, grounded P-101 facts),
+then passed again; zero effects/approvals. All 45 offline tests, repository/JS
+checks and diff checks passed. Repeat repair preserved config/profile hashes;
+repeat StartModel/InstallModel retained the same engine process. MC remains mock,
+CS intent/live handoffs unconnected, broader acceptance/review pending. No Jira,
+commit, push, PR or merge action occurred.
+
+## Local review before the BA phase commit · 21 October 2026
+
+Reviewed the KAN-15 diff against fetched origin/main e51dfc4; no newer main or
+teammate implementation was incorporated. Two new regression tests first failed:
+a truncated chunked model response escaped as HTTP 500, and HTTPError response
+streams were not closed. Both are fixed: protocol exceptions save safe
+INCOMPLETE/LLM_INVALID_OUTPUT, and rejected response streams are closed without
+exposing provider bodies. External-directory Windows Setup also reproduced an
+incorrect configuration path; it now resolves relative LlmConfig against the repo
+and verifies the environment executable before reporting ready. Running that
+Setup twice from work/ created only var/setup-path-review.json and preserved its
+hash. All 47 tests passed on local Python 3.14.5 and 3.12.15, with repository and
+JS checks. These are local checks; remote CI, affected-owner approval and Jira
+claim/status remain unverified. The diff is prepared for a local phase commit
+and a PR-description draft; no publication or merge is implied.
+
 ## AP recording recovery slice · 24 October 2026
 
 KAN-13 / AP-START-01 added a durable AP decision intent, the RECORDING_FAILED
@@ -132,3 +184,37 @@ from branch `KAN-13-ap-start-01` into `main`. The Python 3.9/3.13 workflow runs
 succeeded on commit `c433ef0`; a non-author approval from a reviewer with write
 access is still pending, and the Jira KAN-13 workflow update is still pending for
 an authorised person.
+
+
+## CS/AP and LLM branch integration · 25 October 2026
+
+PR #7 merged as `6e505f0`; AP PR #9 was updated with that main, independently
+verified with 75 offline tests, approved through an explicitly authorised
+AI-assisted dyangwong review and normally merged as `840ac70` after fresh required
+Python 3.9/3.13 checks. The dated earlier open/pending-review records are history.
+
+PR #8 now incorporates that main without replacing either owner's work. Six
+English/Chinese documentation conflicts were resolved by retaining AP recovery
+and Windows LLM evidence together. The combined candidate passes 84 offline
+tests, repository/source checks (107 source files, 41 tracked case groups) and
+JavaScript syntax. This Mac integration does not rerun Windows deployment or
+real Strata inference; the earlier Windows evidence remains scoped as recorded.
+
+MC PR #11 is excluded pending its failure-rendering and mutable-media validation
+fixes/re-review. CS retained-intake HTTP/UI, AP HTTP/UI recovery, real CS/MC model
+paths and complete acceptance remain open. Jira verification is separate from
+whole-module/epic completion; no task is marked Done merely because of a merge.
+
+## Windows post-CS/AP regression · 25 October 2026
+
+Integrated commit 966dae4 (main 840ac70) passed all 84 offline tests on Windows
+Python 3.14.5 and 3.12.15, provenance and JS checks. Actual BA browser inference,
+independent saved-fact validation, timeout/unavailable non-success, CS/AP exact
+scope/customer confirmation/one-effect HTTP flow and durable AP-service recovery
+were exercised in fresh databases. Existing model/config/data were preserved.
+MC remains mock; live CS handoff limits remain accurate. A bounded local stop
+script fix in this update safely handles inaccessible PID metadata.
+AP web recovery is absent; its recording-failed card also uses misleading
+superseded fallback text, recorded for affected-owner/shared UI follow-up.
+The regression run did not touch PR #11, BA starter claims or Jira. See the dated
+VERIFICATION checkpoint; broader acceptance and actual owner review remain open.

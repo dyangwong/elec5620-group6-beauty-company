@@ -1,8 +1,8 @@
 case_id,requirement,source,implementation_status,automated_test_prefixes,remaining_scope
 BA-T-01,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_01,Clarification fixture only; response/resumption and complete requirement checks pending.
-BA-T-02,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_02,"Grounded deterministic mock, not live LLM perception."
-BA-T-03,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_03,UNKNOWN stock tested; provider timeouts/errors and refreshed retry remain.
-BA-T-04,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_04,Unsupported mock claim withheld; all malformed/conflicting/live output cases remain.
+BA-T-02,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_02;test_live_ba_transport,"Default mock and shared BA transport tested offline; actual local BA model request completed with independent fact checks; full natural-language perception/lifecycle pending."
+BA-T-03,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_03;test_unavailable_timeout;test_inference_releases;test_broken_chunked_transport,UNKNOWN stock and shared BA timeout/unavailable transport withholding tested; refreshed retry and full lifecycle remain.
+BA-T-04,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_04;test_invalid_truncated,Unsupported mock claims and malformed/unsupported shared BA transport output withheld; full conflicting/live-model matrix remains.
 BA-T-05,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_05,Selected diagnosis phrases blocked; conditional BA review workflow remains.
 BA-T-06,BA-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
 BA-T-07,BA-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
@@ -37,6 +37,6 @@ CO-T-06,CO-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_06,Uncerta
 CO-T-07,CO-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_02;test_ap_rejection_and_revision,Exchange review boundaries only; general CO authority dispatch remains.
 CO-T-08,CO-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_co_t_08,Outcome-storage injection/recovery; all coordination audit-write failure points remain.
 GR-T-01,GR-C-01..06,docs/reference/acceptance-cases.txt,PARTIAL,test_gr_t_02,All 15 IDs tracked and optional OFF; not all features or models implemented.
-GR-T-02,GR-C-01..06,docs/reference/acceptance-cases.txt,PARTIAL,test_gr_t_02;test_co_t_01,Integrated deterministic exchange slice; real LLM and full case audit remain.
+GR-T-02,GR-C-01..06,docs/reference/acceptance-cases.txt,PARTIAL,test_gr_t_02;test_co_t_01;test_http_auth_and_live_cs_guard,Integrated mock exchange and actual standalone BA model HTTP path verified; live integrated CS/MC and full case audit remain.
 GR-T-03,GR-C-01..06,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_03;test_ap_t_06;test_cs_t_06,Selected commit/delivery/write-timeout boundaries; full matrix remains.
 GR-T-04,GR-C-01..06,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_04;test_gr_t_03,Partial contract/correlation safeguards; full UML participant audit remains.

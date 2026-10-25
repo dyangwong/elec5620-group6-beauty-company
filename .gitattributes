@@ -1,0 +1,5 @@
+# Provenance hashes refer to these exact LF bytes on every OS.
+docs/reference/*.txt text eol=lf
+*.ps1 text eol=crlf
+# Preserve the existing CSV record bytes; CRLF is intentional, not trailing spaces.
+docs/traceability.csv whitespace=cr-at-eol

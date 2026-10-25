@@ -1,6 +1,6 @@
 # 共享接口约定与实现映射
 
-中文阅读副本，依据 2026-10-18 英文主版同步。以[英文主版](../CONTRACTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+中文阅读副本，依据 2026-10-21 英文主版同步。以[英文主版](../CONTRACTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
 读 Stage 1 第 8.2 节与 `docs/reference/stage1-baseline.txt` 的原状态词汇。
 Python 边界用 snake_case，需要明确契约字段的 JSON 用 camelCase。
@@ -86,5 +86,6 @@ CS 重查订单归属、当前政策、库存、确认、精确 action/ref/revis
 ## 共享 LLM 边界与负责人
 
 [LLM_INTEGRATION.md](LLM_INTEGRATION.md) 规定现有 v1 Python 调用、字段单位、模块样例、
-错误／模式缺口与后续真实验收。共享集成保留给 Danyang Wang，当前运行仍全部 mock；
+错误／模式边界与真实验收。共享集成由 Danyang Wang 负责，默认仍 mock；可选独立 BA 传输和
+分能力模式／错误映射见 [WINDOWS_LLM.md](WINDOWS_LLM.md)；一条真实 BA 路径已验证，见 [运行证据](WINDOWS_LLM_RUNTIME.md)；
 CS 意图提取是后续共同定义的接口，尚未实现。
