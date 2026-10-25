@@ -8,7 +8,7 @@ from http.cookies import CookieError, SimpleCookie
 
 from .adapters.after_sales import MockAfterSales
 from .adapters.mock import MockLlm, MockMedia
-from .contracts import Actor, DomainError, require_role
+from .contracts import Actor, DomainError, require_role, revision_value
 from .modules.approval import Approval
 from .modules.beauty_advisor import BeautyAdvisor, catalogue, validated_needs
 from .modules.coordination import Coordination
@@ -141,14 +141,25 @@ class Company:
             raise DomainError(RECORDING_FAILED_MESSAGE, 409, "RECORDING_FAILED")
         return review
 
-    def recover_decision(self, actor, rid):
+    def recover_decision(self, actor, rid, data=None):
         """Recover a decision whose recording failed, using the stored intent only.
 
         The Founder, kind, reason and exact scope come from durable storage, never
         from the caller. Scope and authority are revalidated before the commit.
         """
         require_role(actor, "FOUNDER")
+        if data is not None:
+            if set(data) != {"contextRevision"}:
+                raise DomainError("Recovery accepts only contextRevision. The decision and reason come from storage.")
+            revision = revision_value(data["contextRevision"])
         with self.store.read() as db:
+            if data is not None:
+                review = self.ap.get(db, rid)
+                origin = Store.get(db, review["origin_id"], review["origin_role"])
+                if (revision != review["revision"] or origin["revision"] != revision
+                        or origin["payload"].get("approvalId") != rid):
+                    raise DomainError("This action or context revision has changed. Fresh review is required.",
+                                      409, "STALE_SCOPE")
             intent = self.ap.intent(db, rid)
         if not intent:
             raise DomainError("There is no stored decision intent to recover.", 409, "NO_INTENT")

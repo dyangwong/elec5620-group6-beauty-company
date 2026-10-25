@@ -1,6 +1,6 @@
 # AP 模块交接
 
-中文阅读副本，依据 2026-10-24 英文主版同步。以[英文主版](../../modules/AP.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+中文阅读副本，依据 2026-10-26 英文主版同步。以[英文主版](../../modules/AP.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
 按 Danny 要求默认由 Jiaxuan Ren 延续，不代表共享认领。
 从 [AP-START-01](../tasks/AP-START-01.md) 及窄范围共享例外、[开工入口](../../../START_HERE.zh-CN.md)开始。
@@ -31,8 +31,24 @@ Stage 1：Jiaxuan Ren；AP-M-01 / AP-UC-01 / AP-F-01..03。
 `tests/test_workflows.py` 既有的 AP 原子审计失败回归。
 
 剩余：完整风险/权限分类、BA/CO 本地适配、未知风险、过期、通知、取消、队列失败和可选关联重提。
-HTTP/UI 恢复控制与保存失败演示开关属 GR-INT-01 共享集成，不在本切片内。已观察到的待办：后端已接受
-`approval_recording` 故障值，但演示下拉尚未提供该选项；审阅卡片对 `RECORDING_FAILED` 请求没有恢复按钮；
-其非 PENDING 的兜底文案（"This review was superseded by a changed context."）对保存失败并不准确，
-不过卡片仍如实显示 "No applicable committed decision" 并渲染失败徽标。保存失败是本地注入的模拟，不是真实供应商故障。
+原服务切片将 HTTP/UI 恢复留给 GR-INT-01；下面 10 月 26 日的有限集成补齐该接口／界面缺口。
+保存失败仍是本地注入的模拟，不是真实供应商故障。
 审批代码永不执行换货、结算或发布。
+
+## HTTP/UI 保存恢复 · KAN-9 / GR-INT-01 · 2026-10-26
+
+Danny 单独授权本次共享集成，不领取 Jiaxuan 的 AP starter。
+`POST /api/approvals/{id}/recover` 只接受所显示的 contextRevision，复查当前范围后调用已有的存储恢复 facade。
+仍检查原 Founder／登录会话／CSRF，调用方不能传入决定、理由、身份或动作。
+facade 的可选 data 参数保留原来的双参数服务调用；没有改 schema 或 approval 模块。
+
+失败卡片现准确说明保存失败，将已存种类／理由标作无权威的意图，仅为原 Founder 与当前关联来源
+显示 Recover saved decision。decide／recover 失败会刷新已存状态，立即显示失败卡片。
+Founder 模拟菜单增加 approval_recording。恢复后显示实际决定 ID 与投递状态；投递失败仍用独立重投按钮。
+恢复不调度换货、结算或发布。
+
+新增 tests/test_ap_http.py 的 12 项 Router／会话／SQLite 检查，覆盖权限、CSRF、篡改输入、
+当前／过期／动作范围、再次保存失败、重启、三种已存决定、仅一次提交和独立投递。
+实际网页保存失败／恢复通过；独立读库为一次决定审计、零业务效果、库存不变，详见 VERIFICATION.md。
+AP-T-05 保留 PARTIAL：队列／通知、过期、完整风险路由及真实存储故障验收仍待完成。
+发布、相关负责人审阅和 Jira 进度更新待进行，不代表整个 AP 或 epic 验收完成。

@@ -434,3 +434,61 @@ authorised publication of these four bilingual evidence documents to PR #8.
 The tested application remains the exact commit above; fresh CI must apply
 to the documentation publication commit. No model/config/code, SSH/firewall
 or Jira change, merge or review bypass is included.
+
+## AP HTTP/UI recording recovery · 26 October 2026
+
+**Scope and authority.** Danny explicitly authorised the three AP shared HTTP/UI
+gaps under KAN-9 / GR-INT-01: accurate recording-failure text, a recovery endpoint
+and a recovery button. Branch KAN-9-ap-web-recovery starts from main
+`e141427c393df6515ad8091f035e1c2f81cba65d`. This does not claim Jiaxuan's AP starter
+or change approval.py, schema, CS/MC modules, model deployment or PR #11.
+
+**Contract.** The authenticated original Founder posts only the displayed positive
+integer contextRevision to `/api/approvals/{id}/recover`. The current origin,
+revision and review link are checked even for repeat calls after commit; existing
+service validation checks the durable exact action/actionRef before commit.
+Decision, reason, actor and action overrides are rejected. Existing two-argument
+service callers are retained. Recovery commits the saved intention once, then
+attempts separate delivery; a failed delivery needs explicit same-ID redelivery.
+Neither recovery nor delivery executes a business action. The failed card shows
+the stored kind/reason as non-authoritative and offers recovery only to its
+original Founder for a current origin. Decide/recover errors refresh saved state.
+The new approval_recording menu option is an injected local fixture.
+
+**Automated verification.** Mac Python 3.9.6 passed all **96 tests in 12.810 s**,
+including all existing 84 and 12 new AP HTTP/session/SQLite tests. New scenarios:
+restart and repeated recovery, later Customer-only once-only execution, preserved
+REJECT/REQUEST_REVISION, unauthenticated/wrong-CSRF/Customer/other-Founder denial,
+missing/invalid/extra/overridden inputs, old displayed revision, superseded origin,
+changed action scope, stale repeat after commit, absent intent/unknown review,
+repeat recording failure, and failed delivery with explicit same-ID redelivery.
+Node syntax and whitespace checks passed. No real model was started or called.
+
+**Actual browser acceptance.** A fresh ignored database on loopback port 5661 was
+seeded with a mock CS pending review through the existing service calls. Browser
+login used the fictional Founder. Under Activity trail, selected Decision recording
+failure (no approval), applied it and clicked Approve exact scope with a reason.
+The HTTP 409 refreshed the card immediately to recording failed, saved intention
+(not a committed decision), saved reason and No applicable committed decision;
+Recover saved decision appeared. The incorrect superseded sentence was absent.
+Clicking recovery showed APPROVED, a committed decision ID and DELIVERED; the
+recovery button disappeared and a later refresh kept the same decision.
+Independent SQLite readback: approval AP-d53f12341a0d, decision DEC-6349abf72f19,
+one DECISION_COMMITTED audit, zero effects, P-101 stock still 12, and the CS
+request still AWAITING_CONFIRMATION. Raw database/screenshots remain ignored in
+var/ap-web-20261026-first.sqlite3 and output/previews/ respectively. These are
+mock business effects/fixture failure, not a real storage-outage test.
+
+**Handoff.** Full AP-T-05 and GR acceptance remain PARTIAL. Queue/notification,
+expiry, full risk routing, CS failed-intake UI and MC PR #11 remain separate.
+Jira KAN-9 was read on 26 October: Integration & Verification, To Do, Unassigned;
+no separate GR-INT-01 child appeared in its child list (KAN-15 is listed).
+GitHub had only MC PR #11 open when overlap was checked. No new Jira claim,
+status/comment, remote publication, CI or teammate review is claimed for this
+local change. Prepared with AI assistance at Danny's request.
+
+**Jira update pending:** record this bounded GR-INT-01 AP web-recovery increment
+under KAN-9, link its PR once authorised/published, and request Jiaxuan's review
+of the shared AP boundary. Include the 96-test/browser/no-execution evidence and
+remaining cases above. Do not mark the broad integration epic Done or change
+KAN-13/KAN-15/teammate claims based on this local implementation.
