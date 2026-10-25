@@ -2,7 +2,7 @@
 
 English is the maintained primary version. [中文阅读副本](../zh-CN/tasks/AP-START-01.md).
 
-Owner: M4 / Jiaxuan Ren. Prepared and unclaimed. AP-M-01 / AP-UC-01 / AP-F-02.
+Owner: M4 / Jiaxuan Ren. Claimed by the owner on 24 October 2026. AP-M-01 / AP-UC-01 / AP-F-02.
 AP is a governance control. It never performs the requesting role's action.
 
 ## Source and reading
@@ -69,3 +69,35 @@ do not rewrite all shared transport or web files as part of this service task.
 Report the tested AP-T-05 conditions and remaining queue/expiry/risk/HTTP/UI gaps.
 The optional assisted-resubmission feature and actual human contribution approval
 are not implemented or established by this task.
+
+## Outcome · 24 October 2026 · KAN-13 · branch `KAN-13-ap-start-01`
+
+Pull request: [PR #9](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/9),
+opened on 24 October 2026 against `main`. Review is requested from @dyangwong and the
+Python 3.9/3.13 workflow runs completed successfully on commit `c433ef0`. No non-author
+approval has been observed yet and the Jira workflow update is still pending for an
+authorised person.
+
+Implemented as specified above. A durable decision intent (Founder, exact scope,
+kind, reason) is written in its own committed transaction before the decision
+commit. A failed commit exposes `RECORDING_FAILED` with no decision id, no
+delivered approval and no business effect. `Company.recover_decision` reads the
+intent from storage, revalidates the Founder and current scope, and commits the
+same intended decision exactly once before any delivery.
+
+Tested AP-T-05 conditions: failed commit exposes `RECORDING_FAILED`; the intended
+scope and identity stay recoverable; a restarted service over the same database
+recovers the same intended decision with one authoritative decision and one
+decision audit; a conflicting kind/reason and a stale action/revision or
+superseded request are refused rather than substituted; a missing or different
+Founder authority grants no permission; a failed delivery preserves the committed
+decision and redelivery reuses its id; the request receipt and the pending intent
+remain distinct from an approval. Existing CS/MC approval, rejection, revision,
+stock and duplicate-effect tests still pass (53 tests in total).
+
+Remaining gaps, not established by this task: the recording failure is an
+injected local fixture rather than a real storage outage; the HTTP/UI recovery
+control and the demo fault option are GR-INT-01 shared integration; queue
+notification failure, expiry, cancellation and risk/unknown-risk classification
+are unimplemented. The optional assisted-resubmission feature is still OFF.
+AP-T-05 therefore stays PARTIAL in `docs/traceability.csv`.

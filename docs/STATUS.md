@@ -11,12 +11,19 @@ historical. Update affected behaviour/gaps here in the implementation PR.
 
 - Loopback web app with Customer and Founder workspaces; same-origin JSON API.
 - Fictional accounts; server-created opaque sessions, role/ownership checks and CSRF.
-- BA mock advice from explicit structured constraints and catalogue/stock snapshots;
-  missing constraints, unsupported claimed facts and selected medical requests stop.
+- BA default mock advice plus opt-in standalone local Strata consultation;
+  explicit constraints and independent catalogue/fact checks remain in force.
+  One real BA HTTP path is verified in WINDOWS_LLM_RUNTIME.md; full natural-language
+  clarification and unrestricted generated-text grounding remain incomplete.
 - CS **exchange-only** intake with explicit synthetic policy; Founder-initiated CO
   handoff to BA; current Customer confirmation and exact-scope AP review.
+- CS service-level assess intake retains missing/conflicting/unavailable policy outcomes;
+  confirmation and the effect adapter recheck current evidence. Legacy HTTP intake
+  still raises on failed policy; retained failed intake views need shared integration.
 - AP approve/reject/request-revision, atomic decision/request/audit commit, separate
   delivery and same-decision redelivery. Delivery never executes business work.
+- AP durable decision intent, RECORDING_FAILED on a failed decision commit and
+  storage-only same-decision recovery. A pending intent grants no authority.
 - CS persistent actionRef, simulated service effect, once-only stock decrement,
   post-write-timeout lookup and outcome-recording recovery without repeat effects.
 - MC deterministic script and three storyboard cards, labelled mock media;
@@ -42,16 +49,17 @@ repository have now been published; see the collaboration status below.
 
 ## Not implemented or not yet established
 
-- Live LLM perception, natural-language planning or live tools; provider selection,
-  keys, costs and schema/claim validation for unrestricted live output.
+- Full natural-language perception/planning and live CS/MC tools beyond the verified
+  standalone BA slice; schema/claim validation for unrestricted live output.
 - Full BA revision/cancellation/review lifecycle and all medical/unsafe-language cases.
 - Returns/refunds, routine policy alternatives, full CS cancellation and evidence
-  failure modes. Initial fixture routes every exchange through human review.
+  failure modes beyond the KAN-11 service subset; default HTTP/UI retained failed
+  intake integration. Initial fixture routes every exchange through human review.
 - General CO dispatch/role unavailability/cancellation, unknown external outcomes,
   independent distributed services and automatic retry.
-- AP decision-recording failure state machine with durable same-decision-intent
-  recovery, expiry and complete risk classification. Atomic rollback is tested,
-  but this is not full AP-T-05 implementation.
+- AP expiry, cancellation and complete risk/unknown-risk classification. The
+  decision-recording failure state machine and durable same-decision-intent recovery
+  are implemented and tested; the HTTP/UI recovery control is still GR-INT-01.
 - Real/generated mock video files, media failure/quality workflows, persistent MC
   failed-generation states, full generated-claim validation and review-save recovery.
 - All five optional features (OFF/not implemented); no enabled-mode claims.
@@ -65,8 +73,9 @@ repository have now been published; see the collaboration status below.
 ## Honest demonstration boundary
 
 Database persistence, authority guards, audit commit, action identity and recovery
-logic execute locally. Model interpretation and media generation do not. The
-mock adapter is an implementation aid, not evidence of the AI-capability marks.
+logic execute locally. Standalone BA can explicitly use the verified local model;
+MC/media remain mocks and CS intent is not connected. The default mock alone is
+not evidence of live AI capability or a completed multi-agent system.
 The policy eligibility flag, always-review fixture, prices, stock and eight-hour
 demo session lifetime are explicit synthetic choices, not approved business policy.
 
@@ -159,3 +168,39 @@ hash. All 47 tests passed on local Python 3.14.5 and 3.12.15, with repository an
 JS checks. These are local checks; remote CI, affected-owner approval and Jira
 claim/status remain unverified. The diff is prepared for a local phase commit
 and a PR-description draft; no publication or merge is implied.
+
+## AP recording recovery slice · 24 October 2026
+
+KAN-13 / AP-START-01 added a durable AP decision intent, the RECORDING_FAILED
+state machine and storage-only same-decision recovery. A failed decision commit
+leaves no committed envelope, no delivered approval and no business effect; the
+intended Founder, kind, reason and exact scope stay recoverable from storage, and
+a restarted service can commit that same intended decision exactly once. This is a
+local SQLite simulation of a storage failure, not a real provider outage, and it
+does not add the HTTP/UI recovery control (GR-INT-01), expiry or risk routing.
+
+The implementation is open as [PR #9](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/9)
+from branch `KAN-13-ap-start-01` into `main`. The Python 3.9/3.13 workflow runs
+succeeded on commit `c433ef0`; a non-author approval from a reviewer with write
+access is still pending, and the Jira KAN-13 workflow update is still pending for
+an authorised person.
+
+
+## CS/AP and LLM branch integration · 25 October 2026
+
+PR #7 merged as `6e505f0`; AP PR #9 was updated with that main, independently
+verified with 75 offline tests, approved through an explicitly authorised
+AI-assisted dyangwong review and normally merged as `840ac70` after fresh required
+Python 3.9/3.13 checks. The dated earlier open/pending-review records are history.
+
+PR #8 now incorporates that main without replacing either owner's work. Six
+English/Chinese documentation conflicts were resolved by retaining AP recovery
+and Windows LLM evidence together. The combined candidate passes 84 offline
+tests, repository/source checks (107 source files, 41 tracked case groups) and
+JavaScript syntax. This Mac integration does not rerun Windows deployment or
+real Strata inference; the earlier Windows evidence remains scoped as recorded.
+
+MC PR #11 is excluded pending its failure-rendering and mutable-media validation
+fixes/re-review. CS retained-intake HTTP/UI, AP HTTP/UI recovery, real CS/MC model
+paths and complete acceptance remain open. Jira verification is separate from
+whole-module/epic completion; no task is marked Done merely because of a merge.

@@ -6,12 +6,12 @@ BA-T-04,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_04;test_in
 BA-T-05,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_05,Selected diagnosis phrases blocked; conditional BA review workflow remains.
 BA-T-06,BA-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
 BA-T-07,BA-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
-CS-T-01,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_01,Order mismatch tested; complete verification-service failure paths remain.
-CS-T-02,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_02,Unknown policy tested; contradiction and full clarification/escalation remain.
+CS-T-01,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_01,Verified/mismatched and unavailable association tested without protected context; full verification-service matrix remains.
+CS-T-02,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_02,Service assess retains missing/conflicting/malformed policy and fresh revision evidence; legacy HTTP intake retention and full policy clarification remain.
 CS-T-03,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_gr_t_02,Simulated exchange with mandatory fixture review; routine return/refund paths remain.
-CS-T-04,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_07,Post-approval unavailable stock tested; full UNKNOWN/alternative selection remains.
+CS-T-04,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_04;test_ap_t_07,AVAILABLE/UNAVAILABLE/UNKNOWN and post-intent stock races tested without substitution; general alternative selection and real service matrix remain.
 CS-T-05,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_rejection_and_revision;test_ap_t_02;test_gr_t_02,Review states covered in exchange slice; complete service-failure scenarios remain.
-CS-T-06,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_06;test_co_t_08,Post-write timeout and outcome recording; read failures and real provider guarantees remain.
+CS-T-06,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_06;test_co_t_08,Policy/order/stock read failures retained with zero effects plus original timeout/storage recovery; all audit failures and real provider guarantees remain.
 CS-T-07,CS-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
 MC-T-01,MC-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_mc_t_01_and_06,Deterministic facts-only script/storyboard; live brief interpretation remains.
 MC-T-02,MC-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
@@ -22,10 +22,10 @@ MC-T-06,MC-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_mc_t_01_and_06,
 MC-T-07,MC-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
 AP-T-01,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_02;test_co_t_01,Declared exchange/content fixture routing only; unknown-risk handling remains.
 AP-T-02,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_02;test_ap_rejection_and_revision,Customer/pending/rejected guards; exhaustive mismatched envelope cases remain.
-AP-T-03,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_03,Atomic rollback verified locally; not a real external provider guarantee.
+AP-T-03,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_03,Atomic decision/request/audit rollback verified locally and the failure is exposed as RECORDING_FAILED with a recoverable intent; not a real external provider guarantee.
 AP-T-04,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_04;test_mc_t_01_and_06,Stale review after revision tested; full lifecycle and linked successor model remain.
-AP-T-05,AP-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
-AP-T-06,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_06,Same-decision delivery failure/recovery; queue/notification failures remain.
+AP-T-05,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_05,Failed decision commit exposes RECORDING_FAILED with no committed envelope, no delivered approval and no business effect; storage-only same-decision retry after a restart commits the intended decision exactly once; conflicting kind/reason and stale scope are refused. Injected local fixture rather than a real storage outage; HTTP/UI recovery control, expiry and risk routing remain.
+AP-T-06,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_06;test_ap_t_05_failed_delivery_after_recovery_preserves_the_committed_decision,Same-decision delivery failure/recovery including after a recording recovery; queue/notification failures remain.
 AP-T-07,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_07;test_cs_t_06,Stock and uncertainty checks; full changed-policy/absent-confirmation matrix remains.
 AP-T-08,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_rejection_and_revision;test_ap_t_04,Core revision available with optional OFF; assisted optional ON not implemented.
 CO-T-01,CO-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_co_t_01,Founder-initiated minimal synchronous CS-to-BA handoff only.

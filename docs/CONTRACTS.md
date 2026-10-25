@@ -82,6 +82,11 @@ EXECUTING request can be queried; an unresolved lookup escalates without retry.
   RECORDING_FAILED, UNRESOLVED; review REJECTED/NEEDS_INFORMATION.
 - AP: PENDING → APPROVED/REJECTED/REVISION_REQUESTED; old scope SUPERSEDED.
   No receipt is approval, and failed delivery preserves the committed state.
+  A decision that could not be recorded becomes RECORDING_FAILED: no decision id,
+  no delivery and no business effect. A separate durable decision intent
+  (PROPOSED → COMMITTED, or RECORDING_FAILED) holds the intended Founder, kind,
+  reason and exact scope; it grants no authority and is the only input to
+  storage-only recovery. One request has at most one committed decision.
 - MC: DRAFTING → REVIEW_PENDING → APPROVED/REJECTED/REVISION_REQUIRED;
   revision creates new payload/history and review; former scope is superseded.
 - CO: PENDING_VALIDATION, HANDOFF_SENT, AWAITING_APPROVAL, EXECUTING,

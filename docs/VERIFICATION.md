@@ -260,3 +260,53 @@ hash. All 47 tests passed on local Python 3.14.5 and 3.12.15, with repository an
 JS checks. These are local checks; remote CI, affected-owner approval and Jira
 claim/status remain unverified. The diff is prepared for a local phase commit
 and a PR-description draft; no publication or merge is implied.
+
+## AP recording recovery slice · 24 October 2026
+
+- Added `tests/test_ap.py` (15 cases) and adapted the existing AP atomic-audit-failure
+  regression in `tests/test_workflows.py`. The combined suite passes 53 tests on
+  Python 3.13.3 locally; `python3 scripts/check_repository.py` passes with 93 source
+  files and the 41 tracked case groups intact, and `node --check
+  beauty_company/web/app.js` passes. The Python 3.9/3.13 CI outcome is recorded on
+  the pull request rather than asserted here.
+- Verified against a temporary SQLite database: an injected decision-recording
+  failure leaves the approval at RECORDING_FAILED with no decision id, decision,
+  reason or founder, no delivered approval, no business effect and no
+  DECISION_COMMITTED audit. The intended Founder, kind, reason and exact scope
+  stay readable from storage.
+- Verified that a new service instance over the same database recovers the same
+  intended decision exactly once: one authoritative decision, one decision audit,
+  one delivery, and no duplicate business dispatch when the Customer confirms.
+- Verified that a conflicting kind or reason is refused, that a stale revision or
+  a superseded request is refused, that a non-Founder and a different Founder are
+  refused, and that a request receipt or a pending intent is never read back as
+  an approval.
+- Verified that a failed delivery after a recovery preserves the committed
+  decision and that redelivery reuses its decision id.
+- Not verified here: a real external storage outage (the failure is an injected
+  local fixture), the HTTP/UI recovery control and the demo fault dropdown option
+  (GR-INT-01 shared integration), expiry, notification/queue failure and risk
+  routing. AP-T-05 therefore stays PARTIAL rather than PASSED.
+- Observed on the pull request [PR #9](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/9):
+  the "Local prototype checks" workflow runs for the push event and the pull
+  request event both completed successfully on commit `c433ef0` (Python 3.9 and
+  Python 3.13 jobs). The branch protection requires one non-author Approve from a
+  reviewer with write access, so the pull request stays open and unmerged; no
+  approval was observed when it was opened.
+
+
+## Protected merge and combined integration · 25 October 2026
+
+At Danny's explicit request, PR #7 merged normally as `6e505f0` with its retained
+non-author approval and passing required checks. AP PR #9 incorporated that main
+at `a1ae058`: all 75 offline tests and repository checks passed locally; fresh
+Python 3.9/3.13 CI passed before the authorised AI-assisted review and normal
+squash merge `840ac70`. Neither merge used a review/admin bypass.
+
+The PR #8 integration candidate preserves CS/AP code, tests and claim receipts.
+All six document conflicts retain both relevant changes. Python 3.9.6 passed
+84 tests; repository checks passed for 107 source files / 41 case groups; bundled
+Node passed `--check beauty_company/web/app.js`; staged whitespace checks passed.
+No current Windows/model execution, complete acceptance, MC #11 fix or unseen
+teammate approval is inferred. Remote checks and the remaining PR review are
+reported on PR #8 after publication, separately from this local verification.

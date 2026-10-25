@@ -71,6 +71,9 @@ CS 重查订单归属、当前政策、库存、确认、精确 action/ref/revis
   UNRESOLVED；审阅结果有 REJECTED/NEEDS_INFORMATION。
 - AP：PENDING → APPROVED/REJECTED/REVISION_REQUESTED；旧范围 SUPERSEDED。
   收据不是批准；投递失败保留已提交状态。
+  决定未保存成功时为 RECORDING_FAILED：没有 decisionId、没有投递、没有业务效果。
+  另有独立的持久决定意图（PROPOSED → COMMITTED，或 RECORDING_FAILED）保存预期的 Founder、种类、
+  理由和精确范围；它不授权，是仅从存储恢复的唯一输入。每个请求最多一个已提交决定。
 - MC：DRAFTING → REVIEW_PENDING → APPROVED/REJECTED/REVISION_REQUIRED；
   修改创建新数据/历史/审批，旧范围被替代。
 - CO：PENDING_VALIDATION、HANDOFF_SENT、AWAITING_APPROVAL、EXECUTING、RECONCILING、
