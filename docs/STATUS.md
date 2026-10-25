@@ -15,6 +15,9 @@ historical. Update affected behaviour/gaps here in the implementation PR.
   missing constraints, unsupported claimed facts and selected medical requests stop.
 - CS **exchange-only** intake with explicit synthetic policy; Founder-initiated CO
   handoff to BA; current Customer confirmation and exact-scope AP review.
+- CS service-level assess intake retains missing/conflicting/unavailable policy outcomes;
+  confirmation and the effect adapter recheck current evidence. Legacy HTTP intake
+  still raises on failed policy; retained failed intake views need shared integration.
 - AP approve/reject/request-revision, atomic decision/request/audit commit, separate
   delivery and same-decision redelivery. Delivery never executes business work.
 - AP durable decision intent, RECORDING_FAILED on a failed decision commit and
@@ -48,7 +51,8 @@ repository have now been published; see the collaboration status below.
   keys, costs and schema/claim validation for unrestricted live output.
 - Full BA revision/cancellation/review lifecycle and all medical/unsafe-language cases.
 - Returns/refunds, routine policy alternatives, full CS cancellation and evidence
-  failure modes. Initial fixture routes every exchange through human review.
+  failure modes beyond the KAN-11 service subset; default HTTP/UI retained failed
+  intake integration. Initial fixture routes every exchange through human review.
 - General CO dispatch/role unavailability/cancellation, unknown external outcomes,
   independent distributed services and automatic retry.
 - AP expiry, cancellation and complete risk/unknown-risk classification. The
