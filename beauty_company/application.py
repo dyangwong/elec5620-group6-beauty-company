@@ -16,6 +16,9 @@ from .modules.customer_service import CustomerService
 from .modules.marketing import Marketing
 from .store import Store, password_hash
 
+RECORDING_FAILED_MESSAGE = ("The decision could not be recorded. No approval was delivered and no business work "
+                            "was dispatched. The intended decision is stored and can be recovered from storage.")
+
 
 class Company:
     def __init__(self, path, llm=None):
@@ -61,7 +64,13 @@ class Company:
             ids = [r["id"] for r in db.execute(query, (actor.id,) if actor.role != "FOUNDER" else ())]
             records = [Store.get(db, rid) for rid in ids]
             approval_ids = [r["id"] for r in db.execute("SELECT id,origin_id FROM approvals ORDER BY created DESC") if actor.role == "FOUNDER" or r["origin_id"] in ids]
-            approvals = [self.ap.get(db, rid) for rid in approval_ids]
+            approvals = []
+            for rid in approval_ids:
+                review = self.ap.get(db, rid)
+                # A pending intent is not an approval. It is exposed so the intended
+                # scope of a failed recording stays visible and recoverable.
+                review["intent"] = self.ap.intent(db, rid)
+                approvals.append(review)
             visible = set(ids + approval_ids)
             events = []
             for r in db.execute("SELECT * FROM events ORDER BY seq DESC LIMIT 1000"):
@@ -82,9 +91,48 @@ class Company:
                              "optionalFeatures": {"BA-F-03": False, "CS-F-03": False, "MC-F-03": False, "AP-F-03": False, "CO-F-03": False}}}
 
     def decide(self, actor, rid, data):
+        # The intent is persisted in its own committed transaction, so a failed
+        # decision commit leaves the intended decision recoverable from storage.
         with self.store.transaction() as db:
-            review = self.ap.decide(db, actor, rid, data)
+            intent = self.ap.prepare_intent(db, actor, rid, data)
+        review = self._commit_intent(actor, rid, intent)
         # A delivery failure cannot roll back the committed decision above.
+        with self.store.transaction() as db:
+            return self.ap.deliver(db, review["id"])
+
+    def _commit_intent(self, actor, rid, intent):
+        try:
+            with self.store.transaction() as db:
+                review = self.ap.commit_intent(db, intent["id"], actor)
+        except DomainError:
+            raise
+        except Exception as error:
+            # The commit rolled back. Expose RECORDING_FAILED without a decision id.
+            with self.store.transaction() as db:
+                self.ap.mark_recording_failed(db, intent, {"error": type(error).__name__})
+            raise DomainError(RECORDING_FAILED_MESSAGE, 409, "RECORDING_FAILED") from error
+        if review is None:
+            raise DomainError(RECORDING_FAILED_MESSAGE, 409, "RECORDING_FAILED")
+        return review
+
+    def recover_decision(self, actor, rid):
+        """Recover a decision whose recording failed, using the stored intent only.
+
+        The Founder, kind, reason and exact scope come from durable storage, never
+        from the caller. Scope and authority are revalidated before the commit.
+        """
+        require_role(actor, "FOUNDER")
+        with self.store.read() as db:
+            intent = self.ap.intent(db, rid)
+        if not intent:
+            raise DomainError("There is no stored decision intent to recover.", 409, "NO_INTENT")
+        if intent["founder_id"] != actor.id:
+            raise DomainError("This decision intent belongs to another authorised decision maker.", 403, "FORBIDDEN")
+        if intent["status"] == "COMMITTED":
+            # The decision is already authoritative. Recovery never commits a second one.
+            with self.store.read() as db:
+                return self.ap.get(db, rid)
+        review = self._commit_intent(actor, rid, intent)
         with self.store.transaction() as db:
             return self.ap.deliver(db, review["id"])
 
@@ -95,7 +143,7 @@ class Company:
 
     def set_fault(self, actor, fault):
         require_role(actor, "FOUNDER")
-        if not isinstance(fault, str) or fault not in {"after_sales_timeout", "outcome_recording", "approval_delivery", "none"}:
+        if not isinstance(fault, str) or fault not in {"after_sales_timeout", "outcome_recording", "approval_delivery", "approval_recording", "none"}:
             raise DomainError("Unsupported simulation fixture.")
         with self.store.transaction() as db:
             db.execute("DELETE FROM faults")
