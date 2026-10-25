@@ -68,8 +68,15 @@ try {
         if (-not (Test-Path -LiteralPath $stateFile)) { return $null }
         $receipt = Get-Content -Raw -LiteralPath $stateFile | ConvertFrom-Json
         $process = Get-Process -Id $receipt.pid -ErrorAction SilentlyContinue
-        if ($process -and $process.StartTime.ToUniversalTime().Ticks.ToString() -eq $receipt.startTicks -and
-            $process.Path -eq $receipt.executable) { return $process }
+        if (-not $process) { return $null }
+        # An inaccessible or reused PID is not proof that this is our process.
+        try {
+            $startedAt = $process.StartTime
+            $executable = $process.Path
+        } catch { return $null }
+        if ($startedAt -and $executable -and
+            $startedAt.ToUniversalTime().Ticks.ToString() -eq $receipt.startTicks -and
+            $executable -eq $receipt.executable) { return $process }
         return $null
     }
     switch ($Action) {

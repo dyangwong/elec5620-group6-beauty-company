@@ -95,3 +95,19 @@ Set-Location 'D:\elec5620_project\elec5620-group6-beauty-company'
 本地 Python 3.14.5 和 3.12.15 各通过 47 项测试，来源／JS 检查通过。
 这是本地验证；远程 CI、受影响负责人批准和 Jira 认领／状态仍未核实。
 差异准备作本地阶段提交及 PR 描述草稿，不代表发布或合并。
+
+## Windows 合入 CS/AP 后回归 · 2026-10-25
+
+本机重新验证准确应用提交 966dae4fd1c8afcaeb60b8af84289ae5b6edaa60
+（main 840ac7004723c62995a427191eda4f0cd4151917）。复用已有 Strata／模型／配置，
+没有安装或下载。Python 3.14.5、3.12.15 各通过 84 项 Windows 测试，来源与 JS 检查通过。
+实际网页登录并调用 BA，保存 COMPLETED/simulated:false/P-101，独立核对目录事实，
+页面显示 Live BA recommendation。空模型端口的网页探针保存 INCOMPLETE/LLM_TIMEOUT；
+较长连接预算的实际拒绝连接服务探针保存 LLM_UNAVAILABLE，都没有回退成 mock。
+
+新库 CS/AP HTTP 和 AP 服务重启后恢复通过。MC 仍 mock、CS intent 未连接、真实 CS
+coordinate/revise 仍受阻。AP 网页没有恢复功能，失败页误用 superseded 兜底文案，
+但失败／无权威状态正确。Windows 停止脚本现安全拒绝无法读取的 PID 元数据，
+拒绝不匹配进程与正常停止本轮进程均已验证。最终测试端口无监听，原配置／数据库哈希和
+56 个模型文件大小／修改时间清单保持不变。回归验证本身没有远程发布或 Jira 写入。
+完整证据、局部补丁和限制见 [VERIFICATION.md](VERIFICATION.md) 的本日 Windows 记录。

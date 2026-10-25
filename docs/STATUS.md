@@ -204,3 +204,17 @@ MC PR #11 is excluded pending its failure-rendering and mutable-media validation
 fixes/re-review. CS retained-intake HTTP/UI, AP HTTP/UI recovery, real CS/MC model
 paths and complete acceptance remain open. Jira verification is separate from
 whole-module/epic completion; no task is marked Done merely because of a merge.
+
+## Windows post-CS/AP regression · 25 October 2026
+
+Integrated commit 966dae4 (main 840ac70) passed all 84 offline tests on Windows
+Python 3.14.5 and 3.12.15, provenance and JS checks. Actual BA browser inference,
+independent saved-fact validation, timeout/unavailable non-success, CS/AP exact
+scope/customer confirmation/one-effect HTTP flow and durable AP-service recovery
+were exercised in fresh databases. Existing model/config/data were preserved.
+MC remains mock; live CS handoff limits remain accurate. A bounded local stop
+script fix in this update safely handles inaccessible PID metadata.
+AP web recovery is absent; its recording-failed card also uses misleading
+superseded fallback text, recorded for affected-owner/shared UI follow-up.
+The regression run did not touch PR #11, BA starter claims or Jira. See the dated
+VERIFICATION checkpoint; broader acceptance and actual owner review remain open.

@@ -211,3 +211,13 @@ The script now resolves a relative -LlmConfig against the repository root, even
 when invoked by an absolute script path from another folder. Existing local
 configuration remains untouched. See the latest 47-test review checkpoint in
 VERIFICATION.md; the 38/45-test sections above are earlier observations.
+
+## Windows post-CS/AP regression · 25 October 2026
+
+The 966dae4 integrated branch was validated on this laptop using existing Strata
+and fresh databases. Both Windows interpreters passed 84 tests; actual browser BA
+and safe model failures passed. See [latest runtime checkpoint](WINDOWS_LLM_RUNTIME.md)
+and [full verification](VERIFICATION.md) for precise evidence, the local safe-stop
+fix and AP web recovery/display limitations. Earlier install-blocked, uncommitted
+first-phase and task-status paragraphs above are historical, not current commands
+to reinstall the model or move Jira backwards. The regression run itself made no remote writes.

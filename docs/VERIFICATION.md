@@ -310,3 +310,78 @@ Node passed `--check beauty_company/web/app.js`; staged whitespace checks passed
 No current Windows/model execution, complete acceptance, MC #11 fix or unseen
 teammate approval is inferred. Remote checks and the remaining PR review are
 reported on PR #8 after publication, separately from this local verification.
+
+## Windows post-CS/AP regression · 25 October 2026
+
+Danny / M1 continued KAN-15 / GR-INT-02 only. A clean Windows checkout fast-forwarded
+from bd63c08 to **966dae4fd1c8afcaeb60b8af84289ae5b6edaa60**, incorporating main
+**840ac7004723c62995a427191eda4f0cd4151917**. This is the exact application code
+validated below; this update also includes the bounded stop-script fix and
+bilingual evidence. No BA starter claim, CS/MC live feature or PR #11 work.
+
+- `scripts/windows.ps1 -Action Verify`: Python 3.14.5 passed all **84 tests**
+  (24.250 s; final rerun after the stop fix: 24.422 s); repository/provenance
+  passed (107 source files, 41 original case groups), and Node 22.19.0 JavaScript
+  syntax passed. Bundled Python 3.12.15
+  independently passed all 84 (22.052 s). Counts: workflows 29, onboarding 9,
+  LLM 9, CS 22 and AP 15; the original 47 plus CS/AP 37 explains the increase.
+- Fresh loopback apps/databases: 5635 mock, 5636 Strata, 5637 unavailable-model
+  endpoint, 5638 AP web failure, and 5639 the positive stop check. All databases
+  and raw evidence are isolated under ignored `var/regression-20261025-966dae4/`.
+- Actual browser login and BA submission passed in default mock and Strata modes.
+  Live record BA-b7e1e655e3cf persisted COMPLETED/simulated:false and the page showed
+  Live BA recommendation. An independent SQLite read checked P-101, integer-cent
+  price/budget, fragrance constraint, current stock/version, catalogue:P-101:v1
+  and both literal reasons against the saved catalogue. No BA-related approval
+  or commerce effect was created. Engine log: 297 prompt tokens read in 6201 ms,
+  25 tokens generated in 1042 ms; this is one fixture, not a general benchmark.
+- Browser submission with an unused model port and 0.5 s socket budget persisted
+  INCOMPLETE/LLM_TIMEOUT/simulated:false, displayed The model timed out, and had no
+  product or mock success. On Windows the short connect budget expired before
+  refusal; an additional actual connection-refusal service probe with a 5 s budget
+  persisted INCOMPLETE/LLM_UNAVAILABLE. Neither probe stopped the real model.
+- Actual CS/AP HTTP exchange: pending execution and customer self-approval refused;
+  stale revision refused with STALE_SCOPE. Exact-scope approval/delivery left zero
+  effects; three subsequent current customer confirmations produced one effect
+  for the same actionRef and one stock decrement (12 to 11), ending RESOLVED.
+- AP injected decision-save failure persisted RECORDING_FAILED with no decision id,
+  no delivery and no effect. A new Company instance over the same fresh database
+  recovered the durable same-scope intent; repeat recovery retained one decision/
+  audit and zero effects. Only later customer confirmations produced one effect.
+  HTTP save failure was also exercised; `/api/approvals/{id}/recover` returned 404.
+- AP browser status correctly showed recording failed/no committed decision, with
+  no recovery control. **Observed UI gap:** its fallback sentence incorrectly said
+  the review was superseded by changed context. This is an AP/shared UI integration
+  limitation, not a successful recovery button; no AP business/UI redesign was made.
+- Strata-mode HTTP CS coordinate/revise retained 503/LIVE_HANDOFF_NOT_CONNECTED.
+  Health retained MC:MOCK and csIntent:NOT_CONNECTED. A campaign created in that
+  live-configured app remained simulated:true/REVIEW_PENDING, with mock media.
+
+The existing Terminal 0.1.46.1 / Strata v0.2.1 / engine 0.1.46 CUDA 13 and
+qwen3.8-flash-next-gyro-gyro-s were reused: model API 127.0.0.1:8080, context 8192,
+one request, vision/MTP off, VRAM reserve 1536 MiB, upstream route-tail-skip 7.
+No install/update/download was run. The original local configuration/profile/
+database SHA-256 values stayed unchanged; all 56 existing model-file size/mtime
+entries stayed unchanged. This is not a newly recomputed full weight checksum.
+
+During the execution-permission transition, the test listeners disappeared; no
+unverified PID was killed. The stop script exposed a null StartTime on a recorded
+PID that still existed but could not be identified. The bounded local fix requires
+both readable start time and executable before comparing the existing receipt.
+The inaccessible PID was preserved; a new identity-matched app on 5639 was then
+started/stopped successfully and its database retained. All six test ports,
+including model 8080, were confirmed without listeners at final cleanup.
+
+Earlier diagnostic attempts also exposed an overly narrow probe expectation
+(LLM_UNAVAILABLE vs the observed Windows connect timeout), and the existing CS
+DUPLICATE_REQUEST guard when a completed order was reused for another AP probe.
+The probes were corrected/isolated; no test-count padding or business-rule change.
+
+No real external storage outage, AP web recovery, retained CS failed-intake UI,
+real CS/MC inference, network deployment, general model quality or full 41-case
+acceptance is claimed. GitHub CLI returned 401; the connected GitHub read retrieved
+PR #8 and its exact head. PR text reports an earlier authenticated Jira Verification
+update, but the regression run did not independently verify Jira or perform any
+Jira/PR write. Danny subsequently authorised publication of this evidence and
+stop fix to PR #8. Fresh CI and actual review must apply to the publication commit;
+this self-check is not an Approve. No merge, review bypass or Jira write is included.

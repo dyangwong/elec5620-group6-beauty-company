@@ -127,3 +127,24 @@ hash. All 47 tests passed on local Python 3.14.5 and 3.12.15, with repository an
 JS checks. These are local checks; remote CI, affected-owner approval and Jira
 claim/status remain unverified. The diff is prepared for a local phase commit
 and a PR-description draft; no publication or merge is implied.
+
+## Windows post-CS/AP regression · 25 October 2026
+
+The exact integrated application commit 966dae4fd1c8afcaeb60b8af84289ae5b6edaa60
+(main 840ac7004723c62995a427191eda4f0cd4151917) was rerun on this laptop. Existing
+Strata/model/configuration were reused without installation or download. All 84
+Windows tests passed on Python 3.14.5 and 3.12.15, plus provenance/JS checks.
+Actual browser login and BA inference saved COMPLETED/simulated:false/P-101 with
+independently checked catalogue facts and a Live BA recommendation label. The
+unused-model-endpoint browser probe saved INCOMPLETE/LLM_TIMEOUT; a longer-budget
+connection-refusal service probe saved LLM_UNAVAILABLE. Neither fell back to mock.
+
+Fresh CS/AP HTTP and restarted AP-service recovery checks passed. MC remained
+mock and CS intent unconnected; live CS coordinate/revise stayed blocked. AP web
+recovery remains absent: the failure page's superseded fallback sentence is also
+misleading, despite correct failed/no-authority state. The local Windows stop
+script now safely refuses unreadable PID metadata; negative and owned-positive
+stop checks passed. No test listeners remain, and original config/database hashes
+and all 56 model-file size/mtime entries are unchanged. No remote publication or
+Jira write occurred during the regression run. Full evidence, local patch scope and limitations are in the
+25 October Windows checkpoint in [VERIFICATION.md](VERIFICATION.md).

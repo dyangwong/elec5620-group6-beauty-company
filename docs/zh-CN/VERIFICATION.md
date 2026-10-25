@@ -204,3 +204,58 @@ Python 3.9.6 通过 84 项测试；来源检查通过（107 个源码文件、41
 通过 `--check beauty_company/web/app.js`；暂存差异空白检查通过。
 本次不推断 Windows／模型当前执行、完整验收、MC #11 已修复或未观察到的队友批准。
 发布后的远程检查和剩余审阅在 PR #8 单独记录，不与本地验证混淆。
+
+## Windows 合入 CS/AP 后回归 · 2026-10-25
+
+Danny / M1 仅继续 KAN-15 / GR-INT-02。本地干净，从 bd63c08 快进到
+**966dae4fd1c8afcaeb60b8af84289ae5b6edaa60**，纳入 main
+**840ac7004723c62995a427191eda4f0cd4151917**。以下应用验证对应此准确提交；
+本次更新另包含下述停止脚本局部修复及双语证据。未领取 BA starter、未扩展 CS/MC 真实模型，
+未处理 PR #11。
+
+- Windows Verify：Python 3.14.5 的 **84 项测试**全部通过（24.250 秒；停止修复后最终复跑 24.422 秒）；
+  来源检查通过（107 个源码文件、41 组原始验收），Node 22.19.0 的 JS 语法通过。
+  配套 Python 3.12.15 独立通过 84 项（22.052 秒）。构成为 workflows 29、
+  onboarding 9、LLM 9、CS 22、AP 15；原 47 加 CS/AP 37，没有凑数或修改测试。
+- 新建独立库和本机端口：5635 mock、5636 Strata、5637 模型无法连接、5638 AP 网页失败、
+  5639 正常停止验证。原始证据及测试库位于忽略的 var/regression-20261025-966dae4/。
+- 实际浏览器登录及 BA 提交在默认 mock 和 Strata 均通过。真实记录 BA-b7e1e655e3cf
+  保存 COMPLETED/simulated:false，页面显示 Live BA recommendation。独立读取 SQLite
+  核对 P-101、整数分价格和预算、无香条件、当前库存与版本、catalogue:P-101:v1，
+  两条理由都逐字属于目录事实。BA 未产生审批或交易效果。引擎记录读取 297 个 prompt
+  tokens 用 6201 ms，生成 25 tokens 用 1042 ms；单样例不代表一般性能。
+- 无模型端口配 0.5 秒连接预算的网页提交保存 INCOMPLETE/LLM_TIMEOUT/simulated:false，
+  页面明确显示 The model timed out，没有商品和 mock 成功。Windows 在返回拒绝连接前先超时；
+  另用 5 秒预算实际连接该空端口，服务层保存 INCOMPLETE/LLM_UNAVAILABLE。没有停止真实模型制造故障。
+- 实际 CS/AP HTTP 流程：待审批时执行和客户自批被拒绝，错误版本返回 STALE_SCOPE。
+  精确范围批准及投递后仍为零效果；客户之后连续确认三次，同一 actionRef 仅一个效果，
+  库存仅从 12 减至 11，最终 RESOLVED。
+- 注入 AP 决定保存失败后为 RECORDING_FAILED，无 decisionId、无投递和业务效果。
+  同库新建 Company 服务实例恢复存储中的同一精确意图；重复恢复仍只有一个决定／审计，
+  恢复自身不执行，后续客户确认才产生一次效果。HTTP 保存失败也已验证；
+  /api/approvals/{id}/recover 实际返回 404。
+- AP 网页正确显示 recording failed、无已提交决定，且没有恢复按钮。
+  **发现展示缺口：**兜底文案错误声称 review 因上下文变化被 superseded。
+  这是 AP／共享网页集成限制；本轮没有扩展 AP 业务或界面，也没有声称网页恢复已实现。
+- Strata 模式的 CS coordinate/revise 均保持 503/LIVE_HANDOFF_NOT_CONNECTED。
+  health 的 MC:MOCK、csIntent:NOT_CONNECTED 保持准确；真实配置应用中创建的营销草稿
+  仍为 simulated:true/REVIEW_PENDING，媒体保持 mock。
+
+复用已有 Terminal 0.1.46.1／Strata v0.2.1／engine 0.1.46 CUDA 13 与
+qwen3.8-flash-next-gyro-gyro-s：127.0.0.1:8080，8192 上下文、单并发、vision/MTP 关闭、
+1536 MiB 显存预留、上游 route-tail-skip 7。没有安装、升级或下载。原有本地配置／profile／
+数据库 SHA-256 全部保持，56 个既有模型文件的大小与修改时间清单不变；未重新计算整份权重哈希。
+
+执行权限切换期间测试监听已消失，没有杀死身份不明的 PID。停止脚本遇到一个仍存在但无法读取
+StartTime 的已记录 PID 时出现空值错误。局部修复要求开始时间和可执行文件均可读，才能比较原凭据。
+验证该不可核实 PID 被保留；另启动 5639 的身份匹配应用，正常停止且保留数据库。
+最终六个测试端口（含模型 8080）均无监听。
+
+诊断中还遇到探针过窄地期待 LLM_UNAVAILABLE、实际 Windows 先连接超时，以及复用已完成订单触发
+既有 DUPLICATE_REQUEST。均通过校正探针或另建测试库解决，没有修改测试数量或队友业务规则。
+
+未验证真实外部存储故障、AP 网页恢复、CS 失败 intake 保留界面、真实 CS/MC、跨机网络、一般模型质量
+或完整 41 组验收。GitHub CLI 返回 401，改用已连接 GitHub 工具读取 PR #8 及准确 head。
+PR 正文记有此前经 Jira UI 更新 Verification；回归验证未独立核实 Jira，也未写入 Jira/PR。
+随后 Danny 授权将这些证据与停止修复发布到 PR #8。新的 CI 和实际评审须针对发布提交；
+本地自检不代表 Approve，发布不包含合并、绕过审批或 Jira 写入。
