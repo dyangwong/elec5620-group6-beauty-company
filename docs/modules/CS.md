@@ -98,3 +98,28 @@ For future CS intent: “exchange my item” needs an order reference and verifi
 association; missing policy requires clarification; “use another customer's order”
 must yield generic correction/support. Intent output cannot supply trusted identity,
 approval, stock or execution authority. No independent CS model client was added.
+
+## Shared HTTP/UI integration · GR-INT-01 · 27 October 2026
+
+Danny explicitly authorised switching the HTTP receiver to assess and adding safe
+failure rendering/reassessment. This supersedes the earlier current-HTTP rollback
+handoff above; service submit itself and all member tests remain unchanged.
+Missing policy is saved as NEEDS_INFORMATION; conflicting/unsupported/unavailable
+policy is saved as UNRESOLVED after identity association. The view shows safe
+reason/reference and no old advice/current confirmation when evidence is blocked.
+It directs the Customer to reassess the existing request after authorised evidence
+refresh, preserving history and requiring fresh handoff/confirmation/review.
+No new policy editor, fixture endpoint, service signature, model or schema change.
+
+Eleven new HTTP/session/SQLite tests cover retained outcomes/restart/ownership,
+initial verification denial, policy read failure sanitisation, forged policy,
+evidence refresh/still-blocked reassessment, saved confirmation error and storage
+rollback. The complete branch passes 107 offline tests, plus source/JS checks.
+Actual Customer browser intake persisted NEEDS_INFORMATION; server fixture refresh
+then browser reassessment produced revision 2/ASSESSING. A controlled existing
+Founder service handoff followed by another missing-policy fixture caused actual
+browser confirmation HTTP 409 and immediately displayed the saved blocked result.
+Independent readback found one CS record, no approvals/effects and stock 12.
+All are mock policy/business fixtures. CS-T-01/02/06 stay PARTIAL; routine refunds,
+full cancellation, real CS intent and the wider failure matrix remain open.
+Remote CI/review/merge and current Jira progress are recorded on the integration PR.

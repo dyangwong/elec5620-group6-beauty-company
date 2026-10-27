@@ -37,7 +37,7 @@ HTTP 仅绑定 127.0.0.1，无 CORS。Host/origin 检查拒绝跨站和非本机
 | POST `/api/logout` | 登录 + CSRF | 作废本会话 |
 | GET `/api/snapshot` | 已登录 | 按角色/归属过滤 |
 | POST `/api/consultations` | Customer | message、concern、budget（AUD）、fragranceFree |
-| POST `/api/after-sales` | Customer | orderId 和明确咨询约束 |
+| POST `/api/after-sales` | Customer | orderId／需求 → 已存评估；201 可为 ASSESSING、NEEDS_INFORMATION、UNRESOLVED，不代表换货成功 |
 | POST `/api/after-sales/{id}/coordinate` | Founder | 主动发起 GR-S-01 建议转交 |
 | POST `/api/after-sales/{id}/confirm` | 所属 Customer | 当前 contextRevision；首次送审，后续当前确认才可能执行 |
 | POST `/api/after-sales/{id}/revise` | 所属 Customer | 当前版本和更正需求，作废旧范围 |
@@ -98,3 +98,16 @@ CS 重查订单归属、当前政策、库存、确认、精确 action/ref/revis
 错误／模式边界与真实验收。共享集成由 Danyang Wang 负责，默认仍 mock；可选独立 BA 传输和
 分能力模式／错误映射见 [WINDOWS_LLM.md](WINDOWS_LLM.md)；一条真实 BA 路径已验证，见 [运行证据](WINDOWS_LLM_RUNTIME.md)；
 CS 意图提取是后续共同定义的接口，尚未实现。
+
+## CS HTTP 保留评估 · 2026-10-27
+
+HTTP 受理现明确在原事务调用 CustomerService.assess，原服务 submit 不变。
+初始订单归属不可访问／不可验证时只返回通用错误，不保存记录或受保护上下文。
+归属验证后，政策缺失／冲突／不支持／不可读会保留 NEEDS_INFORMATION／UNRESOLVED、允许的原因／引用，
+不产生建议、审批或效果。写入失败不声称已保存；请求传入的政策／身份不能覆盖服务端证据或登录身份。
+
+卡片根据 evidenceOutcome 展示，不假设 policy／advice 存在，证据受阻时隐藏旧建议，并提供原 revision 重评入口。
+权威证据更新后用当前需求重评会产生新的 ASSESSING 版本，须重新 Founder 交接、客户确认、精确审批；
+表单不能编辑政策。仍缺证据则保留原失败记录，不伪造新提案。coordinate／revise／confirm 错误后刷新已存快照，
+包括通过 HTTP 错误返回但已保存的受阻结果。提示准确称为评估保存，不暗示换货成功。
+保留真实 CS 交接／revise 防护及效果核对；未新增政策修改接口或真实 CS 模型。

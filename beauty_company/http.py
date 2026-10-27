@@ -93,7 +93,7 @@ class Router:
                                   503, "LIVE_HANDOFF_NOT_CONNECTED")
             with self.company.store.transaction() as db:
                 if path == "/api/after-sales":
-                    return json_response(self.company.cs.submit(db, actor, data), 201)
+                    return json_response(self.company.cs.assess(db, actor, data), 201)
                 if path == "/api/campaigns":
                     return json_response(self.company.mc.submit(db, actor, data), 201)
                 if len(parts) == 4 and parts[:2] == ["api", "after-sales"]:

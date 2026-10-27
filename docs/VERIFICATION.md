@@ -492,3 +492,17 @@ under KAN-9, link its PR once authorised/published, and request Jiaxuan's review
 of the shared AP boundary. Include the 96-test/browser/no-execution evidence and
 remaining cases above. Do not mark the broad integration epic Done or change
 KAN-13/KAN-15/teammate claims based on this local implementation.
+
+## CS failed-intake web acceptance · 27 October 2026
+
+Danny-authorised GR-INT-01 integration, based on merged AP main dc1b60b; MC PR #11
+is a separate repaired branch. HTTP intake now commits assess outcomes, the view
+renders evidence failure/reassessment and refreshes errors; no CS module/schema/
+model change. All 107 offline tests passed, including 11 new CS HTTP tests.
+Actual browser missing-policy receipt, corrected-evidence revision 2 and subsequent
+confirmation-error refresh passed in an isolated database on 5663. The Founder
+handoff in this negative probe used the existing service; policy changes were
+controlled test fixtures, not a new application editing feature. Independent DB
+readback: one CS record, no approval/effect and stock unchanged at 12. Full CS/GR
+acceptance remains partial. Remote CI, owner review and Jira publication receipts
+are recorded separately on the PR; no whole-module completion is inferred.

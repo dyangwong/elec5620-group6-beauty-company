@@ -42,7 +42,7 @@ Inputs and database evidence are escaped before insertion into browser markup.
 | POST `/api/logout` | Session + CSRF | Invalidate this server session |
 | GET `/api/snapshot` | Session | Role/ownership-filtered workspace |
 | POST `/api/consultations` | Customer | message, concern, budget (AUD), fragranceFree |
-| POST `/api/after-sales` | Customer | orderId plus explicit consultation constraints |
+| POST `/api/after-sales` | Customer | orderId/needs → stored assessment; 201 may be ASSESSING, NEEDS_INFORMATION or UNRESOLVED, not exchange success |
 | POST `/api/after-sales/{id}/coordinate` | Founder | Initiate the authorised GR-S-01 advice handoff |
 | POST `/api/after-sales/{id}/confirm` | Owning Customer | Current contextRevision; first confirmation submits review, later current confirmation may execute |
 | POST `/api/after-sales/{id}/revise` | Owning Customer | Current revision plus corrected needs; invalidate former scope |
@@ -120,3 +120,24 @@ Opt-in standalone BA transport and precise mode/error reporting are documented i
 [WINDOWS_LLM.md](WINDOWS_LLM.md). One actual BA model path is now verified; see
 [WINDOWS_LLM_RUNTIME.md](WINDOWS_LLM_RUNTIME.md).
 CS intent extraction is a future coordinated interface, not an implemented port.
+
+## Retained CS HTTP assessment · 27 October 2026
+
+HTTP intake now explicitly calls CustomerService.assess in the existing transaction.
+The legacy service submit call remains unchanged. Initial inaccessible/unverifiable
+order association raises a generic error with no record or protected context.
+After verified association, missing/conflicting/unsupported/unavailable policy
+may create NEEDS_INFORMATION/UNRESOLVED with permitted reasons/references, no advice
+or approval/effect. A write failure does not claim a retained result. Client-supplied
+policy/identity fields cannot replace server evidence or the session actor.
+
+The request card renders evidenceOutcome without assuming policy/advice exists,
+hides earlier advice when evidence is blocked, and offers the existing revision
+path for reassessment. Corrected authoritative evidence plus current needs yields
+a new ASSESSING revision requiring a fresh Founder handoff, Customer confirmation
+and exact-scope review. Evidence is never editable through this form. If it is still
+missing, the same blocked record remains, without a fabricated new proposal.
+Coordinate/revise/confirm errors refresh the persisted snapshot, including saved
+blocked outcomes returned through an HTTP error. Non-success receipts use truthful
+assessment wording. Existing live-CS handoff/revise guard and effect reconciliation
+remain unchanged. No new policy fixture endpoint or real CS model is introduced.

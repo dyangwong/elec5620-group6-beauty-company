@@ -133,7 +133,7 @@ function consultation() {
 
 function requestsView() {
   const list = records("CS");
-  const eligibleOrders = state.snapshot.orders.filter(order => order.status === "DELIVERED" && !list.some(item => item.payload.orderId === order.id && !["REJECTED", "CANCELLED", "UNRESOLVED"].includes(item.status)));
+  const eligibleOrders = state.snapshot.orders.filter(order => order.status === "DELIVERED" && !list.some(item => item.payload.orderId === order.id && !["REJECTED", "CANCELLED"].includes(item.status)));
   const create = !isFounder() && eligibleOrders.length ? `<section class="panel"><div class="panel-head"><div><h2>Request an exchange</h2><p>A declared demo policy routes every exchange for Founder review.</p></div><span class="badge">SIMULATED SERVICE</span></div><form id="exchange-form"><div class="form-grid"><div class="field wide"><label for="orderId">Your order</label><select id="orderId" name="orderId">${eligibleOrders.map(order => `<option value="${e(order.id)}">${e(order.id)} · ${e(label(order.status))}</option>`).join("")}</select></div>${needsFields("exchange")}</div><div class="form-footer"><p>No real refund, payment or shipment occurs.</p><button class="button" type="submit">Submit exchange request ↗</button></div></form></section>` : (!isFounder() ? '<div class="notice">Your demo order already has an active or recorded exchange. Follow the existing request below.</div>' : "");
   return heading("CUSTOMER SERVICE & COORDINATION", "Care that keeps its promises.", isFounder() ? "Initiate authorised handoffs. Approval and execution remain separate." : "Track the proposal, Founder review and your final confirmation.") + create
     + `<section class="panel"><div class="panel-head"><h2>${isFounder() ? "Customer requests" : "Your requests"}</h2><span class="small muted">${list.length} recorded</span></div>${list.map(requestCard).join("") || empty("No exchange requests yet", isFounder() ? "Create a request in the Customer workspace, then return to initiate coordination." : "Submit the form above to begin the demo workflow.")}</section>`;
@@ -141,14 +141,16 @@ function requestsView() {
 
 function requestCard(item) {
   const payload = item.payload;
+  const blocked = payload.evidenceOutcome;
+  const evidenceNotice = blocked ? `<div class="notice"><strong>${e(label(blocked.code))}</strong><br>${e(blocked.reason)}<br>No exchange was executed for this blocked assessment.${blocked.policyRefs?.length ? `<br>Permitted policy references: ${blocked.policyRefs.map(e).join(" · ")}` : ""}<br>Required evidence must be refreshed by an authorised source. Then reassess this request with the current needs.</div>` : "";
   let actions = "";
   if (isFounder() && item.status === "ASSESSING") actions = `<button class="button" data-action="coordinate" data-id="${e(item.id)}">Start advice handoff ↗</button>`;
   if (isFounder() && item.status === "REVIEW_PENDING") actions = '<button class="button secondary" data-view="approvals">Open exact-scope review ↗</button>';
   if (!isFounder() && item.status === "AWAITING_CONFIRMATION") actions = `<button class="button" data-action="confirm" data-id="${e(item.id)}" data-revision="${item.revision}">${payload.decision === "APPROVE" ? "Confirm simulated exchange" : "Confirm proposal & request review"} ↗</button>`;
   if (!isFounder() && ["RECONCILING", "RECORDING_FAILED", "EXECUTING"].includes(item.status)) actions = `<button class="button" data-action="reconcile" data-id="${e(item.id)}">Query existing action outcome ↗</button>`;
   const revision = !isFounder() && !["RESOLVED", "EXECUTING", "RECONCILING", "RECORDING_FAILED", "CANCELLED"].includes(item.status)
-    ? `<details><summary>Correct the needs and request a new proposal</summary><form data-form="exchange-revise" data-id="${e(item.id)}" data-revision="${item.revision}"><div class="form-grid">${needsFields(`rev-${item.id}`, payload.needs)}</div><div class="form-footer"><p>Changing the context invalidates previous confirmation and approval.</p><button class="button secondary" type="submit">Save revised needs</button></div></form></details>` : "";
-  return `<article class="record-card"><div class="record-head"><div><span class="mono">${e(item.id)} · Revision ${item.revision}</span><h3>${e(payload.orderId)} · Exchange request</h3></div>${badge(item.status)}</div><p>${e(payload.needs.message)}</p>${payload.advice ? adviceView(payload.advice) : ""}<p class="small muted">${e(payload.note || "Review the current proposal and confirm the exact action.")}</p>${payload.result ? `<div class="evidence">${e(payload.result.outcome)}<br>Service reference: ${e(payload.result.serviceRef)}<br>${e(payload.result.remainingSteps)}</div>` : ""}<div class="review-meta">${payload.actionRef ? `<span>Action: <span class="mono">${e(payload.actionRef)}</span></span>` : ""}${payload.approvalId ? `<span>Review: <span class="mono">${e(payload.approvalId)}</span></span>` : ""}</div><div class="row-actions">${actions}</div>${revision}</article>`;
+    ? `<details><summary>${blocked ? "Reassess with corrected needs or refreshed evidence" : "Correct the needs and request a new proposal"}</summary><form data-form="exchange-revise" data-id="${e(item.id)}" data-revision="${item.revision}"><div class="form-grid">${needsFields(`rev-${item.id}`, payload.needs)}</div><div class="form-footer"><p>Reassessment uses server-side evidence. Changing the context invalidates previous confirmation and approval.</p><button class="button secondary" type="submit">${blocked ? "Reassess current request" : "Save revised needs"}</button></div></form></details>` : "";
+  return `<article class="record-card"><div class="record-head"><div><span class="mono">${e(item.id)} · Revision ${item.revision}</span><h3>${e(payload.orderId)} · Exchange request</h3></div>${badge(item.status)}</div><p>${e(payload.needs.message)}</p>${payload.advice && !blocked ? adviceView(payload.advice) : ""}${evidenceNotice}${!blocked ? `<p class="small muted">${e(payload.note || "Review the current proposal and confirm the exact action.")}</p>` : ""}${payload.result ? `<div class="evidence">${e(payload.result.outcome)}<br>Service reference: ${e(payload.result.serviceRef)}<br>${e(payload.result.remainingSteps)}</div>` : ""}<div class="review-meta">${payload.actionRef ? `<span>Action: <span class="mono">${e(payload.actionRef)}</span></span>` : ""}${payload.approvalId ? `<span>Review: <span class="mono">${e(payload.approvalId)}</span></span>` : ""}</div><div class="row-actions">${actions}</div>${revision}</article>`;
 }
 
 function approvalOutcome(review, origin) {
@@ -218,9 +220,9 @@ document.addEventListener("submit", event => {
   } else if (form.id === "consult-form") {
     mutate(() => api("/api/consultations", formNeeds(form)), "Consultation recorded. Review the supported result below.");
   } else if (form.id === "exchange-form") {
-    mutate(() => api("/api/after-sales", {...formNeeds(form), orderId: values.get("orderId")}), "Request saved. The Founder can now initiate the advice handoff.");
+    mutate(() => api("/api/after-sales", {...formNeeds(form), orderId: values.get("orderId")}), "Request assessment saved. Review the recorded status and next step below.", true);
   } else if (form.dataset.form === "exchange-revise") {
-    mutate(() => api(`/api/after-sales/${encodeURIComponent(form.dataset.id)}/revise`, {...formNeeds(form), contextRevision: Number(form.dataset.revision)}), "Needs revised. Previous approval no longer applies.");
+    mutate(() => api(`/api/after-sales/${encodeURIComponent(form.dataset.id)}/revise`, {...formNeeds(form), contextRevision: Number(form.dataset.revision)}), "Request reassessed. Review the current status; changed proposals need fresh confirmation and review.", true);
   } else if (form.id === "campaign-form" || form.dataset.form === "campaign-revise") {
     const path = form.id === "campaign-form" ? "/api/campaigns" : `/api/campaigns/${encodeURIComponent(form.dataset.id)}/revise`;
     mutate(() => api(path, {brief: values.get("brief"), productId: values.get("productId"), contextRevision: Number(form.dataset.revision)}), "Mock draft saved and submitted for exact-revision review.");
@@ -242,8 +244,8 @@ document.addEventListener("click", event => {
       state.actor = null; state.csrf = ""; state.snapshot = null;
     }).then(() => { if (!state.actor) render(); });
   }
-  if (action === "coordinate") mutate(() => api(`/api/after-sales/${id}/coordinate`, {}), "Advice handoff recorded. The Customer can review the proposal.");
-  if (action === "confirm") mutate(() => api(`/api/after-sales/${id}/confirm`, {contextRevision: Number(button.dataset.revision)}), "Current confirmation recorded. Check the resulting status.");
+  if (action === "coordinate") mutate(() => api(`/api/after-sales/${id}/coordinate`, {}), "Request checked. Review its current status and any required evidence.", true);
+  if (action === "confirm") mutate(() => api(`/api/after-sales/${id}/confirm`, {contextRevision: Number(button.dataset.revision)}), "Current confirmation recorded. Check the resulting status.", true);
   if (action === "reconcile") mutate(() => api(`/api/after-sales/${id}/reconcile`, {}), "Existing action queried without repeat execution.");
   if (action === "redeliver") mutate(() => api(`/api/approvals/${id}/deliver`, {}), "The same committed decision was redelivered.");
   if (action === "recover-decision") mutate(() => api(`/api/approvals/${id}/recover`, {contextRevision: Number(button.dataset.revision)}), "Saved decision recovered. Check delivery status; no business action was executed by recovery.", true);
