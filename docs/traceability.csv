@@ -14,11 +14,11 @@ CS-T-05,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_rejection_an
 CS-T-06,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_06;test_co_t_08,Policy/order/stock read failures retained with zero effects plus original timeout/storage recovery; all audit failures and real provider guarantees remain.
 CS-T-07,CS-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
 MC-T-01,MC-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_mc_t_01_and_06,Deterministic facts-only script/storyboard; live brief interpretation remains.
-MC-T-02,MC-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
-MC-T-03,MC-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_mc_t_03,Claim allowlist mock check; actual unrestricted text/storyboard claim validation remains.
+MC-T-02,MC-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Retained incomplete/rejected/failed draft service results and failed revision history verified; initial HTTP failure retention and full lifecycle remain.
+MC-T-03,MC-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_mc_t_03,Mock script/storyboard/media validation includes independent evidence and frame snapshots against mutating adapters; unrestricted live prose/media quality remain.
 MC-T-04,MC-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_mc_t_01_and_06,Labelled storyboard placeholder only; no video and no media failure matrix.
 MC-T-05,MC-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
-MC-T-06,MC-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_mc_t_01_and_06,Exact draft approval/revision tested; all pending/reject/save-failure cases remain.
+MC-T-06,MC-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_mc_t_01_and_06,Failed revision HTTP persistence and browser studio/superseded-review rendering verified; recording-save recovery and complete failure matrix remain.
 MC-T-07,MC-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
 AP-T-01,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_02;test_co_t_01,Declared exchange/content fixture routing only; unknown-risk handling remains.
 AP-T-02,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_02;test_ap_rejection_and_revision,Customer/pending/rejected guards; exhaustive mismatched envelope cases remain.

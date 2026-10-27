@@ -330,3 +330,13 @@ MC PR #11 仍为独立事项。10 月 26 日读到 Jira KAN-9 为 Integration & 
 **Jira update pending：** 将本次有限 GR-INT-01 AP 网页恢复记录在 KAN-9，获授权发布后补 PR 链接，
 请 Jiaxuan 审阅共享 AP 边界；附 96 项检查、网页／不执行业务的证据及剩余条件。
 不因本地实现将整个集成 epic 标 Done，也不改 KAN-13／KAN-15／队友认领。
+
+## MC 修复验收 · 2026-10-27
+
+保留 Zhengdu Wei 原 KAN-12 实现；按 Danny 明确要求，由 AI 协助将原 PR #11 同步到 main dc1b60b（含 AP #12）并修复，不重新分配 starter，不声称队友已认可。
+
+失败修订现可在 Content studio 显示失败原因，不伪造商品、媒体或审批，并用 productId 保留更正表单选择。审批队列也处理当前失败数据，明确旧 SUPERSEDED 审阅不能批准不同的当前版本。HTTP 创建仍调用 submit，submit_draft 仍是服务入口；未新增真实模型或视频。
+
+传给模型的证据、传给媒体适配器的输入均独立深拷贝；实际媒体帧与另一份已验证分镜快照比较，避免共享可变引用绕过验证。shot／duration 元数据和 mock 标签限定为已声明样例。适配器修改输入不能将无依据字幕带入审批，也不能替换已保存脚本／声明。这仍是确定性 mock 验证，不代表任意自然语言事实校验。
+
+集成后的 112 项测试全部通过，含原 11 项 MC 检查和 5 项新增的适配器／证据变更、元数据、实际 HTTP 失败修订回归。实际浏览器创建后以纯空格修订，保存 INCOMPLETE／revision 2；Content studio 和旧 SUPERSEDED 审批均正常显示，保留历史。远程 CI、实际审阅／合并在 PR #11 单独记录。
