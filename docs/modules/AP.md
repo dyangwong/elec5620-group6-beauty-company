@@ -46,13 +46,33 @@ regression in `tests/test_workflows.py`.
 
 Remaining: full risk/authority classification, BA/CO local adapter mappings,
 unknown risk, expiry, notification, cancellation, queue failure and the optional
-linked resubmission. The HTTP/UI recovery control and demo fixture for the
-recording failure are GR-INT-01 shared integration, not part of this slice.
-Observed pending items for that integration: the backend accepts the
-`approval_recording` fault but the demo dropdown does not offer it yet; the
-review card has no recovery control for a `RECORDING_FAILED` request; and its
-non-PENDING fallback text ("This review was superseded by a changed context.")
-is inaccurate for a failed recording, although the card still reports
-"No applicable committed decision" and renders the failed badge. The recording
-failure is an injected local fixture, not a real provider outage.
+linked resubmission. The original service slice left HTTP/UI recovery to GR-INT-01; the bounded
+26 October integration below closes that transport/view gap. Recording failure
+remains an injected local fixture, not a real provider outage.
 Never execute an exchange, settlement or publication from approval code.
+
+## HTTP/UI recording recovery · KAN-9 / GR-INT-01 · 26 October 2026
+
+Danny authorised this shared integration separately from Jiaxuan's AP starter.
+`POST /api/approvals/{id}/recover` takes only the displayed contextRevision,
+rechecks current scope and calls the existing storage-only recovery facade.
+Original Founder/session/CSRF checks apply; decision, reason, identity and action
+are never accepted from this request. The optional facade data argument preserves
+existing two-argument service callers. No schema or approval-module change.
+
+The failed review card now names the actual recording failure, displays the saved
+kind/reason as an intention without authority, and offers Recover saved decision
+only to its original Founder for a current linked origin. Failed decide/recover
+refreshes saved state, so the card appears immediately. The Founder simulation
+menu includes approval_recording. After recovery, show the actual committed ID and
+delivery status; a failed delivery retains the existing separate redelivery button.
+No exchange, settlement or publication is dispatched by recovery.
+
+Twelve new Router/session/SQLite tests in tests/test_ap_http.py cover authority,
+CSRF, input tampering, current/stale/action scope, repeated recording failure,
+restart, all three saved decision kinds, once-only commit and separate delivery.
+Actual browser save-failure/recovery passed; independent DB readback found one
+committed audit, zero effects and unchanged stock. See VERIFICATION.md.
+AP-T-05 stays PARTIAL: queue/notification, expiry, full risk routing and real
+storage-outage acceptance remain open. Publication, affected-owner review and
+Jira progress update are pending; this is not full AP or epic acceptance.

@@ -78,6 +78,8 @@ class Router:
                     return json_response(self.company.decide(actor, parts[2], data))
                 if parts[3] == "deliver":
                     return json_response(self.company.redeliver(actor, parts[2]))
+                if parts[3] == "recover":
+                    return json_response(self.company.recover_decision(actor, parts[2], data))
             if len(parts) == 4 and parts[:2] == ["api", "after-sales"]:
                 if parts[3] == "confirm":
                     return json_response(self.company.cs.confirm(actor, parts[2], data))

@@ -1,6 +1,6 @@
 # 本地验证记录
 
-中文阅读副本，依据 2026-10-25 英文主版同步。以[英文主版](../VERIFICATION.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+中文阅读副本，依据 2026-10-26 英文主版同步。以[英文主版](../VERIFICATION.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
 以下为按日期保留的历史记录；后续发布更新覆盖早期“无远端/字节一致打包”的现状描述。
 
@@ -292,3 +292,41 @@ Windows 重启／睡眠唤醒、长输入、多人并发、一般建议质量、
 稳定性测试期间只准备本地双语记录，没有远程写入；随后 Danny 授权将这四份双语证据文档
 发布到 PR #8。实际测试的应用仍为上述准确提交，新的 CI 须针对文档发布提交。
 本次发布不包含模型／配置／代码、SSH／防火墙或 Jira 变更，也不包含合并或绕过审批。
+
+## AP HTTP/UI 保存恢复 · 2026-10-26
+
+**范围与授权：** Danny 明确授权 KAN-9 / GR-INT-01 的三个 AP 共享接口／界面缺口：准确保存失败文案、
+恢复接口和恢复按钮。分支 KAN-9-ap-web-recovery 基于 main
+`e141427c393df6515ad8091f035e1c2f81cba65d`，不领取 Jiaxuan 的 AP starter，
+未改 approval.py、schema、CS/MC 模块、模型部署或 PR #11。
+
+**接口：** 原 Founder 的登录会话只向 `/api/approvals/{id}/recover` 提交所显示的正整数 contextRevision。
+即便已提交后重复调用，仍检查当前来源、版本和审阅关联；原服务在提交前复核持久意图的精确动作／actionRef。
+拒绝覆盖决定、理由、身份和动作；保留原双参数服务调用。恢复同一已存意图只提交一次，再单独尝试投递；
+投递失败须显式重投同一决定 ID。恢复／投递均不执行业务。失败卡片将已存种类／理由标作无权威意图，
+仅原 Founder 对当前来源可见恢复按钮。decide／recover 失败立即刷新已存状态；
+approval_recording 下拉项是本地注入样例。
+
+**自动检查：** Mac Python 3.9.6 的 **96 项测试在 12.810 秒全部通过**，含原 84 项和 12 项新增
+AP HTTP／会话／SQLite 检查：重启／重复恢复、后续仅客户确认才恰好一次执行、保留 REJECT／REQUEST_REVISION、
+未登录／错误 CSRF／Customer／其他 Founder 被拒、缺失／非法／额外／覆盖输入、旧显示版本、
+被替代来源、动作范围改变、提交后旧范围重复恢复、无意图／不存在审批、再次保存失败，
+以及投递失败后显式重投同一 ID。Node 语法与空白检查通过，未启动或调用真实模型。
+
+**实际网页：** 使用全新忽略数据库、本机 5661 端口，通过原服务创建 mock CS 待审批记录。
+浏览器登录虚构 Founder，在 Activity trail 选 Decision recording failure (no approval) 并应用，
+填写理由后点 Approve exact scope。HTTP 409 后立即刷新为 recording failed，展示非已提交决定的已存意图、
+理由、No applicable committed decision 和 Recover saved decision；不再误说 superseded。
+点恢复后显示 APPROVED、决定 ID、DELIVERED，恢复按钮消失，再刷新仍为同一决定。
+独立读库：审批 AP-d53f12341a0d，决定 DEC-6349abf72f19，一条 DECISION_COMMITTED 审计、零业务效果，
+P-101 库存仍为 12，CS 仍 AWAITING_CONFIRMATION。原始库／截图位于忽略的
+var/ap-web-20261026-first.sqlite3、output/previews/。业务效果及故障为 mock／注入，不代表真实存储故障验收。
+
+**交接：** 完整 AP-T-05／GR 验收保留 PARTIAL；队列／通知、过期、完整风险路由、CS 失败受理界面、
+MC PR #11 仍为独立事项。10 月 26 日读到 Jira KAN-9 为 Integration & Verification、To Do、Unassigned；
+子项只有 KAN-15，未显示单独 GR-INT-01 子项。核对 GitHub 重叠工作时仅 MC PR #11 开放。
+本次未执行 Jira 认领、状态／评论、远程发布或队友审阅，不声称远程 CI；按 Danny 要求由 AI 协助完成。
+
+**Jira update pending：** 将本次有限 GR-INT-01 AP 网页恢复记录在 KAN-9，获授权发布后补 PR 链接，
+请 Jiaxuan 审阅共享 AP 边界；附 96 项检查、网页／不执行业务的证据及剩余条件。
+不因本地实现将整个集成 epic 标 Done，也不改 KAN-13／KAN-15／队友认领。

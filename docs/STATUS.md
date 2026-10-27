@@ -24,6 +24,8 @@ historical. Update affected behaviour/gaps here in the implementation PR.
   delivery and same-decision redelivery. Delivery never executes business work.
 - AP durable decision intent, RECORDING_FAILED on a failed decision commit and
   storage-only same-decision recovery. A pending intent grants no authority.
+- AP Founder HTTP/UI recovery with the displayed revision, saved intent and exact
+  scope checks; recording-failure fixture, accurate failed card and separate delivery.
 - CS persistent actionRef, simulated service effect, once-only stock decrement,
   post-write-timeout lookup and outcome-recording recovery without repeat effects.
 - MC deterministic script and three storyboard cards, labelled mock media;
@@ -59,7 +61,8 @@ repository have now been published; see the collaboration status below.
   independent distributed services and automatic retry.
 - AP expiry, cancellation and complete risk/unknown-risk classification. The
   decision-recording failure state machine and durable same-decision-intent recovery
-  are implemented and tested; the HTTP/UI recovery control is still GR-INT-01.
+  and its bounded HTTP/UI recovery control are implemented and tested. Queue/
+  notification failure and the remaining lifecycle/risk cases remain open.
 - Real/generated mock video files, media failure/quality workflows, persistent MC
   failed-generation states, full generated-claim validation and review-save recovery.
 - All five optional features (OFF/not implemented); no enabled-mode claims.
@@ -218,3 +221,16 @@ AP web recovery is absent; its recording-failed card also uses misleading
 superseded fallback text, recorded for affected-owner/shared UI follow-up.
 The regression run did not touch PR #11, BA starter claims or Jira. See the dated
 VERIFICATION checkpoint; broader acceptance and actual owner review remain open.
+
+## AP HTTP/UI recovery · 26 October 2026
+
+KAN-9 / GR-INT-01, explicitly authorised by Danny. Based on main e141427,
+branch KAN-9-ap-web-recovery adds the original-Founder/current-revision recovery
+endpoint, accurate RECORDING_FAILED view, saved-intent recovery button and demo
+fault option. Decision/recovery failures refresh persisted state immediately.
+Existing AP commit/delivery semantics and two-argument callers are retained;
+no schema, teammate business module or model change. All 96 offline tests passed,
+including 12 new AP HTTP tests. Actual browser failure/recovery and independent
+SQLite readback showed one decision audit, zero effects and stock 12 unchanged.
+No full AP/GR acceptance, remote CI, owner review or Jira update is inferred.
+CS failed-intake UI and MC PR #11 remain separate. See VERIFICATION.md.

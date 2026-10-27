@@ -49,6 +49,7 @@ Inputs and database evidence are escaped before insertion into browser markup.
 | POST `/api/after-sales/{id}/reconcile` | Owning Customer | Read same actionRef effect and recover outcome, never repeat execution |
 | POST `/api/approvals/{id}/decide` | Founder | decision, reason, contextRevision |
 | POST `/api/approvals/{id}/deliver` | Founder | Redeliver same committed decision |
+| POST `/api/approvals/{id}/recover` | Original Founder | Only contextRevision; recover the saved decision intent for the displayed current scope |
 | POST `/api/campaigns` | Founder | brief and authorised productId → mock draft/review |
 | POST `/api/campaigns/{id}/revise` | Founder | Current revision, brief, productId → new exact-scope review |
 | POST `/api/demo/fault` | Founder | One declared next-operation failure fixture |
@@ -61,6 +62,19 @@ DecisionKind is APPROVE, REJECT or REQUEST_REVISION. Committed decisions retain
 decision_id, actor, reason and exact scope; decision/request/audit update together.
 Delivery is a separate transaction and status. Repeated delivery is idempotent;
 stale scope cannot change the current origin. Approval itself performs no effect.
+
+Recording recovery requires the authenticated original Founder, CSRF and exactly
+`{"contextRevision": <positive integer>}`. The displayed revision must still match
+the review and current origin/approval link; the stored intent's exact action and
+actionRef are revalidated before commit. Caller-supplied decision, reason, actor
+or action fields are rejected. Recovery reuses the durable kind/reason, commits
+once and attempts separate delivery; it never executes commerce or publication.
+Repeating recovery after commit returns the same decision without redelivery;
+use `/deliver` for failed delivery. Stale scope is refused even on this repeat.
+The failed card displays the saved intention as non-authoritative and offers
+recovery only for the original Founder and a current linked origin. Decision and
+recovery errors refresh the saved state before showing the error. The
+`approval_recording` fixture is available under Founder simulation controls.
 
 CS rechecks order association, current policy evidence, replacement stock, current
 confirmation, exact action/ref/revision and delivered committed approval. It saves

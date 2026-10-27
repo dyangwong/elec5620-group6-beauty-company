@@ -46,7 +46,7 @@ async function refresh() {
   render();
 }
 
-async function mutate(action, message) {
+async function mutate(action, message, refreshOnError = false) {
   if (state.busy) return;
   state.busy = true;
   document.querySelectorAll("button").forEach(button => { button.disabled = true; });
@@ -56,7 +56,12 @@ async function mutate(action, message) {
     else render();
     if (message) toast(message);
   } catch (error) {
-    toast(error.message, true);
+    let detail = error.message;
+    if (refreshOnError) {
+      try { await refresh(); }
+      catch { detail += " Workspace refresh failed; refresh before retrying."; }
+    }
+    toast(detail, true);
   } finally {
     state.busy = false;
     document.querySelectorAll("button").forEach(button => { button.disabled = false; });
@@ -146,6 +151,19 @@ function requestCard(item) {
   return `<article class="record-card"><div class="record-head"><div><span class="mono">${e(item.id)} · Revision ${item.revision}</span><h3>${e(payload.orderId)} · Exchange request</h3></div>${badge(item.status)}</div><p>${e(payload.needs.message)}</p>${payload.advice ? adviceView(payload.advice) : ""}<p class="small muted">${e(payload.note || "Review the current proposal and confirm the exact action.")}</p>${payload.result ? `<div class="evidence">${e(payload.result.outcome)}<br>Service reference: ${e(payload.result.serviceRef)}<br>${e(payload.result.remainingSteps)}</div>` : ""}<div class="review-meta">${payload.actionRef ? `<span>Action: <span class="mono">${e(payload.actionRef)}</span></span>` : ""}${payload.approvalId ? `<span>Review: <span class="mono">${e(payload.approvalId)}</span></span>` : ""}</div><div class="row-actions">${actions}</div>${revision}</article>`;
 }
 
+function approvalOutcome(review, origin) {
+  if (review.status === "RECORDING_FAILED" && !review.decision_id) {
+    const intent = review.intent;
+    const current = origin?.revision === review.revision && origin?.payload.approvalId === review.id;
+    const recoverable = isFounder() && current && intent?.founder_id === state.actor.id
+      && ["PROPOSED", "RECORDING_FAILED"].includes(intent.status);
+    return `<div class="evidence">The decision could not be recorded. No approval was delivered and no business action was executed.${intent ? `<br>Saved intention (not a committed decision): <strong>${e(label(intent.kind))}</strong><br>Saved reason: ${e(intent.reason)}` : ""}<br>No applicable committed decision.</div>${recoverable ? `<div class="row-actions"><button class="button secondary" data-action="recover-decision" data-id="${e(review.id)}" data-revision="${review.revision}">Recover saved decision</button></div><p class="small muted">Restore the saved decision for this exact scope. Recovery does not execute an exchange or publish content.</p>` : `<p class="small muted">${current ? "Recovery requires the original authorised decision maker and a saved intention." : "The proposal has changed. Fresh review is required; this saved intention cannot be recovered."}</p>`}`;
+  }
+  const fallback = review.status === "SUPERSEDED" ? "This review was superseded by a changed context."
+    : review.decision_id ? "Decision recorded for this exact scope." : "No decision has been committed.";
+  return `<div class="evidence">${e(review.reason || fallback)}<br>${review.decision_id ? `Committed decision: ${e(review.decision_id)} · Delivery: ${e(review.delivery)}` : "No applicable committed decision."}</div>${review.delivery === "FAILED" ? `<div class="row-actions"><button class="button secondary" data-action="redeliver" data-id="${e(review.id)}">Redeliver the same decision</button></div>` : ""}`;
+}
+
 function approvalsView() {
   const reviews = state.snapshot.approvals;
   return heading("HUMAN APPROVAL & GOVERNANCE", "Your decision. This exact scope.", "A committed approval permits re-evaluation. It does not execute an exchange or publish content.")
@@ -155,7 +173,7 @@ function approvalsView() {
       const evidence = source
         ? `Policy fixture: ${e(review.evidence.policyRef)}<br>Catalogue source: ${e(source.catalogueRef)}<br>Customer constraints: ${e(label(source.constraints.concern))}, budget ${money(source.constraints.budget)}, ${source.constraints.fragranceFree ? "fragrance-free required" : "fragrance-free not required"}.`
         : `Catalogue source: ${e(review.evidence.catalogueRef)}<br>Supported facts: ${e((review.evidence.facts || []).join(" · "))}`;
-      return `<article class="review-card"><div class="record-head"><div><span class="mono">${e(review.id)} · Revision ${review.revision}</span><h3>${review.origin_role === "CS" ? "Simulated customer exchange" : "Mock marketing draft"}</h3></div>${badge(review.status)}</div><div class="scope">${review.origin_role === "CS" ? `Order <strong>${e(review.action.orderId)}</strong> → replacement <strong>${e(review.action.productId)}</strong>` : `Draft <strong>${e(review.action.draftId)}</strong> · revision <strong>${review.revision}</strong>`}<br>Origin: <span class="mono">${e(review.origin_id)}</span></div>${origin?.payload.advice ? adviceView(origin.payload.advice) : ""}${origin?.kind === "MC" ? `<p class="script">${e(origin.payload.script)}</p><p class="small muted">${e(origin.payload.media.label)}</p>` : ""}<div class="evidence">${evidence}</div>${review.status === "PENDING" ? `<form data-form="review" data-id="${e(review.id)}" data-revision="${review.revision}"><div class="field"><label for="reason-${e(review.id)}">Your reason</label><textarea id="reason-${e(review.id)}" name="reason" maxlength="1000" placeholder="Explain your decision for this exact action and revision." required></textarea></div><div class="row-actions"><button class="button" type="button" data-action="decide" data-decision="APPROVE">Approve exact scope</button><button class="button secondary" type="button" data-action="decide" data-decision="REQUEST_REVISION">Request revision</button><button class="button danger" type="button" data-action="decide" data-decision="REJECT">Reject</button></div></form>` : `<div class="evidence">${e(review.reason || "This review was superseded by a changed context.")}<br>${review.decision_id ? `Committed decision: ${e(review.decision_id)} · Delivery: ${e(review.delivery)}` : "No applicable committed decision."}</div>${review.delivery === "FAILED" ? `<div class="row-actions"><button class="button secondary" data-action="redeliver" data-id="${e(review.id)}">Redeliver the same decision</button></div>` : ""}`}</article>`;
+      return `<article class="review-card"><div class="record-head"><div><span class="mono">${e(review.id)} · Revision ${review.revision}</span><h3>${review.origin_role === "CS" ? "Simulated customer exchange" : "Mock marketing draft"}</h3></div>${badge(review.status)}</div><div class="scope">${review.origin_role === "CS" ? `Order <strong>${e(review.action.orderId)}</strong> → replacement <strong>${e(review.action.productId)}</strong>` : `Draft <strong>${e(review.action.draftId)}</strong> · revision <strong>${review.revision}</strong>`}<br>Origin: <span class="mono">${e(review.origin_id)}</span></div>${origin?.payload.advice ? adviceView(origin.payload.advice) : ""}${origin?.kind === "MC" ? `<p class="script">${e(origin.payload.script)}</p><p class="small muted">${e(origin.payload.media.label)}</p>` : ""}<div class="evidence">${evidence}</div>${review.status === "PENDING" ? `<form data-form="review" data-id="${e(review.id)}" data-revision="${review.revision}"><div class="field"><label for="reason-${e(review.id)}">Your reason</label><textarea id="reason-${e(review.id)}" name="reason" maxlength="1000" placeholder="Explain your decision for this exact action and revision." required></textarea></div><div class="row-actions"><button class="button" type="button" data-action="decide" data-decision="APPROVE">Approve exact scope</button><button class="button secondary" type="button" data-action="decide" data-decision="REQUEST_REVISION">Request revision</button><button class="button danger" type="button" data-action="decide" data-decision="REJECT">Reject</button></div></form>` : approvalOutcome(review, origin)}</article>`;
     }).join("") || empty("Your review queue is clear", "Exchange proposals and generated mock drafts will appear here when submitted.")}</section>`;
 }
 
@@ -169,7 +187,7 @@ function studio() {
 }
 
 function traceView() {
-  const tools = isFounder() ? `<section class="panel"><div class="panel-head"><div><h2>Simulation controls</h2><p>Inject one failure into the next applicable operation.</p></div></div><form id="fault-form" class="simulation-tools"><select name="fault" aria-label="Failure fixture"><option value="none">Normal operation</option><option value="after_sales_timeout">After-sales timeout after execution</option><option value="outcome_recording">Outcome recording failure</option><option value="approval_delivery">Committed decision delivery failure</option></select><button class="button secondary" type="submit">Apply fixture</button><p class="small muted">Currently armed: ${e(state.snapshot.faults.join(", ") || "none")}</p></form></section>` : "";
+  const tools = isFounder() ? `<section class="panel"><div class="panel-head"><div><h2>Simulation controls</h2><p>Inject one failure into the next applicable operation.</p></div></div><form id="fault-form" class="simulation-tools"><select name="fault" aria-label="Failure fixture"><option value="none">Normal operation</option><option value="after_sales_timeout">After-sales timeout after execution</option><option value="outcome_recording">Outcome recording failure</option><option value="approval_delivery">Committed decision delivery failure</option><option value="approval_recording">Decision recording failure (no approval)</option></select><button class="button secondary" type="submit">Apply fixture</button><p class="small muted">Currently armed: ${e(state.snapshot.faults.join(", ") || "none")}</p></form></section>` : "";
   return heading("COORDINATION & RECOVERY", "Follow the work, not just the answer.", "Recorded events distinguish handoffs, committed decisions, execution and recovery.") + tools
     + `<section class="panel"><div class="panel-head"><h2>Recorded activity</h2><span class="small muted">Newest first · up to 150 events</span></div><div class="trace-list">${state.snapshot.events.map(event => `<article class="trace-event"><div class="agent-symbol ${event.role.toLowerCase()}">${e(event.role)}</div><div><h3>${e(label(event.event))}</h3><p class="mono">${e(event.entity_id)}</p><details><summary>Inspect recorded context</summary><div class="trace-detail">${e(JSON.stringify(event.detail))}</div></details></div><time datetime="${e(event.created)}">${e(new Date(event.created).toLocaleTimeString("en-AU"))}</time></article>`).join("") || empty("No activity has been recorded", "Events appear when you use a workflow. No development history is fabricated.")}</div></section>`;
 }
@@ -228,11 +246,12 @@ document.addEventListener("click", event => {
   if (action === "confirm") mutate(() => api(`/api/after-sales/${id}/confirm`, {contextRevision: Number(button.dataset.revision)}), "Current confirmation recorded. Check the resulting status.");
   if (action === "reconcile") mutate(() => api(`/api/after-sales/${id}/reconcile`, {}), "Existing action queried without repeat execution.");
   if (action === "redeliver") mutate(() => api(`/api/approvals/${id}/deliver`, {}), "The same committed decision was redelivered.");
+  if (action === "recover-decision") mutate(() => api(`/api/approvals/${id}/recover`, {contextRevision: Number(button.dataset.revision)}), "Saved decision recovered. Check delivery status; no business action was executed by recovery.", true);
   if (action === "decide") {
     const form = button.closest("form");
     if (!form.reportValidity()) return;
     const reason = new FormData(form).get("reason");
-    mutate(() => api(`/api/approvals/${encodeURIComponent(form.dataset.id)}/decide`, {decision: button.dataset.decision, contextRevision: Number(form.dataset.revision), reason}), "Decision committed. Review delivery status; no business action was executed by approval.");
+    mutate(() => api(`/api/approvals/${encodeURIComponent(form.dataset.id)}/decide`, {decision: button.dataset.decision, contextRevision: Number(form.dataset.revision), reason}), "Decision committed. Review delivery status; no business action was executed by approval.", true);
   }
 });
 

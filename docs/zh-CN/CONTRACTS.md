@@ -1,6 +1,6 @@
 # 共享接口约定与实现映射
 
-中文阅读副本，依据 2026-10-21 英文主版同步。以[英文主版](../CONTRACTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+中文阅读副本，依据 2026-10-26 英文主版同步。以[英文主版](../CONTRACTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
 读 Stage 1 第 8.2 节与 `docs/reference/stage1-baseline.txt` 的原状态词汇。
 Python 边界用 snake_case，需要明确契约字段的 JSON 用 camelCase。
@@ -44,6 +44,7 @@ HTTP 仅绑定 127.0.0.1，无 CORS。Host/origin 检查拒绝跨站和非本机
 | POST `/api/after-sales/{id}/reconcile` | 所属 Customer | 查询同一 actionRef 并保存结果，不重复执行 |
 | POST `/api/approvals/{id}/decide` | Founder | decision、reason、contextRevision |
 | POST `/api/approvals/{id}/deliver` | Founder | 重投同一已提交决定 |
+| POST `/api/approvals/{id}/recover` | 原 Founder | 仅 contextRevision；恢复所显示当前范围的已保存决定意图 |
 | POST `/api/campaigns` | Founder | brief、授权 productId 得 mock 草稿/审批 |
 | POST `/api/campaigns/{id}/revise` | Founder | 当前版本、brief、productId，创建新范围审批 |
 | POST `/api/demo/fault` | Founder | 一次下一操作故障样例 |
@@ -54,6 +55,14 @@ HTTP 仅绑定 127.0.0.1，无 CORS。Host/origin 检查拒绝跨站和非本机
 PENDING 是请求状态，不是 DecisionKind。DecisionKind 为 APPROVE、REJECT、REQUEST_REVISION。
 已提交决定有 decision_id、actor、reason、精确范围；决定/请求/审计同时更新。
 投递独立事务/状态且幂等，旧范围不能修改当前来源。批准本身无业务效果。
+
+保存恢复需要原 Founder 的登录会话、CSRF，且请求只含
+`{"contextRevision": <正整数>}`。所显示版本仍须匹配审阅、当前来源和 approvalId；
+提交前重新校验已存意图的精确动作及 actionRef。拒绝调用方传入决定、理由、身份或动作，
+仅复用持久化的种类和理由，恰好一次提交后单独尝试投递，不执行交易或发布。
+已提交后重复恢复仅返回同一决定，不重新投递；投递失败须显式调用 `/deliver`。
+重复恢复也拒绝旧范围。失败卡片明确已存意图并非权威决定，只有原 Founder 对当前关联来源可见恢复按钮。
+决定/恢复失败后先刷新已存状态再展示错误。Founder 演示控件已提供 `approval_recording` 选项。
 
 CS 重查订单归属、当前政策、库存、确认、精确 action/ref/revision、已投递且已提交的批准。
 先保存 EXECUTING/意图，模拟外部适配器在另一事务原子条件扣库存并插入唯一 actionRef 效果，
