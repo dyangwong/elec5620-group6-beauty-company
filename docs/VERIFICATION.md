@@ -502,3 +502,35 @@ Failed revisions now render as failed records in Content studio, with their perm
 Model evidence and media inputs are deep copies; media frames are checked against an independent verified storyboard snapshot, rather than a mutable alias. Shot/duration metadata and the mock-media label are bounded to the declared fixture. A mutating adapter cannot introduce unsupported captions or alter the saved script/claims by changing its input. This remains deterministic mock validation, not unrestricted prose grounding.
 
 The full integrated suite passed 112 tests, including the original 11 MC tests and five new regressions for adapter/evidence mutation, metadata and the actual failed HTTP revision contract. Actual browser creation followed by a whitespace-only revision saved INCOMPLETE/revision 2; both Content studio and the old SUPERSEDED review rendered without crashing. Initial revision history and old review are retained. Remote CI and actual review/merge are recorded on PR #11 separately.
+
+## CS failed-intake web acceptance · 27 October 2026
+
+Danny-authorised GR-INT-01 integration, based on merged AP main dc1b60b; MC PR #11
+is a separate repaired branch. HTTP intake now commits assess outcomes, the view
+renders evidence failure/reassessment and refreshes errors; no CS module/schema/
+model change. All 107 offline tests passed, including 11 new CS HTTP tests.
+Actual browser missing-policy receipt, corrected-evidence revision 2 and subsequent
+confirmation-error refresh passed in an isolated database on 5663. The Founder
+handoff in this negative probe used the existing service; policy changes were
+controlled test fixtures, not a new application editing feature. Independent DB
+readback: one CS record, no approval/effect and stock unchanged at 12. Full CS/GR
+acceptance remains partial. Remote CI, owner review and Jira publication receipts
+are recorded separately on the PR; no whole-module completion is inferred.
+
+## Combined MC/CS integration checkpoint · 27 October 2026
+
+PR #11 merged as 8bcc329 after an explicitly authorised AI-assisted review through
+dyangwong and passing required checks. PR #13 has merged that main into its task
+branch; both MC and CS implementation and bilingual evidence sections are retained.
+The combined tree passed **123/123 offline tests in 15.884 s** on Mac Python 3.9.6,
+repository provenance (110 source files / 41 tracked cases), JavaScript syntax
+and whitespace checks. The 112/107-test entries above describe their earlier
+separate baselines, not the combined tree. Existing browser probes are recorded
+above; no new combined browser probe is claimed by this checkpoint.
+
+Danny explicitly requested merging both #11 and #13. For his own #13, this
+authorises the documented owner review-layer exception after fresh current-main CI;
+self-checking is not a self-Approve or an independent human review. The previous
+#12-only authorisation is not being reused. PR #13's remote head, fresh CI, actual
+merge and Jira receipts are recorded on GitHub/Jira after they occur. Whole MC, CS
+and GR acceptance and real CS/MC model integration remain open.

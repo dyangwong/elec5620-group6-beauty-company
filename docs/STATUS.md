@@ -17,9 +17,9 @@ historical. Update affected behaviour/gaps here in the implementation PR.
   clarification and unrestricted generated-text grounding remain incomplete.
 - CS **exchange-only** intake with explicit synthetic policy; Founder-initiated CO
   handoff to BA; current Customer confirmation and exact-scope AP review.
-- CS service-level assess intake retains missing/conflicting/unavailable policy outcomes;
-  confirmation and the effect adapter recheck current evidence. Legacy HTTP intake
-  still raises on failed policy; retained failed intake views need shared integration.
+- CS service/HTTP assess intake retains missing/conflicting/unavailable policy outcomes;
+  the browser displays permitted reasons/references and reassessment, while confirmation
+  and the effect adapter recheck current evidence. Initial unverified identity still raises.
 - AP approve/reject/request-revision, atomic decision/request/audit commit, separate
   delivery and same-decision redelivery. Delivery never executes business work.
 - AP durable decision intent, RECORDING_FAILED on a failed decision commit and
@@ -55,8 +55,8 @@ repository have now been published; see the collaboration status below.
   standalone BA slice; schema/claim validation for unrestricted live output.
 - Full BA revision/cancellation/review lifecycle and all medical/unsafe-language cases.
 - Returns/refunds, routine policy alternatives, full CS cancellation and evidence
-  failure modes beyond the KAN-11 service subset; default HTTP/UI retained failed
-  intake integration. Initial fixture routes every exchange through human review.
+  failure modes beyond the KAN-11 service subset. Bounded HTTP/UI retained failed
+  intake is implemented; the initial fixture routes every exchange through human review.
 - General CO dispatch/role unavailability/cancellation, unknown external outcomes,
   independent distributed services and automatic retry.
 - AP expiry, cancellation and complete risk/unknown-risk classification. The
@@ -238,3 +238,35 @@ CS failed-intake UI and MC PR #11 remain separate. See VERIFICATION.md.
 ## MC failure repair · 27 October 2026
 
 KAN-12 PR #11 now retains failed mock drafts/revisions and safely renders their failure states, including superseded review cards. Independent evidence/storyboard snapshots close mutable-adapter validation gaps. 112 integrated offline tests and actual browser failed revision/old-review rendering passed. Initial HTTP failed-draft creation, live MC, general prose grounding and full MC acceptance remain open. See the PR for remote checks/review/merge; no member claim is reassigned.
+
+## CS failed-intake web acceptance · 27 October 2026
+
+Danny-authorised GR-INT-01 integration, based on merged AP main dc1b60b; MC PR #11
+is a separate repaired branch. HTTP intake now commits assess outcomes, the view
+renders evidence failure/reassessment and refreshes errors; no CS module/schema/
+model change. All 107 offline tests passed, including 11 new CS HTTP tests.
+Actual browser missing-policy receipt, corrected-evidence revision 2 and subsequent
+confirmation-error refresh passed in an isolated database on 5663. The Founder
+handoff in this negative probe used the existing service; policy changes were
+controlled test fixtures, not a new application editing feature. Independent DB
+readback: one CS record, no approval/effect and stock unchanged at 12. Full CS/GR
+acceptance remains partial. Remote CI, owner review and Jira publication receipts
+are recorded separately on the PR; no whole-module completion is inferred.
+
+## Combined MC/CS integration checkpoint · 27 October 2026
+
+PR #11 merged as 8bcc329 after an explicitly authorised AI-assisted review through
+dyangwong and passing required checks. PR #13 has merged that main into its task
+branch; both MC and CS implementation and bilingual evidence sections are retained.
+The combined tree passed **123/123 offline tests in 15.884 s** on Mac Python 3.9.6,
+repository provenance (110 source files / 41 tracked cases), JavaScript syntax
+and whitespace checks. The 112/107-test entries above describe their earlier
+separate baselines, not the combined tree. Existing browser probes are recorded
+above; no new combined browser probe is claimed by this checkpoint.
+
+Danny explicitly requested merging both #11 and #13. For his own #13, this
+authorises the documented owner review-layer exception after fresh current-main CI;
+self-checking is not a self-Approve or an independent human review. The previous
+#12-only authorisation is not being reused. PR #13's remote head, fresh CI, actual
+merge and Jira receipts are recorded on GitHub/Jira after they occur. Whole MC, CS
+and GR acceptance and real CS/MC model integration remain open.
