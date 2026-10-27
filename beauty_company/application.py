@@ -8,13 +8,16 @@ from http.cookies import CookieError, SimpleCookie
 
 from .adapters.after_sales import MockAfterSales
 from .adapters.mock import MockLlm, MockMedia
-from .contracts import Actor, DomainError, require_role
+from .contracts import Actor, DomainError, require_role, revision_value
 from .modules.approval import Approval
-from .modules.beauty_advisor import BeautyAdvisor, catalogue
+from .modules.beauty_advisor import BeautyAdvisor, catalogue, validated_needs
 from .modules.coordination import Coordination
 from .modules.customer_service import CustomerService
 from .modules.marketing import Marketing
 from .store import Store, password_hash
+
+RECORDING_FAILED_MESSAGE = ("The decision could not be recorded. No approval was delivered and no business work "
+                            "was dispatched. The intended decision is stored and can be recovered from storage.")
 
 
 class Company:
@@ -40,6 +43,33 @@ class Company:
             db.execute("INSERT INTO sessions VALUES(?,?,?,?)", (hashlib.sha256(token.encode()).hexdigest(), username, csrf, time.time() + 28800))
             return token, csrf, Actor(row["id"], row["role"], row["name"])
 
+    def mode(self):
+        live = not self.ba.simulated
+        return {"simulated": not live, "model": "Local BA model" if live else "Deterministic mock",
+                "ba": "LIVE" if live else "MOCK", "mc": "MOCK", "csIntent": "NOT_CONNECTED",
+                "media": "Storyboard placeholder", "commerce": "SIMULATED",
+                "optionalFeatures": {"BA-F-03": False, "CS-F-03": False, "MC-F-03": False,
+                                     "AP-F-03": False, "CO-F-03": False}}
+
+    def consult(self, actor, data):
+        """BA first live slice: no write lock during inference; recheck before save."""
+        require_role(actor, "CUSTOMER")
+        try:
+            needs = validated_needs(data)
+        except DomainError as error:
+            with self.store.transaction() as db:
+                return self.ba._record(db, actor, "CLARIFYING", {"message": str(error), "simulated": True})
+        with self.store.read() as db:
+            result = self.ba.recommend(db, needs)
+        with self.store.transaction() as db:
+            if result["status"] == "COMPLETED":
+                current = next((p for p in catalogue(db) if p["id"] == result["product"]["id"]), None)
+                if current != result["product"]:
+                    result = {"status": "INCOMPLETE", "message": "Catalogue or stock changed during advice. Submit a fresh consultation.",
+                              "errorCode": "LLM_STALE_EVIDENCE", "simulated": self.ba.simulated}
+            return self.ba._record(db, actor, result["status"],
+                                   {"needs": needs, "result": result, "simulated": result["simulated"]})
+
     def session(self, cookie):
         jar = SimpleCookie()
         try:
@@ -61,7 +91,13 @@ class Company:
             ids = [r["id"] for r in db.execute(query, (actor.id,) if actor.role != "FOUNDER" else ())]
             records = [Store.get(db, rid) for rid in ids]
             approval_ids = [r["id"] for r in db.execute("SELECT id,origin_id FROM approvals ORDER BY created DESC") if actor.role == "FOUNDER" or r["origin_id"] in ids]
-            approvals = [self.ap.get(db, rid) for rid in approval_ids]
+            approvals = []
+            for rid in approval_ids:
+                review = self.ap.get(db, rid)
+                # A pending intent is not an approval. It is exposed so the intended
+                # scope of a failed recording stays visible and recoverable.
+                review["intent"] = self.ap.intent(db, rid)
+                approvals.append(review)
             visible = set(ids + approval_ids)
             events = []
             for r in db.execute("SELECT * FROM events ORDER BY seq DESC LIMIT 1000"):
@@ -78,13 +114,62 @@ class Company:
             faults = [r["name"] for r in db.execute("SELECT name FROM faults")] if actor.role == "FOUNDER" else []
             return {"actor": actor.__dict__, "products": catalogue(db), "orders": orders,
                     "records": records, "approvals": approvals, "events": events[:150], "faults": faults,
-                    "mode": {"simulated": True, "model": "Deterministic mock", "media": "Storyboard placeholder",
-                             "optionalFeatures": {"BA-F-03": False, "CS-F-03": False, "MC-F-03": False, "AP-F-03": False, "CO-F-03": False}}}
+                    "mode": self.mode()}
 
     def decide(self, actor, rid, data):
+        # The intent is persisted in its own committed transaction, so a failed
+        # decision commit leaves the intended decision recoverable from storage.
         with self.store.transaction() as db:
-            review = self.ap.decide(db, actor, rid, data)
+            intent = self.ap.prepare_intent(db, actor, rid, data)
+        review = self._commit_intent(actor, rid, intent)
         # A delivery failure cannot roll back the committed decision above.
+        with self.store.transaction() as db:
+            return self.ap.deliver(db, review["id"])
+
+    def _commit_intent(self, actor, rid, intent):
+        try:
+            with self.store.transaction() as db:
+                review = self.ap.commit_intent(db, intent["id"], actor)
+        except DomainError:
+            raise
+        except Exception as error:
+            # The commit rolled back. Expose RECORDING_FAILED without a decision id.
+            with self.store.transaction() as db:
+                self.ap.mark_recording_failed(db, intent, {"error": type(error).__name__})
+            raise DomainError(RECORDING_FAILED_MESSAGE, 409, "RECORDING_FAILED") from error
+        if review is None:
+            raise DomainError(RECORDING_FAILED_MESSAGE, 409, "RECORDING_FAILED")
+        return review
+
+    def recover_decision(self, actor, rid, data=None):
+        """Recover a decision whose recording failed, using the stored intent only.
+
+        The Founder, kind, reason and exact scope come from durable storage, never
+        from the caller. Scope and authority are revalidated before the commit.
+        """
+        require_role(actor, "FOUNDER")
+        if data is not None:
+            if set(data) != {"contextRevision"}:
+                raise DomainError("Recovery accepts only contextRevision. The decision and reason come from storage.")
+            revision = revision_value(data["contextRevision"])
+        with self.store.read() as db:
+            if data is not None:
+                review = self.ap.get(db, rid)
+                origin = Store.get(db, review["origin_id"], review["origin_role"])
+                if (revision != review["revision"] or origin["revision"] != revision
+                        or origin["payload"].get("approvalId") != rid):
+                    raise DomainError("This action or context revision has changed. Fresh review is required.",
+                                      409, "STALE_SCOPE")
+            intent = self.ap.intent(db, rid)
+        if not intent:
+            raise DomainError("There is no stored decision intent to recover.", 409, "NO_INTENT")
+        if intent["founder_id"] != actor.id:
+            raise DomainError("This decision intent belongs to another authorised decision maker.", 403, "FORBIDDEN")
+        if intent["status"] == "COMMITTED":
+            # The decision is already authoritative. Recovery never commits a second one.
+            with self.store.read() as db:
+                return self.ap.get(db, rid)
+        review = self._commit_intent(actor, rid, intent)
         with self.store.transaction() as db:
             return self.ap.deliver(db, review["id"])
 
@@ -95,7 +180,7 @@ class Company:
 
     def set_fault(self, actor, fault):
         require_role(actor, "FOUNDER")
-        if not isinstance(fault, str) or fault not in {"after_sales_timeout", "outcome_recording", "approval_delivery", "none"}:
+        if not isinstance(fault, str) or fault not in {"after_sales_timeout", "outcome_recording", "approval_delivery", "approval_recording", "none"}:
             raise DomainError("Unsupported simulation fixture.")
         with self.store.transaction() as db:
             db.execute("DELETE FROM faults")

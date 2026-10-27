@@ -2,7 +2,7 @@
 
 English primary. [中文阅读副本](zh-CN/LLM_INTEGRATION.md).
 
-[KAN-15 / GR-INT-02](https://uni-team6-elec5620.atlassian.net/browse/KAN-15) · owner: Danyang Wang · reserved; implementation not started.
+[KAN-15 / GR-INT-02](https://uni-team6-elec5620.atlassian.net/browse/KAN-15) · owner: Danyang Wang · local model deployed; one actual BA path verified, broader integration pending.
 
 ## Owner and present boundary
 
@@ -14,10 +14,13 @@ create direct provider clients or redesign the shared model boundary. Request
 interface changes through the shared task, with affected-owner review recommended.
 This reserves responsibility, not permission to overwrite others' module work.
 
-Current scope: agree ownership and compatible seams, then hand off deployment to
-Danny's gaming laptop. Runtime remains mock-only; no model/server/provider is
-selected, installed or connected by this change. The gaming laptop's exact OS,
-GPU memory, runtime and model choice must be inspected during the later task.
+The 18 October reservation prepared ownership/seams only. On 21 October Danny
+authorised gaming-laptop deployment and shared integration. Default mode stays
+mock; an opt-in standalone BA adapter, capability labels and Windows scripts now
+exist. After the initial restricted install failed, the model was installed and
+the migrated runtime ACL repaired. One actual BA HTTP path now passes; see
+[runtime evidence](WINDOWS_LLM_RUNTIME.md) and [machine/setup history](WINDOWS_LLM.md).
+MC stays mock and CS intent is unconnected.
 
 ## Existing callable boundary (v1, preserve compatibility)
 
@@ -85,8 +88,8 @@ against saved current scope; the model must not supply trusted identity/revision
    separate services per teammate. Version incompatible changes with callers,
    fixtures and docs in the same PR; no silent signature changes.
 2. Explicit mock/live selection and trustworthy per-capability mode reporting.
-   Existing UI/facade hard-codes simulation; update it before claiming any live
-   behaviour. A live text model does not make media/commerce live. No silent mock
+   UI/facade now expose configured BA/MC/CS-intent/media/commerce modes; app
+   health does not prove model readiness. Each advice record retains its own mode. A live text model does not make media/commerce live. No silent mock
    fallback labelled as a real model result.
 3. First verify one bounded BA path end to end, including independent evidence
    checks, malformed output, unavailable/timeout behaviour and safe non-success.
@@ -115,3 +118,10 @@ At each handoff record the branch/commit, actual Jira state, files changed, chec
 remaining work and setup prerequisites in Jira/PR and versioned relevant docs.
 Never rely on chat memory or a local saved identity as shared progress. Weights,
 secrets and local databases are not synchronised through the public repository.
+
+## Current local slice · 21 October 2026
+
+See WINDOWS_LLM.md for exact error mapping, standalone BA transaction/recheck,
+HTTP CS handoff guard, budgets, signatures, tests and pending Jira text. Shared
+review is pending; no teammate module or starter claim was changed. Preserved v1
+calls do not establish live MC/CS capability or full GR-INT-02 acceptance.

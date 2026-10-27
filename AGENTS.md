@@ -65,8 +65,10 @@ database, session, ZIP, Git directory or customer media belongs in this repo.
 ## Invariants
 
 - Exactly three AI business roles: BA, CS and MC. AP and CO are shared controls.
-- Current adapters are deterministic mocks. Never describe this as a working live
-  LLM multi-agent system or a generated video. No real settlement/publication.
+- Default adapters are deterministic mocks. KAN-15 adds opt-in standalone BA
+  transport; one real BA path is verified (docs/WINDOWS_LLM_RUNTIME.md). Never
+  describe it as a completed live multi-agent system or generated video. No real
+  settlement/publication.
 - Real/local model deployment is deferred, not an onboarding prerequisite. Do not
   install/download/connect providers or request keys as part of a starter task.
 - Validate evidence independently of model output; UNKNOWN stock is not available.
@@ -168,4 +170,5 @@ CS intent examples; they do not start duplicate provider/model integration.
 A need to change a shared signature is a bounded request to Danny, not a reason
 to implement a separate client. CS has no independent live intent port yet.
 For Danny explicitly continuing GR-INT-02, use that guide/shared task rather than
-automatically selecting BA-START-01. Runtime deployment remains deferred.
+automatically selecting BA-START-01. Standalone local BA runtime is now verified;
+MC/CS live integration remains pending (docs/WINDOWS_LLM_RUNTIME.md).

@@ -39,7 +39,9 @@ class Router:
                 mime = {"index.html": "text/html", "app.js": "text/javascript", "styles.css": "text/css"}[filename]
                 return Response(200, (Path(__file__).parent / "web" / filename).read_bytes(), {"Content-Type": mime + "; charset=utf-8"})
             if method == "GET" and path == "/api/health":
-                return json_response({"status": "ok", "mode": "SIMULATION_ONLY", "version": "0.1.0"})
+                capabilities = self.company.mode()
+                return json_response({"status": "ok", "mode": "SIMULATION_ONLY" if capabilities["simulated"] else "LIVE_BA_MOCK_MC",
+                                      "version": "0.1.0", "capabilities": capabilities})
             data = {}
             if method == "POST":
                 if headers.get("content-type", "").split(";")[0] != "application/json":
@@ -76,15 +78,20 @@ class Router:
                     return json_response(self.company.decide(actor, parts[2], data))
                 if parts[3] == "deliver":
                     return json_response(self.company.redeliver(actor, parts[2]))
+                if parts[3] == "recover":
+                    return json_response(self.company.recover_decision(actor, parts[2], data))
             if len(parts) == 4 and parts[:2] == ["api", "after-sales"]:
                 if parts[3] == "confirm":
                     return json_response(self.company.cs.confirm(actor, parts[2], data))
                 if parts[3] == "reconcile":
                     return json_response(self.company.cs.reconcile(actor, parts[2]))
+            if path == "/api/consultations":
+                return json_response(self.company.consult(actor, data), 201)
+            if (not self.company.ba.simulated and len(parts) == 4 and parts[:2] == ["api", "after-sales"]
+                    and parts[3] in {"coordinate", "revise"}):
+                raise DomainError("Live BA is enabled only for standalone consultations. Use mock mode for CS handoffs until CS/CO review.",
+                                  503, "LIVE_HANDOFF_NOT_CONNECTED")
             with self.company.store.transaction() as db:
-                if path == "/api/consultations":
-                    require_role(actor, "CUSTOMER")
-                    return json_response(self.company.ba.submit(db, actor, data), 201)
                 if path == "/api/after-sales":
                     return json_response(self.company.cs.submit(db, actor, data), 201)
                 if path == "/api/campaigns":

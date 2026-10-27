@@ -49,6 +49,7 @@ Inputs and database evidence are escaped before insertion into browser markup.
 | POST `/api/after-sales/{id}/reconcile` | Owning Customer | Read same actionRef effect and recover outcome, never repeat execution |
 | POST `/api/approvals/{id}/decide` | Founder | decision, reason, contextRevision |
 | POST `/api/approvals/{id}/deliver` | Founder | Redeliver same committed decision |
+| POST `/api/approvals/{id}/recover` | Original Founder | Only contextRevision; recover the saved decision intent for the displayed current scope |
 | POST `/api/campaigns` | Founder | brief and authorised productId → mock draft/review |
 | POST `/api/campaigns/{id}/revise` | Founder | Current revision, brief, productId → new exact-scope review |
 | POST `/api/demo/fault` | Founder | One declared next-operation failure fixture |
@@ -61,6 +62,19 @@ DecisionKind is APPROVE, REJECT or REQUEST_REVISION. Committed decisions retain
 decision_id, actor, reason and exact scope; decision/request/audit update together.
 Delivery is a separate transaction and status. Repeated delivery is idempotent;
 stale scope cannot change the current origin. Approval itself performs no effect.
+
+Recording recovery requires the authenticated original Founder, CSRF and exactly
+`{"contextRevision": <positive integer>}`. The displayed revision must still match
+the review and current origin/approval link; the stored intent's exact action and
+actionRef are revalidated before commit. Caller-supplied decision, reason, actor
+or action fields are rejected. Recovery reuses the durable kind/reason, commits
+once and attempts separate delivery; it never executes commerce or publication.
+Repeating recovery after commit returns the same decision without redelivery;
+use `/deliver` for failed delivery. Stale scope is refused even on this repeat.
+The failed card displays the saved intention as non-authoritative and offers
+recovery only for the original Founder and a current linked origin. Decision and
+recovery errors refresh the saved state before showing the error. The
+`approval_recording` fixture is available under Founder simulation controls.
 
 CS rechecks order association, current policy evidence, replacement stock, current
 confirmation, exact action/ref/revision and delivered committed approval. It saves
@@ -82,6 +96,11 @@ EXECUTING request can be queried; an unresolved lookup escalates without retry.
   RECORDING_FAILED, UNRESOLVED; review REJECTED/NEEDS_INFORMATION.
 - AP: PENDING → APPROVED/REJECTED/REVISION_REQUESTED; old scope SUPERSEDED.
   No receipt is approval, and failed delivery preserves the committed state.
+  A decision that could not be recorded becomes RECORDING_FAILED: no decision id,
+  no delivery and no business effect. A separate durable decision intent
+  (PROPOSED → COMMITTED, or RECORDING_FAILED) holds the intended Founder, kind,
+  reason and exact scope; it grants no authority and is the only input to
+  storage-only recovery. One request has at most one committed decision.
 - MC: DRAFTING → REVIEW_PENDING → APPROVED/REJECTED/REVISION_REQUIRED;
   revision creates new payload/history and review; former scope is superseded.
 - CO: PENDING_VALIDATION, HANDOFF_SENT, AWAITING_APPROVAL, EXECUTING,
@@ -96,5 +115,8 @@ must inspect the actual output, not trust a model-provided list of its own claim
 
 See [LLM_INTEGRATION.md](LLM_INTEGRATION.md) for the preserved v1 Python calls,
 field units, module fixtures, error/mode gaps and later live acceptance. Shared
-LLM integration is reserved to Danyang Wang; current runtime remains mock-only.
+LLM integration is reserved to Danyang Wang; default runtime remains mock.
+Opt-in standalone BA transport and precise mode/error reporting are documented in
+[WINDOWS_LLM.md](WINDOWS_LLM.md). One actual BA model path is now verified; see
+[WINDOWS_LLM_RUNTIME.md](WINDOWS_LLM_RUNTIME.md).
 CS intent extraction is a future coordinated interface, not an implemented port.

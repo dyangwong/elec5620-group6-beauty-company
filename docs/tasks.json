@@ -45,8 +45,8 @@
       "owner_member_id": "M2",
       "title": "Persist truthful eligibility and policy/read failure outcomes",
       "readiness": "READY",
-      "claim_state": "UNCLAIMED",
-      "claimed_by": null,
+      "claim_state": "CLAIMED",
+      "claimed_by": "M2",
       "jira_key": "KAN-11",
       "pr_url": null,
       "brief": "docs/tasks/CS-START-01.md",
@@ -73,7 +73,8 @@
       "jira_url": "https://uni-team6-elec5620.atlassian.net/browse/KAN-11",
       "jira_epic": "KAN-5",
       "jira_assignee_display_name": "Siyuan Lei",
-      "jira_status_at_setup": "To Do"
+      "jira_status_at_setup": "To Do",
+      "claim_evidence": "2026-10-18: human explicitly requested Siyuan Lei KAN-11 implementation and GitHub PR in the coding session. Jira claim/transition pending; this versioned receipt is not live Jira status."
     },
     {
       "id": "MC-START-01",
@@ -117,10 +118,10 @@
       "owner_member_id": "M4",
       "title": "Durable same-decision intent and storage-only recording recovery",
       "readiness": "READY",
-      "claim_state": "UNCLAIMED",
-      "claimed_by": null,
+      "claim_state": "CLAIMED",
+      "claimed_by": "M4",
       "jira_key": "KAN-13",
-      "pr_url": null,
+      "pr_url": "https://github.com/dyangwong/elec5620-group6-beauty-company/pull/9",
       "brief": "docs/tasks/AP-START-01.md",
       "suggested_branch": "KAN-13-ap-start-01",
       "features": [
@@ -210,9 +211,10 @@
       "owner_name": "Danyang Wang",
       "reservation_date": "2026-10-18",
       "status_at_reservation": "To Do",
-      "implementation_started": false,
+      "implementation_started": true,
       "guide": "docs/LLM_INTEGRATION.md",
-      "note": "Explicit owner reservation, separate from BA-START-01. Other members preserve injectable seams/fakes, without duplicate provider/deployment work. Use Jira for current status."
+      "note": "Danny continued KAN-15 locally, separate from BA-START-01. Strata/Gyro-S deployed after migrated runtime ACL repair; actual BA HTTP model path passed twice. MC remains mock; CS intent and broader acceptance/review pending. Jira live claim/status unverified, no update sent. See docs/WINDOWS_LLM_RUNTIME.md; reservation snapshot preserved.",
+      "local_branch": "KAN-15-shared-llm-windows"
     }
   ]
 }

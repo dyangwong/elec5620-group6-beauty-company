@@ -1,17 +1,17 @@
 case_id,requirement,source,implementation_status,automated_test_prefixes,remaining_scope
 BA-T-01,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_01,Clarification fixture only; response/resumption and complete requirement checks pending.
-BA-T-02,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_02,"Grounded deterministic mock, not live LLM perception."
-BA-T-03,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_03,UNKNOWN stock tested; provider timeouts/errors and refreshed retry remain.
-BA-T-04,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_04,Unsupported mock claim withheld; all malformed/conflicting/live output cases remain.
+BA-T-02,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_02;test_live_ba_transport,"Default mock and shared BA transport tested offline; actual local BA model request completed with independent fact checks; full natural-language perception/lifecycle pending."
+BA-T-03,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_03;test_unavailable_timeout;test_inference_releases;test_broken_chunked_transport,UNKNOWN stock and shared BA timeout/unavailable transport withholding tested; refreshed retry and full lifecycle remain.
+BA-T-04,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_04;test_invalid_truncated,Unsupported mock claims and malformed/unsupported shared BA transport output withheld; full conflicting/live-model matrix remains.
 BA-T-05,BA-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ba_t_05,Selected diagnosis phrases blocked; conditional BA review workflow remains.
 BA-T-06,BA-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
 BA-T-07,BA-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
-CS-T-01,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_01,Order mismatch tested; complete verification-service failure paths remain.
-CS-T-02,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_02,Unknown policy tested; contradiction and full clarification/escalation remain.
+CS-T-01,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_01,Verified/mismatched and unavailable association tested without protected context; full verification-service matrix remains.
+CS-T-02,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_02,Service assess retains missing/conflicting/malformed policy and fresh revision evidence; legacy HTTP intake retention and full policy clarification remain.
 CS-T-03,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_gr_t_02,Simulated exchange with mandatory fixture review; routine return/refund paths remain.
-CS-T-04,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_07,Post-approval unavailable stock tested; full UNKNOWN/alternative selection remains.
+CS-T-04,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_04;test_ap_t_07,AVAILABLE/UNAVAILABLE/UNKNOWN and post-intent stock races tested without substitution; general alternative selection and real service matrix remain.
 CS-T-05,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_rejection_and_revision;test_ap_t_02;test_gr_t_02,Review states covered in exchange slice; complete service-failure scenarios remain.
-CS-T-06,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_06;test_co_t_08,Post-write timeout and outcome recording; read failures and real provider guarantees remain.
+CS-T-06,CS-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_06;test_co_t_08,Policy/order/stock read failures retained with zero effects plus original timeout/storage recovery; all audit failures and real provider guarantees remain.
 CS-T-07,CS-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
 MC-T-01,MC-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_mc_t_01_and_06,Deterministic facts-only script/storyboard; live brief interpretation remains.
 MC-T-02,MC-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
@@ -22,10 +22,10 @@ MC-T-06,MC-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_mc_t_01_and_06,
 MC-T-07,MC-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
 AP-T-01,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_02;test_co_t_01,Declared exchange/content fixture routing only; unknown-risk handling remains.
 AP-T-02,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_02;test_ap_rejection_and_revision,Customer/pending/rejected guards; exhaustive mismatched envelope cases remain.
-AP-T-03,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_03,Atomic rollback verified locally; not a real external provider guarantee.
+AP-T-03,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_03,Atomic decision/request/audit rollback verified locally and the failure is exposed as RECORDING_FAILED with a recoverable intent; not a real external provider guarantee.
 AP-T-04,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_04;test_mc_t_01_and_06,Stale review after revision tested; full lifecycle and linked successor model remain.
-AP-T-05,AP-M-01,docs/reference/acceptance-cases.txt,NOT_STARTED,,Not implemented or not meaningfully verified; retain the complete source specification.
-AP-T-06,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_06,Same-decision delivery failure/recovery; queue/notification failures remain.
+AP-T-05,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_05,"Failed decision commit exposes RECORDING_FAILED with no committed envelope, no delivered approval and no business effect; storage-only same-decision retry after a restart commits the intended decision exactly once; conflicting kind/reason and stale scope are refused. Authenticated HTTP/current-revision recovery and browser failure/recovery verified under GR-INT-01 with no effect; duplicate recovery retains one decision and later Customer confirmation executes once. Injected local fixture rather than a real storage outage; queue/notification, expiry and full risk routing remain."
+AP-T-06,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_06;test_ap_t_05_failed_delivery_after_recovery_preserves_the_committed_decision,Same-decision delivery failure/recovery including after a recording recovery; queue/notification failures remain.
 AP-T-07,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_07;test_cs_t_06,Stock and uncertainty checks; full changed-policy/absent-confirmation matrix remains.
 AP-T-08,AP-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_rejection_and_revision;test_ap_t_04,Core revision available with optional OFF; assisted optional ON not implemented.
 CO-T-01,CO-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_co_t_01,Founder-initiated minimal synchronous CS-to-BA handoff only.
@@ -37,6 +37,6 @@ CO-T-06,CO-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_cs_t_06,Uncerta
 CO-T-07,CO-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_02;test_ap_rejection_and_revision,Exchange review boundaries only; general CO authority dispatch remains.
 CO-T-08,CO-M-01,docs/reference/acceptance-cases.txt,PARTIAL,test_co_t_08,Outcome-storage injection/recovery; all coordination audit-write failure points remain.
 GR-T-01,GR-C-01..06,docs/reference/acceptance-cases.txt,PARTIAL,test_gr_t_02,All 15 IDs tracked and optional OFF; not all features or models implemented.
-GR-T-02,GR-C-01..06,docs/reference/acceptance-cases.txt,PARTIAL,test_gr_t_02;test_co_t_01,Integrated deterministic exchange slice; real LLM and full case audit remain.
+GR-T-02,GR-C-01..06,docs/reference/acceptance-cases.txt,PARTIAL,test_gr_t_02;test_co_t_01;test_http_auth_and_live_cs_guard,Integrated mock exchange and actual standalone BA model HTTP path verified; live integrated CS/MC and full case audit remain.
 GR-T-03,GR-C-01..06,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_03;test_ap_t_06;test_cs_t_06,Selected commit/delivery/write-timeout boundaries; full matrix remains.
 GR-T-04,GR-C-01..06,docs/reference/acceptance-cases.txt,PARTIAL,test_ap_t_04;test_gr_t_03,Partial contract/correlation safeguards; full UML participant audit remains.

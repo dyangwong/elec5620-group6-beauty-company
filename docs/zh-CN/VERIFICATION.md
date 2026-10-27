@@ -1,6 +1,6 @@
 # 本地验证记录
 
-中文阅读副本，依据 2026-10-16 英文主版同步。以[英文主版](../VERIFICATION.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+中文阅读副本，依据 2026-10-26 英文主版同步。以[英文主版](../VERIFICATION.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
 以下为按日期保留的历史记录；后续发布更新覆盖早期“无远端/字节一致打包”的现状描述。
 
@@ -135,3 +135,198 @@ GitHub 仓库/邀请、Jira 任务、源码发布。
   处理讨论、禁强推／删除；审阅层例外不移除基础保护。
 - 同步中英文 Agent／开工／Jira／Git、默认 CODEOWNERS 及 PR 审阅字段，替代队友零批准政策。
 - 这是配置读回，不是使用队友凭据测试，不证明已发生队友审阅；Danny 选择保留维护 PR #6 等队友 Approve，不使用本人例外合并。
+
+## KAN-15 Windows 检查 · 客户端工作日期 2026-10-21
+
+e51dfc4 基线首次 38 项测试因临时目录权限失败，工作区 TEMP/TMP 重跑全部通过。
+来源检查首次因 Git CRLF 失败；恢复 Git 原始字节、不改哈希后通过。新增七项集成测试，
+共 45 项在 Windows Python 3.14.5 通过；来源／JS 语法检查通过。
+Setup/Start/mock HTTP 探针/重复 Start/Stop 已测，保留配置、不建重复启动的另一数据库。
+无模型时实际 live 配置 HTTP 咨询约 2.1 秒后保存 INCOMPLETE/LLM_TIMEOUT，探针退出 1。
+Terminal 哈希和签名 feed 检查通过，引擎／模型安装受限目录权限失败，沙箱外执行被审批策略拒绝。
+不宣称真实推理成功。实测规格、版本、命令、脱敏失败、剩余验收和待填 Jira 内容见 WINDOWS_LLM.md。
+原始主机证据时间为 10 月 20 日 UTC，客户端日期为 10 月 21 日，均不是 Jira 状态观察。
+
+补充：Terminal 自带 Python 3.12.15 的 45 项测试和来源检查也通过；这是本地检查，不是 GitHub CI。
+实际浏览器确认 mock 成功与模型超时 INCOMPLETE 记录及分项配置标签；Windows 原生拓扑接口确认
+24 物理核心 / 24 逻辑处理器。
+
+## runtime ACL 修复与真实 BA · 2026-10-21
+
+取代此前安装受阻／真实成功未验证快照。迁移继承 D 盘权限导致失败，已备份并通过官方私有 ACL
+修复检查。脚本新增 RepairModel，复用保存的 profile，不重复下载／启动或覆盖配置。
+Strata 0.1.46 CUDA 13／Gyro-S，8192 上下文、单并发、无 MTP／图像、显存预留 1536 MiB。
+精确 ID 和证据见 [WINDOWS_LLM_RUNTIME.md](WINDOWS_LLM_RUNTIME.md)。实际登录后 BA HTTP
+咨询通过（6.804 秒、COMPLETED、simulated:false、P-101 支持事实），随后再次通过；效果／审批均 0。
+45 项离线测试、来源／JS／差异检查通过；重复修复保留配置和 profile 哈希，重复启动保留同一进程。
+MC 仍 mock，CS intent／live 转交及更广验收／审阅待完成；没有 Jira、提交、推送、PR 或合并动作。
+
+## BA 阶段提交前本地审查 · 2026-10-21
+
+已对照 fetch 后 origin/main e51dfc4 审查 KAN-15 差异，没有引入更新 main 或队友实现。
+两个新增回归先复现失败：chunked 模型响应截断会变成 HTTP 500，HTTPError 响应流未关闭。
+现已分别修复为安全保存 INCOMPLETE/LLM_INVALID_OUTPUT 和及时关闭响应，不暴露供应商原文。
+还复现仓库外调用 Windows Setup 时配置路径解析错误，已改为相对仓库根解析 LlmConfig，
+并在报告就绪前检查环境解释器。由 work/ 连跑两次，只生成 var/setup-path-review.json，哈希不变。
+本地 Python 3.14.5 和 3.12.15 各通过 47 项测试，来源／JS 检查通过。
+这是本地验证；远程 CI、受影响负责人批准和 Jira 认领／状态仍未核实。
+差异准备作本地阶段提交及 PR 描述草稿，不代表发布或合并。
+
+## AP 保存恢复切片 · 2026-10-24
+
+- 新增 `tests/test_ap.py`（15 例），并适配 `tests/test_workflows.py` 既有的 AP 原子审计失败回归。
+  合并后本地 Python 3.13.3 通过 53 项测试；`python3 scripts/check_repository.py` 通过，93 个源码文件、
+  41 组验收保持不变；`node --check beauty_company/web/app.js` 通过。Python 3.9／3.13 的 CI 结果记在 PR 上，
+  不在此断言。
+- 在临时 SQLite 库上核实：注入决定保存失败后，审批处于 RECORDING_FAILED，没有 decisionId、决定、理由和 Founder，
+  没有已投递批准、没有业务效果、没有 DECISION_COMMITTED 审计；预期的 Founder、种类、理由和精确范围仍可从存储读取。
+- 核实同一数据库上新建服务实例恰好一次恢复同一预期决定：一个权威决定、一条决定审计、一次投递，
+  Customer 再次确认时不重复业务效果。
+- 核实冲突种类或理由被拒绝、过期版本或已被替代的请求被拒绝、非 Founder 和其他 Founder 被拒绝，
+  请求回执或待存意图都不会被读成批准。
+- 核实恢复后投递失败保留已提交决定，重投复用同一 decisionId。
+- 此处未核实：真实外部存储故障（保存失败是本地注入的模拟）、HTTP/UI 恢复控制与演示故障下拉项
+  （GR-INT-01 共享集成）、过期、通知／队列失败和风险路由。因此 AP-T-05 仍记 PARTIAL，不记 PASSED。
+- 在 PR 上观察到：[PR #9](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/9) 的
+  “Local prototype checks” 工作流在 push 事件与 pull request 事件下都于提交 `c433ef0` 成功完成
+  （Python 3.9 与 3.13 作业）。分支保护要求有写权限者的非作者批准，故 PR 保持开启未合并；开启时未观察到批准。
+
+
+## 受保护合并与组合集成 · 2026-10-25
+
+Danny 明确要求后，PR #7 保留有效非作者批准并通过必需检查，正常合并为 `6e505f0`。
+AP PR #9 在 `a1ae058` 纳入该 main：本地 75 项离线测试与来源检查通过，新的 Python
+3.9／3.13 CI 通过后，经授权的 AI 辅助审阅批准，正常 squash 合并为 `840ac70`。
+两次合并均未使用审阅／管理员绕过。
+
+PR #8 集成候选保留 CS／AP 代码、测试与认领凭据，六个文档冲突保留双方相关变化。
+Python 3.9.6 通过 84 项测试；来源检查通过（107 个源码文件、41 组验收）；内置 Node
+通过 `--check beauty_company/web/app.js`；暂存差异空白检查通过。
+本次不推断 Windows／模型当前执行、完整验收、MC #11 已修复或未观察到的队友批准。
+发布后的远程检查和剩余审阅在 PR #8 单独记录，不与本地验证混淆。
+
+## Windows 合入 CS/AP 后回归 · 2026-10-25
+
+Danny / M1 仅继续 KAN-15 / GR-INT-02。本地干净，从 bd63c08 快进到
+**966dae4fd1c8afcaeb60b8af84289ae5b6edaa60**，纳入 main
+**840ac7004723c62995a427191eda4f0cd4151917**。以下应用验证对应此准确提交；
+本次更新另包含下述停止脚本局部修复及双语证据。未领取 BA starter、未扩展 CS/MC 真实模型，
+未处理 PR #11。
+
+- Windows Verify：Python 3.14.5 的 **84 项测试**全部通过（24.250 秒；停止修复后最终复跑 24.422 秒）；
+  来源检查通过（107 个源码文件、41 组原始验收），Node 22.19.0 的 JS 语法通过。
+  配套 Python 3.12.15 独立通过 84 项（22.052 秒）。构成为 workflows 29、
+  onboarding 9、LLM 9、CS 22、AP 15；原 47 加 CS/AP 37，没有凑数或修改测试。
+- 新建独立库和本机端口：5635 mock、5636 Strata、5637 模型无法连接、5638 AP 网页失败、
+  5639 正常停止验证。原始证据及测试库位于忽略的 var/regression-20261025-966dae4/。
+- 实际浏览器登录及 BA 提交在默认 mock 和 Strata 均通过。真实记录 BA-b7e1e655e3cf
+  保存 COMPLETED/simulated:false，页面显示 Live BA recommendation。独立读取 SQLite
+  核对 P-101、整数分价格和预算、无香条件、当前库存与版本、catalogue:P-101:v1，
+  两条理由都逐字属于目录事实。BA 未产生审批或交易效果。引擎记录读取 297 个 prompt
+  tokens 用 6201 ms，生成 25 tokens 用 1042 ms；单样例不代表一般性能。
+- 无模型端口配 0.5 秒连接预算的网页提交保存 INCOMPLETE/LLM_TIMEOUT/simulated:false，
+  页面明确显示 The model timed out，没有商品和 mock 成功。Windows 在返回拒绝连接前先超时；
+  另用 5 秒预算实际连接该空端口，服务层保存 INCOMPLETE/LLM_UNAVAILABLE。没有停止真实模型制造故障。
+- 实际 CS/AP HTTP 流程：待审批时执行和客户自批被拒绝，错误版本返回 STALE_SCOPE。
+  精确范围批准及投递后仍为零效果；客户之后连续确认三次，同一 actionRef 仅一个效果，
+  库存仅从 12 减至 11，最终 RESOLVED。
+- 注入 AP 决定保存失败后为 RECORDING_FAILED，无 decisionId、无投递和业务效果。
+  同库新建 Company 服务实例恢复存储中的同一精确意图；重复恢复仍只有一个决定／审计，
+  恢复自身不执行，后续客户确认才产生一次效果。HTTP 保存失败也已验证；
+  /api/approvals/{id}/recover 实际返回 404。
+- AP 网页正确显示 recording failed、无已提交决定，且没有恢复按钮。
+  **发现展示缺口：**兜底文案错误声称 review 因上下文变化被 superseded。
+  这是 AP／共享网页集成限制；本轮没有扩展 AP 业务或界面，也没有声称网页恢复已实现。
+- Strata 模式的 CS coordinate/revise 均保持 503/LIVE_HANDOFF_NOT_CONNECTED。
+  health 的 MC:MOCK、csIntent:NOT_CONNECTED 保持准确；真实配置应用中创建的营销草稿
+  仍为 simulated:true/REVIEW_PENDING，媒体保持 mock。
+
+复用已有 Terminal 0.1.46.1／Strata v0.2.1／engine 0.1.46 CUDA 13 与
+qwen3.8-flash-next-gyro-gyro-s：127.0.0.1:8080，8192 上下文、单并发、vision/MTP 关闭、
+1536 MiB 显存预留、上游 route-tail-skip 7。没有安装、升级或下载。原有本地配置／profile／
+数据库 SHA-256 全部保持，56 个既有模型文件的大小与修改时间清单不变；未重新计算整份权重哈希。
+
+执行权限切换期间测试监听已消失，没有杀死身份不明的 PID。停止脚本遇到一个仍存在但无法读取
+StartTime 的已记录 PID 时出现空值错误。局部修复要求开始时间和可执行文件均可读，才能比较原凭据。
+验证该不可核实 PID 被保留；另启动 5639 的身份匹配应用，正常停止且保留数据库。
+最终六个测试端口（含模型 8080）均无监听。
+
+诊断中还遇到探针过窄地期待 LLM_UNAVAILABLE、实际 Windows 先连接超时，以及复用已完成订单触发
+既有 DUPLICATE_REQUEST。均通过校正探针或另建测试库解决，没有修改测试数量或队友业务规则。
+
+未验证真实外部存储故障、AP 网页恢复、CS 失败 intake 保留界面、真实 CS/MC、跨机网络、一般模型质量
+或完整 41 组验收。GitHub CLI 返回 401，改用已连接 GitHub 工具读取 PR #8 及准确 head。
+PR 正文记有此前经 Jira UI 更新 Verification；回归验证未独立核实 Jira，也未写入 Jira/PR。
+随后 Danny 授权将这些证据与停止修复发布到 PR #8。新的 CI 和实际评审须针对发布提交；
+本地自检不代表 Approve，发布不包含合并、绕过审批或 Jira 写入。
+
+## 本地模型稳定性与重启恢复 · 2026-10-25
+
+Danny / M1 在准确提交 `dbb6662fc1f71db9d40657bfa959cb712364b7bd` 上继续
+KAN-15 / GR-INT-02。使用全新数据库和本机 5641 端口，复用 8080 的 Strata/Gyro-S profile。
+未改模型／配置／代码、未装依赖、未领取 BA starter，也未扩展 CS/MC。
+
+- 连续 20 次实际登录后的 HTTP BA 请求（保湿／洁面各 10 次），实测空闲 180 秒后 3 次，
+  模型停启后 3 次，合计 **26 次**全部保存 COMPLETED/simulated:false。
+  独立读取 SQLite 校验商品、逐字事实、整数分价格／预算、无香、库存和版本。
+- 连续调用最短／中位／最长为 1.292/1.385/15.203 秒；空闲后为 1.277/1.321/2.802 秒；
+  重启后为 1.994/2.421/7.386 秒。包含本机 HTTP／保存校验，仅为样例耗时。
+- 首次模型就绪 18.816 秒，停止后再就绪 20.017 秒；重复 StartModel 复用同一实例／监听 PID，
+  空闲后原实例仍就绪，重启后同一 profile 产生不同的新实例。
+- 模型确实停止时，2.109 秒内保存 INCOMPLETE/LLM_UNAVAILABLE/simulated:false，
+  未回退为 mock；此时 84 项离线测试全部通过（23.512 秒）。应用和数据库贯穿模型重启保留。
+- 最终库为 26 条 COMPLETED、1 条预期 INCOMPLETE，零审批／交易效果，库存仍为 12/8/0。
+  捕获的模型日志没有 OOM、fatal CUDA 错误、traceback 或崩溃标记。
+- 已加载／请求／空闲采样的可用显存为 1957–2023 MiB，可用系统内存为 2.35–11.16 GiB。
+  系统内存余量有限；没有调参或清理缓存。
+- 所记录原有配置／profile／数据库哈希及 56 个模型文件大小／修改时间清单不变。
+  两轮尝试启动的服务均按本轮凭据／实例身份停止，测试端口无监听。
+
+首轮控制器因 Windows 子进程继承输出管道，在应用就绪后仍等待，尚未发出任何咨询。
+只停止它自己的应用／模型后改为文件日志，另起全新数据库完整重跑；首轮不算成功测试。
+
+成功测试窗口共 319.467 秒（约 5.3 分钟）、单并发、短小结构化样例；不代表过夜运行、
+Windows 重启／睡眠唤醒、长输入、多人并发、一般建议质量、远程 Mac／Windows 或真实 CS/MC。
+不能据此保证无内存泄漏。本轮为实际 HTTP 自动化，没有重新声称手动网页验收。
+原始证据留在忽略目录 `var/stability-20261025-dbb6662-20261025T053019994156Z/`。
+稳定性测试期间只准备本地双语记录，没有远程写入；随后 Danny 授权将这四份双语证据文档
+发布到 PR #8。实际测试的应用仍为上述准确提交，新的 CI 须针对文档发布提交。
+本次发布不包含模型／配置／代码、SSH／防火墙或 Jira 变更，也不包含合并或绕过审批。
+
+## AP HTTP/UI 保存恢复 · 2026-10-26
+
+**范围与授权：** Danny 明确授权 KAN-9 / GR-INT-01 的三个 AP 共享接口／界面缺口：准确保存失败文案、
+恢复接口和恢复按钮。分支 KAN-9-ap-web-recovery 基于 main
+`e141427c393df6515ad8091f035e1c2f81cba65d`，不领取 Jiaxuan 的 AP starter，
+未改 approval.py、schema、CS/MC 模块、模型部署或 PR #11。
+
+**接口：** 原 Founder 的登录会话只向 `/api/approvals/{id}/recover` 提交所显示的正整数 contextRevision。
+即便已提交后重复调用，仍检查当前来源、版本和审阅关联；原服务在提交前复核持久意图的精确动作／actionRef。
+拒绝覆盖决定、理由、身份和动作；保留原双参数服务调用。恢复同一已存意图只提交一次，再单独尝试投递；
+投递失败须显式重投同一决定 ID。恢复／投递均不执行业务。失败卡片将已存种类／理由标作无权威意图，
+仅原 Founder 对当前来源可见恢复按钮。decide／recover 失败立即刷新已存状态；
+approval_recording 下拉项是本地注入样例。
+
+**自动检查：** Mac Python 3.9.6 的 **96 项测试在 12.810 秒全部通过**，含原 84 项和 12 项新增
+AP HTTP／会话／SQLite 检查：重启／重复恢复、后续仅客户确认才恰好一次执行、保留 REJECT／REQUEST_REVISION、
+未登录／错误 CSRF／Customer／其他 Founder 被拒、缺失／非法／额外／覆盖输入、旧显示版本、
+被替代来源、动作范围改变、提交后旧范围重复恢复、无意图／不存在审批、再次保存失败，
+以及投递失败后显式重投同一 ID。Node 语法与空白检查通过，未启动或调用真实模型。
+
+**实际网页：** 使用全新忽略数据库、本机 5661 端口，通过原服务创建 mock CS 待审批记录。
+浏览器登录虚构 Founder，在 Activity trail 选 Decision recording failure (no approval) 并应用，
+填写理由后点 Approve exact scope。HTTP 409 后立即刷新为 recording failed，展示非已提交决定的已存意图、
+理由、No applicable committed decision 和 Recover saved decision；不再误说 superseded。
+点恢复后显示 APPROVED、决定 ID、DELIVERED，恢复按钮消失，再刷新仍为同一决定。
+独立读库：审批 AP-d53f12341a0d，决定 DEC-6349abf72f19，一条 DECISION_COMMITTED 审计、零业务效果，
+P-101 库存仍为 12，CS 仍 AWAITING_CONFIRMATION。原始库／截图位于忽略的
+var/ap-web-20261026-first.sqlite3、output/previews/。业务效果及故障为 mock／注入，不代表真实存储故障验收。
+
+**交接：** 完整 AP-T-05／GR 验收保留 PARTIAL；队列／通知、过期、完整风险路由、CS 失败受理界面、
+MC PR #11 仍为独立事项。10 月 26 日读到 Jira KAN-9 为 Integration & Verification、To Do、Unassigned；
+子项只有 KAN-15，未显示单独 GR-INT-01 子项。核对 GitHub 重叠工作时仅 MC PR #11 开放。
+本次未执行 Jira 认领、状态／评论、远程发布或队友审阅，不声称远程 CI；按 Danny 要求由 AI 协助完成。
+
+**Jira update pending：** 将本次有限 GR-INT-01 AP 网页恢复记录在 KAN-9，获授权发布后补 PR 链接，
+请 Jiaxuan 审阅共享 AP 边界；附 96 项检查、网页／不执行业务的证据及剩余条件。
+不因本地实现将整个集成 epic 标 Done，也不改 KAN-13／KAN-15／队友认领。
