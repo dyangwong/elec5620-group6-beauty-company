@@ -1,4 +1,6 @@
 """MC-M-01: grounded mock script/storyboard with exact-revision review."""
+from copy import deepcopy
+
 from ..contracts import DomainError, require_role, revision_value, text_value
 from ..store import Store
 from .beauty_advisor import catalogue
@@ -15,7 +17,7 @@ class Marketing:
             raise DomainError("Choose an authorised catalogue product.", 409, "INCOMPLETE")
 
         try:
-            script = self.llm.generate_script(brief, product)
+            script = self.llm.generate_script(brief, deepcopy(product))
         except (RuntimeError, TimeoutError, ConnectionError):
             raise DomainError("Marketing text generation is unavailable.", 409, "GENERATION_FAILED")
 
@@ -38,18 +40,28 @@ class Marketing:
         if any(frame.get("direction") != direction for frame, direction in zip(storyboard, ["Product introduction", "Catalogue-supported benefit", "Draft closing card"])):
             raise DomainError("Storyboard directions are not supported.", 409, "CONTENT_REJECTED")
 
+        if any(set(frame) != {"shot", "duration", "caption", "direction"}
+               or type(frame["shot"]) is not int or frame["shot"] != index
+               or frame["duration"] != duration
+               for index, (frame, duration) in enumerate(zip(storyboard, ["0–5 s", "5–10 s", "10–15 s"]), 1)):
+            raise DomainError("Storyboard metadata is not supported by this mock fixture.", 409, "CONTENT_REJECTED")
+        verified_storyboard = deepcopy(storyboard)
+
         try:
-            media = self.media.generate(script)
+            # An adapter may mutate its input; it must not alter our validated text
+            # or the independent snapshot used to check its actual output.
+            media = self.media.generate(deepcopy(script))
         except (RuntimeError, TimeoutError, ConnectionError):
             raise DomainError("Mock media generation failed.", 409, "GENERATION_FAILED")
 
         if not isinstance(media, dict) or media.get("kind") != "MOCK_STORYBOARD" or media.get("simulated") is not True:
             raise DomainError("Mock media result is invalid.", 409, "GENERATION_FAILED")
-        if media.get("frames") != storyboard:
+        if (media.get("frames") != verified_storyboard
+                or media.get("label") != "Storyboard placeholder; no video file has been generated."):
             raise DomainError("Mock media frames do not match the verified storyboard.", 409, "GENERATION_FAILED")
 
         return {"brief": brief, "product": product, "script": script["script"],
-                "claims": claims, "media": media, "simulated": True,
+                "claims": claims, "media": deepcopy(media), "simulated": True,
                 "evidence": {"catalogueRef": f"catalogue:{product['id']}:v{product['version']}", "facts": product["facts"]}}
 
     def submit(self, db, actor, data):
@@ -59,6 +71,7 @@ class Marketing:
         record = Store.get(db, rid)
         self._review(db, record)
         return record
+
     def submit_draft(self, db, actor, data):
         require_role(actor, "FOUNDER")
         rid = Store.create(db, "MC", actor.id, "DRAFTING", {"brief": data.get("brief"), "productId": data.get("productId"), "simulated": True}, "MC")
@@ -81,6 +94,7 @@ class Marketing:
         record["status"] = "REVIEW_PENDING"
         Store.save(db, record)
         Store.event(db, record["id"], "MC", "MOCK_DRAFT_SAVED_AND_SUBMITTED", {"contextRevision": record["revision"], "simulated": True, "videoGenerated": False})
+
     def revise(self, db, actor, rid, data):
         require_role(actor, "FOUNDER")
         record = Store.get(db, rid, "MC")

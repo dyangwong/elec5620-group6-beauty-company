@@ -54,3 +54,13 @@ The tested scenarios include failed draft persistence, media failures, failed re
 - Complete wider recovery and failure-path verification.
 - Review the MC changes against the shared LLM integration contract.
 - Confirm the final task acceptance conditions before marking KAN-12 Done.
+
+## Danny-authorised repair and integration · 27 October 2026
+
+The original KAN-12 implementation by Zhengdu Wei is retained. At Danny's explicit request, the original PR #11 was brought up to main dc1b60b (merged AP #12) and repaired with AI assistance. This does not reassign the starter or claim the teammate's endorsement.
+
+Failed revisions now render as failed records in Content studio, with their permitted reason, no fabricated product/media/approval, and a corrected-draft form using productId. The review queue also handles failed current payloads and shows that a superseded review cannot approve a different current revision. Existing HTTP creation still calls submit; submit_draft remains a service entry point. No live model or video generation is added.
+
+Model evidence and media inputs are deep copies; media frames are checked against an independent verified storyboard snapshot, rather than a mutable alias. Shot/duration metadata and the mock-media label are bounded to the declared fixture. A mutating adapter cannot introduce unsupported captions or alter the saved script/claims by changing its input. This remains deterministic mock validation, not unrestricted prose grounding.
+
+The full integrated suite passed 112 tests, including the original 11 MC tests and five new regressions for adapter/evidence mutation, metadata and the actual failed HTTP revision contract. Actual browser creation followed by a whitespace-only revision saved INCOMPLETE/revision 2; both Content studio and the old SUPERSEDED review rendered without crashing. Initial revision history and old review are retained. Remote CI and actual review/merge are recorded on PR #11 separately.

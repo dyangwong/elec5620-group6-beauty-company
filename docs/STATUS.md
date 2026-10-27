@@ -234,3 +234,7 @@ including 12 new AP HTTP tests. Actual browser failure/recovery and independent
 SQLite readback showed one decision audit, zero effects and stock 12 unchanged.
 No full AP/GR acceptance, remote CI, owner review or Jira update is inferred.
 CS failed-intake UI and MC PR #11 remain separate. See VERIFICATION.md.
+
+## MC failure repair · 27 October 2026
+
+KAN-12 PR #11 now retains failed mock drafts/revisions and safely renders their failure states, including superseded review cards. Independent evidence/storyboard snapshots close mutable-adapter validation gaps. 112 integrated offline tests and actual browser failed revision/old-review rendering passed. Initial HTTP failed-draft creation, live MC, general prose grounding and full MC acceptance remain open. See the PR for remote checks/review/merge; no member claim is reassigned.
