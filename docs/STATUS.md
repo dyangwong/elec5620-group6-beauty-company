@@ -3,6 +3,13 @@
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
 ## Current deployment checkpoint · 28 October 2026
 
+Frozen package source f7bb141 (documentation only over main 515bfa5) was also
+re-extracted into a second new directory: 123 tests, provenance/JS, actual HTTP
+mock/AP restart recovery and real BA all passed; stopped-model failure was saved
+truthfully. All owned services ended and original data/config/model inventory
+was preserved. The after-the-fact archive checksum receipt is in VERIFICATION.md.
+
+
 Local GR-INT-03 (internal label, Jira unverified/update pending) rehearsed source
 515bfa5 ZIP -> new Windows directory -> mock browser CS/BA/Customer/AP flow,
 AP failure/restart/web recovery and one real standalone BA consultation against

@@ -625,3 +625,43 @@ cached-model approval, overnight/sleep/reboot/long-context/concurrent use, real
 CS/MC and broader Stage 2 acceptance remain separate. A later documentation-only
 source package must retain its own commit, SHA-256 and fresh-directory recheck
 receipt outside the ZIP rather than pretending the earlier archive hash applies.
+
+## Frozen rehearsal package receipt · 28 October 2026
+
+The final documentation-inclusive ZIP is frozen at source commit
+`f7bb141f6e35c7846989adccf58841b9e128a978` (local branch GR-INT-03-zip-windows),
+110 files / **5,579,703 bytes**, SHA-256:
+`5be88639cdd33415dadc77c0e6bfdc286b34b50e4635be2568ee01f4543e6ba3`.
+Its non-document files are byte-identical to the validated main 515bfa5 source.
+This after-the-fact receipt is a subsequent documentation-only commit: it does
+not change the ZIP or pretend its source commit equals the later receipt HEAD.
+
+A second unused extraction at
+`D:\elec5620_project\rehearsals\20261028-f7bb141\final fresh source`
+passed repeated Setup/config preservation and independent import-origin checks.
+Its new venv ran **123 tests in 36.100 s**, provenance (110 files / 41 cases)
+and JavaScript syntax successfully, without .git or old application imports.
+
+Actual authenticated HTTP on final extracted ports 5680/mock and 5681/live
+repeated the CS -> BA -> Customer -> AP -> simulated-effect chain. AP recording
+failed with no authority/effect; after app restart, saved-intent recovery plus
+three repeats kept one decision and zero effects. Customer confirmation plus
+three repeats kept one effect, same actionRef and stock 12 -> 11. The earlier
+515bfa5 package has the actual browser acceptance; this final-package repeat is
+actual HTTP automation, not another browser acceptance claim.
+
+One actual final-package BA request saved COMPLETED/simulated:false/P-101 in
+**2.780 s**, using the same existing model instance and a separate new-directory
+config. Independent SQLite readback verified full saved payload, facts, stock,
+price/budget, fragrance and version; zero approvals/effects. After the run-owned
+model was stopped with its exact instance guard, the final app remained healthy;
+another request saved **INCOMPLETE/LLM_UNAVAILABLE/simulated:false**, with no
+product and no mock fallback. Both final apps and the run-owned model stopped.
+Original config/database hashes and all 56 model-file size/mtime entries match
+the preflight inventory. No code/script/model/dependency change was necessary.
+
+Raw final reports/logs/DBs are ignored. Archive and machine-readable source/hash/
+verification receipt were copied to the local handoff output directory. No Jira
+read/write, remote push/PR/merge or Canvas upload occurred. GR-INT-03 remains an
+internal rehearsal label; formal Canvas download, venue prerequisites/permission,
+clean-machine/network, real CS/MC and wider Stage 2 acceptance remain unverified.

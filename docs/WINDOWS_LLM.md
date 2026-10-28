@@ -7,6 +7,14 @@ The installation-blocked sections below retain the earlier attempt as history.
 English primary. [中文阅读副本](zh-CN/WINDOWS_LLM.md).
 ## Current ZIP deployment procedure · 28 October 2026
 
+Frozen rehearsal ZIP: source `f7bb141f6e35c7846989adccf58841b9e128a978`,
+SHA-256 `5be88639cdd33415dadc77c0e6bfdc286b34b50e4635be2568ee01f4543e6ba3`.
+The final source package passed a second fresh-directory 123-test, mock/failure/
+recovery and real-BA HTTP repeat. Its source stays frozen; later documentation
+receipt commits do not change this archive. See the final dated receipt in
+VERIFICATION.md; the earlier 515bfa5 browser package is recorded separately.
+
+
 Danny / M1 authorised a local GR-INT-03 source-delivery rehearsal, separate from
 BA-START-01 and the broader GR-INT-02 model task. **GR-INT-03 is an internal backlog
 label, not a Jira key.** The repository has no mapped deployment-ticket key;

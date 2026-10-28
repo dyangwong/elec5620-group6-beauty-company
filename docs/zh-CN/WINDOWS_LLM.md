@@ -1,6 +1,12 @@
 # Windows 部署与 KAN-15 交接
 ## 当前 ZIP 部署步骤 · 2026-10-28
 
+冻结演练包源码 `f7bb141f6e35c7846989adccf58841b9e128a978`，
+SHA-256 `5be88639cdd33415dadc77c0e6bfdc286b34b50e4635be2568ee01f4543e6ba3`。
+最终包已在第二个新目录通过 123 项测试、mock／失败恢复和真实 BA 的实际 HTTP 复验。
+之后的文档回执提交不改变该 ZIP；最终回执见 VERIFICATION.md，515bfa5 的网页演练另列。
+
+
 Danny / M1 授权本次 GR-INT-03 本地源码交付演练，不领取 BA-START-01，不补完整个
 GR-INT-02。**GR-INT-03 是内部 BACKLOG 标签，不是 Jira key。**仓库没有对应部署任务的
 Jira 编号映射；Jira 未核实／更新待办。按用户要求，本轮不查询或修改外部 Jira，不上传
