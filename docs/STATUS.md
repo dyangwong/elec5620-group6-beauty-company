@@ -3,6 +3,30 @@
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
 ## Current deployment checkpoint · 28 October 2026
 
+## BA needs checkpoint · 29 October 2026
+
+Local branch `KAN-15-ba-needs-clarification`, starting at a577c98c010142882abc22b552c73de92e3d51d0
+(preserved GR-INT-03 docs over main 515bfa537e31a01b9e9a24400a7112f8103babb3;
+remote main fetched and unchanged at task start). Danny authorised the bounded
+standalone needs/clarification/confirmation slice, including the necessary shared
+adapter/facade/HTTP/UI contracts and tests. No teammate task/claim or real CS/MC
+scope was taken; affected shared-file review remains pending publication.
+
+Natural-language BA now asks missing questions, resumes the same saved consultation,
+requires explicit editable Customer confirmation, rejects stale in-flight results
+and independently checks the final product. Actual mock and live browser paths
+both passed; stopped model saved INCOMPLETE / LLM_UNAVAILABLE without mock fallback.
+Windows offline verification: **147 tests (123 previous + 24 new), provenance
+113 files / 41 tracked groups, JavaScript syntax passed**. This does not mark
+147 acceptance groups passed: BA groups remain partial and BA-F-03 stays disabled.
+
+Models/dependencies were reused without download/upgrade; original data/config and
+56-file model inventory preserved. Test apps/model started for this run were stopped.
+English/Chinese docs and traceability updated locally; no push/PR/merge/Canvas/Jira
+operation. Jira unverified / update pending by user instruction. The prior frozen
+ZIP remains historical and does not contain this new feature. See VERIFICATION.md
+and modules/BA.md for evidence, reproduction and remaining lifecycle/review gaps.
+
 Frozen package source f7bb141 (documentation only over main 515bfa5) was also
 re-extracted into a second new directory: 123 tests, provenance/JS, actual HTTP
 mock/AP restart recovery and real BA all passed; stopped-model failure was saved
@@ -32,8 +56,8 @@ historical. Update affected behaviour/gaps here in the implementation PR.
 - Fictional accounts; server-created opaque sessions, role/ownership checks and CSRF.
 - BA default mock advice plus opt-in standalone local Strata consultation;
   explicit constraints and independent catalogue/fact checks remain in force.
-  One real BA HTTP path is verified in WINDOWS_LLM_RUNTIME.md; full natural-language
-  clarification and unrestricted generated-text grounding remain incomplete.
+  Bounded natural needs/clarification/explicit confirmation is now verified; broader
+  language understanding, full lifecycle and unrestricted prose grounding remain incomplete.
 - CS **exchange-only** intake with explicit synthetic policy; Founder-initiated CO
   handoff to BA; current Customer confirmation and exact-scope AP review.
 - CS service/HTTP assess intake retains missing/conflicting/unavailable policy outcomes;

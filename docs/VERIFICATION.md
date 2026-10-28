@@ -2,6 +2,60 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/VERIFICATION.md).
 
+## BA needs checkpoint · 29 October 2026
+
+New local KAN-15 slice, not BA-START-01 acceptance or Stage 2 completion. Branch
+`KAN-15-ba-needs-clarification`; starting source a577c98c010142882abc22b552c73de92e3d51d0
+over fetched main 515bfa537e31a01b9e9a24400a7112f8103babb3. The local code commit
+containing this checkpoint identifies the delivered implementation; older ZIP
+receipts below do not include it. No Jira access/update or external publication.
+
+| New check | Actual result |
+|---|---|
+| Windows 11 Pro 25H2 build 26200.9711; application Python 3.14.5 | Full unittest discovery: 147 passed in 27.301 s; 24 new BA tests, old 123 retained |
+| `scripts/check_repository.py`; `node --check beauty_company/web/app.js` | 113 source files, 41 tracked groups, source fingerprints/handoff passed; JS passed, including final confirmation-label adjustment |
+| Real browser mock, port 5690, fresh ignored database | Dry-skin text -> two missing questions -> same ID revision 2 after answer -> no product until Customer confirmation -> revision 3 COMPLETED / P-101 / simulated=true |
+| Real browser Strata, port 5691, separate fresh ignored database | Same flow; two actual extraction requests, then one recommendation; literal sources saved, explicit needsConfirmed, revision 3 COMPLETED / simulated=false |
+| Independent read-only SQLite checks after both paths | Budget 6000 cents, P-101 price 4800, catalogue:P-101:v1, stock AVAILABLE=12; reasons literal subset of product facts; zero approvals/effects, stock unchanged |
+| Existing model stopped with this run's exact instance ID; app retained | App health status ok with LIVE configuration; browser saved INCOMPLETE / LLM_UNAVAILABLE / simulated=false, no result or mock fallback |
+| Exercised browser console | No captured warnings/errors |
+| Local originals / cleanup | Original preexisting config/database hashes and 56-file weight size/mtime inventory preserved; only this run's two apps/model stopped |
+
+Reused Strata 0.2.1, Terminal 0.1.46.1, engine 0.1.46 CUDA 13, bundled model Python
+3.12.15, qwen3.8-flash-next-gyro-gyro-s, saved 8192 context / one request / vision
+and MTP off / 1536 MiB reserve / route-tail-skip 7. No install/upgrade/download or
+model-folder copy. Actual engine log recorded generation during the browser flow;
+strict adapter envelope verifies the exact configured model ID. This is bounded
+English evidence, not a broad model-quality or Chinese-live evaluation.
+
+New offline tests cover focused missing fields, sufficient-but-unconfirmed input,
+English/Chinese mock fixtures, ambiguous budget, sentence punctuation, Customer
+field correction, same-ID restart resumption, owner/session/CSRF restrictions,
+extra/invalid inputs and limits, two concurrent stale-result cases, current
+catalogue changes, invalid/hallucinated source output, unavailable capability/model,
+no fallback, and failed final save without false completion. Transport fakes use
+strict model envelopes; they are separate from the actual-model browser evidence.
+
+Failures found and resolved: an ambiguity-regex change initially rejected the
+sentence-ending period after an amount (146-test intermediate run: five failures,
+five errors); fixed with an explicit punctuation/partial-decimal regression. The
+verification helper initially used a nonexistent provenance filename and assumed
+top-level health capabilities; rerun using check_repository.py and the actual
+capabilities envelope passed. No application error was disguised as successful.
+
+Raw logs, test databases, before/after manifests, model log and browser record
+snapshots remain ignored under `var/ba-needs-20261029/`; browser screenshots are
+local outputs. Only this sanitised summary and necessary source/docs are tracked.
+
+Not newly verified/completed: full cancellation/completed-record revision, BA
+review lifecycle, arbitrary natural language or medical-scope detection, full
+provider/catalogue/inventory fault matrix, optional alternatives, automatic BA
+storage recovery (final save rollback can leave ACTIVE), macOS/second-machine
+acceptance, new-feature ZIP/Canvas rehearsal. CS/AP/MC existing cases passed in
+the full offline suite, but their browser flows were not repeated this round.
+MC remains mock; CS intent and real CS handoff remain unconnected/restricted.
+Affected-owner review and publication remain pending. Jira unverified/update pending.
+
 The dated sections below are historical records; later publication updates supersede
 earlier no-remote/byte-identical-packaging statements.
 

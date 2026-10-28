@@ -2,6 +2,39 @@
 
 English primary. [中文阅读副本](zh-CN/LLM_INTEGRATION.md).
 
+## BA needs checkpoint · 29 October 2026
+
+Danny authorised a bounded KAN-15 standalone BA perception/clarification slice.
+It does not claim BA-START-01 or connect CS/MC. The additive optional capability
+`extract_needs(messages: list[str]) -> dict` reuses `StrataLlm._complete`, the same
+loopback configuration, strict JSON/envelope checks, timeout and no-redirect
+transport as `propose`. No new client, dependency, URL or key is introduced.
+Existing injected objects implementing only the v1 propose/script methods still
+work with their old callers. Natural intake with a missing extraction method
+saves INCOMPLETE / LLM_CAPABILITY_UNAVAILABLE; it never substitutes MockLlm.
+Health adds `capabilities.baNeeds=LIVE|MOCK|NOT_CONNECTED`; configuration is not
+model readiness. MC remains MOCK, csIntent NOT_CONNECTED and the live CS handoff
+guard is unchanged.
+
+Extraction v1.1 has exactly concern (HYDRATION/CLEANSING/null), budget (positive
+AUD dollars, at most two decimal places and 10,000, or null), fragranceFree
+(boolean/null), sources (exactly those three keys, literal user quotation/null).
+Every non-null value requires a short source (at most 600 characters) found in
+the saved original messages; budget also needs an explicit budget/currency cue
+and matching literal amount; other currencies/conversion are refused. No user
+identity, credentials, order, policy, product or database handle enters extraction.
+Nulls generate fixed focused questions. English/Chinese mock grammar is a small,
+labelled fixture; unsupported/ambiguous input requires clarification or safe stop.
+Quotations and schema checks do not prove unrestricted semantic correctness or
+medical safety. Customer confirmation is mandatory; recommendation then independently
+checks authorised product ID, literal facts, price, constraints and current stock.
+
+Natural intake uses only the Customer-reviewed three fields and original first
+message for recommendation; the conversation stays stored separately. No general
+multi-turn model memory, arbitrary generated prose grounding, live CS intent or
+real MC/media is claimed. Actual Windows model and failure evidence is in
+VERIFICATION.md; the 28 October source ZIP predates this feature and is historical.
+
 [KAN-15 / GR-INT-02](https://uni-team6-elec5620.atlassian.net/browse/KAN-15) · owner: Danyang Wang · local model deployed; one actual BA path verified, broader integration pending.
 
 ## Owner and present boundary

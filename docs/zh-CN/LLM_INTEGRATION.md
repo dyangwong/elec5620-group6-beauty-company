@@ -2,6 +2,28 @@
 
 中文阅读副本，依据 2026-10-21 [英文主版](../LLM_INTEGRATION.md) 同步。
 
+## BA 需求检查点 · 2026-10-29
+
+Danny 授权 KAN-15 有限独立 BA 理解/追问切片，不代表领取 BA-START-01，未连接真实 CS/MC。
+新增可选能力 extract_needs(messages: list[str]) -> dict，复用 StrataLlm._complete
+及原有 loopback 配置、严格 JSON/响应包校验、超时和禁止跳转传输；没有新客户端、依赖、
+地址或密钥。只实现旧 v1 propose/script 的注入对象仍可用于原调用；缺失提取方法时，
+自然语言入口保存 INCOMPLETE / LLM_CAPABILITY_UNAVAILABLE，不替换为 MockLlm。
+健康响应增加 capabilities.baNeeds=LIVE|MOCK|NOT_CONNECTED；配置不等于模型就绪。
+MC 仍为 MOCK、csIntent 为 NOT_CONNECTED，真实 CS 交接限制保留。
+
+提取 v1.1 精确字段：concern（HYDRATION/CLEANSING/null），budget（正澳元、最多两位小数、
+上限 10,000 或 null），fragranceFree（布尔/null），sources（精确对应三个字段的原文引用/null）。
+每个非空值须有保存在原消息中的短引用（最多 600 字符）；预算还须有预算/货币提示及
+一致的字面数字，拒绝其他货币/换算。提取不接收身份、凭据、订单、政策、商品或数据库句柄。
+空值触发固定的针对性追问。中英文 mock 是有限语法样例，无法明确解析/有歧义时继续追问
+或安全停止。引用和结构检查不能证明任意语义正确或医疗安全，因此必须客户确认；
+推荐再独立验证商品 ID、字面事实、价格、条件及当前库存。
+
+推荐只接收客户核定的三个字段及第一条原消息，完整对话另存；本轮没有通用多轮模型记忆、
+任意生成文字事实验证、真实 CS 意图识别或 MC/媒体。Windows 实测及失败证据见 VERIFICATION.md；
+10 月 28 日源码 ZIP 早于本功能，只是历史证据。
+
 [KAN-15 / GR-INT-02](https://uni-team6-elec5620.atlassian.net/browse/KAN-15) · 负责人：Danyang Wang · 本地模型已部署，一条真实 BA 路径已验证，更广集成仍待完成。
 
 ## 负责人和当前范围

@@ -11,6 +11,7 @@ from .adapters.mock import MockLlm, MockMedia
 from .contracts import Actor, DomainError, require_role, revision_value
 from .modules.approval import Approval
 from .modules.beauty_advisor import BeautyAdvisor, catalogue, validated_needs
+from .modules.ba_intake import BaIntake
 from .modules.coordination import Coordination
 from .modules.customer_service import CustomerService
 from .modules.marketing import Marketing
@@ -25,6 +26,7 @@ class Company:
         self.store = Store(path)
         self.llm = llm or MockLlm()
         self.ba = BeautyAdvisor(self.llm)
+        self.ba_intake = BaIntake(self.store, self.ba)
         self.ap = Approval()
         self.co = Coordination()
         self.cs = CustomerService(self.store, self.ba, self.co, self.ap, MockAfterSales(self.store))
@@ -47,6 +49,7 @@ class Company:
         live = not self.ba.simulated
         return {"simulated": not live, "model": "Local BA model" if live else "Deterministic mock",
                 "ba": "LIVE" if live else "MOCK", "mc": "MOCK", "csIntent": "NOT_CONNECTED",
+                "baNeeds": ("LIVE" if live else "MOCK") if callable(getattr(self.llm, "extract_needs", None)) else "NOT_CONNECTED",
                 "media": "Storyboard placeholder", "commerce": "SIMULATED",
                 "optionalFeatures": {"BA-F-03": False, "CS-F-03": False, "MC-F-03": False,
                                      "AP-F-03": False, "CO-F-03": False}}

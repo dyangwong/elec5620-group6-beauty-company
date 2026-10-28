@@ -1,6 +1,31 @@
 # 共享接口约定与实现映射
 
-中文阅读副本，依据 2026-10-26 英文主版同步。以[英文主版](../CONTRACTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../CONTRACTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+
+## BA 需求检查点 · 2026-10-29
+
+新增独立 BA 自然语言入口，要求 Customer 会话、CSRF 及记录归属校验。
+原有结构化 `/api/consultations` 与 CS/CO 调用契约保留。
+
+| POST 路径 | 精确 JSON 字段 | 保存行为 |
+|---|---|---|
+| `/api/consultations/intake` | `message` | 201；推理时 ACTIVE，随后 CLARIFYING 或 INCOMPLETE |
+| `/api/consultations/{id}/clarify` | `message`, `contextRevision` | 同 ID、修订加一、旧结果失效、重新提取 |
+| `/api/consultations/{id}/confirm-needs` | `contextRevision`, `concern`, `budget`, `fragranceFree` | 客户显式核对/更正并确认，修订加一，随后独立校验推荐 |
+
+单条消息 1–2,000 字符，最多八条、合计 8,000 字符。仅自然语言记录的
+ACTIVE/CLARIFYING/INCOMPLETE 状态允许补充。确认必须 CLARIFYING 且 needsReady=true；
+字段齐全也不会自动推荐。contextRevision 为正整数，不能是布尔值。过期修订返回
+409 STALE_SCOPE，其他客户 404、Founder 403；拒绝额外字段。已完成咨询须新建，
+本轮没有取消或已完成记录修订接口。
+
+payload.messages 保留原文；proposedNeeds 含有限字面引用，仍是未确认假设。
+网页先显示固定缺失字段问题，再显示可编辑确认表单；确认后先保存 needsConfirmed
+和客户核定的 needs。请求/提取预算为澳元，确认保存与目录为澳分。
+推理在写事务之外执行，保存前重查修订/状态及当前目录，拒绝旧结果覆盖。
+不可用、超时、无效输出保存 INCOMPLETE，不回退为 mock 成功。最终数据库写入失败
+会回滚，记录可能停留 ACTIVE，不能虚报 COMPLETED；本轮 BA 尚无自动存储恢复或专用按钮。
+实际检查见 VERIFICATION.md，不代表所有 BA 验收完成。
 
 读 Stage 1 第 8.2 节与 `docs/reference/stage1-baseline.txt` 的原状态词汇。
 Python 边界用 snake_case，需要明确契约字段的 JSON 用 camelCase。
@@ -74,7 +99,7 @@ CS 重查订单归属、当前政策、库存、确认、精确 action/ref/revis
 
 ## 已实现状态子集
 
-- BA：CLARIFYING、COMPLETED、INCOMPLETE；完整生命周期待做。
+- BA：自然语言入口 ACTIVE → CLARIFYING（追问或显式确认关卡）→ ACTIVE → COMPLETED/INCOMPLETE；完整生命周期待做。
 - CS：ASSESSING → AWAITING_CONFIRMATION → REVIEW_PENDING → 当前批准 →
   AWAITING_CONFIRMATION → EXECUTING → RESOLVED；失败有 RECONCILING、RECORDING_FAILED、
   UNRESOLVED；审阅结果有 REJECTED/NEEDS_INFORMATION。

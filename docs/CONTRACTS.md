@@ -2,6 +2,38 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/CONTRACTS.md).
 
+## BA needs checkpoint · 29 October 2026
+
+Additive standalone BA intake (Customer session + CSRF, same owner). The existing
+structured `/api/consultations` route and CS/CO callers retain their contracts.
+
+| POST path | Exact JSON body | Saved behaviour |
+|---|---|---|
+| `/api/consultations/intake` | `message` | 201 record; ACTIVE during inference, then CLARIFYING or INCOMPLETE |
+| `/api/consultations/{id}/clarify` | `message`, `contextRevision` | Same ID, revision increment, old result invalidated, re-extract |
+| `/api/consultations/{id}/confirm-needs` | `contextRevision`, `concern`, `budget`, `fragranceFree` | Explicit Customer review/correction, revision increment, then independently validated advice |
+
+Messages are 1–2,000 characters, at most eight messages / 8,000 characters total.
+Only ACTIVE/CLARIFYING/INCOMPLETE natural-needs records accept clarification.
+Confirmation requires CLARIFYING and `needsReady=true`; a complete extraction
+alone never recommends. `contextRevision` is a positive integer, not a boolean.
+Stale revisions return 409 STALE_SCOPE; another Customer receives 404, Founder 403.
+Unsupported/extra body fields are rejected. Completed records require a new
+consultation; no cancel or completed-record revision API is supplied in this slice.
+
+`payload.messages` retains original text; `proposedNeeds` includes bounded literal
+sources and remains an unconfirmed hypothesis. UI shows fixed missing-field
+questions, then editable confirmation fields. Confirmation stores `needsConfirmed`
+and authoritative Customer-reviewed `needs` before recommendation. Request and
+extraction budgets use AUD dollars; saved confirmed needs/catalogue use cents.
+Provider work is outside write transactions. Revision/status and current catalogue
+are rechecked before saving; stale inference cannot overwrite the current revision.
+Unavailable/timeout/invalid output saves INCOMPLETE with no successful recommendation
+or mock fallback. If the final database write fails, its transaction rolls back:
+the saved record can remain ACTIVE, never falsely COMPLETED. Automatic storage
+recovery and a dedicated recovery button are not implemented for this new BA path.
+See VERIFICATION.md for actual checks; this does not complete all BA cases.
+
 Read Stage 1 section 8.2 and the original state vocabularies in
 `reference/stage1-baseline.txt`. Python uses snake_case at the code boundary;
 JSON uses camelCase where an explicit contract field is needed. This is a partial
@@ -90,7 +122,7 @@ EXECUTING request can be queried; an unresolved lookup escalates without retry.
 
 ## Implemented state subsets
 
-- BA: CLARIFYING, COMPLETED, INCOMPLETE. Full lifecycle remains pending.
+- BA: ACTIVE → CLARIFYING (missing questions or explicit-confirmation gate) → ACTIVE → COMPLETED/INCOMPLETE for natural intake; full lifecycle remains pending.
 - CS: ASSESSING → AWAITING_CONFIRMATION → REVIEW_PENDING → current approval →
   AWAITING_CONFIRMATION → EXECUTING → RESOLVED; failure states RECONCILING,
   RECORDING_FAILED, UNRESOLVED; review REJECTED/NEEDS_INFORMATION.
