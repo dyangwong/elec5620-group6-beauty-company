@@ -1,8 +1,11 @@
-"""Standalone BA needs conversation; extract -> clarify -> Customer confirm -> advise."""
+"""Owned standalone BA conversation, revision/cancellation and storage-only recovery."""
+from copy import deepcopy
+import sqlite3
+
 from ..adapters.llm import ModelError
 from ..adapters.needs import FIELDS, validate_extraction
 from ..contracts import DomainError, require_role, revision_value, text_value
-from ..store import Store
+from ..store import Store, now
 from .beauty_advisor import catalogue, validated_needs
 
 QUESTIONS = {
@@ -32,12 +35,37 @@ class BaIntake:
     @staticmethod
     def _history(record):
         payload = record["payload"]
-        payload.setdefault("history", []).append({"revision": record["revision"], "status": record["status"],
-            "proposedNeeds": payload.get("proposedNeeds"), "errorCode": payload.get("errorCode")})
-        for key in ("result", "proposedNeeds", "questions", "needsReady", "needs", "needsConfirmed", "errorCode", "message"):
+        prior = {"revision": record["revision"], "status": record["status"]}
+        for key in ("messages", "proposedNeeds", "needs", "needsConfirmed", "result", "errorCode", "simulated"):
+            if key in payload:
+                prior[key] = deepcopy(payload[key])
+        payload.setdefault("history", []).append(prior)
+        for key in ("result", "proposedNeeds", "questions", "needsReady", "needs", "needsConfirmed", "errorCode", "message",
+                    "pendingOutcome", "recordedRevision"):
             payload.pop(key, None)
         record["revision"] += 1
         record["status"] = "ACTIVE"
+
+    def _begin(self, record):
+        self._history(record)
+        record["payload"].update(needsReady=False, simulated=self.advisor.simulated)
+
+    @staticmethod
+    def public_record(record):
+        """Uncommitted advice drafts are persistence data, never snapshot output."""
+        record = deepcopy(record)
+        pending = record["payload"].get("pendingOutcome")
+        if pending:
+            record["payload"]["pendingOutcome"] = ({key: pending[key]
+                for key in ("kind", "revision", "simulated") if key in pending}
+                if isinstance(pending, dict) else {"invalid": True})
+        return record
+
+    @staticmethod
+    def _storage_error():
+        return DomainError("The result could not be recorded. No completion is claimed. "
+                           "Refresh; recover a saved draft if offered, otherwise retry the attempt.",
+                           503, "BA_STORAGE_UNAVAILABLE")
 
     def start(self, actor, data):
         require_role(actor, "CUSTOMER")
@@ -61,10 +89,65 @@ class BaIntake:
             messages = record["payload"]["messages"]
             if len(messages) >= 8 or sum(map(len, messages)) + len(message) > 8000:
                 raise DomainError("This bounded consultation is full. Start a new consultation.", 409, "CONVERSATION_LIMIT")
-            self._history(record)
+            self._begin(record)
             messages.append(message)
-            record["payload"]["needsReady"] = False
             Store.save(db, record)
+        return self._extract(record)
+
+    def revise(self, actor, rid, data):
+        require_role(actor, "CUSTOMER")
+        self._input(data, ("message", "contextRevision"))
+        revision = revision_value(data["contextRevision"])
+        message = text_value(data["message"], "Your replacement request")
+        with self.store.transaction() as db:
+            record = self._owned(db, actor, rid, revision)
+            if record["status"] not in {"ACTIVE", "CLARIFYING", "INCOMPLETE", "COMPLETED"}:
+                raise DomainError("A cancelled consultation requires a new consultation.", 409, "INVALID_STATE")
+            self._begin(record)
+            # A replacement is a new scope, not an implicit inheritance of old constraints.
+            record["payload"]["messages"] = [message]
+            Store.save(db, record)
+            Store.event(db, rid, "BA", "CONSULTATION_REVISED", {"revision": record["revision"]})
+        return self._extract(record)
+
+    def cancel(self, actor, rid, data):
+        require_role(actor, "CUSTOMER")
+        self._input(data, ("contextRevision",))
+        revision = revision_value(data["contextRevision"])
+        try:
+            with self.store.transaction() as db:
+                record = self._owned(db, actor, rid, revision)
+                if record["status"] == "CANCELLED":
+                    return record
+                if record["status"] not in {"ACTIVE", "CLARIFYING", "INCOMPLETE"}:
+                    raise DomainError("Completed advice may be revised; it cannot be cancelled retroactively.",
+                                      409, "INVALID_STATE")
+                self._history(record)
+                record["status"] = "CANCELLED"
+                record["payload"].update(needsReady=False, message="Consultation cancelled. Late results are suppressed. "
+                                       "Start a new consultation to continue.")
+                Store.save(db, record)
+                Store.event(db, rid, "BA", "CONSULTATION_CANCELLED", {"revision": record["revision"]})
+                return record
+        except sqlite3.Error:
+            raise DomainError("Cancellation could not be recorded. It is not confirmed; refresh before retrying.",
+                              503, "BA_CANCELLATION_NOT_RECORDED") from None
+
+    def retry(self, actor, rid, data):
+        require_role(actor, "CUSTOMER")
+        self._input(data, ("contextRevision",))
+        revision = revision_value(data["contextRevision"])
+        with self.store.transaction() as db:
+            record = self._owned(db, actor, rid, revision)
+            if record["status"] not in {"ACTIVE", "INCOMPLETE"}:
+                raise DomainError("Only an interrupted or incomplete attempt can be retried.", 409, "INVALID_STATE")
+            if record["payload"].get("pendingOutcome"):
+                raise DomainError("A saved result is available. Recover it or explicitly revise the request.",
+                                  409, "RECOVERY_AVAILABLE")
+            self._begin(record)
+            Store.save(db, record)
+            Store.event(db, rid, "BA", "CONSULTATION_RETRY_REQUESTED", {"revision": record["revision"]})
+        # Explicit new read-only inference, not storage recovery or an automatic retry.
         return self._extract(record)
 
     def _extract(self, record):
@@ -85,27 +168,8 @@ class BaIntake:
             except (ValueError, TypeError, KeyError):
                 error = ModelError("The extracted needs could not be verified. No recommendation was made.",
                                    502, "LLM_INVALID_OUTPUT")
-        # Inference has finished: re-read the saved revision before applying it.
-        with self.store.transaction() as db:
-            current = Store.get(db, record["id"], "BA")
-            if current["revision"] != record["revision"] or current["status"] != "ACTIVE":
-                raise DomainError("A newer consultation revision exists. Old interpretation was discarded.", 409, "STALE_SCOPE")
-            payload = current["payload"]
-            if error:
-                current["status"] = "INCOMPLETE"
-                payload.update(errorCode=error.code, message=str(error), needsReady=False)
-            else:
-                missing = [key for key in FIELDS if result[key] is None]
-                current["status"] = "CLARIFYING"
-                payload.update(proposedNeeds=result, needsReady=not missing,
-                               questions=[QUESTIONS[key] for key in missing],
-                               message="Please answer the missing needs." if missing else
-                               "Review and explicitly confirm these interpreted needs before advice.")
-            Store.save(db, current)
-            Store.event(db, current["id"], "BA", "NEEDS_INTERPRETATION_RECORDED",
-                        {"status": current["status"], "revision": current["revision"],
-                         "simulated": payload["simulated"], "needsReady": payload["needsReady"]})
-            return current
+        value = {"errorCode": error.code, "message": str(error)} if error else {"extracted": result}
+        return self._stage(record, "NEEDS", value)
 
     def confirm(self, actor, rid, data):
         require_role(actor, "CUSTOMER")
@@ -118,25 +182,131 @@ class BaIntake:
             # These are explicit Customer-reviewed fields, not trusted model authority.
             needs = validated_needs({"message": record["payload"]["messages"][0],
                                      **{key: data[key] for key in FIELDS}})
-            self._history(record)
+            self._begin(record)
             record["payload"].update(needs=needs, needsConfirmed=True, needsReady=False)
             Store.save(db, record)
             Store.event(db, rid, "BA", "CUSTOMER_NEEDS_CONFIRMED", {"revision": record["revision"]})
         with self.store.read() as db:
             result = self.advisor.recommend(db, needs)
-        with self.store.transaction() as db:
-            current = self._owned(db, actor, rid, record["revision"])
-            if current["status"] != "ACTIVE":
-                raise DomainError("This result is no longer applicable.", 409, "STALE_SCOPE")
-            if result["status"] == "COMPLETED":
-                product = next((p for p in catalogue(db) if p["id"] == result["product"]["id"]), None)
-                if product != result["product"]:
-                    result = {"status": "INCOMPLETE", "errorCode": "LLM_STALE_EVIDENCE",
-                              "message": "Catalogue or stock changed. Start a fresh consultation.",
-                              "simulated": self.advisor.simulated}
-            current["status"] = result["status"]
-            current["payload"].update(result=result, simulated=result["simulated"])
-            Store.save(db, current)
-            Store.event(db, rid, "BA", "CONFIRMED_ADVICE_RECORDED", {"status": current["status"],
-                        "revision": current["revision"], "simulated": result["simulated"]})
+        return self._stage(record, "ADVICE", result)
+
+    def _stage(self, record, kind, value):
+        """Persist a non-authoritative draft before attempting its final recording."""
+        try:
+            with self.store.transaction() as db:
+                current = Store.get(db, record["id"], "BA")
+                if current["revision"] != record["revision"] or current["status"] != "ACTIVE":
+                    raise DomainError("A newer or cancelled revision exists. Old output was discarded.", 409, "STALE_SCOPE")
+                current["payload"]["pendingOutcome"] = {
+                    "kind": kind, "revision": record["revision"], "value": value,
+                    "simulated": record["payload"]["simulated"]}
+                Store.save(db, current)
+        except sqlite3.Error:
+            # There may be no durable draft. Do not invent one or return the model output.
+            raise self._storage_error() from None
+        return self._finish(record["id"], record["revision"])
+
+    def recover(self, actor, rid, data):
+        require_role(actor, "CUSTOMER")
+        self._input(data, ("contextRevision",))
+        revision = revision_value(data["contextRevision"])
+        with self.store.read() as db:
+            self._owned(db, actor, rid, revision)
+        # No model call, supplied result or change to Customer-confirmed scope.
+        return self._finish(rid, revision, actor)
+
+    def _finish(self, rid, revision, actor=None):
+        try:
+            with self.store.transaction() as db:
+                current = self._owned(db, actor, rid, revision) if actor else Store.get(db, rid, "BA")
+                if current["revision"] != revision or current["status"] == "CANCELLED":
+                    raise DomainError("This output belongs to a stale or cancelled revision.", 409, "STALE_SCOPE")
+                p = current["payload"]
+                if p.get("recordedRevision") == revision and not p.get("pendingOutcome"):
+                    return current  # Idempotent same-revision recovery; no repeat audit/inference.
+                pending = p.get("pendingOutcome")
+                if current["status"] not in {"ACTIVE", "INCOMPLETE"} or not pending:
+                    raise DomainError("No saved draft is available. Retry interrupted work explicitly.", 409, "NO_PENDING_RESULT")
+                if (not isinstance(pending, dict) or set(pending) != {"kind", "revision", "value", "simulated"}
+                        or type(pending["revision"]) is not int or pending["revision"] != revision
+                        or type(pending["simulated"]) is not bool or pending["kind"] not in ("NEEDS", "ADVICE")
+                        or not isinstance(pending["value"], dict)):
+                    raise DomainError("The saved draft is invalid. Revise the request instead.", 409, "INVALID_SAVED_RESULT")
+                # Explicit simulation of a final-write failure, retaining the durable draft.
+                if pending["kind"] == "ADVICE" and Store.fault(db, "ba_recording"):
+                    p.update(errorCode="BA_RECORDING_FAILED", message="The final advice save failed. "
+                             "A draft is saved; recover it without calling the model again.")
+                    current["status"] = "INCOMPLETE"
+                    Store.save(db, current)
+                    Store.event(db, rid, "BA", "ADVICE_RECORDING_FAILED", {"revision": revision, "simulatedFixture": True})
+                    fixture = True
+                else:
+                    fixture = False
+                    value = deepcopy(pending["value"])
+                    p.pop("message", None); p.pop("errorCode", None)
+                    if pending["kind"] == "NEEDS":
+                        if set(value) == {"extracted"}:
+                            try:
+                                extracted = validate_extraction(value["extracted"], p["messages"])
+                            except (ValueError, TypeError, KeyError):
+                                raise DomainError("The saved interpretation is invalid. Revise the request.", 409, "INVALID_SAVED_RESULT") from None
+                            missing = [key for key in FIELDS if extracted[key] is None]
+                            current["status"] = "CLARIFYING"
+                            p.update(proposedNeeds=extracted, needsReady=not missing,
+                                     questions=[QUESTIONS[key] for key in missing],
+                                     message="Please answer the missing needs." if missing else
+                                     "Review and explicitly confirm these interpreted needs before advice.")
+                        elif set(value) == {"errorCode", "message"}:
+                            current["status"] = "INCOMPLETE"
+                            p.update(value, needsReady=False)
+                        else:
+                            raise DomainError("The saved interpretation is invalid.", 409, "INVALID_SAVED_RESULT")
+                        event = "NEEDS_INTERPRETATION_RECORDED"
+                    else:
+                        if not p.get("needsConfirmed") or value.get("status") not in {"COMPLETED", "INCOMPLETE"}:
+                            raise DomainError("The saved advice has no confirmed scope.", 409, "INVALID_SAVED_RESULT")
+                        if value["status"] == "COMPLETED":
+                            supplied = value.get("product")
+                            if not isinstance(supplied, dict) or not isinstance(value.get("evidence"), dict):
+                                raise DomainError("The saved advice evidence is invalid.", 409, "INVALID_SAVED_RESULT")
+                            product = next((item for item in catalogue(db) if item["id"] == supplied.get("id")), None)
+                            needs = p["needs"]
+                            fact = "Moisturises dry skin" if needs["concern"] == "HYDRATION" else "Cleanses the skin"
+                            if (not product or product != supplied or product["availability"] != "AVAILABLE"
+                                    or product["price"] > needs["budget"] or fact not in product["facts"]
+                                    or (needs["fragranceFree"] and not product["fragrance_free"])
+                                    or not isinstance(value.get("reasons"), list) or not value["reasons"]
+                                    or any(reason not in product["facts"] for reason in value["reasons"])
+                                    or value["evidence"].get("catalogueRef") != f"catalogue:{product['id']}:v{product['version']}"
+                                    or value["evidence"].get("constraints") != {key: needs[key] for key in FIELDS}):
+                                value = {"status": "INCOMPLETE", "errorCode": "LLM_STALE_EVIDENCE",
+                                         "message": "Catalogue or stock changed. Retry with fresh evidence.",
+                                         "simulated": pending["simulated"]}
+                            else:
+                                value["evidence"].update(inventoryObservation=now(), availability=product["availability"])
+                        current["status"] = value["status"]
+                        value["simulated"] = pending["simulated"]
+                        p.update(result=value)
+                        event = "CONFIRMED_ADVICE_RECORDED"
+                    p.update(simulated=pending["simulated"], recordedRevision=revision)
+                    p.pop("pendingOutcome")
+                    Store.save(db, current)
+                    Store.event(db, rid, "BA", event, {"status": current["status"], "revision": revision,
+                                "simulated": p["simulated"], "recovered": actor is not None})
+            if fixture:
+                raise DomainError("The final advice save failed. Refresh and recover the saved draft; no completion is claimed.",
+                                  503, "BA_RECORDING_FAILED")
             return current
+        except sqlite3.Error:
+            # Final write rolled back. Its durable draft remains non-authoritative.
+            try:
+                with self.store.transaction() as db:
+                    current = Store.get(db, rid, "BA")
+                    if current["revision"] == revision and current["status"] == "ACTIVE" and current["payload"].get("pendingOutcome"):
+                        current["status"] = "INCOMPLETE"
+                        current["payload"].update(errorCode="BA_RECORDING_FAILED", message="The result save failed. "
+                                                  "Recover the saved draft without repeating inference.")
+                        Store.save(db, current)
+            except sqlite3.Error:
+                pass  # Even the failure cannot be stored; disclose without a false saved state.
+            raise self._storage_error() from None

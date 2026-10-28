@@ -93,6 +93,8 @@ class Company:
             query = "SELECT id FROM records" + (" WHERE owner_id=?" if actor.role != "FOUNDER" else "") + " ORDER BY created DESC,id"
             ids = [r["id"] for r in db.execute(query, (actor.id,) if actor.role != "FOUNDER" else ())]
             records = [Store.get(db, rid) for rid in ids]
+            records = [self.ba_intake.public_record(record) if record["kind"] == "BA"
+                       and record["payload"].get("naturalNeeds") else record for record in records]
             approval_ids = [r["id"] for r in db.execute("SELECT id,origin_id FROM approvals ORDER BY created DESC") if actor.role == "FOUNDER" or r["origin_id"] in ids]
             approvals = []
             for rid in approval_ids:
@@ -183,7 +185,7 @@ class Company:
 
     def set_fault(self, actor, fault):
         require_role(actor, "FOUNDER")
-        if not isinstance(fault, str) or fault not in {"after_sales_timeout", "outcome_recording", "approval_delivery", "approval_recording", "none"}:
+        if not isinstance(fault, str) or fault not in {"after_sales_timeout", "outcome_recording", "approval_delivery", "approval_recording", "ba_recording", "none"}:
             raise DomainError("Unsupported simulation fixture.")
         with self.store.transaction() as db:
             db.execute("DELETE FROM faults")

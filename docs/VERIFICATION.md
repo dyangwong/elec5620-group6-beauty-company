@@ -2,7 +2,58 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/VERIFICATION.md).
 
-## BA needs checkpoint · 29 October 2026
+## BA lifecycle checkpoint · 29 October 2026
+
+First-round completion was rechecked before edits: clean local 478d522694ca381b2ba3c3c5e3711a77fb04133a,
+147 passing tests and explicit normal app/model stop receipts (model exit 0).
+No project crash was observed; these records do not establish Codex desktop-window
+stability. Then fetched main 515bfa537e31a01b9e9a24400a7112f8103babb3 and branched
+`KAN-15-ba-lifecycle-recovery` from 478d522, preserving all earlier local work.
+
+| New round-2 check | Actual result |
+|---|---|
+| Repository Windows Verify, Python 3.14.5 | **169 tests passed in 46.561 s**: 147 previous + 22 new; source verification 113 files / 41 groups and JS passed |
+| New offline lifecycle/failure cases | Same-ID complete replacement/history, completed cancel refusal, cancellation during extraction and recommendation, revision races, owner/session/CSRF/input guards, repeat/concurrent recovery, mode preservation, failed staging/final/failure/cancel writes, no-draft explicit retry and invalid/unsupported saved evidence |
+| Real SQLite trigger aborts final advice audit in an isolated unit database | Result UPDATE rolled back with audit; durable draft retained, no COMPLETED/current result; removing the test trigger then recovering committed exactly once, without inference |
+| Actual mock browser, fresh database / port 5700 | P-101 at revision 2 -> replacement `Gentle cleansing.` at revision 3 withheld old advice/asked missing fields -> answer revision 4 -> new Customer confirmation revision 5 / P-102; history retained P-101 |
+| Actual mock cancellation and recovery | Another consultation CANCELLED/revision 2, no continuation controls; declared Founder BA-save fixture -> INCOMPLETE + hidden draft -> same-database app restart -> browser recovery COMPLETED at the same revision |
+| Actual model in-flight cancellation, fresh database / port 5701 | Refresh exposed ACTIVE revision 1 with cancel enabled; cancellation saved revision 2; late original intake returned HTTP 409; events contain only creation/cancel, no interpretation/advice result |
+| Actual model final-save simulation and persistence recovery | New consultation used real extraction and proposal; fixture retained live draft, no current result. Exact owned model instance stopped, app restarted with same test DB, model port 8080 closed. Browser recovered COMPLETED / simulated=false / P-101 at unchanged revision 2 |
+| Independent SQLite/HTTP verification | Catalogue ID/version/price/constraints/reasons checked; live result price 4800 cents under budget 6000. Three further recoveries per mode retained one advice event; zero approvals/effects; stocks P-101=12, P-102=8, P-103=0 |
+| Separate new live request after model shutdown | App health ok, mode still configured LIVE; saved INCOMPLETE / LLM_UNAVAILABLE / simulated=false with no recommendation; no mock fallback |
+| Browser console / cleanup | No captured warnings/errors; original config/database hashes and 56-file model size/mtime inventory preserved; only owned 5700/5701 apps and this run's exact model instance stopped |
+
+Reused Windows 11 Pro 25H2 build 26200.9711, Strata 0.2.1 / Terminal 0.1.46.1 /
+engine 0.1.46 CUDA 13 / bundled Python 3.12.15, exact model
+qwen3.8-flash-next-gyro-gyro-s, saved 8192 context, single request, no vision/MTP,
+1536 MiB reserve, route-tail-skip 7. No upgrade, download, weight/config copy or
+new dependency. Recorded engine generation and strict configured-model validation
+support real inference; model-off recovery is persistence of that prior live output,
+not a new live inference or proof of model availability.
+
+Intermediate observations: one old failed-save test initially expected the previous
+raw exception/ACTIVE gap; it was updated to require the new safe 503, durable draft,
+INCOMPLETE and successful storage-only recovery. A first timed live cancellation
+occurred after extraction completed, so was not counted as in-flight; a second
+same-call browser submit/refresh/cancel sequence produced the verified late 409.
+The browser save-failure fixture is explicitly a simulation; genuine SQLite write
+and audit failures are separately verified in isolated tests, not by damaging disk.
+
+Raw logs, process receipts, before/after hashes, engine log, record snapshots and
+evidence-summary.json remain ignored under `var/ba-lifecycle-20261029/` (browser
+screenshots in local outputs). Only sanitised evidence is tracked. Relevant shared
+changes: BA service, HTTP routes, facade draft projection/fixture and UI concurrent
+refresh/cancel; no schema/provider/teammate module change. Review pending.
+
+Not established: complete legacy structured-route lifecycle, BA review, full
+catalogue/inventory faults, unrestricted language/medical safety, physical GPU
+abort, automatic recovery/retry, guarantees during total disk loss, cross-machine
+or new-feature ZIP/Canvas acceptance. CS/AP/MC existing offline suites passed;
+their browser chains were not rerun. All BA groups remain partial as appropriate;
+BA-START-01/task ownership unchanged; Jira unverified/update pending, no access or
+external publication. This does not prove Stage 2 complete.
+
+## Earlier round 1 · BA needs checkpoint · 29 October 2026
 
 New local KAN-15 slice, not BA-START-01 acceptance or Stage 2 completion. Branch
 `KAN-15-ba-needs-clarification`; starting source a577c98c010142882abc22b552c73de92e3d51d0

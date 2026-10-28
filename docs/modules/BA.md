@@ -2,7 +2,45 @@
 
 English is the maintained primary version. [中文阅读副本](../zh-CN/modules/BA.md).
 
-## BA needs checkpoint · 29 October 2026
+## BA lifecycle checkpoint · 29 October 2026
+
+Current branch `KAN-15-ba-lifecycle-recovery`, starting at
+478d522694ca381b2ba3c3c5e3711a77fb04133a; fetched main remains
+515bfa537e31a01b9e9a24400a7112f8103babb3. Danny authorised this KAN-15 continuation;
+no BA-START-01/Jira claim or teammate attribution was changed. Additive shared
+HTTP/UI/facade changes and draft-snapshot filtering require later shared review.
+
+Use the Windows launch instructions and a fresh database, then Product advice:
+
+1. Complete a natural-needs consultation. Open **Replace the full request**, enter
+   `Gentle cleansing.`, save, and observe missing budget/fragrance questions.
+   The same ID advances revision; old advice is historical, no longer current.
+   Answer with `Budget AUD 40. Fragrance-free required.`, review and confirm.
+2. **Cancel consultation** is available before completion. While inference is
+   pending, **Refresh** retrieves its saved revision and leaves cancel enabled.
+   A successful cancel ends this session; start a new consultation to continue.
+3. For an intentional test, Founder can select **BA final advice save failure
+   (draft retained)** in Activity trail's Simulation controls, then Customer
+   confirms needs. The card remains incomplete, with **Recover saved result**.
+   Restarting the application with the same test database preserves that draft.
+   Recovery checks evidence and writes once; it does not require a running model.
+4. **Retry this attempt** is distinct: it is available for interrupted/incomplete
+   work without a draft, creates a new revision and may call the model again.
+   It is user-initiated, never automatic; it requires fresh Customer confirmation.
+
+Actual Windows checks cover these controls, a real in-flight cancellation with
+late HTTP 409, and recovery of real BA advice after model shutdown/app restart.
+169 offline tests pass (147 prior + 22 new); one prior failed-save assertion now
+checks the durable-draft/INCOMPLETE contract instead of the earlier ACTIVE-only gap.
+Read VERIFICATION.md for the SQLite fault/audit checks and independent catalogue checks.
+
+Remaining: legacy structured-route lifecycle parity, BA review/escalation/failures,
+the complete catalogue/inventory failure matrix, general language/medical safety,
+optional alternatives and cross-machine/ZIP/Canvas acceptance of these changes.
+Full disk loss cannot promise a durable draft or cancellation; storage failures
+are disclosed. Existing BA-T-07 remains PARTIAL; this is not all BA/Stage 2 complete.
+
+## Earlier round 1 · BA needs checkpoint · 29 October 2026
 
 Current Danny-authorised KAN-15 work adds `modules/ba_intake.py`, bounded extraction
 in `adapters/needs.py`, the shared adapter capability, three HTTP routes and a
@@ -50,7 +88,7 @@ candidate; independent ID/fact/stock/constraint checks; consultation evidence sa
 BA changes no order, stock, price, payment or public content. CO receives only the
 permitted advice context; no order identity or credentials enter the model input.
 
-Remaining after the 29 October slice: full completed-record revision/cancellation,
+Remaining after both 29 October slices: legacy structured-route lifecycle parity,
 BA review, the complete provider/evidence failure matrix, general language understanding
 and optional verified alternatives. Bounded clarification/resumption and stale-output
 suppression are now covered as described above. Medical keyword blocking

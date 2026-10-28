@@ -80,6 +80,14 @@ class Router:
                     return json_response(self.company.ba_intake.clarify(actor, parts[2], data))
                 if parts[3] == "confirm-needs":
                     return json_response(self.company.ba_intake.confirm(actor, parts[2], data))
+                if parts[3] == "revise":
+                    return json_response(self.company.ba_intake.revise(actor, parts[2], data))
+                if parts[3] == "cancel":
+                    return json_response(self.company.ba_intake.cancel(actor, parts[2], data))
+                if parts[3] == "recover":
+                    return json_response(self.company.ba_intake.recover(actor, parts[2], data))
+                if parts[3] == "retry":
+                    return json_response(self.company.ba_intake.retry(actor, parts[2], data))
             if len(parts) == 4 and parts[:2] == ["api", "approvals"]:
                 if parts[3] == "decide":
                     return json_response(self.company.decide(actor, parts[2], data))

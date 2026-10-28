@@ -1,6 +1,6 @@
 "use strict";
 
-const state = {actor: null, csrf: "", snapshot: null, view: "overview", busy: false};
+const state = {actor: null, csrf: "", snapshot: null, view: "overview", busy: false, refreshVersion: 0};
 const app = document.querySelector("#app");
 const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[ch]));
 const e = escapeHtml;
@@ -41,15 +41,37 @@ function toast(message, error = false) {
 }
 
 async function refresh() {
-  state.snapshot = await api("/api/snapshot");
+  const version = ++state.refreshVersion, actorId = state.actor?.id;
+  const snapshot = await api("/api/snapshot");
+  if (version !== state.refreshVersion || actorId !== state.actor?.id) return;
+  state.snapshot = snapshot;
   state.actor = state.snapshot.actor;
   render();
+}
+
+function busyButtons(disabled) {
+  document.querySelectorAll("button").forEach(button => {
+    button.disabled = disabled && !["refresh", "ba-cancel"].includes(button.dataset.action);
+  });
+}
+
+async function baControl(action, message) {
+  // Refresh/cancel must stay usable while a separate model request is pending.
+  try {
+    await action();
+    await refresh();
+    if (message) toast(message);
+  } catch (error) {
+    let detail = error.message;
+    try { await refresh(); } catch { detail += " Refresh before retrying."; }
+    toast(detail, true);
+  }
 }
 
 async function mutate(action, message, refreshOnError = false) {
   if (state.busy) return;
   state.busy = true;
-  document.querySelectorAll("button").forEach(button => { button.disabled = true; });
+  busyButtons(true);
   try {
     await action();
     if (state.actor) await refresh();
@@ -64,7 +86,7 @@ async function mutate(action, message, refreshOnError = false) {
     toast(detail, true);
   } finally {
     state.busy = false;
-    document.querySelectorAll("button").forEach(button => { button.disabled = false; });
+    busyButtons(false);
   }
 }
 
@@ -85,6 +107,7 @@ function render() {
   const titles = {overview: "Overview", consult: "Product advice", requests: "After-sales care", approvals: "Review queue", studio: "Content studio", trace: "Activity trail"};
   const date = new Intl.DateTimeFormat("en-AU", {day: "numeric", month: "short", timeZone: "Australia/Sydney"}).format(new Date());
   app.innerHTML = `<div class="shell"><aside class="sidebar">${brand()}<div class="nav-label">${isFounder() ? "FOUNDER WORKSPACE" : "CUSTOMER WORKSPACE"}</div><nav class="nav" aria-label="Workspace navigation">${navigation()}</nav><div class="sidebar-footer"><div class="mode-note"><div class="live-dot">${e(modeLabel())}</div><p>Fictional data. MC and media use mocks.<br>No real payments or public posting.</p></div><div class="profile"><span class="avatar">${isFounder() ? "F" : e(state.actor.name[0])}</span><div class="profile-text"><strong>${isFounder() ? "Founder / Operator" : e(state.actor.name.split(" · ")[0])}</strong><span>${isFounder() ? "Accountable human" : "Demo Customer"}</span></div><button class="logout" data-action="logout" aria-label="Sign out" title="Sign out">↪</button></div></div></aside><main class="main"><header class="topbar"><div class="crumb">Company workspace <span aria-hidden="true"> / </span><strong>${titles[state.view]}</strong></div><div class="topbar-right"><span class="small muted">${e(date)}</span><span class="pill sim">${e(modeLabel())}</span><button class="text-button" data-action="refresh" aria-label="Refresh workspace">↻ Refresh</button><button class="text-button" data-action="logout">Sign out</button></div></header><div class="content">${pageContent()}<p class="footer-note">A local proof of concept for the AI-Powered One-Person Beauty Commerce and Content Company.<br>BA: ${e(state.snapshot.mode.ba)} configured. MC: mock. Media and commerce: simulated. Live configuration does not prove model availability.</p></div></main></div>`;
+  if (state.busy) busyButtons(true);
 }
 
 function heading(eyebrow, title, subtitle, action = "") {
@@ -132,8 +155,13 @@ function needsConversation(item) {
   const summary = n ? `<div class="evidence"><strong>Interpreted needs · awaiting your confirmation</strong><br>Product need: ${e(n.concern ? label(n.concern) : "Not stated")}<br>Budget: ${n.budget === null ? "Not stated" : money(n.budget * 100)}<br>Fragrance-free: ${n.fragranceFree === null ? "Not stated" : n.fragranceFree ? "Required" : "Not required"}<details><summary>Quoted sources from your messages</summary>${Object.entries(n.sources).filter(([, quote]) => quote).map(([key, quote]) => `<p>${e(key)}: <q>${e(quote)}</q></p>`).join("")}</details></div>` : "";
   const questions = p.questions?.length ? `<div class="notice"><strong>Please clarify</strong><ul>${p.questions.map(q => `<li>${e(q)}</li>`).join("")}</ul></div>` : "";
   const confirm = item.status === "CLARIFYING" && p.needsReady ? `<form data-form="ba-confirm-needs" data-id="${e(item.id)}" data-revision="${item.revision}"><div class="form-grid"><div class="field"><label for="need-${e(item.id)}">Confirm product need</label><select id="need-${e(item.id)}" name="concern" required><option value="HYDRATION" ${n.concern === "HYDRATION" ? "selected" : ""}>Hydration / dry skin</option><option value="CLEANSING" ${n.concern === "CLEANSING" ? "selected" : ""}>Gentle cleansing</option></select></div><div class="field"><label for="budget-${e(item.id)}">Confirm maximum budget · AUD</label><input id="budget-${e(item.id)}" name="budget" type="number" min="0.01" max="10000" step="0.01" value="${e(n.budget)}" required></div><div class="field"><label for="fragrance-${e(item.id)}">Confirm fragrance preference</label><select id="fragrance-${e(item.id)}" name="fragranceFree" required><option value="true" ${n.fragranceFree ? "selected" : ""}>Fragrance-free required</option><option value="false" ${!n.fragranceFree ? "selected" : ""}>Fragrance acceptable</option></select></div></div><p>Review and correct these conditions. No product has been recommended yet.</p><button class="button" type="submit">Confirm needs & find a match ↗</button></form>` : "";
-  const answer = ["CLARIFYING", "INCOMPLETE"].includes(item.status) && p.errorCode !== "MEDICAL_SCOPE" ? `<form data-form="ba-clarify" data-id="${e(item.id)}" data-revision="${item.revision}"><div class="field"><label for="answer-${e(item.id)}">Your answer or correction</label><textarea id="answer-${e(item.id)}" name="message" maxlength="2000" required placeholder="For example: My budget is AUD 60 and fragrance-free is required."></textarea></div><button class="button secondary" type="submit">Update this consultation ↗</button></form>` : "";
-  return `<article class="record-card"><div class="record-head"><div><span class="mono">${e(item.id)} · Revision ${item.revision}</span><h3>${e(p.messages[0])}</h3></div>${badge(item.status)}</div><p class="small muted">${e(mode)} · ${p.needsConfirmed ? "Needs explicitly confirmed by Customer." : "Hypotheses require Customer confirmation."}</p><details><summary>Your conversation</summary>${p.messages.map(text => `<p>${e(text)}</p>`).join("")}</details>${item.status === "CLARIFYING" ? summary : ""}${questions}${p.message ? `<p>${e(p.message)}</p>` : ""}${item.status === "ACTIVE" ? '<p>Processing the current revision. Refresh to check its saved outcome.</p>' : ""}${adviceView(p.result)}${confirm}${answer}</article>`;
+  const pending = p.pendingOutcome?.revision === item.revision;
+  const canCancel = ["ACTIVE", "CLARIFYING", "INCOMPLETE"].includes(item.status);
+  const answer = ["CLARIFYING", "INCOMPLETE"].includes(item.status) && !pending && p.errorCode !== "MEDICAL_SCOPE" ? `<form data-form="ba-clarify" data-id="${e(item.id)}" data-revision="${item.revision}"><div class="field"><label for="answer-${e(item.id)}">Your answer or correction</label><textarea id="answer-${e(item.id)}" name="message" maxlength="2000" required placeholder="For example: My budget is AUD 60 and fragrance-free is required."></textarea></div><button class="button secondary" type="submit">Update this consultation ↗</button></form>` : "";
+  const revise = item.status !== "CANCELLED" ? `<details><summary>Replace the full request</summary><form data-form="ba-revise" data-id="${e(item.id)}" data-revision="${item.revision}"><div class="field"><label for="replace-${e(item.id)}">Replacement request</label><textarea id="replace-${e(item.id)}" name="message" maxlength="2000" required placeholder="State all current needs, budget and fragrance preference."></textarea></div><p class="small muted">This replaces the current scope. Former advice stays historical; missing conditions will be asked again.</p><button class="button secondary" type="submit">Save replacement request ↗</button></form></details>` : "";
+  const controls = `<div class="row-actions">${pending && canCancel ? `<button class="button" data-action="ba-recover" data-id="${e(item.id)}" data-revision="${item.revision}">Recover saved result ↗</button>` : ""}${!pending && ["ACTIVE", "INCOMPLETE"].includes(item.status) && p.errorCode !== "MEDICAL_SCOPE" ? `<button class="button secondary" data-action="ba-retry" data-id="${e(item.id)}" data-revision="${item.revision}">Retry this attempt ↗</button>` : ""}${canCancel ? `<button class="button secondary" data-action="ba-cancel" data-id="${e(item.id)}" data-revision="${item.revision}">Cancel consultation</button>` : ""}</div>`;
+  const history = p.history?.length ? `<details><summary>Previous revisions · not current advice</summary>${p.history.map(prior => `<div class="evidence">Revision ${e(prior.revision)} · ${e(label(prior.status))}${prior.messages ? `<br>${prior.messages.map(e).join("<br>")}` : ""}${prior.result?.product ? `<br>Historical recommendation: ${e(prior.result.product.name)}. Recheck required for any current advice.` : ""}</div>`).join("")}</details>` : "";
+  return `<article class="record-card"><div class="record-head"><div><span class="mono">${e(item.id)} · Revision ${item.revision}</span><h3>${e(p.messages[0])}</h3></div>${badge(item.status)}</div><p class="small muted">${e(mode)} · ${item.status === "CANCELLED" ? "Cancelled; no current advice applies." : p.needsConfirmed ? "Needs explicitly confirmed by Customer." : "Hypotheses require Customer confirmation."}</p><details><summary>Your conversation</summary>${p.messages.map(text => `<p>${e(text)}</p>`).join("")}</details>${item.status === "CLARIFYING" ? summary : ""}${questions}${p.message ? `<p>${e(p.message)}</p>` : ""}${item.status === "ACTIVE" ? '<p>Processing or interrupted. Refresh to inspect the saved revision. Cancellation suppresses the reply; an in-flight model request may still finish.</p>' : ""}${pending ? '<div class="notice">A draft is saved, but no final result is recorded. Recovery rechecks the saved scope and evidence without calling the model.</div>' : ""}${adviceView(p.result)}${confirm}${answer}${controls}${!pending && ["ACTIVE", "INCOMPLETE"].includes(item.status) && p.errorCode !== "MEDICAL_SCOPE" ? '<p class="small muted">Retry starts a new revision and may call the model again. It discards any still-running attempt and requires fresh needs confirmation.</p>' : ""}${revise}${history}</article>`;
 }
 
 function consultation() {
@@ -211,7 +239,7 @@ function studio() {
 }
 
 function traceView() {
-  const tools = isFounder() ? `<section class="panel"><div class="panel-head"><div><h2>Simulation controls</h2><p>Inject one failure into the next applicable operation.</p></div></div><form id="fault-form" class="simulation-tools"><select name="fault" aria-label="Failure fixture"><option value="none">Normal operation</option><option value="after_sales_timeout">After-sales timeout after execution</option><option value="outcome_recording">Outcome recording failure</option><option value="approval_delivery">Committed decision delivery failure</option><option value="approval_recording">Decision recording failure (no approval)</option></select><button class="button secondary" type="submit">Apply fixture</button><p class="small muted">Currently armed: ${e(state.snapshot.faults.join(", ") || "none")}</p></form></section>` : "";
+  const tools = isFounder() ? `<section class="panel"><div class="panel-head"><div><h2>Simulation controls</h2><p>Inject one failure into the next applicable operation.</p></div></div><form id="fault-form" class="simulation-tools"><select name="fault" aria-label="Failure fixture"><option value="none">Normal operation</option><option value="after_sales_timeout">After-sales timeout after execution</option><option value="outcome_recording">Outcome recording failure</option><option value="approval_delivery">Committed decision delivery failure</option><option value="approval_recording">Decision recording failure (no approval)</option><option value="ba_recording">BA final advice save failure (draft retained)</option></select><button class="button secondary" type="submit">Apply fixture</button><p class="small muted">Currently armed: ${e(state.snapshot.faults.join(", ") || "none")}</p></form></section>` : "";
   return heading("COORDINATION & RECOVERY", "Follow the work, not just the answer.", "Recorded events distinguish handoffs, committed decisions, execution and recovery.") + tools
     + `<section class="panel"><div class="panel-head"><h2>Recorded activity</h2><span class="small muted">Newest first · up to 150 events</span></div><div class="trace-list">${state.snapshot.events.map(event => `<article class="trace-event"><div class="agent-symbol ${event.role.toLowerCase()}">${e(event.role)}</div><div><h3>${e(label(event.event))}</h3><p class="mono">${e(event.entity_id)}</p><details><summary>Inspect recorded context</summary><div class="trace-detail">${e(JSON.stringify(event.detail))}</div></details></div><time datetime="${e(event.created)}">${e(new Date(event.created).toLocaleTimeString("en-AU"))}</time></article>`).join("") || empty("No activity has been recorded", "Events appear when you use a workflow. No development history is fabricated.")}</div></section>`;
 }
@@ -245,6 +273,8 @@ document.addEventListener("submit", event => {
     mutate(() => api(`/api/consultations/${encodeURIComponent(form.dataset.id)}/clarify`, {message: values.get("message"), contextRevision: Number(form.dataset.revision)}), "Consultation updated. Review the interpreted conditions before confirming.", true);
   } else if (form.dataset.form === "ba-confirm-needs") {
     mutate(() => api(`/api/consultations/${encodeURIComponent(form.dataset.id)}/confirm-needs`, {contextRevision: Number(form.dataset.revision), concern: values.get("concern"), budget: Number(values.get("budget")), fragranceFree: values.get("fragranceFree") === "true"}), "Confirmed consultation saved. Check whether advice completed.", true);
+  } else if (form.dataset.form === "ba-revise") {
+    mutate(() => api(`/api/consultations/${encodeURIComponent(form.dataset.id)}/revise`, {message: values.get("message"), contextRevision: Number(form.dataset.revision)}), "Replacement saved. Review and confirm the new conditions.", true);
   } else if (form.id === "consult-form") {
     mutate(() => api("/api/consultations", formNeeds(form)), "Consultation recorded. Review the supported result below.");
   } else if (form.id === "exchange-form") {
@@ -261,17 +291,20 @@ document.addEventListener("submit", event => {
 
 document.addEventListener("click", event => {
   const button = event.target.closest("button");
-  if (!button || state.busy) return;
+  if (!button || (state.busy && !["refresh", "ba-cancel"].includes(button.dataset.action))) return;
   if (button.dataset.view) { state.view = button.dataset.view; render(); window.scrollTo(0, 0); return; }
   const action = button.dataset.action;
   const id = encodeURIComponent(button.dataset.id || "");
-  if (action === "refresh") mutate(async () => {}, "Workspace refreshed.");
+  if (action === "refresh") baControl(async () => {}, "Workspace refreshed.");
   if (action === "logout") {
     mutate(async () => {
       await api("/api/logout", {});
       state.actor = null; state.csrf = ""; state.snapshot = null;
     }).then(() => { if (!state.actor) render(); });
   }
+  if (action === "ba-cancel") baControl(() => api(`/api/consultations/${id}/cancel`, {contextRevision: Number(button.dataset.revision)}), "Cancellation saved. Late replies will be discarded; start a new consultation to continue.");
+  if (action === "ba-recover") mutate(() => api(`/api/consultations/${id}/recover`, {contextRevision: Number(button.dataset.revision)}), "Saved result checked and recorded without repeating inference. Review its actual status.", true);
+  if (action === "ba-retry") mutate(() => api(`/api/consultations/${id}/retry`, {contextRevision: Number(button.dataset.revision)}), "New attempt saved. Review the current conditions before confirming.", true);
   if (action === "coordinate") mutate(() => api(`/api/after-sales/${id}/coordinate`, {}), "Request checked. Review its current status and any required evidence.", true);
   if (action === "confirm") mutate(() => api(`/api/after-sales/${id}/confirm`, {contextRevision: Number(button.dataset.revision)}), "Current confirmation recorded. Check the resulting status.", true);
   if (action === "reconcile") mutate(() => api(`/api/after-sales/${id}/reconcile`, {}), "Existing action queried without repeat execution.");

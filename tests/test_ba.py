@@ -262,11 +262,17 @@ class BaNeedsTests(unittest.TestCase):
             if item['status'] == 'COMPLETED':
                 raise sqlite3.OperationalError('PRIVATE_DATABASE_PATH')
             return original(db, item)
-        with patch.object(Store, 'save', side_effect=fail_completed), self.assertRaises(sqlite3.OperationalError):
+        with patch.object(Store, 'save', side_effect=fail_completed), self.assertRaises(DomainError) as caught:
             self.confirm(record)
+        self.assertEqual(caught.exception.code, 'BA_STORAGE_UNAVAILABLE')
+        self.assertNotIn('PRIVATE_DATABASE_PATH', str(caught.exception))
         saved = self.saved(record['id'])
-        self.assertEqual(saved['status'], 'ACTIVE')
+        self.assertEqual(saved['status'], 'INCOMPLETE')
+        self.assertEqual(saved['payload']['pendingOutcome']['kind'], 'ADVICE')
         self.assertNotIn('result', saved['payload'])
+        with patch.object(self.company.llm, 'propose', side_effect=AssertionError('Recovery must not infer')):
+            recovered = self.intake.recover(CUSTOMER, record['id'], {'contextRevision': saved['revision']})
+        self.assertEqual(recovered['status'], 'COMPLETED')
         self.no_effects()
 
     def test_ba_t_07_message_limits_invalid_inputs_and_unknown_fields_preserve_record(self):
@@ -282,6 +288,332 @@ class BaNeedsTests(unittest.TestCase):
         with self.assertRaises(DomainError) as caught:
             self.intake.clarify(CUSTOMER, record['id'], {'contextRevision': record['revision'], 'message': 'One more.'})
         self.assertEqual(caught.exception.code, 'CONVERSATION_LIMIT')
+
+    def fail_advice_recording(self, message=FULL):
+        self.company.set_fault(FOUNDER, 'ba_recording')
+        record = self.start(message)
+        with self.assertRaises(DomainError) as caught:
+            self.confirm(record)
+        self.assertEqual(caught.exception.code, 'BA_RECORDING_FAILED')
+        return self.saved(record['id'])
+
+    def test_ba_t_07_completed_revision_preserves_history_and_replaces_scope(self):
+        final = self.confirm(self.start())
+        revised = self.intake.revise(CUSTOMER, final['id'], {'contextRevision': final['revision'],
+                                                             'message': 'Gentle cleansing.'})
+        self.assertEqual((revised['id'], revised['revision'], revised['status']), (final['id'], 3, 'CLARIFYING'))
+        self.assertIsNone(revised['payload']['proposedNeeds']['budget'])
+        self.assertNotIn('needsConfirmed', revised['payload'])
+        self.assertNotIn('result', revised['payload'])
+        self.assertEqual(revised['payload']['messages'], ['Gentle cleansing.'])
+        old = revised['payload']['history'][-1]
+        self.assertEqual(old['status'], 'COMPLETED')
+        self.assertEqual(old['result']['product']['id'], 'P-101')
+        self.assertEqual(old['needs']['budget'], 6000)
+        ready = self.intake.clarify(CUSTOMER, final['id'], {'contextRevision': 3,
+                                        'message': 'Budget AUD 40. Fragrance-free required.'})
+        new = self.confirm(ready, concern='CLEANSING', budget=40)
+        self.assertEqual(new['payload']['result']['product']['id'], 'P-102')
+        self.no_effects()
+
+    def test_ba_t_07_cancel_persists_is_idempotent_and_requires_fresh_session(self):
+        record = self.start('Dry skin.')
+        cancelled = self.intake.cancel(CUSTOMER, record['id'], {'contextRevision': 1})
+        self.assertEqual((cancelled['status'], cancelled['revision']), ('CANCELLED', 2))
+        self.company = Company(self.path); self.intake = self.company.ba_intake
+        self.assertEqual(self.intake.cancel(CUSTOMER, record['id'], {'contextRevision': 2})['revision'], 2)
+        for operation, data in [('clarify', {'message': FULL}), ('revise', {'message': FULL}),
+                                ('retry', {}), ('recover', {}), ('confirm', CONFIRM)]:
+            with self.subTest(operation=operation), self.assertRaises(DomainError):
+                getattr(self.intake, operation)(CUSTOMER, record['id'], {'contextRevision': 2, **data})
+        with self.assertRaises(DomainError) as caught:
+            self.intake.cancel(CUSTOMER, record['id'], {'contextRevision': 1})
+        self.assertEqual(caught.exception.code, 'STALE_SCOPE')
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM events WHERE event='CONSULTATION_CANCELLED'").fetchone()[0], 1)
+        self.assertNotEqual(self.start()['id'], record['id'])
+        self.no_effects()
+
+    def test_ba_t_07_completed_advice_cannot_be_retroactively_cancelled(self):
+        final = self.confirm(self.start())
+        with self.assertRaises(DomainError) as caught:
+            self.intake.cancel(CUSTOMER, final['id'], {'contextRevision': final['revision']})
+        self.assertEqual(caught.exception.code, 'INVALID_STATE')
+        self.assertEqual(self.saved(final['id'])['payload']['result'], final['payload']['result'])
+
+    def test_ba_t_07_cancel_suppresses_delayed_extraction(self):
+        record = self.start('Dry skin.')
+        entered, release = threading.Event(), threading.Event()
+        def delayed(messages):
+            entered.set(); self.assertTrue(release.wait(10))
+            return mock_extract(messages)
+        with patch.object(self.company.llm, 'extract_needs', side_effect=delayed), ThreadPoolExecutor(1) as pool:
+            future = pool.submit(self.intake.clarify, CUSTOMER, record['id'],
+                                 {'contextRevision': 1, 'message': 'Budget AUD 60. Fragrance-free required.'})
+            try:
+                self.assertTrue(entered.wait(5))
+                cancelled = self.intake.cancel(CUSTOMER, record['id'], {'contextRevision': 2})
+                self.assertEqual(cancelled['status'], 'CANCELLED')
+            finally: release.set()
+            with self.assertRaises(DomainError) as caught: future.result(5)
+            self.assertEqual(caught.exception.code, 'STALE_SCOPE')
+        saved = self.saved(record['id'])
+        self.assertEqual(saved['status'], 'CANCELLED')
+        self.assertNotIn('result', saved['payload'])
+        self.assertNotIn('pendingOutcome', saved['payload'])
+        self.no_effects()
+
+    def test_ba_t_07_cancel_suppresses_delayed_recommendation(self):
+        record = self.start()
+        entered, release = threading.Event(), threading.Event()
+        original = self.company.llm.propose
+        def delayed(needs, evidence):
+            entered.set(); self.assertTrue(release.wait(10))
+            return original(needs, evidence)
+        with patch.object(self.company.llm, 'propose', side_effect=delayed), ThreadPoolExecutor(1) as pool:
+            future = pool.submit(self.confirm, record)
+            try:
+                self.assertTrue(entered.wait(5))
+                self.intake.cancel(CUSTOMER, record['id'], {'contextRevision': 2})
+            finally: release.set()
+            with self.assertRaises(DomainError) as caught: future.result(5)
+            self.assertEqual(caught.exception.code, 'STALE_SCOPE')
+        self.assertEqual(self.saved(record['id'])['status'], 'CANCELLED')
+        self.assertNotIn('result', self.saved(record['id'])['payload'])
+        self.no_effects()
+
+    def test_ba_t_07_revision_supersedes_inflight_advice(self):
+        record = self.start()
+        entered, release = threading.Event(), threading.Event()
+        original = self.company.llm.propose
+        def delayed(needs, evidence):
+            entered.set(); self.assertTrue(release.wait(10))
+            return original(needs, evidence)
+        with patch.object(self.company.llm, 'propose', side_effect=delayed), ThreadPoolExecutor(1) as pool:
+            future = pool.submit(self.confirm, record)
+            try:
+                self.assertTrue(entered.wait(5))
+                current = self.intake.revise(CUSTOMER, record['id'], {'contextRevision': 2,
+                    'message': 'Gentle cleansing. Budget AUD 40. Fragrance-free required.'})
+            finally: release.set()
+            with self.assertRaises(DomainError) as caught: future.result(5)
+            self.assertEqual(caught.exception.code, 'STALE_SCOPE')
+        self.assertEqual(self.saved(record['id'])['revision'], current['revision'])
+        self.assertNotIn('result', current['payload'])
+        self.assertEqual(current['payload']['proposedNeeds']['concern'], 'CLEANSING')
+
+    def test_ba_t_07_new_operations_enforce_owner_and_exact_inputs(self):
+        record = self.fail_advice_recording()
+        for operation in ('revise', 'cancel', 'recover', 'retry'):
+            data = {'contextRevision': record['revision'], **({'message': FULL} if operation == 'revise' else {})}
+            for actor, status in ((OTHER, 404), (FOUNDER, 403)):
+                with self.subTest(operation=operation, actor=actor.id), self.assertRaises(DomainError) as caught:
+                    getattr(self.intake, operation)(actor, record['id'], data)
+                self.assertEqual(caught.exception.status, status)
+            for bad in ({**data, 'contextRevision': True}, {**data, 'result': {'productId': 'FORGED'}},
+                        {**data, 'contextRevision': record['revision']-1}):
+                with self.subTest(operation=operation, bad=bad), self.assertRaises(DomainError):
+                    getattr(self.intake, operation)(CUSTOMER, record['id'], bad)
+        self.assertEqual(self.saved(record['id'])['status'], 'INCOMPLETE')
+
+    def test_ba_t_07_recovery_survives_restart_and_never_repeats_inference(self):
+        record = self.fail_advice_recording()
+        self.assertNotIn('result', record['payload'])
+        self.company = Company(self.path); self.intake = self.company.ba_intake
+        with patch.object(self.company.llm, 'propose', side_effect=AssertionError('No inference')), \
+                patch.object(self.company.llm, 'extract_needs', side_effect=AssertionError('No extraction')):
+            for _ in range(3):
+                recovered = self.intake.recover(CUSTOMER, record['id'], {'contextRevision': record['revision']})
+                self.assertEqual(recovered['status'], 'COMPLETED')
+                self.assertEqual(recovered['revision'], record['revision'])
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM events WHERE entity_id=? AND event='CONFIRMED_ADVICE_RECORDED'", (record['id'],)).fetchone()[0], 1)
+        self.no_effects()
+
+    def test_ba_t_07_snapshot_hides_uncommitted_advice_draft_for_both_roles(self):
+        record = self.fail_advice_recording()
+        self.assertIn('product', record['payload']['pendingOutcome']['value'])
+        for actor in (CUSTOMER, FOUNDER):
+            visible = next(r for r in self.company.snapshot(actor)['records'] if r['id'] == record['id'])
+            self.assertEqual(set(visible['payload']['pendingOutcome']), {'kind', 'revision', 'simulated'})
+            self.assertNotIn('result', visible['payload'])
+            self.assertNotIn('Daily Hydration Cream', json.dumps(visible))
+
+    def test_ba_t_07_recovered_live_label_survives_mock_restart(self):
+        self.company.llm.ba_simulated = False  # Explicit fake capability; this is not actual model evidence.
+        record = self.fail_advice_recording()
+        self.company = Company(self.path); self.intake = self.company.ba_intake
+        result = self.intake.recover(CUSTOMER, record['id'], {'contextRevision': record['revision']})
+        self.assertFalse(result['payload']['simulated'])
+        self.assertFalse(result['payload']['result']['simulated'])
+        revised = self.intake.revise(CUSTOMER, result['id'], {'contextRevision': result['revision'], 'message': FULL})
+        self.assertTrue(revised['payload']['simulated'])
+
+    def test_ba_t_03_recovery_rechecks_current_stock_without_new_model_call(self):
+        record = self.fail_advice_recording()
+        with self.company.store.transaction() as db:
+            db.execute("UPDATE products SET stock=0,version=2 WHERE id='P-101'")
+        with patch.object(self.company.llm, 'propose', side_effect=AssertionError('No inference')):
+            result = self.intake.recover(CUSTOMER, record['id'], {'contextRevision': record['revision']})
+        self.assertEqual(result['status'], 'INCOMPLETE')
+        self.assertEqual(result['payload']['result']['errorCode'], 'LLM_STALE_EVIDENCE')
+        self.assertNotIn('product', result['payload']['result'])
+        self.assertNotIn('pendingOutcome', result['payload'])
+
+    def test_ba_t_07_old_draft_cannot_be_recovered_after_revision_or_cancellation(self):
+        for operation in ('revise', 'cancel'):
+            record = self.fail_advice_recording()
+            data = {'contextRevision': record['revision'], **({'message': 'Cleansing.'} if operation == 'revise' else {})}
+            current = getattr(self.intake, operation)(CUSTOMER, record['id'], data)
+            with self.assertRaises(DomainError) as caught:
+                self.intake.recover(CUSTOMER, record['id'], {'contextRevision': record['revision']})
+            self.assertEqual(caught.exception.code, 'STALE_SCOPE')
+            self.assertNotIn('pendingOutcome', current['payload'])
+            self.assertNotIn('result', current['payload'])
+
+    def test_ba_t_07_concurrent_recovery_records_one_advice_event(self):
+        record = self.fail_advice_recording()
+        with ThreadPoolExecutor(2) as pool:
+            futures = [pool.submit(self.intake.recover, CUSTOMER, record['id'],
+                                   {'contextRevision': record['revision']}) for _ in range(2)]
+            self.assertTrue(all(future.result(10)['status'] == 'COMPLETED' for future in futures))
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM events WHERE entity_id=? AND event='CONFIRMED_ADVICE_RECORDED'", (record['id'],)).fetchone()[0], 1)
+        self.no_effects()
+
+    def test_ba_t_07_missing_durable_draft_requires_explicit_retry(self):
+        record = self.start(); original = Store.save
+        def fail_stage(db, item):
+            if item['payload'].get('pendingOutcome'):
+                raise sqlite3.OperationalError('PRIVATE_STAGE_PATH')
+            return original(db, item)
+        with patch.object(Store, 'save', side_effect=fail_stage), self.assertRaises(DomainError) as caught:
+            self.confirm(record)
+        self.assertEqual(caught.exception.code, 'BA_STORAGE_UNAVAILABLE')
+        saved = self.saved(record['id'])
+        self.assertEqual(saved['status'], 'ACTIVE')
+        self.assertNotIn('pendingOutcome', saved['payload'])
+        with self.assertRaises(DomainError) as caught:
+            self.intake.recover(CUSTOMER, record['id'], {'contextRevision': saved['revision']})
+        self.assertEqual(caught.exception.code, 'NO_PENDING_RESULT')
+        with patch.object(self.company.llm, 'propose', side_effect=AssertionError('Confirmation required')):
+            retried = self.intake.retry(CUSTOMER, record['id'], {'contextRevision': saved['revision']})
+        self.assertEqual(retried['status'], 'CLARIFYING')
+        self.assertNotIn('needsConfirmed', retried['payload'])
+
+    def test_ba_t_07_final_and_failure_writes_both_unavailable_preserve_active_draft(self):
+        record = self.start(); original = Store.save; staged = False
+        def unavailable(db, item):
+            nonlocal staged
+            if staged: raise sqlite3.OperationalError('DISK_UNAVAILABLE')
+            result = original(db, item)
+            if item['payload'].get('pendingOutcome'): staged = True
+            return result
+        with patch.object(Store, 'save', side_effect=unavailable), self.assertRaises(DomainError) as caught:
+            self.confirm(record)
+        self.assertEqual(caught.exception.code, 'BA_STORAGE_UNAVAILABLE')
+        saved = self.saved(record['id'])
+        self.assertEqual(saved['status'], 'ACTIVE')
+        self.assertIn('pendingOutcome', saved['payload'])
+        self.assertNotIn('result', saved['payload'])
+        self.company = Company(self.path); self.intake = self.company.ba_intake
+        self.assertEqual(self.intake.recover(CUSTOMER, saved['id'], {'contextRevision': saved['revision']})['status'], 'COMPLETED')
+
+    def test_ba_t_07_failed_interpretation_save_recovers_only_questions_not_advice(self):
+        original = Store.save
+        def fail_clarifying(db, item):
+            if item['status'] == 'CLARIFYING': raise sqlite3.OperationalError('WRITE_FAILED')
+            return original(db, item)
+        with patch.object(Store, 'save', side_effect=fail_clarifying), self.assertRaises(DomainError):
+            self.start()
+        with self.company.store.read() as db:
+            rid = db.execute("SELECT id FROM records WHERE kind='BA'").fetchone()[0]
+        with patch.object(self.company.llm, 'propose', side_effect=AssertionError('Needs not confirmed')):
+            result = self.intake.recover(CUSTOMER, rid, {'contextRevision': 1})
+        self.assertEqual(result['status'], 'CLARIFYING')
+        self.assertTrue(result['payload']['needsReady'])
+        self.assertNotIn('result', result['payload'])
+
+    def test_ba_t_07_failed_cancel_is_not_reported_as_cancelled(self):
+        record = self.start('Dry skin.'); original = Store.save
+        def fail_cancel(db, item):
+            if item['status'] == 'CANCELLED': raise sqlite3.OperationalError('PRIVATE_CANCEL_PATH')
+            return original(db, item)
+        with patch.object(Store, 'save', side_effect=fail_cancel), self.assertRaises(DomainError) as caught:
+            self.intake.cancel(CUSTOMER, record['id'], {'contextRevision': 1})
+        self.assertEqual(caught.exception.code, 'BA_CANCELLATION_NOT_RECORDED')
+        self.assertNotIn('PRIVATE_CANCEL_PATH', str(caught.exception))
+        self.assertEqual((self.saved(record['id'])['status'], self.saved(record['id'])['revision']), ('CLARIFYING', 1))
+
+    def test_ba_t_07_actual_sqlite_audit_failure_rolls_back_result_and_recovers_once(self):
+        record = self.start()
+        with self.company.store.transaction() as db:
+            db.execute("""CREATE TRIGGER reject_ba_final_audit BEFORE INSERT ON events
+                          WHEN NEW.event='CONFIRMED_ADVICE_RECORDED'
+                          BEGIN SELECT RAISE(ABORT,'PRIVATE_AUDIT_STORAGE_FAILURE'); END""")
+        with self.assertRaises(DomainError) as caught:
+            self.confirm(record)
+        self.assertEqual(caught.exception.code, 'BA_STORAGE_UNAVAILABLE')
+        self.assertNotIn('PRIVATE_AUDIT_STORAGE_FAILURE', str(caught.exception))
+        saved = self.saved(record['id'])
+        self.assertEqual(saved['status'], 'INCOMPLETE')
+        self.assertNotIn('result', saved['payload'])
+        self.assertEqual(saved['payload']['pendingOutcome']['kind'], 'ADVICE')
+        with self.company.store.transaction() as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM events WHERE event='CONFIRMED_ADVICE_RECORDED'").fetchone()[0], 0)
+            db.execute('DROP TRIGGER reject_ba_final_audit')  # Only this test's isolated temporary database.
+        with patch.object(self.company.llm, 'propose', side_effect=AssertionError('No repeat model call')):
+            result = self.intake.recover(CUSTOMER, saved['id'], {'contextRevision': saved['revision']})
+        self.assertEqual(result['status'], 'COMPLETED')
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM events WHERE event='CONFIRMED_ADVICE_RECORDED'").fetchone()[0], 1)
+        self.no_effects()
+
+    def test_ba_t_03_retry_is_explicit_and_refuses_saved_draft(self):
+        with patch.object(self.company.llm, 'extract_needs', side_effect=ModelError('Unavailable', 503, 'LLM_UNAVAILABLE')):
+            record = self.start()
+        ready = self.intake.retry(CUSTOMER, record['id'], {'contextRevision': 1})
+        self.assertEqual((ready['id'], ready['revision'], ready['status']), (record['id'], 2, 'CLARIFYING'))
+        failed = self.fail_advice_recording()
+        with self.assertRaises(DomainError) as caught:
+            self.intake.retry(CUSTOMER, failed['id'], {'contextRevision': failed['revision']})
+        self.assertEqual(caught.exception.code, 'RECOVERY_AVAILABLE')
+
+    def test_ba_t_04_invalid_saved_draft_never_becomes_success(self):
+        for mutate in (lambda p: p.update(revision=True), lambda p: p.update(value=[]),
+                       lambda p: p.update(kind='APPROVE'), lambda p: p.update(simulated='false')):
+            record = self.fail_advice_recording()
+            with self.company.store.transaction() as db:
+                saved = Store.get(db, record['id']); mutate(saved['payload']['pendingOutcome']); Store.save(db, saved)
+            with self.assertRaises(DomainError) as caught:
+                self.intake.recover(CUSTOMER, record['id'], {'contextRevision': record['revision']})
+            self.assertEqual(caught.exception.code, 'INVALID_SAVED_RESULT')
+            self.assertNotIn('result', self.saved(record['id'])['payload'])
+
+    def test_ba_t_04_recovery_independently_withholds_unsupported_saved_facts(self):
+        record = self.fail_advice_recording()
+        with self.company.store.transaction() as db:
+            saved = Store.get(db, record['id'])
+            saved['payload']['pendingOutcome']['value']['reasons'] = ['Invented medical cure']
+            Store.save(db, saved)
+        result = self.intake.recover(CUSTOMER, record['id'], {'contextRevision': record['revision']})
+        self.assertEqual(result['status'], 'INCOMPLETE')
+        self.assertNotIn('product', result['payload']['result'])
+
+    def test_ba_t_07_lifecycle_http_routes_require_session_csrf_and_customer(self):
+        record = self.start('Dry skin.'); router = Router(self.company)
+        token, csrf, _ = self.company.login('customer', 'customer-demo')
+        base = {'Host': '127.0.0.1:5620', 'Content-Type': 'application/json'}
+        for operation in ('revise', 'cancel', 'recover', 'retry'):
+            route = '/api/consultations/'+record['id']+'/'+operation
+            data = {'contextRevision': 1, **({'message': FULL} if operation == 'revise' else {})}
+            body = json.dumps(data).encode()
+            self.assertEqual(router.handle('POST', route, base, body).status, 401)
+            self.assertEqual(router.handle('POST', route, {**base, 'Cookie': 'beauty_session='+token}, body).status, 403)
+        response = router.handle('POST', '/api/consultations/'+record['id']+'/cancel',
+            {**base, 'Cookie': 'beauty_session='+token, 'X-CSRF-Token': csrf}, json.dumps({'contextRevision': 1}).encode())
+        self.assertEqual(response.status, 200)
+        self.assertEqual(json.loads(response.body)['status'], 'CANCELLED')
 
     def test_ba_t_01_actual_router_requires_session_csrf_and_customer(self):
         router=Router(self.company)

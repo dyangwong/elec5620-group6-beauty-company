@@ -2,7 +2,25 @@
 
 English primary. [中文阅读副本](zh-CN/LLM_INTEGRATION.md).
 
-## BA needs checkpoint · 29 October 2026
+## BA lifecycle checkpoint · 29 October 2026
+
+Round 2 adds natural BA revision/cancellation and persistence recovery around the
+existing extraction/propose calls; it adds no provider dependency, prompt, key,
+model download or live CS/MC capability. Full replacement input starts a fresh
+interpretation scope and requires Customer confirmation. Cancelled/stale outputs
+are discarded before staging/final save. A model request may still consume GPU
+time after cancellation; no physical provider-abort guarantee is claimed.
+
+Recovery accepts only the displayed revision and reads a saved server draft. It
+never invokes extract_needs/propose, rechecks current authoritative evidence and
+retains the draft's originating mode. With no saved draft, **retry** is a separate,
+explicit new model attempt with a new revision and fresh needs confirmation.
+Raw drafts are withheld from HTTP snapshots. Actual live recovery was verified
+after model shutdown and application restart; a separate new consultation still
+failed truthfully with LLM_UNAVAILABLE. Evidence and limits: VERIFICATION.md.
+CS intent remains NOT_CONNECTED, MC MOCK, and the live CS handoff guard remains.
+
+## Earlier round 1 · BA needs checkpoint · 29 October 2026
 
 Danny authorised a bounded KAN-15 standalone BA perception/clarification slice.
 It does not claim BA-START-01 or connect CS/MC. The additive optional capability

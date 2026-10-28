@@ -2,7 +2,19 @@
 
 中文阅读副本，依据 2026-10-21 [英文主版](../LLM_INTEGRATION.md) 同步。
 
-## BA 需求检查点 · 2026-10-29
+## BA 生命周期检查点 · 2026-10-29
+
+第二轮围绕既有提取/propose 增加自然语言 BA 修改/取消和保存恢复；没有新供应方依赖、提示词、
+密钥、模型下载或真实 CS/MC 能力。完整替换原文后重新解释并要求客户确认；取消/过期输出在暂存及
+最终保存前被拒绝。取消后已发出的推理仍可能消耗 GPU，不声称物理中断供应方请求。
+
+恢复只接收显示的修订号，从服务端持久草稿读取，不调用 extract_needs/propose，重新检查当前权威
+证据并保留原模式。没有草稿时，retry 是另外明确发起的新模型尝试，增加修订并重新确认条件。
+HTTP 快照不暴露原始草稿。已实测关闭模型并重启应用后的真实草稿恢复；另一次新咨询仍如实
+返回 LLM_UNAVAILABLE。证据和限制见 VERIFICATION.md。CS intent 仍 NOT_CONNECTED，MC 仍 MOCK，
+真实 CS 交接限制保留。
+
+## 较早的第一轮 · BA 需求检查点 · 2026-10-29
 
 Danny 授权 KAN-15 有限独立 BA 理解/追问切片，不代表领取 BA-START-01，未连接真实 CS/MC。
 新增可选能力 extract_needs(messages: list[str]) -> dict，复用 StrataLlm._complete

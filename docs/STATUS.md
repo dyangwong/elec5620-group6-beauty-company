@@ -3,7 +3,28 @@
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
 ## Current deployment checkpoint · 28 October 2026
 
-## BA needs checkpoint · 29 October 2026
+## BA lifecycle checkpoint · 29 October 2026
+
+Round 2 on `KAN-15-ba-lifecycle-recovery`, based on verified local 478d522;
+main fetched unchanged at 515bfa5. Natural BA now supports same-ID full replacement
+and fresh confirmation, nonterminal cancellation, stale reply suppression, durable
+draft finalisation/recovery and a distinct explicit retry for work with no draft.
+Cancelled sessions require a new ID; completed advice can be revised, not cancelled.
+
+**169 tests passed on Windows Python 3.14.5**, including 22 new tests, genuine
+SQLite audit-abort rollback and concurrent/idempotent recovery. Source checks
+(113 files / 41 groups), JS and exercised browser checks passed. Mock browser
+revision/cancel/restart recovery and real in-flight cancellation/model-off recovery
+passed. No commerce/AP effects, stock changes, download or dependency changes.
+Original configs/databases and model inventory preserved; owned test services stopped.
+
+Scope is the natural BA route, not complete BA acceptance or real CS/MC. Legacy
+structured lifecycle, BA review and wider evidence failure/acceptance gaps remain.
+English/Chinese docs updated locally; task assignments unchanged. Jira unverified /
+update pending, no read/write by user instruction; no push/PR/merge/Canvas upload.
+Old source ZIP is historical and must be rebuilt/rehearsed before sharing these features.
+
+## Earlier round 1 · BA needs checkpoint · 29 October 2026
 
 Local branch `KAN-15-ba-needs-clarification`, starting at a577c98c010142882abc22b552c73de92e3d51d0
 (preserved GR-INT-03 docs over main 515bfa537e31a01b9e9a24400a7112f8103babb3;
@@ -96,7 +117,7 @@ repository have now been published; see the collaboration status below.
 
 - Full natural-language perception/planning and live CS/MC tools beyond the verified
   standalone BA slice; schema/claim validation for unrestricted live output.
-- Full BA revision/cancellation/review lifecycle and all medical/unsafe-language cases.
+- Legacy structured BA lifecycle parity, BA review and all medical/unsafe-language cases.
 - Returns/refunds, routine policy alternatives, full CS cancellation and evidence
   failure modes beyond the KAN-11 service subset. Bounded HTTP/UI retained failed
   intake is implemented; the initial fixture routes every exchange through human review.

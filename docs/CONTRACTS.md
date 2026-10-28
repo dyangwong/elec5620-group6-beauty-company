@@ -2,7 +2,49 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/CONTRACTS.md).
 
-## BA needs checkpoint · 29 October 2026
+## BA lifecycle checkpoint · 29 October 2026
+
+Additive operations on the owning Customer's **natural-needs** BA records;
+Customer session, CSRF and exact positive-integer contextRevision remain required.
+Legacy structured consultations and CS/CO callers retain their contracts.
+
+| POST `/api/consultations/{id}/…` | Exact JSON body | Guard and result |
+|---|---|---|
+| `revise` | `contextRevision`, `message` | ACTIVE/CLARIFYING/INCOMPLETE/COMPLETED; same ID, revision +1, replace the full current message scope, re-extract and require new confirmation |
+| `cancel` | `contextRevision` | ACTIVE/CLARIFYING/INCOMPLETE only; revision +1, CANCELLED; repeat at the cancelled current revision returns unchanged |
+| `recover` | `contextRevision` | Current durable draft in ACTIVE/INCOMPLETE; storage-only finalisation, no inference; already recorded current revision returns unchanged |
+| `retry` | `contextRevision` | ACTIVE/INCOMPLETE with no draft; new revision and explicit new extraction, then Customer confirmation; pending draft returns 409 RECOVERY_AVAILABLE |
+
+This follows BA-STM-01 panel B (PDF page 49): COMPLETED is resumable by revision,
+but not cancellable; CANCELLED requires a fresh consultation. Cancellation suppresses
+late output; it does not abort an already running GPU request or undo earlier delivery.
+Replacing the request never silently inherits old constraints. History retains old
+input, confirmed needs, applicable result and mode, clearly labelled historical.
+Old/cancelled revisions return 409 and cannot stage or deliver a result.
+
+Inference finishes outside write transactions. A server-owned `pendingOutcome`
+draft is first committed in the existing payload; final result and audit commit
+together only after current revision/status/confirmed scope/catalogue/fact/stock
+checks. This adds no schema or model interface. Snapshot projection exposes only
+draft kind/revision/mode, never its uncommitted advice value. Caller-supplied result,
+mode or extra fields are refused. Recovery preserves the original mock/live label
+even after configuration changes, and refreshes the inventory observation once.
+Repeated recovery returns the saved outcome/observation, not a new availability check.
+
+If final persistence fails, return 503 BA_STORAGE_UNAVAILABLE and save INCOMPLETE /
+BA_RECORDING_FAILED when possible; if even failure recording is unavailable, ACTIVE
+with a draft may remain. If draft staging also failed, no draft is invented: recovery
+returns NO_PENDING_RESULT; explicit retry makes a new inference attempt. An ACTIVE
+record is not proof of a crashed process; retry explicitly supersedes possible
+ongoing work. Failed cancellation returns 503 BA_CANCELLATION_NOT_RECORDED and does
+not claim the request stopped. No automatic retry or commerce effect is introduced.
+
+Founder-only `ba_recording` is a declared one-shot final-advice-save simulation,
+retaining a recoverable draft. It does not damage storage or affect AP/CS operations.
+Web refresh/cancel remain usable during inference; response sequencing prevents an
+older snapshot from replacing a later refresh. Shared review remains pending.
+
+## Earlier round 1 · BA needs checkpoint · 29 October 2026
 
 Additive standalone BA intake (Customer session + CSRF, same owner). The existing
 structured `/api/consultations` route and CS/CO callers retain their contracts.

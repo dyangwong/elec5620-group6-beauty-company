@@ -2,7 +2,36 @@
 
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../CONTRACTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
-## BA 需求检查点 · 2026-10-29
+## BA 生命周期检查点 · 2026-10-29
+
+仅为所属 Customer 的**自然语言 BA 记录**新增操作；仍要求会话、CSRF 和正整数 contextRevision。
+原结构化咨询及 CS/CO 调用契约保留。
+
+| POST `/api/consultations/{id}/…` | 精确 JSON 字段 | 守卫及结果 |
+|---|---|---|
+| revise | contextRevision、message | ACTIVE/CLARIFYING/INCOMPLETE/COMPLETED；同 ID、修订 +1，完整替换当前原文，重新提取并要求新确认 |
+| cancel | contextRevision | 仅 ACTIVE/CLARIFYING/INCOMPLETE；修订 +1、CANCELLED；按取消后的当前修订重复返回原状态 |
+| recover | contextRevision | ACTIVE/INCOMPLETE 的当前持久草稿；只做最终保存、不推理；已保存的当前修订重复返回原结果 |
+| retry | contextRevision | ACTIVE/INCOMPLETE 且无草稿；新修订、显式重新提取、再次客户确认；有草稿则 409 RECOVERY_AVAILABLE |
+
+遵循 BA-STM-01 B 面板（PDF 第 49 页）：COMPLETED 可修改恢复，但不可取消；CANCELLED 必须新建。
+取消抑制晚到输出，不中断已发出的 GPU 请求，也不撤销既有交付。替换原文不会暗中继承旧约束；
+历史保留旧输入、核定条件、已适用结果及模式，明确标为历史。旧/取消修订返回 409，不能暂存或交付结果。
+
+推理在写事务外完成，先将服务端 pendingOutcome 草稿提交至既有 payload，再重查当前修订/状态/
+确认范围/目录/事实/库存，将最终结果与审计一起提交；无新表或模型接口。快照仅暴露草稿类型/修订/模式，
+不返回未最终保存的建议内容。拒绝客户端提供结果、模式或额外字段。恢复保留原 mock/live 标签，即使配置
+切换也不改变来源；首次恢复更新库存观察时间。重复恢复返回已保存结果/观察时间，不是新的库存检查。
+
+最终保存失败返回 503 BA_STORAGE_UNAVAILABLE，存储允许时保存 INCOMPLETE/BA_RECORDING_FAILED；
+连失败状态也无法写入时，可能留 ACTIVE 加草稿。草稿暂存也失败时不编造草稿，恢复返回 NO_PENDING_RESULT，
+显式重试才新推理。ACTIVE 不证明进程崩溃；重试会明确取代可能仍运行的工作。
+取消保存失败返回 503 BA_CANCELLATION_NOT_RECORDED，不宣称已停止。没有自动重试或交易效果。
+
+Founder 专用 ba_recording 是声明的一次性最终建议保存失败模拟，保留草稿，不损坏存储、不影响 AP/CS。
+推理中网页仍可刷新/取消，响应顺序校验拒绝旧快照覆盖较新刷新。共享文件评审待办。
+
+## 较早的第一轮 · BA 需求检查点 · 2026-10-29
 
 新增独立 BA 自然语言入口，要求 Customer 会话、CSRF 及记录归属校验。
 原有结构化 `/api/consultations` 与 CS/CO 调用契约保留。
