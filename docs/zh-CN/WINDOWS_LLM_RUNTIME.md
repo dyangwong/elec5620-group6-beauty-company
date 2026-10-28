@@ -1,4 +1,14 @@
 # Strata 运行目录修复与真实 BA 验证
+## 当前新源码连接方式 · 2026-10-28
+
+见 [当前 ZIP 步骤](WINDOWS_LLM.md#当前-zip-部署步骤--2026-10-28) 与
+[本轮验证](VERIFICATION.md)。新 ZIP 目录使用自己的 Python／代码／静态资源和全新库，
+端口 5670／5671；旧 Strata 模型环境只提供 loopback8080 服务，无模型复制或下载。
+使用新目录自己创建、匹配 /v1/models exact ID 的配置，取消旧应用配置依赖。实际网页
+BA 保存 COMPLETED／simulated:false、P-101 且独立校验；MC 仍 mock，CS intent 未接入，
+live CS 交接受阻。无需修复 runtime／脚本。当前 main 已有 AP 网页恢复和 CS 失败状态 UI，
+下方 25 日“尚无按钮”为历史。本地 GR-INT-03 不等于 Canvas／全新电脑或完整任务验收。
+
 
 中文阅读副本；维护依据为[英文主版](../WINDOWS_LLM_RUNTIME.md)。2026-10-21，Danny / M1，
 KAN-15 / GR-INT-02，本地分支 `KAN-15-shared-llm-windows`。

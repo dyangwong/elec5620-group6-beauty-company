@@ -1,6 +1,20 @@
 # Strata runtime repair and actual BA verification
 
 English primary. [中文阅读副本](zh-CN/WINDOWS_LLM_RUNTIME.md).
+## Current fresh-source connection · 28 October 2026
+
+See [the current ZIP procedure](WINDOWS_LLM.md#current-zip-deployment-procedure--28-october-2026)
+and the dated [new verification](VERIFICATION.md). A new ZIP extraction ran its
+own Python/code/static assets and fresh databases on 5670/5671, while the model
+owner's existing Strata environment served loopback8080. No model was copied or
+downloaded. A separately created fresh-directory config (exact /v1/models ID)
+removed the old app-config dependency. Browser real BA saved COMPLETED /
+simulated:false with independently validated P-101 evidence; MC stayed mock,
+CS intent unconnected and live CS handoff blocked. No runtime/script repair was
+needed. The newer main also contains AP web recovery and CS retained-assessment
+UI; their absence in the 25 October record below is historical. This local
+GR-INT-03 rehearsal does not establish Canvas/clean-machine or full-task acceptance.
+
 
 21 October 2026, Danny / M1, KAN-15 / GR-INT-02, local branch
 `KAN-15-shared-llm-windows`. This record supersedes the installation-blocked and

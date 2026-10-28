@@ -534,3 +534,94 @@ self-checking is not a self-Approve or an independent human review. The previous
 #12-only authorisation is not being reused. PR #13's remote head, fresh CI, actual
 merge and Jira receipts are recorded on GitHub/Jira after they occur. Whole MC, CS
 and GR acceptance and real CS/MC model integration remain open.
+
+## GR-INT-03 source ZIP / fresh-directory Windows rehearsal · 28 October 2026
+
+**Scope/version.** Danny / M1 authorised local deployment verification and local
+commits only. Internal GR-INT-03 is not a Jira key; repository mapping has no
+deployment child key. Jira unverified / update pending; external Jira was neither
+read nor written by explicit request. No BA starter/teammate claim, business
+feature, live CS/MC, Canvas upload, push or merge. Clean local main e141427
+fast-forwarded to current origin/main **515bfa537e31a01b9e9a24400a7112f8103babb3**;
+no newer main existed at fetch. Branch: GR-INT-03-zip-windows.
+
+**New environment evidence.** Windows 11 Pro 25H2 / 26200.9711 x64; system and new
+venv Python 3.14.5; Windows PowerShell 5.1; Git 2.51.0.windows.1; Node 22.19.0;
+driver 617.42, RTX 5070 Ti Laptop 12227 MiB. Initial D free 210.60 GiB. No existing
+project/model process or listener on the selected ports was found. Baseline
+Windows Verify passed **123 tests in 36.202 s**, provenance **110 source files /
+41 tracked cases**, and JavaScript syntax. The Mac 123-test timing is historical,
+not substituted for this run. Counts include 12 AP HTTP, 11 CS HTTP and 16 MC
+tests in addition to the earlier 84-test suite; no tests were changed.
+
+**Archive/extraction.** Existing scripts/package_source.py produced 5,565,726 bytes,
+110 files, from that clean source. SHA-256:
+`6d6517d837137db65def0223db449f8e0a8dd5c3943e1ecd15be1fb1fa040fb0`.
+Names exactly matched the tracked file list; every member matched source bytes.
+No .git/.venv/var/database/key/model/old output/private report was included.
+Reusing the output name exited 2 and preserved its hash. Extracted into previously
+nonexistent `D:\elec5620_project\rehearsals\20261028-515bfa5\fresh source retry`.
+Both setup runs passed; the config hash stayed unchanged. New venv executable and
+beauty_company.__file__ both resolved inside that directory, with inherited Python
+and BEAUTY path overrides removed. Complete new-directory Verify passed **123
+tests in 40.384 s**, 110-file/41-case provenance and JS syntax, without .git.
+
+An initial external-controller list comparison counted the trailing empty Git
+entry and aborted before extraction/startup. The empty destination and original
+ZIP were retained; filtering that empty entry fixed the controller, not project
+code. Separately, the browser sandbox refused writing a screenshot on D; the
+screenshot was saved under the authorised C output directory instead. Neither
+attempt is counted as an application failure or a successful deployment probe.
+
+**Actual mock browser workflow.** New app on 127.0.0.1:5670, new
+var/mock-browser.sqlite3. Customer login -> ORD-1001 intake -> Founder CS/CO-to-BA
+handoff -> grounded Mock recommendation -> current Customer confirmation -> exact
+AP review. The existing approval_recording fixture caused RECORDING_FAILED.
+Independent SQLite: no decision ID, no committed-decision audit/effect, stock 12.
+Only this app was stopped/restarted with the same DB. Its persisted failure view
+offered Recover saved decision. Browser recovery saved APPROVED/DELIVERED, one
+decision audit, zero effects, stock 12; three repeated actual HTTP recoveries kept
+the same decision. Later Customer browser confirmation saved RESOLVED and one
+simulated actionRef effect; three repeated confirmations kept one effect and
+stock **12 -> 11**. Exact action/revision/actionRef and product/fact/price/budget/
+fragrance/version were independently checked in SQLite. This is the actual newly
+merged AP web recovery, superseding the 25 October absent-button limitation.
+
+**Actual fresh-app/model path.** The old model runtime was stopped; the existing
+owner-private profile was verified and started using its model workspace's
+StartModel in 20.535 s (includes checks). No reinstall/download/weight migration.
+Official runtime ready and /v1/models reported qwen3.8-flash-next-gyro-gyro-s.
+Strata 0.2.1, Terminal 0.1.46.1, bundled Python 3.12.15, engine 0.1.46 CUDA 13;
+8192 context, one request, vision/MTP off, saved VRAM reserve 1536 MiB unchanged.
+The fresh app used 127.0.0.1:5671 and new var/live-browser.sqlite3. An initial
+health-only launch used absolute -LlmConfig against the original private config;
+before any BA consultation it was restarted with a separately created fresh
+var/llm.rehearsal.json (120 s / 512 tokens / loopback8080 / exact model ID). Setup
+also preserved that existing file's hash. No old app config is needed thereafter.
+
+Actual Customer browser submission saved **COMPLETED / simulated:false / P-101**,
+with **Live BA recommendation**. Independent SQLite checked saved product/facts,
+integer-cent price/budget, fragrance, stock and version; zero approval/effect.
+The current engine log recorded **297 prompt tokens in 7496 ms and 25 generated
+tokens in 1223 ms**. One sample is not a general benchmark. A loaded snapshot had
+1967 MiB free VRAM and about 4.0 GiB available RAM. MC stayed MOCK, csIntent
+NOT_CONNECTED, and an actual fresh-app CS coordinate request still returned
+503 / LIVE_HANDOFF_NOT_CONNECTED. Real CS/MC was not connected or expanded.
+
+**Dependencies/limits.** Mock runs from packaged code/static assets with new local
+state and installed Python; Node is verification-only, Git packaging-only. Live
+BA additionally depends on the pre-existing Windows Strata installation, model
+files/profile/private runtime/driver and loopback service; it does not depend on
+old workspace application imports or an old app config. No deployment-script or
+business-code change was necessary; only existing bilingual guides/status/evidence
+were updated. Original config/database hashes and the 56-file model size/mtime
+inventory remained unchanged at the browser checkpoint. Raw evidence stays in
+ignored var/rehearsal-20261028-515bfa5/ and the fresh directories' var folders.
+
+The original 41 acceptance groups remain tracked at their existing statuses; this
+does not promote full cases/modules to PASSED. Formal Canvas upload/download,
+final package identity/re-extraction, clean machine/network, teaching-team software/
+cached-model approval, overnight/sleep/reboot/long-context/concurrent use, real
+CS/MC and broader Stage 2 acceptance remain separate. A later documentation-only
+source package must retain its own commit, SHA-256 and fresh-directory recheck
+receipt outside the ZIP rather than pretending the earlier archive hash applies.

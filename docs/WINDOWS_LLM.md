@@ -5,6 +5,181 @@ ACL repair. See [current runtime evidence and recovery commands](WINDOWS_LLM_RUN
 The installation-blocked sections below retain the earlier attempt as history.
 
 English primary. [中文阅读副本](zh-CN/WINDOWS_LLM.md).
+## Current ZIP deployment procedure · 28 October 2026
+
+Danny / M1 authorised a local GR-INT-03 source-delivery rehearsal, separate from
+BA-START-01 and the broader GR-INT-02 model task. **GR-INT-03 is an internal backlog
+label, not a Jira key.** The repository has no mapped deployment-ticket key;
+Jira is unverified / update pending. At Danny's request, no live Jira lookup or
+write, Canvas upload, push or merge is part of this run.
+
+### Prepare before the demonstration
+
+- Windows PowerShell and a working Python >=3.9 with venv/ensurepip. This laptop
+  used Windows 11 Pro 25H2, build 26200.9711, Python 3.14.5 and PowerShell 5.1.
+  Setup creates a new local virtual environment; there are no third-party app
+  packages, pip downloads, frontend builds or network assets to install.
+- A browser. Node is needed for the JavaScript verification step (22.19.0 tested),
+  not for serving the app. Git is needed on the packaging machine, not to run the
+  unpacked source or its repository check. Verify skips JavaScript syntax if Node
+  is absent: run the explicit syntax command below; do not claim it passed then.
+- For real BA on this laptop only: retain the separately installed Strata 0.2.1 /
+  Terminal 0.1.46.1 / bundled Python 3.12.15 / engine 0.1.46 CUDA 13 and existing
+  Gyro-S weights, saved launch profile and owner-private runtime. Driver 617.42,
+  RTX 5070 Ti Laptop 12227 MiB and 31.42 GiB usable RAM were observed. Existing
+  model files total 86.39 GiB (56 files); they are deliberately outside the ZIP.
+  Keep 8192 context, one request, vision/MTP off and the saved 1536 MiB VRAM reserve.
+  Do not install/download/update or relocate the model during the demonstration.
+- Confirm with the teaching team whether prepared Python/Node, cached model and
+  private runtime on the demonstration laptop are permitted. This is not yet a
+  clean-machine, offline-network or actual Canvas-download acceptance.
+
+### Package an identified clean source version
+
+From a clean committed task branch, first run Windows Verify. Record the exact
+commit and ZIP hash separately; a ZIP cannot contain its own final SHA-256.
+The existing packager reads source files, not an immutable Git archive: review
+untracked files and require a clean worktree before claiming an exact revision.
+
+```powershell
+git status --short
+git rev-parse HEAD
+# Stop here if there are uncommitted/untracked source changes.
+$sourceId = git rev-parse HEAD
+$archive = Join-Path $PWD "output/prototype-source-$sourceId.zip"
+python scripts/package_source.py --output $archive
+if ($LASTEXITCODE -ne 0) { throw 'Source packaging failed' }
+Get-FileHash -LiteralPath $archive -Algorithm SHA256
+```
+
+The packager refuses an existing output path. Preserve previous archives and use
+a new name for a new candidate. Inspect the ZIP before delivery: no .git, .venv,
+var, databases, credentials, model weights, old outputs or private source report.
+The rehearsed 515bfa5 archive contained exactly the 110 tracked source files;
+each archive member matched the source bytes. It includes the public redacted
+reference PDF and source excerpts needed by provenance checks.
+
+### Execute from a new extraction directory
+
+Use an unused destination and fresh database names. Do not expand with -Force
+over a prior deployment. Paths with spaces were actually exercised.
+
+```powershell
+# Set these to the chosen ZIP and an unused destination.
+$archive = 'D:\submission\prototype-source.zip'
+$fresh = 'D:\submission\fresh source'
+if (Test-Path -LiteralPath $fresh) { throw 'Preserve existing directory; choose a new destination' }
+Expand-Archive -LiteralPath $archive -DestinationPath $fresh
+Set-Location -LiteralPath $fresh
+Remove-Item Env:PYTHONPATH,Env:PYTHONHOME,Env:BEAUTY_DB,Env:BEAUTY_PORT -ErrorAction SilentlyContinue
+.\scripts\windows.ps1 -Action Setup
+.\scripts\windows.ps1 -Action Setup  # existing environment/config must survive
+.\scripts\windows.ps1 -Action Verify
+node --check beauty_company/web/app.js
+.\.venv\Scripts\python.exe -c "import sys,beauty_company; print(sys.executable); print(beauty_company.__file__)"
+.\scripts\windows.ps1 -Action Start -Mode mock -Port 5670 -Database var/mock-demo.sqlite3
+```
+
+Both printed Python/module paths must belong to this new directory. The app
+serves its own packaged HTML/JS/CSS and writes only its fresh var/database. Do
+not set PYTHONPATH to the old checkout. No old working-tree code is needed.
+Open http://127.0.0.1:5670, sign in as Customer with the fictional demo account,
+submit ORD-1001, sign out, sign in as Founder and start the advice handoff. Return
+as Customer to confirm the proposal; return as Founder to review its exact scope.
+For the rehearsed failure, Activity trail -> Decision recording failure (no
+approval) -> Apply fixture, then approve with a reason. It must show recording
+failed, no applicable committed decision and Recover saved decision. Stop/start
+only this fresh app with the same DB, log in if needed and recover. Recovery may
+commit/deliver one decision but must not execute. Only the subsequent Customer
+confirmation executes one simulated effect. Repeating recovery/confirmation must
+not duplicate a decision, effect or stock decrement. See VERIFICATION.md for the
+actual database readback, not just the visible success message.
+
+### Connect the fresh app to the existing model service
+
+The fresh app does not own the separately installed model environment. On the
+model owner's existing workspace, inspect existing runtime/processes first. If
+that saved profile is stopped, use its StartModel; if already ready, reuse it.
+For this laptop the model workspace remains
+`D:\elec5620_project\elec5620-group6-beauty-company`.
+
+```powershell
+$modelWorkspace = 'D:\elec5620_project\elec5620-group6-beauty-company'
+# Only after confirming this is the intended installed profile:
+& "$modelWorkspace\scripts\windows.ps1" -Action StartModel
+$modelIds = (Invoke-RestMethod 'http://127.0.0.1:8080/v1/models' -TimeoutSec 10).data.id
+$modelIds
+```
+
+Do not run InstallModel/StartModel from the new extraction: those actions look
+for model state under that extraction's var. This is an explicit model-supervisor
+dependency, not a hidden application import. No model folder or original private
+configuration is copied. In the fresh app directory, create a separate ignored
+configuration with the observed exact model ID; exclusive creation prevents an
+existing local file from being replaced:
+
+```powershell
+$chosenModel = 'qwen3.8-flash-next-gyro-gyro-s'
+if ($chosenModel -notin $modelIds) { throw 'Expected installed model ID was not reported' }
+$configPath = Join-Path $PWD 'var/llm.demo.json'
+$json = @{base_url='http://127.0.0.1:8080/v1'; model=$chosenModel;
+  timeout_seconds=120; max_tokens=512; api_key_env='BEAUTY_LLM_API_KEY'} | ConvertTo-Json
+$stream = [IO.File]::Open($configPath, 'CreateNew', 'Write', 'None')
+try { $bytes=[Text.Encoding]::UTF8.GetBytes($json); $stream.Write($bytes,0,$bytes.Length) }
+finally { $stream.Dispose() }
+.\scripts\windows.ps1 -Action Start -Mode strata -Port 5671 -Database var/live-demo.sqlite3 -LlmConfig var/llm.demo.json
+.\scripts\windows.ps1 -Action SmokeTest -Mode strata -Port 5671
+```
+
+The local Strata service required no key. Any future key stays in the named local
+environment variable, never in source/ZIP/log summaries. Keep loopback binding;
+this procedure grants no LAN/SSH access. Reusing an existing config is also
+supported by absolute -LlmConfig, but the completed browser probe used a newly
+created config inside the fresh directory, so it needs no old app-config path.
+
+Application /api/health showing BA LIVE is configuration evidence only. Official
+runtime ready plus /v1/models establishes model readiness; only a saved completed
+consultation with simulated:false and independently checked catalogue facts
+establishes actual inference. In the fresh live webpage sign in as Customer,
+open Product advice and submit the explicit hydration/$60/fragrance-free fixture.
+Expect Live BA recommendation, P-101 and supported facts. MC remains mock and CS
+intent is NOT_CONNECTED; live CS coordinate/revise remains blocked. A missing or
+unready model must save INCOMPLETE, never a fabricated mock success.
+
+### Stop and diagnose
+
+```powershell
+# Run using the scripts from this fresh directory, with the same ports.
+.\scripts\windows.ps1 -Action Stop -Port 5670
+.\scripts\windows.ps1 -Action Stop -Port 5671
+# Verify only these owned listeners have ended. Retain var and all databases.
+```
+
+Do not stop a model that predated the rehearsal. When this rehearsal started its
+own model, cleanup checked the same official runtime instance ID and used
+`runtime stop --profile launch-elec5620-ba --if-instance-id <observed-id>`; a
+changed identity must be left for reconciliation. No process-name-wide kills.
+Inspect fresh var/app-PORT-*.err.log, its process receipt, /api/health and the
+model owner's runtime/engine logs separately. Logs/databases/cookies/config stay
+ignored. Port conflicts are refused without changing the existing process.
+Setup preserves existing config and .venv; it refuses an incomplete environment.
+Start reuses its owned app, so Stop before deliberately changing DB/mode/config.
+Never repair a repeated run by deleting data or overwriting local configuration.
+
+### This run, historical evidence and remaining work
+
+Newly verified: ZIP 515bfa537e31a01b9e9a24400a7112f8103babb3 -> new directory,
+123 Windows tests, source/JS checks, repeated Setup, browser mock main flow and
+AP failure/restart/web recovery, once-only execution, and one browser real BA
+call against the existing installed service. No repository code/script fix was
+needed. See the 28 October entry in VERIFICATION.md for exact timings/hash.
+Older 21/25 October model installation/84-test records below remain history.
+The merged AP recovery button and CS retained-assessment UI are present in this
+current source; earlier statements that they were absent no longer describe it.
+Formal Canvas download/re-extraction, final-source-package freeze, venue/software/
+cached-model permission, real CS/MC, wider acceptance, long runs and another
+computer remain separate. A successful local source rehearsal is not full Stage 2.
+
 
 Client work date: 21 October 2026 (Australia/Sydney). Danyang Wang / Danny / M1,
 KAN-15 / GR-INT-02, branch `KAN-15-shared-llm-windows`, baseline `e51dfc4`.

@@ -1,4 +1,141 @@
 # Windows 部署与 KAN-15 交接
+## 当前 ZIP 部署步骤 · 2026-10-28
+
+Danny / M1 授权本次 GR-INT-03 本地源码交付演练，不领取 BA-START-01，不补完整个
+GR-INT-02。**GR-INT-03 是内部 BACKLOG 标签，不是 Jira key。**仓库没有对应部署任务的
+Jira 编号映射；Jira 未核实／更新待办。按用户要求，本轮不查询或修改外部 Jira，不上传
+Canvas，不推送或合并 PR。
+
+### 现场前准备
+
+- Windows PowerShell、可用 Python >=3.9（含 venv/ensurepip）与浏览器。本机实测 Windows
+  11 Pro 25H2 / 26200.9711、Python 3.14.5、PowerShell 5.1。Setup 在新目录创建环境，
+  应用只用标准库，不需要下载 pip 依赖、前端构建或联网资源。
+- Node 只用于 JavaScript 核验（实测 22.19.0），运行应用不需要它。Git 只在打包机需要，
+  解压运行和无 Git 的来源检查不依赖 Git。Verify 在缺少 Node 时会跳过语法步骤，所以应
+  显式运行下列 node 检查；缺少时不能说该项通过。
+- 真实 BA 另需本机预装 Strata 0.2.1、Terminal 0.1.46.1、其 Python 3.12.15、engine
+  0.1.46 CUDA 13、Gyro-S 权重、原保存 profile 和 owner-private runtime。本机驱动
+  617.42、RTX 5070 Ti Laptop 显存 12227 MiB、可用物理 RAM 总量 31.42 GiB。
+  模型文件合计 86.39 GiB／56 个，故意不放 ZIP。保留已验证的 8192 上下文、单请求、
+  vision/MTP off、1536 MiB VRAM reserve。现场不下载、升级或搬移模型。
+- 须向教学团队确认预装软件和缓存模型是否允许。尚未验证真正全新电脑、断网环境或
+  实际 Canvas 下载；不能把它们当成已经满足的前置条件。
+
+### 打包准确的干净提交
+
+先在已提交、干净的任务分支运行 Windows Verify。提交号和 ZIP SHA-256 单独记录，
+ZIP 无法包含自身最终哈希。现有打包器读取工作区源文件，**不是不可变 Git archive**，
+因此须检查未追踪文件，并在工作区干净时才能把包对应到准确提交。
+
+```powershell
+git status --short
+git rev-parse HEAD
+# 有未提交／未追踪源码时先停止，保留并核对。
+$sourceId = git rev-parse HEAD
+$archive = Join-Path $PWD "output/prototype-source-$sourceId.zip"
+python scripts/package_source.py --output $archive
+if ($LASTEXITCODE -ne 0) { throw 'Source packaging failed' }
+Get-FileHash -LiteralPath $archive -Algorithm SHA256
+```
+
+同名 ZIP 会被拒绝覆盖；新候选使用新文件名。检查包中不含 .git、.venv、var、数据库、
+凭证、模型、旧输出或未脱敏原报告。515bfa5 的实测包准确包含 110 个追踪源文件，
+逐文件与源字节一致，保留来源检查所需的公开脱敏 PDF 和文本摘录。
+
+### 现场从全新目录运行
+
+选择不存在的目标和全新数据库；不要用 -Force 覆盖旧解压目录。已实际验证含空格路径。
+
+```powershell
+$archive = 'D:\submission\prototype-source.zip'
+$fresh = 'D:\submission\fresh source'
+if (Test-Path -LiteralPath $fresh) { throw 'Preserve existing directory; choose a new destination' }
+Expand-Archive -LiteralPath $archive -DestinationPath $fresh
+Set-Location -LiteralPath $fresh
+Remove-Item Env:PYTHONPATH,Env:PYTHONHOME,Env:BEAUTY_DB,Env:BEAUTY_PORT -ErrorAction SilentlyContinue
+.\scripts\windows.ps1 -Action Setup
+.\scripts\windows.ps1 -Action Setup
+.\scripts\windows.ps1 -Action Verify
+node --check beauty_company/web/app.js
+.\.venv\Scripts\python.exe -c "import sys,beauty_company; print(sys.executable); print(beauty_company.__file__)"
+.\scripts\windows.ps1 -Action Start -Mode mock -Port 5670 -Database var/mock-demo.sqlite3
+```
+
+Python 和模块路径都应在新目录。应用使用包内 HTML/JS/CSS，只向新 var／数据库写入；
+不要设置指向旧源码的 PYTHONPATH。打开 5670，Customer 提交 ORD-1001；切到 Founder
+发起 BA 交接，再由 Customer 确认提案并请求审核。Founder 查看准确范围；本轮在 Activity
+trail 选择 Decision recording failure (no approval) 并 Apply fixture，再填写原因审批。
+应出现 recording failed、No applicable committed decision、Recover saved decision。
+只停启这个新应用并使用同一数据库；重新登录／刷新后恢复。恢复只提交／送达一次决定，
+不能产生业务效果；后续 Customer 再确认才产生一次模拟执行。重复恢复和确认不能重复
+决定、效果或扣库存。实际 SQLite 证据见 VERIFICATION.md，不只看成功提示。
+
+### 新应用连接既有模型服务
+
+模型由独立的旧模型工作区管理。先检查保存的 profile／进程；已 ready 就复用，只有确认
+它已停止才使用该环境的 StartModel。此游戏本模型环境仍在：
+`D:\elec5620_project\elec5620-group6-beauty-company`。
+
+```powershell
+$modelWorkspace = 'D:\elec5620_project\elec5620-group6-beauty-company'
+& "$modelWorkspace\scripts\windows.ps1" -Action StartModel
+$modelIds = (Invoke-RestMethod 'http://127.0.0.1:8080/v1/models' -TimeoutSec 10).data.id
+$modelIds
+```
+
+不要从新解压目录执行 InstallModel／StartModel，它们会在新目录 var 查找模型。
+这是明确保留的模型管理依赖，不是旧代码导入。权重和原私密配置均不复制。新应用目录
+可以创建自己独立的忽略配置；CreateNew 确保已有文件不会被覆盖：
+
+```powershell
+$chosenModel = 'qwen3.8-flash-next-gyro-gyro-s'
+if ($chosenModel -notin $modelIds) { throw 'Expected installed model ID was not reported' }
+$configPath = Join-Path $PWD 'var/llm.demo.json'
+$json = @{base_url='http://127.0.0.1:8080/v1'; model=$chosenModel;
+  timeout_seconds=120; max_tokens=512; api_key_env='BEAUTY_LLM_API_KEY'} | ConvertTo-Json
+$stream = [IO.File]::Open($configPath, 'CreateNew', 'Write', 'None')
+try { $bytes=[Text.Encoding]::UTF8.GetBytes($json); $stream.Write($bytes,0,$bytes.Length) }
+finally { $stream.Dispose() }
+.\scripts\windows.ps1 -Action Start -Mode strata -Port 5671 -Database var/live-demo.sqlite3 -LlmConfig var/llm.demo.json
+.\scripts\windows.ps1 -Action SmokeTest -Mode strata -Port 5671
+```
+
+本机 Strata 不需要密钥；未来密钥只放本地环境变量，不进源码／ZIP／证据摘要。保持
+loopback，本流程不授权 LAN／SSH。绝对 -LlmConfig 也支持复用旧配置，但本轮完成的网页
+真实推理使用新目录自己新建的配置，故不依赖旧应用配置路径。
+
+应用 /api/health 的 BA LIVE 只证明配置；官方 runtime ready 和 /v1/models 证明模型就绪；
+只有实际咨询保存 COMPLETED／simulated:false 并独立核对目录事实，才证明真实推理。
+在 5671 登录 Customer、进入 Product advice、提交保湿／60 AUD／无香样例，应出现 Live
+BA recommendation、P-101 和支持事实。MC 仍 mock，CS intent 为 NOT_CONNECTED，live
+CS coordinate/revise 仍受阻。模型失败必须保存 INCOMPLETE，不能伪装 mock 成功。
+
+### 停止与诊断
+
+```powershell
+.\scripts\windows.ps1 -Action Stop -Port 5670
+.\scripts\windows.ps1 -Action Stop -Port 5671
+```
+
+仅停止当前新目录拥有的进程，保留 var／数据库。不要停止演练前已存在的模型；本轮自己
+启动的模型在清理时先核对 instance ID，再用 `runtime stop --profile launch-elec5620-ba
+--if-instance-id <observed-id>` 停止，身份变化应保留排查，不能按进程名批量结束。
+分别检查新 var/app-PORT-*.err.log、进程凭据、/api/health，以及原模型环境的 runtime／
+引擎日志。不要公开会话、配置或数据库。端口占用会拒绝启动，不终止既有进程。
+Setup 保留已有配置和 .venv，不完整环境会拒绝处理。Start 会复用自己的应用；要改数据库、
+模式或配置时先 Stop。重复演练不能通过删除数据库或覆盖配置来“修好”。
+
+### 本轮、历史与剩余条件
+
+本轮新验证：源码 515bfa537e31a01b9e9a24400a7112f8103babb3 的 ZIP 解压到全新目录、
+123 项 Windows 测试、来源／JS 检查、重复 Setup、网页 mock 主线、AP 保存失败／应用重启／
+网页恢复、一次性效果和 1 次网页真实 BA。无需修改应用或部署脚本。准确耗时和哈希见
+VERIFICATION.md 的 28 日记录。下方 21／25 日安装与 84 项测试是历史；当前源码已有
+AP 恢复按钮和 CS 失败状态 UI，旧“尚未实现”说法不代表当前版本。
+正式 Canvas 下载／解压复演、最终包冻结、现场软件／模型许可、真实 CS/MC、更广验收、
+长期运行和跨电脑仍需分别完成。此演练通过不等于 Stage 2 全部完成。
+
 
 当前更新：本地模型及一条真实 BA HTTP 路径已在 runtime ACL 修复后通过，
 见 [当前运行证据与恢复命令](WINDOWS_LLM_RUNTIME.md)。下方安装受阻内容保留为此前尝试记录。

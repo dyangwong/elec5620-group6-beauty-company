@@ -1,6 +1,18 @@
 # Current implementation status
 
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
+## Current deployment checkpoint · 28 October 2026
+
+Local GR-INT-03 (internal label, Jira unverified/update pending) rehearsed source
+515bfa5 ZIP -> new Windows directory -> mock browser CS/BA/Customer/AP flow,
+AP failure/restart/web recovery and one real standalone BA consultation against
+the existing model service. Both old-workspace and new-directory 123-test suites,
+source and JS checks passed. No business/script/model change was needed; only
+bilingual deployment/evidence docs changed. See WINDOWS_LLM.md for the current
+steps and VERIFICATION.md for exact source/hash/results. Older dated absence of
+AP/CS web features is historical. No Canvas upload, Jira write, push or merge;
+broader cases, real CS/MC and cross-machine/venue acceptance remain open.
+
 
 Created 16 October 2026. Initial local foundation, not a final submission.
 This file describes implementation at its repository revision, not live task

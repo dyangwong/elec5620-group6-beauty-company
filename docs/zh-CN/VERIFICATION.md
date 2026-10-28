@@ -363,3 +363,63 @@ Danny 本次明确要求合并 #11 和 #13；自己的 #13 在最新 main 的新
 可使用已有的本人 PR 审阅层例外。自检不是自我 Approve，也不是独立人工审阅，
 没有将此前仅限 #12 的授权套用到 #13。#13 的远程提交、新 CI、实际合并和 Jira 回执
 在发生后记于 GitHub／Jira。完整 MC、CS、GR 验收及真实 CS／MC 模型集成仍未完成。
+
+## GR-INT-03 源码 ZIP／全新目录 Windows 演练 · 2026-10-28
+
+Danny / M1 授权本地部署验证与本地提交。GR-INT-03 为内部标签，不是 Jira key；仓库未映射
+部署子任务编号。Jira 未核实／更新待办，按要求本轮不查询或修改外部 Jira。不领取 BA
+starter、不改队友归属、不新增业务／真实 CS/MC、不上传 Canvas、不推送或合并。
+原干净 main e141427 已快进到最新远程 **515bfa537e31a01b9e9a24400a7112f8103babb3**，
+获取时没有更新 main。独立分支 GR-INT-03-zip-windows。
+
+本轮环境：Windows 11 Pro 25H2／26200.9711 x64；系统／新环境 Python 3.14.5；Windows
+PowerShell 5.1；Git 2.51.0.windows.1；Node 22.19.0；RTX 5070 Ti Laptop 12227 MiB，
+驱动 617.42，初始 D 盘剩余 210.60 GiB。未发现既有项目／模型进程或所选端口监听。
+Windows 基线 **123 项测试，36.202 秒**，来源 **110 文件／41 用例组** 和 JS 检查通过。
+数量为此前 84 项加 12 AP HTTP、11 CS HTTP、16 MC，未改测试；Mac 耗时不冒充本机结果。
+
+现有打包器在干净源码上生成 5,565,726 字节／110 文件的 ZIP，SHA-256 为
+`6d6517d837137db65def0223db449f8e0a8dd5c3943e1ecd15be1fb1fa040fb0`。
+文件名与追踪清单完全一致，成员字节与源码一致；无 .git／.venv／var／数据库／密钥／模型／
+旧输出／未脱敏报告。同名再打包退出 2 且原哈希不变。解压到全新含空格目录
+`D:\elec5620_project\rehearsals\20261028-515bfa5\fresh source retry`，两次 Setup
+成功且配置哈希不变，Python 可执行文件与模块均来自该新目录，移除了继承的 Python／
+BEAUTY 路径覆盖。无 .git 的新目录完整核验 **123 项测试，40.384 秒**，来源和 JS 均通过。
+首次外部控制器把 Git 末尾空项计入清单，尚未解压／启动即停止；保留空目录与 ZIP，过滤
+空项后修正的是控制器，不是项目代码。浏览器沙箱另拒绝向 D 写截图，改存已授权 C 输出
+目录；这不是应用失败，也未将这些尝试计为成功部署证据。
+
+实际网页 mock 主线：新 5670 应用／mock-browser.sqlite3，Customer 登录／ORD-1001 ->
+Founder 发起 CS/CO→BA -> Mock recommendation -> Customer 当前提案确认 -> AP 精确
+范围审核。已有 approval_recording 注入令决定 RECORDING_FAILED；SQLite 确认无决定 ID、
+无提交审计／效果，库存 12。只停启本轮新应用并保留同一库，失败状态仍在；网页恢复后
+APPROVED／DELIVERED，一条决定审计、零效果、库存 12；另 3 次 HTTP 恢复保持同一决定。
+后续 Customer 网页确认才 RESOLVED，产生一条 actionRef 模拟效果；再 3 次确认仍一条
+效果，库存 **12→11**。独立核对 action／revision／actionRef、商品事实／整数分价格预算／
+无香／库存版本。本轮已实际验证当前 AP 网页恢复，25 日“无按钮”为历史限制。
+
+真实 BA：原模型 runtime 已停止，核验 owner-private profile 后用原环境 StartModel 复用
+安装，在 20.535 秒内就绪（含检查），无重装／下载／权重迁移。官方 runtime 和 /v1/models
+确认 exact ID qwen3.8-flash-next-gyro-gyro-s。Strata 0.2.1／Terminal 0.1.46.1／其 Python
+3.12.15／engine 0.1.46 CUDA 13，8192 上下文、单请求、vision/MTP off、1536 MiB reserve
+不变。新 5671 应用／live-browser.sqlite3 最初只做健康检查时使用旧配置绝对路径；任何
+真实 BA 调用前已用新目录自己创建的 llm.rehearsal.json 重启，120 秒／512 tokens／
+loopback8080／准确 ID，Setup 也保留该文件哈希。此后应用不需要旧应用配置。
+
+实际 Customer 网页咨询保存 **COMPLETED／simulated:false／P-101**，显示 **Live BA
+recommendation**；SQLite 独立校验事实、价格预算、无香、库存／版本，零审批／效果。
+本次引擎日志为 297 输入 tokens／7496 ms、25 输出 tokens／1223 ms，不推广为基准性能。
+加载后的单次资源快照为可用显存 1967 MiB、可用系统 RAM 约 4.0 GiB。MC 仍 MOCK、
+csIntent 为 NOT_CONNECTED，新应用实际 live CS coordinate 返回 503／
+LIVE_HANDOFF_NOT_CONNECTED；未扩展真实 CS/MC。
+
+依赖：mock 只需新包代码／静态资源、Python 和全新本地状态，Node 只核验、Git 只打包。
+live 另外依赖旧模型环境的安装、86.39 GiB 权重、profile／私有 runtime、驱动及本机服务；
+不依赖旧应用导入路径或旧应用配置。无需修部署脚本或业务代码，仅更新现有双语说明／
+状态／证据。网页检查点时原配置／数据库哈希与 56 个模型文件大小／修改时间清单不变。
+原始证据在忽略目录 var/rehearsal-20261028-515bfa5/ 和新目录 var 中。
+
+41 个用例组保留原状态，不因演练通过提升整个模块。实际 Canvas 上传／下载、最终包
+冻结／重新解压、全新电脑／网络、教学团队预装软件／缓存模型许可、长期／睡眠／重启／
+长上下文／多人、真实 CS/MC 和完整 Stage 2 仍分别待验。后续仅文档更新的源码包也必须
+在 ZIP 外记录自己的准确提交／SHA-256／新目录复验回执，不能沿用本包哈希冒充。
