@@ -5,7 +5,8 @@ param(
     [ValidateSet('mock','strata')][string]$Mode = 'mock',
     [ValidateRange(1,65535)][int]$Port = 5620,
     [string]$Database = 'var/company.sqlite3',
-    [string]$LlmConfig = 'var/llm.strata.json'
+    [string]$LlmConfig = 'var/llm.strata.json',
+    [switch]$LiveMc
 )
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
@@ -103,6 +104,7 @@ try {
         }
         'Start' {
             Need-Python
+            if ($LiveMc -and $Mode -ne 'strata') { throw 'LiveMc requires -Mode strata; default mock was preserved.' }
             if (Get-OwnedProcess) { Write-Output "Already running on port $Port; configuration preserved."; break }
             $probe = [Net.Sockets.TcpClient]::new()
             try { $probe.Connect('127.0.0.1', $Port); $busyPort = $true } catch { $busyPort = $false } finally { $probe.Dispose() }
@@ -113,11 +115,12 @@ try {
                 Check-Exit 'Live configuration validation'
                 $arguments += @('--llm-config', "`"$LlmConfig`"")
             }
+            if ($LiveMc) { $arguments += '--mc-live' }
             $stamp = Get-Date -Format 'yyyyMMdd-HHmmss-ffff'
             $stdout = Join-Path $runtimeRoot "app-$Port-$stamp.out.log"
             $stderr = Join-Path $runtimeRoot "app-$Port-$stamp.err.log"
             $process = Start-Process -FilePath $pythonPath -ArgumentList $arguments -WorkingDirectory $repoRoot -WindowStyle Hidden -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
-            @{pid=$process.Id; startTicks=$process.StartTime.ToUniversalTime().Ticks.ToString(); executable=$pythonPath; mode=$Mode} |
+            @{pid=$process.Id; startTicks=$process.StartTime.ToUniversalTime().Ticks.ToString(); executable=$pythonPath; mode=$Mode; mcLive=[bool]$LiveMc} |
                 ConvertTo-Json | Set-Content -LiteralPath $stateFile -Encoding UTF8
             $healthy = $false
             for ($attempt=0; $attempt -lt 30; $attempt++) {
@@ -128,7 +131,7 @@ try {
                 } catch { Start-Sleep -Milliseconds 200 }
             }
             if (-not $healthy) { throw "App did not become ready. Inspect $stderr" }
-            Write-Output "Ready: http://127.0.0.1:$Port | BA $($health.capabilities.ba), MC MOCK. Model availability is checked by SmokeTest."
+            Write-Output "Ready: http://127.0.0.1:$Port | BA $($health.capabilities.ba), MC text $($health.capabilities.mc), media MOCK. Model availability is checked by SmokeTest."
         }
         'Stop' {
             $process = Get-OwnedProcess

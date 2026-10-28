@@ -2,6 +2,46 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/VERIFICATION.md).
 
+## MC bounded live-text checkpoint · 29 October 2026
+
+This is new **local MC text** evidence, separate from prior BA and ZIP checkpoints.
+Branch KAN-15-mc-live-text, starting clean at 4f43f38a89637248874f4ed308441a5502e464ff;
+fetched origin/main unchanged at 515bfa537e31a01b9e9a24400a7112f8103babb3. Danny / M1
+authorised the shared-file exception, with AI assistance; task assignments unchanged.
+
+| New check | Actual result |
+|---|---|
+| Windows repository Verify | **181 tests, all passed in 49.886 s**; prior 169 + 12 new MC tests. Source verification 114 files / 41 tracked groups, source hashes and handoff checks passed. JS syntax passed, including after review-label correction. MC-only suite 28 passed. |
+| Offline live-MC failure/boundary tests | Explicit opt-in/default preservation; strict/minimal shared transport; invalid plan/no fallback; actual script/caption/direction/duration mutation; immutable evidence; owner/role/CSRF/exact fields; pending/decision/revision; concurrent generation vs revision; changed catalogue; final-save transaction rollback; unavailable/timeout/invalid-output retention. These use test doubles, not live inference. |
+| Default mock, actual Founder browser, new DB / 5710 | MC-b3315edc057a revision 1 APPROVED; simulated/textSimulated/mediaSimulated true. Existing mock review/decision delivery passed. |
+| Actual shared model, new DB / 5711 | MC-931edb7409b9 revision 1: CALM, featured Fragrance-free, all three literal catalogue facts; brief asked only Fragrance-free but model retained other authorised facts. This creative instruction mismatch is visible for Founder review, not passed as semantic compliance. Founder REQUEST_REVISION delivered. |
+| Actual model new revision and approval | Same MC ID revision 2: ENERGETIC, factRefs=[50 ml], featured caption 50 ml; actual script changed to “Meet Daily Hydration Cream. 50 ml. Explore the product details.” New AP-31e86c3715fa APPROVED/DELIVERED; prior AP-d0e8fc30ccdd SUPERSEDED with its recorded revision request retained. |
+| Independent persisted output checks | Reconstructed actual script/claims/three frames against untouched current P-101:v1 catalogue; mode false for text, true for media. Exact draft ID/revision/live-text/mock-media review actions checked; two distinct decisions, zero effects, stocks 12/8/0 unchanged. |
+| Exact owned model stopped; new browser create | App healthy/configured LIVE_TEXT_WITH_MOCK_MEDIA; port 8080 closed. MC-de418646a5b9 GENERATION_FAILED / LLM_UNAVAILABLE / textSimulated=false, no script/claims/media/approval; no mock fallback. |
+| Environment and cleanup | Windows 11 Pro 25H2 build 26200.9711; app Python 3.14.5; Strata 0.2.1, Terminal 0.1.46.1, engine 0.1.46 CUDA 13 / Python 3.12.15; model qwen3.8-flash-next-gyro-gyro-s. Existing 8192 context, single request, no vision/MTP, 1536 MiB reserve, route-tail-skip 7, 120 s / 512 output tokens reused. No install/download/dependency/config changes. Only owned 5710/5711 apps and guarded model instance stopped. Original config/database hashes and 56 model-file size/mtime inventory matched. No captured browser warnings/errors. |
+
+Engine logs recorded the two MC generations: prompts 326/332 tokens, outputs 53/41
+tokens, reported prompt/decode 6135+2062 ms and 1803+1260 ms (engine measurements,
+not full browser latency). Adapter checks exact configured model ID and completed
+JSON; actual persisted content and model-off failure independently distinguish this
+from fixtures or health-only checks. Initial implementation tests exposed a missing
+text_value import; corrected before the passing suite. Form create/revise fields
+and live review title were also corrected before final browser acceptance.
+
+Raw logs, DBs, exact-instance receipts, before/after hashes, engine log and
+evidence-summary.json remain ignored in var/mc-live-20261029; screenshots are local
+outputs. No sessions/keys/model files are tracked. Reproduce using WINDOWS_LLM.md.
+No new ZIP/checksum is claimed: old f7bb141 archive predates BA/MC increments.
+
+**Not verified/completed:** free-form creative prose, unrestricted/multilingual brief
+semantics, medical safety, real video/media quality, MC cancellation or durable
+generation-save recovery/full lifecycle, whole MC/Stage 2 acceptance, fresh-ZIP or
+another-machine/venue acceptance of this increment. Final-save rollback can leave
+DRAFTING with no output/review; existing AP recovery must not be described as an
+MC generation-recovery button. No real CS intent/handoff added. Jira unverified /
+update pending (no access/write requested); no push, PR, merge or Canvas upload.
+
+
 ## BA lifecycle checkpoint · 29 October 2026
 
 First-round completion was rechecked before edits: clean local 478d522694ca381b2ba3c3c5e3711a77fb04133a,

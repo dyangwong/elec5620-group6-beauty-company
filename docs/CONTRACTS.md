@@ -2,6 +2,33 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/CONTRACTS.md).
 
+## MC bounded live-text checkpoint · 29 October 2026
+
+Additive, explicitly opted-in MC live route; default mock callers retain their
+existing paths. Founder session/CSRF and owner guards apply.
+
+| POST | Exact body | Result |
+|---|---|---|
+| `/api/campaigns` | `brief`, `productId` | 201 with persisted MC draft/failure record |
+| `/api/campaigns/{id}/revise` | `brief`, `productId`, positive integer `contextRevision` | 200, same ID/new revision; old review superseded, history preserved; stale scope 409 |
+
+No caller-supplied mode, result or approval fields. Success payload includes
+script/claims/product/evidence, textPlan, simulated=false, textSimulated=false,
+mediaSimulated=true and labelled mock media. Exact three-shot composition is
+described in LLM_INTEGRATION.md. Current catalogue and revision/status are checked
+before save/review. Live review action is REVIEW_TEXT_DRAFT with draftId,
+draftRevision, textMode=LIVE, mediaKind=MOCK_STORYBOARD. Pending review is not approval;
+approved text/mock preview is not video generation or permission to publish.
+
+Known provider failures produce persisted GENERATION_FAILED or CONTENT_REJECTED;
+missing/changed evidence can produce INCOMPLETE. No output/review is invented on
+failure. Whole-result final transaction rollback leaves earlier DRAFTING scope,
+not successful content or approval; generic HTTP 500 requires refreshing the saved
+record. No cancellation, durable result staging/recovery or automatic retry is
+provided here. Default mock may keep its older failure contract. Mode belongs to
+each saved record; current capability flags alone never relabel historical results.
+
+
 ## BA lifecycle checkpoint · 29 October 2026
 
 Additive operations on the owning Customer's **natural-needs** BA records;

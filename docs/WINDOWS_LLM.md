@@ -5,6 +5,48 @@ ACL repair. See [current runtime evidence and recovery commands](WINDOWS_LLM_RUN
 The installation-blocked sections below retain the earlier attempt as history.
 
 English primary. [中文阅读副本](zh-CN/WINDOWS_LLM.md).
+## MC bounded live-text checkpoint · 29 October 2026
+
+Reuse the installed model/config; do not rerun InstallModel or copy weights.
+From the current source root, after Setup/Verify and checking ports/processes:
+
+```powershell
+.\scripts\windows.ps1 -Action StartModel
+.\scripts\windows.ps1 -Action Start -Mode strata -LiveMc -Port 5711 -Database var/mc-demo.sqlite3 -LlmConfig var/llm.strata.json
+# Open http://127.0.0.1:5711; sign in as the fictional Founder; use Content studio.
+.\scripts\windows.ps1 -Action Stop -Port 5711
+```
+
+Choose an unused port/new database name for an independent run; existing databases
+are intentionally retained. CLI equivalent:
+
+```powershell
+.venv\Scripts\python.exe -m beauty_company --llm-mode strata --llm-config var/llm.strata.json --mc-live --port 5711 --db var/mc-demo.sqlite3
+```
+
+Omitting LiveMc/mc-live keeps MC mock;
+mock + LiveMc is rejected before process changes. No configuration rewrite or new
+dependencies are needed. If using fresh unpacked source, pass the existing laptop's
+absolute local LlmConfig path as described below; StartModel belongs to the model-owning
+workspace, not an unpacked root without its runtime. The new MC increment itself
+has not yet had a fresh-directory ZIP rehearsal.
+
+Check app health, model readiness and an actual generated result separately. For
+verification use a calm brief/Fragrance-free, then request revision and use an
+energetic brief/50 ml. Inspect different script/style/caption, new review, mode labels
+and catalogue facts; approve only that exact revision. Text is catalogue-literal
+composition; media remains MOCK_STORYBOARD. Stopped/unavailable model must retain
+GENERATION_FAILED/LLM_UNAVAILABLE without text/media/review or silent mock success.
+Health and configured LIVE labels alone prove neither readiness nor inference.
+
+Stop only the app receipt/port started by the run. If the run started a model,
+use the exact runtime instance guard in WINDOWS_LLM_RUNTIME.md; do not stop an
+existing shared model. This rehearsal used 5710 mock and 5711 live with independent
+databases under ignored var/mc-live-20261029. Both apps and the owned model ended;
+original configs/databases/model inventory were preserved. Full results below are
+historical where dated; current evidence is in VERIFICATION.md.
+
+
 ## Current ZIP deployment procedure · 28 October 2026
 
 Frozen rehearsal ZIP: source `f7bb141f6e35c7846989adccf58841b9e128a978`,

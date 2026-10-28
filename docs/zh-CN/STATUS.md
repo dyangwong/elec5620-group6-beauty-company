@@ -1,5 +1,30 @@
 # 当前实现状态
 
+## MC 有界真实文字检查点 · 2026-10-29
+
+Danny / M1 明确授权本次有界 MC 集成；分支 `KAN-15-mc-live-text`，基于本地
+4f43f38a89637248874f4ed308441a5502e464ff（BA 第二轮），获取远程后 main 仍为
+515bfa537e31a01b9e9a24400a7112f8103babb3。保留原工作及 Zhengdu Wei 的 MC 代码和归属；
+不领取 BA-START-01，不重新分配 KAN-12。
+
+Windows Python 3.14.5 **181 项离线测试通过**（原 169 + 新 12 项），来源核验
+114 文件／41 组，JS 语法通过。实际网页：默认 mock 草稿审批通过；显式真实 MC 生成 calm
+草稿 → Founder 要求修改 → energetic 新版本及新审批 → 批准。脚本和重点事实实际变化。
+独立核验保存的目录、脚本、分镜和审批关系通过。停止本轮模型后，新请求保存为真实模式
+GENERATION_FAILED / LLM_UNAVAILABLE，无输出／审批／mock 回退；应用健康。业务效果为 0，
+库存未变。原配置／数据库哈希及 56 个模型文件清单保留，仅停止本轮两个应用及准确模型实例。
+
+`-Mode strata -LiveMc`／`--llm-mode strata --mc-live` 显式开启；普通 Strata 仍是 BA 真实、
+MC mock。共享模型选择事实／顺序、重点字幕和三种风格之一；商品文字按目录原文有界组合，
+不是自由创作文案。媒体仍为 MOCK_STORYBOARD，不是视频。复用精确修订 AP，不发布内容。
+
+**本轮停止条件已达到。**媒体输出／质量／失败验收、更广 brief 语义、取消和生成保存的持久恢复
+仍待处理；最终保存失败可能保留 DRAFTING，不产生审批或成功输出。不宣称完整 MC 或 Stage 2
+完成。BA 未改；CS 意图 NOT_CONNECTED、真实 CS 交接仍被阻止。证据见 VERIFICATION.md 和
+modules/MC.md。Jira 未核实／更新待办，本轮未访问或更新；未推送、PR、合并、上传 Canvas、
+新增依赖或下载。旧 f7bb141 ZIP 属历史，本轮尚未重新打包／新目录验收。
+
+
 ## BA 生命周期检查点 · 2026-10-29
 
 第二轮分支 KAN-15-ba-lifecycle-recovery，基于已验证本地 478d522；获取远程后 main 仍 515bfa5。

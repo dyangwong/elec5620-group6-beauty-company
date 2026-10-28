@@ -1,7 +1,8 @@
-"""MC-M-01: grounded mock script/storyboard with exact-revision review."""
+"""MC-M-01: grounded script/storyboard with exact-revision review; media stays mock."""
 from copy import deepcopy
 
 from ..contracts import DomainError, require_role, revision_value, text_value
+from ..adapters.mc_text import validate_live_script
 from ..store import Store
 from .beauty_advisor import catalogue
 
@@ -9,6 +10,10 @@ from .beauty_advisor import catalogue
 class Marketing:
     def __init__(self, llm, media, approval):
         self.llm, self.media, self.ap = llm, media, approval
+
+    @property
+    def simulated(self):
+        return getattr(self.llm, "mc_simulated", True)
 
     def generate(self, db, data):
         brief = text_value(data.get("brief"), "Campaign brief")
@@ -21,6 +26,13 @@ class Marketing:
         except (RuntimeError, TimeoutError, ConnectionError):
             raise DomainError("Marketing text generation is unavailable.", 409, "GENERATION_FAILED")
 
+        if not self.simulated:
+            try:
+                validate_live_script(script, brief, product)
+            except (ValueError, TypeError, KeyError):
+                raise DomainError("Generated marketing text/captions could not be independently verified.",
+                                  409, "CONTENT_REJECTED") from None
+
         if not isinstance(script, dict) or not isinstance(script.get("script"), str) or not script["script"].strip():
             raise DomainError("Malformed generated output was withheld.", 409, "CONTENT_REJECTED")
 
@@ -28,19 +40,19 @@ class Marketing:
         if not isinstance(claims, list) or not claims or any(not isinstance(c, str) or c not in product["facts"] for c in claims):
             raise DomainError("Unsupported generated claims were withheld.", 409, "CONTENT_REJECTED")
         expected_script = f"Meet {product['name']}. " + ". ".join(product["facts"]) + "."
-        if script["script"] != expected_script or claims != product["facts"]:
+        if self.simulated and (script["script"] != expected_script or claims != product["facts"]):
             raise DomainError("Generated script does not match authorised catalogue evidence.", 409, "CONTENT_REJECTED")
 
         storyboard = script.get("storyboard")
         if not isinstance(storyboard, list) or not storyboard or any(not isinstance(frame, dict) for frame in storyboard):
             raise DomainError("Malformed storyboard was withheld.", 409, "CONTENT_REJECTED")
         expected_captions = [product["name"], product["facts"][0], "Explore the product details"]
-        if len(storyboard) != 3 or any(frame.get("caption") != caption for frame, caption in zip(storyboard, expected_captions)):
+        if self.simulated and (len(storyboard) != 3 or any(frame.get("caption") != caption for frame, caption in zip(storyboard, expected_captions))):
             raise DomainError("Storyboard contains unsupported content.", 409, "CONTENT_REJECTED")
-        if any(frame.get("direction") != direction for frame, direction in zip(storyboard, ["Product introduction", "Catalogue-supported benefit", "Draft closing card"])):
+        if self.simulated and any(frame.get("direction") != direction for frame, direction in zip(storyboard, ["Product introduction", "Catalogue-supported benefit", "Draft closing card"])):
             raise DomainError("Storyboard directions are not supported.", 409, "CONTENT_REJECTED")
 
-        if any(set(frame) != {"shot", "duration", "caption", "direction"}
+        if self.simulated and any(set(frame) != {"shot", "duration", "caption", "direction"}
                or type(frame["shot"]) is not int or frame["shot"] != index
                or frame["duration"] != duration
                for index, (frame, duration) in enumerate(zip(storyboard, ["0–5 s", "5–10 s", "10–15 s"]), 1)):
@@ -61,7 +73,9 @@ class Marketing:
             raise DomainError("Mock media frames do not match the verified storyboard.", 409, "GENERATION_FAILED")
 
         return {"brief": brief, "product": product, "script": script["script"],
-                "claims": claims, "media": deepcopy(media), "simulated": True,
+                "claims": claims, "media": deepcopy(media), "simulated": self.simulated,
+                "textSimulated": self.simulated, "mediaSimulated": True,
+                **({"textPlan": deepcopy(script["textPlan"])} if not self.simulated else {}),
                 "evidence": {"catalogueRef": f"catalogue:{product['id']}:v{product['version']}", "facts": product["facts"]}}
 
     def submit(self, db, actor, data):
@@ -89,11 +103,14 @@ class Marketing:
         return record
 
     def _review(self, db, record):
+        live = record["payload"].get("textSimulated") is False
         record["payload"]["approvalId"] = self.ap.submit(db, "MC", record["id"], record["revision"],
-            {"kind": "REVIEW_MOCK_DRAFT", "draftId": record["id"], "draftRevision": record["revision"]}, record["payload"]["evidence"])
+            {"kind": "REVIEW_TEXT_DRAFT" if live else "REVIEW_MOCK_DRAFT", "draftId": record["id"],
+             "draftRevision": record["revision"], **({"textMode": "LIVE", "mediaKind": "MOCK_STORYBOARD"} if live else {})}, record["payload"]["evidence"])
         record["status"] = "REVIEW_PENDING"
         Store.save(db, record)
-        Store.event(db, record["id"], "MC", "MOCK_DRAFT_SAVED_AND_SUBMITTED", {"contextRevision": record["revision"], "simulated": True, "videoGenerated": False})
+        Store.event(db, record["id"], "MC", "TEXT_DRAFT_SAVED_AND_SUBMITTED" if live else "MOCK_DRAFT_SAVED_AND_SUBMITTED",
+                    {"contextRevision": record["revision"], "simulated": not live, "videoGenerated": False})
 
     def revise(self, db, actor, rid, data):
         require_role(actor, "FOUNDER")

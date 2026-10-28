@@ -40,7 +40,8 @@ class Router:
                 return Response(200, (Path(__file__).parent / "web" / filename).read_bytes(), {"Content-Type": mime + "; charset=utf-8"})
             if method == "GET" and path == "/api/health":
                 capabilities = self.company.mode()
-                return json_response({"status": "ok", "mode": "SIMULATION_ONLY" if capabilities["simulated"] else "LIVE_BA_MOCK_MC",
+                return json_response({"status": "ok", "mode": "SIMULATION_ONLY" if capabilities["simulated"] else
+                                      ("LIVE_TEXT_WITH_MOCK_MEDIA" if capabilities["mc"] == "LIVE" else "LIVE_BA_MOCK_MC"),
                                       "version": "0.1.0", "capabilities": capabilities})
             data = {}
             if method == "POST":
@@ -74,7 +75,12 @@ class Router:
                 return json_response(self.company.set_fault(actor, data.get("fault")))
             if path == "/api/consultations/intake":
                 return json_response(self.company.ba_intake.start(actor, data), 201)
+            if path == "/api/campaigns" and not self.company.mc.simulated:
+                return json_response(self.company.campaign(actor, data), 201)
             parts = path.strip("/").split("/")
+            if (not self.company.mc.simulated and len(parts) == 4 and parts[:2] == ["api", "campaigns"]
+                    and parts[3] == "revise"):
+                return json_response(self.company.campaign(actor, data, parts[2]))
             if len(parts) == 4 and parts[:2] == ["api", "consultations"]:
                 if parts[3] == "clarify":
                     return json_response(self.company.ba_intake.clarify(actor, parts[2], data))

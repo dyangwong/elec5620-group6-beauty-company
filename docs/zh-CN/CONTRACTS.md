@@ -2,6 +2,28 @@
 
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../CONTRACTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
+## MC 有界真实文字检查点 · 2026-10-29
+
+这是显式开启的 MC 真实文字增量；默认 mock 保留原路径。要求 Founder 会话／CSRF，修改时
+校验 owner。
+
+| POST | 精确请求体 | 结果 |
+|---|---|---|
+| `/api/campaigns` | brief、productId | 201，保存的 MC 草稿或失败记录 |
+| `/api/campaigns/{id}/revise` | brief、productId、正整数 contextRevision | 200，同 ID 新版本；旧审批被取代、保留历史；过期范围 409 |
+
+拒绝调用方提供模式、结果、审批等额外字段。成功载荷包含 script／claims／product／evidence、
+textPlan、simulated=false、textSimulated=false、mediaSimulated=true 和标注 mock 的媒体。
+三镜头规则见 LLM_INTEGRATION.md；最终保存／提交前重查目录、版本和状态。真实审批 action 为
+REVIEW_TEXT_DRAFT，绑定 draftId／draftRevision，含 textMode=LIVE、mediaKind=MOCK_STORYBOARD。
+待审不等于批准，批准文字／模拟预览不等于生成视频或允许发布。
+
+已知模型失败保存 GENERATION_FAILED 或 CONTENT_REJECTED；缺少／变化证据可为 INCOMPLETE。
+失败不捏造输出或审批。最终结果事务回滚留下此前 DRAFTING 范围，无成功内容或审批；通用 HTTP
+500 后应刷新查看记录。本轮不提供取消、结果持久暂存／恢复或自动重试。默认 mock 可保持原失败
+契约。每条记录保留自身模式，当前能力配置不会重新标记历史结果。
+
+
 ## BA 生命周期检查点 · 2026-10-29
 
 仅为所属 Customer 的**自然语言 BA 记录**新增操作；仍要求会话、CSRF 和正整数 contextRevision。

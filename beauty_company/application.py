@@ -4,11 +4,12 @@ import hmac
 import json
 import secrets
 import time
+from copy import deepcopy
 from http.cookies import CookieError, SimpleCookie
 
 from .adapters.after_sales import MockAfterSales
 from .adapters.mock import MockLlm, MockMedia
-from .contracts import Actor, DomainError, require_role, revision_value
+from .contracts import Actor, DomainError, require_role, revision_value, text_value
 from .modules.approval import Approval
 from .modules.beauty_advisor import BeautyAdvisor, catalogue, validated_needs
 from .modules.ba_intake import BaIntake
@@ -47,12 +48,71 @@ class Company:
 
     def mode(self):
         live = not self.ba.simulated
-        return {"simulated": not live, "model": "Local BA model" if live else "Deterministic mock",
-                "ba": "LIVE" if live else "MOCK", "mc": "MOCK", "csIntent": "NOT_CONNECTED",
+        mc_live = not self.mc.simulated
+        return {"simulated": not (live or mc_live), "model": "Local shared model" if live or mc_live else "Deterministic mock",
+                "ba": "LIVE" if live else "MOCK", "mc": "LIVE" if mc_live else "MOCK", "csIntent": "NOT_CONNECTED",
                 "baNeeds": ("LIVE" if live else "MOCK") if callable(getattr(self.llm, "extract_needs", None)) else "NOT_CONNECTED",
                 "media": "Storyboard placeholder", "commerce": "SIMULATED",
                 "optionalFeatures": {"BA-F-03": False, "CS-F-03": False, "MC-F-03": False,
                                      "AP-F-03": False, "CO-F-03": False}}
+
+    def campaign(self, actor, data, rid=None):
+        """Opt-in MC HTTP path: persist scope, infer without a write lock, revalidate/save/review."""
+        require_role(actor, "FOUNDER")
+        expected = {"brief", "productId", *({"contextRevision"} if rid else set())}
+        if not isinstance(data, dict) or set(data) != expected:
+            raise DomainError("Supply only the displayed campaign fields.")
+        brief = text_value(data["brief"], "Campaign brief")
+        product_id = text_value(data["productId"], "Product ID", 100)
+        with self.store.transaction() as db:
+            history = []
+            if rid:
+                record = Store.get(db, rid, "MC")
+                if record["owner_id"] != actor.id:
+                    raise DomainError("Only the campaign owner may revise this draft.", 403, "FORBIDDEN")
+                if revision_value(data["contextRevision"]) != record["revision"]:
+                    raise DomainError("The draft revision changed.", 409, "STALE_SCOPE")
+                history = deepcopy(record["payload"].get("history", []))
+                history.append({"revision": record["revision"], "status": record["status"],
+                                "payload": deepcopy({k: v for k, v in record["payload"].items() if k != "history"})})
+                self.ap.supersede(db, record["payload"].get("approvalId"))
+                record["revision"] += 1
+            else:
+                rid = Store.create(db, "MC", actor.id, "DRAFTING", {}, "MC")
+                record = Store.get(db, rid, "MC")
+            record["status"] = "DRAFTING"
+            record["payload"] = {"brief": brief, "productId": product_id, "simulated": self.mc.simulated,
+                                 "textSimulated": self.mc.simulated, "mediaSimulated": True, "history": history}
+            Store.save(db, record)
+            Store.event(db, rid, "MC", "TEXT_GENERATION_STARTED", {"revision": record["revision"], "simulated": self.mc.simulated})
+        try:
+            with self.store.read() as db:
+                payload = self.mc.generate(db, {"brief": brief, "productId": product_id})
+        except DomainError as error:
+            payload = {**record["payload"], "failure": {"code": error.code, "reason": str(error)}}
+            status = error.code if error.code in {"INCOMPLETE", "CONTENT_REJECTED", "GENERATION_FAILED"} else (
+                "CONTENT_REJECTED" if error.code == "LLM_INVALID_OUTPUT" else "GENERATION_FAILED")
+        else:
+            status = "DRAFTING"
+        with self.store.transaction() as db:
+            current = Store.get(db, rid, "MC")
+            if current["revision"] != record["revision"] or current["status"] != "DRAFTING":
+                raise DomainError("This generated draft is stale. Output was discarded.", 409, "STALE_SCOPE")
+            if status == "DRAFTING":
+                product = next((p for p in catalogue(db) if p["id"] == product_id), None)
+                if product != payload["product"]:
+                    payload = {**record["payload"], "failure": {"code": "MC_STALE_EVIDENCE",
+                               "reason": "Catalogue changed during generation. Revise with fresh evidence."}}
+                    status = "INCOMPLETE"
+            payload["history"] = history
+            current["payload"] = payload
+            if status == "DRAFTING":
+                self.mc._review(db, current)
+            else:
+                current["status"] = status
+                Store.save(db, current)
+                Store.event(db, rid, "MC", "TEXT_GENERATION_FAILED", {"revision": current["revision"], "code": payload["failure"]["code"]})
+            return current
 
     def consult(self, actor, data):
         """BA first live slice: no write lock during inference; recheck before save."""

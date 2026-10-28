@@ -2,6 +2,46 @@
 
 English primary. [中文阅读副本](zh-CN/LLM_INTEGRATION.md).
 
+## MC bounded live-text checkpoint · 29 October 2026
+
+This current opt-in supersedes older BA-only/MC-mock descriptions below; those
+dated checkpoints remain historical. Default mock and ordinary Strata defaults
+stay unchanged. `create_llm(..., mc_live=True)`, CLI `--mc-live`, or Windows
+`-LiveMc` require explicit Strata configuration; mock + live-MC is rejected.
+
+Shared `StrataLlm.generate_script(brief, evidence)` uses the existing local
+chat-completions transport, timeout, exact-model/finished-response checks and
+strict JSON. Only brief plus product `{id,name,facts,version}` enters this call,
+not sessions, identity, order, approval or database data. The model returns exactly
+`productId`, `style` (CALM/ENERGETIC/INFORMATIVE), literal `briefRef` (1–200 chars),
+distinct nonempty literal `factRefs`, and `featureFact` from those facts.
+
+`adapters/mc_text.py` composes a catalogue-literal script and three bounded shots
+from that plan. Marketing independently reconstructs/checks the **actual** script,
+claims, captions, directions and duration against its untouched catalogue/brief
+snapshot; checking only a separate claims array is insufficient. Style/brief quotes
+do not prove general semantic correctness. Founder still assesses creative fit.
+No unrestricted prose/medical claim verifier or generated video is introduced.
+
+The live HTTP facade persists DRAFTING scope, generates outside a write transaction,
+then rechecks current revision/status and the catalogue before one save/review
+transaction. Changed revision discards old output; changed evidence saves INCOMPLETE.
+Provider timeout/unavailability/invalid plan retains a failed record with original
+live mode and no text/media/approval; no fallback or automatic retry. Mock media
+remains independently checked and explicitly labelled. Final save failure may leave
+DRAFTING without output/review; no durable MC recovery is claimed in this slice.
+
+Capabilities separately report `mc=LIVE`, `textSimulated=false`, `mediaSimulated=true`;
+top-level simulated=false refers to text, not all capabilities. Health mode becomes
+LIVE_TEXT_WITH_MOCK_MEDIA, a configuration label, not readiness/inference evidence.
+Default BA-only Strata retains LIVE_BA_MOCK_MC. CS intent/real handoff limits remain.
+Existing AP stores REVIEW_TEXT_DRAFT bound to ID/revision, textMode=LIVE and
+mediaKind=MOCK_STORYBOARD; review receipt, decision and delivery remain distinct.
+No AP implementation, database schema, dependency, model install or task ownership
+change. Shared adapter/facade/HTTP/UI/script contract changes await affected-owner
+review before publication. Actual limited Windows evidence is in VERIFICATION.md.
+
+
 ## BA lifecycle checkpoint · 29 October 2026
 
 Round 2 adds natural BA revision/cancellation and persistence recovery around the

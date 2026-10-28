@@ -2,6 +2,37 @@
 
 English is the maintained primary version. [中文阅读副本](../zh-CN/modules/MC.md).
 
+## MC bounded live-text checkpoint · 29 October 2026
+
+Danny explicitly authorised this shared-model increment; original Zhengdu Wei
+KAN-12 service work and task ownership are retained. It adds no video or new AP
+business rules. Shared-file changes are recorded in SHARED_FILES.md; review pending.
+
+Founder brief + authorised product -> real shared-model bounded plan -> independently
+grounded catalogue-literal script/three-shot storyboard -> mock media placeholder
+-> saved current revision -> existing AP review. The model chooses fact selection/
+order, featured caption and CALM/ENERGETIC/INFORMATIVE style. It does not generate
+unrestricted marketing prose; style relevance still needs Founder judgement.
+Default mock and BA-only Strata remain unchanged; enable live MC explicitly.
+
+Actual Windows browser calm -> REQUEST_REVISION -> energetic new script -> fresh
+APPROVE passed. Original review became SUPERSEDED. Model-off new creation retained
+GENERATION_FAILED/LLM_UNAVAILABLE with no output/review/fallback. 181 full tests
+(28 MC tests) passed, including timeout/invalid output, actual-field tampering,
+independent evidence, current catalogue, concurrent revisions and final-save rollback.
+See VERIFICATION.md for concrete records/environment and reproduction.
+
+Stop here for this increment. **Storyboard is not video.** Media output and quality,
+full failure/recovery/cancellation lifecycle, broader brief interpretation and all
+Stage 1 MC acceptance conditions remain open. If final generation-save fails,
+DRAFTING may remain without output/review; no MC recovery UI is claimed. Existing
+AP decision recovery is a separate capability. English live examples alone do not
+establish multilingual/creative/medical safety or complete MC acceptance.
+
+The following earlier mock-only handoff/progress sections are historical.
+
+
+
 Default Stage 2 continuation: Zhengdu Wei, at Danny's request; no shared claim is
 inferred. Begin with [MC-START-01](../tasks/MC-START-01.md) and
 [START_HERE](../../START_HERE.md). Complete only its declared slice first.
@@ -20,6 +51,7 @@ video/labelled fallback assets, media failure/quality lifecycle, failed-save
 recovery, cancellation/stale callbacks and optional variants. A three-card
 storyboard placeholder must not be reported as generated video. An approval here
 is scoped to the current mock draft, not permission to post it externally.
+
 
 
 ## MC-START-01 / KAN-12 Implementation Progress

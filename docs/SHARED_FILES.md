@@ -22,6 +22,19 @@ New module-local helpers/tests may be added when their ownership is explicit.
 Do not move shared catalogue functions merely to make a local task easier: record
 the affected imports/contracts and integrate that change separately.
 
+## MC bounded live-text checkpoint · 29 October 2026
+
+Danny / M1 explicitly authorised bounded real MC text via KAN-15. Changes touch
+shared llm adapter + new pure mc_text contract, Company.campaign/mode, opt-in HTTP
+dispatch, CLI/Windows switch, MC service/current review action, UI labels/form
+fields and tests/test_mc.py. Existing AP implementation, schema, BA/CS/CO services,
+task registry, ownership and model config/installation are unchanged. Default mock
+and BA-only Strata are preserved. Original Zhengdu Wei MC code remains attributed.
+Affected MC/shared-file review is pending; no teammate endorsement, Jira update,
+remote PR or acceptance is inferred. This is not authority to add real CS intent,
+video, MC cancellation/recovery or unrestricted prose in the same increment.
+
+
 ## Shared surfaces
 
 `contracts.py`, `store.py`, `application.py`, `http.py`, `adapters/mock.py`,

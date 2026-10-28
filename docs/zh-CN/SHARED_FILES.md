@@ -18,6 +18,16 @@
 
 可添加归属明确的模块内 helper/测试。不为本地便利擅自搬共享商品函数；先列影响的导入/契约，另做集成。
 
+## MC 有界真实文字检查点 · 2026-10-29
+
+Danny / M1 明确授权 KAN-15 有界真实 MC 文字。本轮涉及共享 llm 适配器、新纯 mc_text
+契约、Company.campaign/mode、可选 HTTP 分发、CLI／Windows 开关、MC 服务／当前审批 action、
+UI 标签／表单及 tests/test_mc.py。既有 AP 实现、数据库结构、BA／CS／CO 服务、任务登记／归属、
+模型配置／安装不变；保留默认 mock、BA-only Strata 及 Zhengdu Wei 原 MC 工作署名。
+相关 MC／共享文件评审待办，不推断队友认可、Jira 更新、远程 PR 或验收。本授权不包含同轮增加
+真实 CS 意图、视频、MC 取消／恢复或自由文案。
+
+
 ## 共同文件
 
 `contracts.py`、`store.py`、`application.py`、`http.py`、`adapters/mock.py`、

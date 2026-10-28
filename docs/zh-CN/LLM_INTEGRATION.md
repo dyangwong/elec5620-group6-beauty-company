@@ -2,6 +2,35 @@
 
 中文阅读副本，依据 2026-10-21 [英文主版](../LLM_INTEGRATION.md) 同步。
 
+## MC 有界真实文字检查点 · 2026-10-29
+
+本检查点覆盖下方历史 BA-only／MC-mock 描述；保留旧日期证据。默认 mock 和普通 Strata
+行为不变。`create_llm(..., mc_live=True)`、`--mc-live` 或 Windows `-LiveMc` 需要显式
+Strata 配置，mock + live MC 被拒绝。
+
+共享 `StrataLlm.generate_script` 复用既有本地传输、超时、精确模型／完成响应和严格 JSON
+检查。仅发送 brief 与商品 `{id,name,facts,version}`，不发送身份、会话、订单、审批或数据库。
+返回严格五字段：productId、style（CALM/ENERGETIC/INFORMATIVE）、1–200 字符的原文 briefRef、
+非空无重复的目录原文 factRefs、选中事实之一 featureFact。
+
+`adapters/mc_text.py` 从模型方案组合目录原文脚本及三镜头；Marketing 使用未被适配器改动的
+原始目录／brief 独立重建并核验实际脚本、声明、字幕、方向和时长，不能仅信任 claims 数组。
+风格和原文引用不证明一般语义正确，Founder 仍需判断创意是否符合需求。未增加自由文案／医疗
+声明验证器或视频生成。
+
+真实 HTTP 先保存 DRAFTING 范围，在写事务之外推理，再核验当前版本／状态／目录，原子保存并
+提交审批。过期输出丢弃，证据变化保存 INCOMPLETE。供应方不可用／超时／无效方案保存真实模式
+失败记录，无文字／媒体／审批，不回退或自动重试。mock 媒体仍独立校验并标注。最终保存失败
+可能留下无输出／审批的 DRAFTING；本轮不宣称 MC 持久恢复。
+
+模式分开报告 mc=LIVE、textSimulated=false、mediaSimulated=true；总 simulated=false 仅表示
+文字不全为模拟。健康标签 LIVE_TEXT_WITH_MOCK_MEDIA 不代表模型就绪或推理成功；普通 BA-only
+Strata 保留 LIVE_BA_MOCK_MC。CS 意图／真实交接限制不变。现有 AP 保存绑定 ID／修订的
+REVIEW_TEXT_DRAFT，含 textMode=LIVE、mediaKind=MOCK_STORYBOARD；回执、决策、投递分开。
+未修改 AP 实现、数据库结构、依赖、模型安装和任务归属。共享契约变更发布前仍待相关成员评审；
+实际有限 Windows 证据见 VERIFICATION.md。
+
+
 ## BA 生命周期检查点 · 2026-10-29
 
 第二轮围绕既有提取/propose 增加自然语言 BA 修改/取消和保存恢复；没有新供应方依赖、提示词、

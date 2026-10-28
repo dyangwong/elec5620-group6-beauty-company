@@ -1,6 +1,39 @@
 # Current implementation status
 
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
+## MC bounded live-text checkpoint · 29 October 2026
+
+Danny / M1 explicitly authorised this bounded MC integration on `KAN-15-mc-live-text`,
+from local 4f43f38a89637248874f4ed308441a5502e464ff (BA round 2). Fetched main remains
+515bfa537e31a01b9e9a24400a7112f8103babb3. Earlier local work and Zhengdu Wei's MC
+implementation/attribution remain. This does not claim BA-START-01 or reassign KAN-12.
+
+**181 offline tests passed on Windows Python 3.14.5** (169 previous + 12 MC tests),
+source checks 114 files / 41 groups and JavaScript syntax passed. Actual browser:
+default mock draft approved; opt-in real MC calm draft -> Founder REQUEST_REVISION
+-> energetic new revision/fresh review -> APPROVED. Script and featured fact changed.
+Independent persisted catalogue/script/frame/approval checks passed. Stopping this
+run's model saved a separate GENERATION_FAILED / LLM_UNAVAILABLE live record with
+no output/review and no mock fallback; app health remained ok. Zero commerce effects
+and unchanged stock. Original config/database hashes and 56 model-file inventory
+were preserved; only this run's two apps and exact model instance were stopped.
+
+Enable with `-Mode strata -LiveMc` / `--llm-mode strata --mc-live`; ordinary Strata
+continues BA-only live with MC mock. The shared model selects facts/order, featured
+fact and one of three styles. Product text is catalogue-literal constrained
+composition, not unrestricted creative prose. Media is still MOCK_STORYBOARD,
+not video. Existing exact-revision AP controls are reused, with no publication.
+
+**Stop condition reached for this increment.** Remaining MC work includes media
+output/quality/failure acceptance, broader brief semantics, cancellation and durable
+generation-save recovery. A final-save failure can retain DRAFTING, never approval
+or successful output. These and full Stage 2 acceptance are not claimed complete.
+BA is unchanged; CS intent remains NOT_CONNECTED and live CS handoff blocked.
+See VERIFICATION.md and modules/MC.md. Jira unverified / update pending: no access
+or update this run. No push, PR, merge, Canvas upload, dependencies or downloads.
+The old f7bb141 ZIP is historical; this increment has not had a fresh-ZIP rehearsal.
+
+
 ## Current deployment checkpoint · 28 October 2026
 
 ## BA lifecycle checkpoint · 29 October 2026

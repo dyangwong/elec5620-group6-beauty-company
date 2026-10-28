@@ -2,6 +2,40 @@
 
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../VERIFICATION.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
+## MC 有界真实文字检查点 · 2026-10-29
+
+本次是**本地 MC 文字**新证据，区别于历史 BA／ZIP 检查点。分支 KAN-15-mc-live-text，
+从干净 4f43f38a89637248874f4ed308441a5502e464ff 开始；获取远程后 origin/main 仍为
+515bfa537e31a01b9e9a24400a7112f8103babb3。Danny / M1 明确授权共享文件例外，AI 辅助，
+任务归属不变。
+
+| 本次检查 | 实际结果 |
+|---|---|
+| Windows Verify | **181 项全部通过，49.886 秒**，原 169 + 新 MC 12；来源 114 文件／41 组、来源哈希及交接检查通过。JS 语法通过，审批标签修正后再查通过；MC 单独 28 项通过。 |
+| 离线边界／失败 | 显式开启／默认兼容、最小 DTO 严格传输、无效方案无回退、实际脚本／字幕／方向／时长篡改、独立证据、身份权限／CSRF／精确字段、审批／修订、并发过期结果、目录变化、最终保存回滚及不可用／超时／无效结果留存。这些是测试替身，不算真实推理。 |
+| 实际 mock 网页／新库 5710 | MC-b3315edc057a 修订 1 APPROVED，文字／媒体均模拟，原审批及投递通过。 |
+| 真实模型／新库 5711 | MC-931edb7409b9 修订 1 CALM，重点 Fragrance-free，仍选择三个目录事实。brief 要求仅 Fragrance-free，但模型保留其他授权事实；此创意不符显示给 Founder，不能宣称语义遵循通过。Founder REQUEST_REVISION 已投递。 |
+| 真实新修订及审批 | 同 MC 修订 2 ENERGETIC，factRefs=[50 ml]，重点字幕 50 ml；脚本变为 “Meet Daily Hydration Cream. 50 ml. Explore the product details.” AP-31e86c3715fa APPROVED/DELIVERED；旧 AP-d0e8fc30ccdd SUPERSEDED，保留修改要求决策。 |
+| 独立数据库核验 | 使用当前 P-101:v1 原目录重建实际脚本／声明／三分镜，文字非模拟、媒体模拟。审批绑定准确草稿／修订／真实文字／mock 媒体；两条不同决策，业务效果 0，库存 12/8/0 不变。 |
+| 停止准确所启模型后新网页创建 | 应用健康、配置 LIVE_TEXT_WITH_MOCK_MEDIA，8080 关闭；MC-de418646a5b9 GENERATION_FAILED / LLM_UNAVAILABLE / textSimulated=false，无脚本／声明／媒体／审批，不回退 mock。 |
+| 环境和清理 | Windows 11 Pro 25H2 build 26200.9711、应用 Python 3.14.5；Strata 0.2.1、Terminal 0.1.46.1、engine 0.1.46 CUDA 13／Python 3.12.15，qwen3.8-flash-next-gyro-gyro-s。复用 8192 context、单请求、关闭 vision/MTP、1536 MiB reserve、route-tail-skip 7、120 秒／512 输出 token；无安装／下载／新依赖／配置改写。仅停止本轮 5710／5711 和准确模型实例。原配置／数据库哈希和 56 模型文件大小／mtime 匹配；无捕获的浏览器警告／错误。 |
+
+引擎两次 MC 生成记录 prompt 326／332 token、输出 53／41 token，prompt/decode 时间为
+6135+2062 毫秒和 1803+1260 毫秒，是引擎测量，不是完整网页耗时。适配器核对精确配置模型与
+完整 JSON；实际保存内容和模型停机失败另行核验，区别于替身／仅健康检查。初次测试发现漏导入
+text_value，修正后全通过；创建／修订字段和真实审批标题也在最终网页验收前修正。
+
+原始日志、测试库、实例回执、前后哈希、引擎日志和 evidence-summary.json 在忽略目录
+var/mc-live-20261029，截图在本地 outputs。未跟踪会话／密钥／模型。复现见 WINDOWS_LLM.md。
+未生成新 ZIP／校验值，旧 f7bb141 包早于 BA／MC 增量。
+
+**未验证／未完成：**自由创作文案、一般／多语言 brief 语义、医疗安全、真实视频／媒体质量、MC
+取消和生成保存的持久恢复／完整生命周期、完整 MC／Stage 2 验收、新增量 ZIP／其他电脑／现场
+验收。最终保存回滚可能保留无输出／审批的 DRAFTING，已有 AP 恢复不能称为 MC 生成恢复按钮。
+未接入真实 CS 意图／交接。Jira 未核实／更新待办（本轮不访问／修改），未推送／PR／合并／
+上传 Canvas。
+
+
 ## BA 生命周期检查点 · 2026-10-29
 
 动工前复核第一轮：本地 478d522694ca381b2ba3c3c5e3711a77fb04133a 干净，147 项通过，

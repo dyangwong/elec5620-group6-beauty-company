@@ -2,6 +2,29 @@
 
 中文阅读副本，依据 2026-10-16 英文主版同步。以[英文主版](../../modules/MC.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
+## MC 有界真实文字检查点 · 2026-10-29
+
+Danny 明确授权共享模型增量，保留 Zhengdu Wei 的 KAN-12 原代码和归属。未增加视频或 AP
+业务规则；共享文件影响见 SHARED_FILES.md，相关评审待办。
+
+Founder brief + 授权商品 → 真实共享模型有界方案 → 独立核验的目录原文脚本／三镜头分镜 →
+mock 媒体占位 → 保存当前修订 → 现有 AP。模型选择事实及顺序、重点字幕和 CALM/ENERGETIC/
+INFORMATIVE 风格，不生成自由营销文案；创意贴合度仍由 Founder 判断。默认 mock 和 BA-only
+Strata 不变，真实 MC 需显式开启。
+
+实际 Windows 网页 calm → REQUEST_REVISION → energetic 新脚本 → 新 APPROVE 通过，旧审批
+SUPERSEDED。模型停机后的新请求保存 GENERATION_FAILED/LLM_UNAVAILABLE，无输出、审批或
+回退。完整 181 项（MC 28 项）通过，覆盖超时／无效结果、实际字段篡改、独立证据、当前目录、
+并发修改和最终保存回滚。具体记录、环境和复现见 VERIFICATION.md。
+
+本轮到此停止。**分镜不是视频。**媒体输出／质量、完整失败恢复／取消、更广 brief 解释和所有
+Stage 1 MC 验收仍有缺口。生成最终保存失败可能保留无输出／审批的 DRAFTING，没有 MC 恢复
+网页；已有 AP 决策恢复是另一能力。英语实例不证明多语言、创作、医疗安全或完整 MC 完成。
+
+下方早期 mock-only 交接和进展是历史记录。
+
+
+
 按 Danny 要求默认由 Zhengdu Wei 延续，不代表共享认领。
 从 [MC-START-01](../tasks/MC-START-01.md) 和[开工入口](../../../START_HERE.zh-CN.md)开始，先做声明范围。
 
@@ -14,6 +37,7 @@ Stage 1：Zhengdu Wei；MC-M-01 / MC-UC-01 / MC-F-01..03。
 
 剩余：真实 brief 理解、完整声明检查、视频/标明替代媒体、失败/质量生命周期、保存失败恢复、
 取消/旧回调、可选变体。三张分镜卡不是生成视频；此处批准仅限当前 mock 草稿，不授权外部发布。
+
 
 ## Danny 授权修复与集成 · 2026-10-27
 

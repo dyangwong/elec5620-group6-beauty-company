@@ -1,4 +1,33 @@
 # Windows 部署与 KAN-15 交接
+## MC 有界真实文字检查点 · 2026-10-29
+
+复用已安装模型／配置，不重新 InstallModel 或复制权重。当前源码根目录完成 Setup／Verify
+并检查端口／进程后：
+
+```powershell
+.\scripts\windows.ps1 -Action StartModel
+.\scripts\windows.ps1 -Action Start -Mode strata -LiveMc -Port 5711 -Database var/mc-demo.sqlite3 -LlmConfig var/llm.strata.json
+# 浏览器打开 http://127.0.0.1:5711，以虚构 Founder 登录 Content studio。
+.\scripts\windows.ps1 -Action Stop -Port 5711
+```
+
+独立演练选择空闲端口和新库名，原数据库保留。CLI 同等参数为 --llm-mode strata、--llm-config
+var/llm.strata.json、--mc-live、--port 5711、--db var/mc-demo.sqlite3。省略 LiveMc/mc-live
+保持 MC mock；mock + LiveMc 在进程变动前拒绝。无需改写配置或新增依赖。新解压源码应按下方
+步骤传入游戏本原本地配置的绝对路径；StartModel 仍从拥有模型环境的原目录执行。本次 MC 增量
+尚未做新目录 ZIP 演练。
+
+分别检查应用健康、模型就绪、实际结果。calm／Fragrance-free brief 生成后要求修订，再用
+energetic／50 ml，检查脚本／风格／字幕变化、新审批、模式和目录事实，仅批准当前精确修订。
+文字是目录原文组合，媒体仍 MOCK_STORYBOARD。模型停机应保存 GENERATION_FAILED /
+LLM_UNAVAILABLE，无文字／媒体／审批或静默 mock 成功；LIVE 配置和健康不证明就绪或推理。
+
+只停止本轮端口／回执对应的应用；本轮启动的模型用 WINDOWS_LLM_RUNTIME.md 的准确实例保护
+停止，不关闭已有共享模型。本次用 5710 mock、5711 live 及 var/mc-live-20261029 下独立库；
+两个应用和所启模型均已停止，原配置／数据库／模型保留。下方旧日期证据属历史，当前见
+VERIFICATION.md。
+
+
 ## 当前 ZIP 部署步骤 · 2026-10-28
 
 冻结演练包源码 `f7bb141f6e35c7846989adccf58841b9e128a978`，
