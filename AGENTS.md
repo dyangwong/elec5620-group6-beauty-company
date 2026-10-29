@@ -172,6 +172,11 @@ A need to change a shared signature is a bounded request to Danny, not a reason
 to implement a separate client. CS now has the shared interpret_service_request v1 port for the bounded exchange scene.
 For Danny explicitly continuing GR-INT-02, use that guide/shared task rather than
 automatically selecting BA-START-01. BA/MC and bounded CS exchange live paths are evidenced; broader CS,
-conditional BA review and final release acceptance remain.
+broader BA review and final release acceptance remain.
 Read the current STATUS/VERIFICATION and STAGE2_READINESS checkpoints; they distinguish
 implemented slices from older gaps and version-specific Windows/model evidence.
+
+Natural BA now also has a consented unresolved-product AP review branch;
+read the 30 October STATUS/VERIFICATION and BA/AP contracts before rebuilding it.
+Routine advice remains direct; approved review requires fresh Customer confirmation
+and validation. Broader BA review/structured-route and final release acceptance remain.

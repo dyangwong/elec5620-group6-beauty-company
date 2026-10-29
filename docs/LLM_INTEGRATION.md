@@ -2,6 +2,17 @@
 
 English primary. [中文阅读副本](zh-CN/LLM_INTEGRATION.md).
 
+## BA conditional review checkpoint · 30 October 2026
+
+No model transport/prompt/capability/config change. Natural BA confirmation
+now snapshots/closes catalogue DB access before propose, then rechecks current
+session/Customer/owner/source/revision before staging and existing evidence validation.
+Review submission/delivery/recovery never calls the model. Founder APPROVE does not
+endorse an old invalid/unavailable result; Customer reconfirmation invokes fresh
+propose with current catalogue/stock. Failed original live mode remains live,
+without mock fallback. Actual model-off review then restored-model browser advice
+passed (VERIFICATION.md). Default mocks and existing CS/MC capabilities preserved.
+
 ## Current CS exchange slice · 29 October 2026
 
 Danny / M1 explicitly authorised this AI-assisted KAN-15 / GR-INT-02 shared

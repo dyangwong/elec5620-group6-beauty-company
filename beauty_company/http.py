@@ -121,8 +121,10 @@ class Router:
             if len(parts) == 4 and parts[:2] == ["api", "consultations"]:
                 if parts[3] == "clarify":
                     return json_response(self.company.ba_intake.clarify(actor, parts[2], data))
+                if parts[3] == "request-review":
+                    return json_response(self.company.ba_review.request(actor, parts[2], data, authenticate))
                 if parts[3] == "confirm-needs":
-                    return json_response(self.company.ba_intake.confirm(actor, parts[2], data))
+                    return json_response(self.company.ba_intake.confirm(actor, parts[2], data, authenticate))
                 if parts[3] == "revise":
                     return json_response(self.company.ba_intake.revise(actor, parts[2], data))
                 if parts[3] == "cancel":

@@ -2,6 +2,13 @@
 
 中文阅读副本，以[英文主版](../STAGE2_READINESS.md)为维护依据。
 
+## BA conditional review checkpoint · 30 October 2026
+
+自然BA的有界条件复核已实现并验证：同意／回执、待定不算成功、准确人工决定、更正／取消失效和批准后
+新建议验证。281项Windows及实际mock／live网页通过；看当前STATUS／VERIFICATION，不重复旧审计缺口。
+这不是完成率或全部模块验收。更广CS／CO／NFR、一般语义／医疗质量、结构化入口、真人相关负责人评审、
+最新版ZIP／Canvas／现场及真实Agile／贡献证据仍需收尾。下一轮冻结评审后的main并演练交付，不继续新增审批选项。
+
 ## 盘点后的当前 CS 检查点 · 2026-10-29
 
 当前KAN-15-cs-live-handoff仅针对有界自然换货场景取代下方历史CS未连接／真实阻止缺口。

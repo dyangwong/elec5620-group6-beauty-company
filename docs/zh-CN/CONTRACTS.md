@@ -2,6 +2,32 @@
 
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../CONTRACTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
+## BA conditional review checkpoint · 30 October 2026
+
+新增自然语言 BA-UC-01 E4 契约，无 schema／provider 变更：
+
+POST /api/consultations/{id}/request-review 只接受
+{contextRevision:正整数, consent:true, issue:1–1000字符产品问题}。
+要求客户会话／CSRF／所有权及数据库当前客户角色；只接受确认需求后的自然语言 INCOMPLETE 建议，
+不能带待恢复草稿或医疗停止。相同范围重复返回同一回执，变更问题须新版本；不接受自带 action／角色／
+证据／决定／输出或审批ID。
+
+服务端 action={type:REASSESS_ADVICE, consultationId, contextRevision}、actionRef=null。
+最小证据={needs:{concern,budget,fragranceFree},issue,outcomeCode,adviceSimulated}，预算整数分。
+失败分类受限，不传原始聊天／错误输出／订单／档案／凭证／会话。客户同意绑定当前版本。
+AP回执、BA REVIEW_PENDING与审计原子提交；不可用／无回执／保存失败为BA_REVIEW_UNAVAILABLE，
+不算成功或已提交。本地SQLite ReviewPort并非新增远程服务。
+
+AP增加BA来源，沿用Founder决定意图／原子提交／存储恢复／投递；BA重查当前action／版本／同意／
+确认约束／证据，恢复时也校验意图证据。APPROVE投递仅进入CLARIFYING／needsReady，旧失败建议仍未完成；
+客户经原confirm-needs进入新版本重新评估。REJECT→INCOMPLETE，REQUEST_REVISION→CLARIFYING且needsReady:false，
+均不能直接确认。普通有效建议不需复核；决定不能越过医疗／商品／事实／库存验证，不执行业务、
+不直接调用模型、不自动重试。
+
+自然confirm-needs接受Router可信会话复查回调，推理前关闭快照连接，暂存前核实当前客户／会话、
+所有权、来源payload和版本；保留最终证据校验与草稿恢复。更正／重试／再确认／取消使旧复核失效并保存历史，
+旧投递／恢复不能赋予新版本权限。旧结构化consult签名不变，本切片未给它接入条件复核。
+
 ## CS 意图v1与分阶段真实交接 · 2026-10-29
 
 新增共享`interpret_service_request(message: str) -> dict`复用StrataLlm._complete／配置／错误。

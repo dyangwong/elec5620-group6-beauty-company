@@ -2,6 +2,14 @@
 
 中文阅读副本，依据 2026-10-21 [英文主版](../LLM_INTEGRATION.md) 同步。
 
+## BA conditional review checkpoint · 30 October 2026
+
+不改模型传输／提示／能力／配置。自然BA确认先快照商品并关闭数据库连接，再propose；暂存前重查当前
+会话／客户／所有权／来源／版本并保留证据校验。复核提交／投递／恢复不调用模型。
+Founder批准不背书旧的无效或不可用结果，客户再确认才按最新商品／库存重新propose。
+旧真实失败仍真实，不回退mock；实际停机复核后恢复模型的网页建议已通过，见VERIFICATION。
+默认mock及既有CS／MC能力保留。
+
 ## 当前 CS 换货切片 · 2026-10-29
 
 Danny／M1 明确授权 KAN-15／GR-INT-02 本切片，AI 辅助。从已获取的干净 main

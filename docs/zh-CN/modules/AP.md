@@ -12,6 +12,14 @@ Stage 1：Jiaxuan Ren；AP-M-01 / AP-UC-01 / AP-F-01..03。
 已有：CS/MC 精确动作/版本证据；持久 PENDING 回执；仅 Founder 以理由 APPROVE/REJECT/REQUEST_REVISION；
 决定/请求/审计一次提交，投递另做。重复投递同 decisionId；旧范围不能改当前工作，接收服务独立复核。
 
+## BA conditional review checkpoint · 30 October 2026
+
+Danny授权KAN-15最小共享接入，保留Jiaxuan Ren／M4的AP贡献及KAN-13／starter归属。
+新增BA REASSESS_ADVICE来源，沿用现有表／意图／决定／恢复／投递；BA本地接收器核实同意与准确范围／证据，
+不调用模型或业务效果。批准返回客户确认和重新验证，拒绝保持未完成，要求修改需更正。
+CS／MC映射和AP保存恢复保持，完整281项通过。相关负责人真人评审待办，不能由授权／CI推断Approve。
+见CONTRACTS／VERIFICATION／BA指南；未知风险、过期、队列／通知和AP完整验收仍另行处理。
+
 ## 保存失败与恢复 · KAN-13 / AP-START-01 · 2026-10-24
 
 **决定意图**是持久、可辨识的决定提议，保存 Founder、精确范围（来源、版本、动作、actionRef）、种类和理由。

@@ -22,6 +22,18 @@ New module-local helpers/tests may be added when their ownership is explicit.
 Do not move shared catalogue functions merely to make a local task easier: record
 the affected imports/contracts and integrate that change separately.
 
+## BA conditional review checkpoint · 30 October 2026
+
+Danny / M1 explicitly authorised the bounded KAN-15 natural BA review integration:
+new modules/ba_review.py; natural ba_intake scope/history and connection boundary;
+minimal BA origin/receiver hooks in modules/approval.py; Company wiring, HTTP review
+route/session callback and existing web views. Tests stay in tests/test_ba.py;
+English/Chinese contracts/guides and selected BA/AP/GR traceability update together.
+No schema, provider signature/client, dependency/config/model install, CS/MC/CO
+business rule or effect adapter change. Preserve Jiaxuan Ren / M4 AP and all original
+team contributions; no starter claims/reassignment. Relevant AP/shared-owner review
+pending; authorised owner exception/CI is not an independent Approve.
+
 ## CS intent/live exchange shared exception · 29 October 2026
 
 Danny / M1 explicitly authorised KAN-15 CS/CO/shared integration with AI assistance:

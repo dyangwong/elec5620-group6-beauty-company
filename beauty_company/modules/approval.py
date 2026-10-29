@@ -21,7 +21,7 @@ RECORDING_FAILED = "RECORDING_FAILED"
 class Approval:
     @staticmethod
     def submit(db, role, origin_id, revision, action, evidence, action_ref=None, predecessor=None):
-        if role not in {"CS", "MC"} or not action or not evidence:
+        if role not in {"BA", "CS", "MC"} or not action or not evidence:
             raise DomainError("Review requires a supported origin, exact action and evidence.")
         existing = db.execute("SELECT id FROM approvals WHERE origin_role=? AND origin_id=? AND revision=?",
                               (role, origin_id, revision)).fetchone()
@@ -79,6 +79,9 @@ class Approval:
         reason = text_value(data.get("reason"), "Decision reason", 1000)
         revision = revision_value(data.get("contextRevision"))
         review = self.get(db, rid)
+        if review["origin_role"] == "BA":
+            from .ba_review import check_review_scope
+            check_review_scope(Store.get(db, review["origin_id"], "BA"), review)
         existing = self.intent(db, rid)
         if review["decision_id"]:
             if review["decision"] == kind and review["reason"] == reason:
@@ -139,6 +142,11 @@ class Approval:
         if intent["founder_id"] != actor.id:
             raise DomainError("This decision intent belongs to another authorised decision maker.", 403, "FORBIDDEN")
         review = self.get(db, intent["approval_id"])
+        if review["origin_role"] == "BA":
+            from .ba_review import check_review_scope
+            check_review_scope(Store.get(db, review["origin_id"], "BA"), review)
+            if review["evidence"] != intent["evidence"]:
+                raise DomainError("The intended BA review evidence changed.", 409, "STALE_SCOPE")
         if review["decision_id"]:
             if review["decision"] == intent["kind"] and review["reason"] == intent["reason"]:
                 # One authoritative decision per request. A repeated commit is not a second decision.
@@ -202,6 +210,9 @@ class Approval:
         if origin["revision"] != review["revision"] or origin["payload"].get("approvalId") != rid:
             db.execute("UPDATE approvals SET delivery='STALE' WHERE id=?", (rid,))
             return self.get(db, rid)
+        if review["origin_role"] == "BA":
+            from .ba_review import check_review_scope
+            check_review_scope(origin, review)
         if origin["payload"].get("decisionId") == review["decision_id"]:
             return review
         if Store.fault(db, "approval_delivery"):
@@ -210,7 +221,10 @@ class Approval:
             return self.get(db, rid)
         origin["payload"]["decisionId"] = review["decision_id"]
         origin["payload"]["decision"] = review["decision"]
-        if review["origin_role"] == "CS":
+        if review["origin_role"] == "BA":
+            from .ba_review import receive_review
+            receive_review(origin, review)
+        elif review["origin_role"] == "CS":
             origin["status"] = {"APPROVE": "AWAITING_CONFIRMATION", "REJECT": "REJECTED", "REQUEST_REVISION": "NEEDS_INFORMATION"}[review["decision"]]
             origin["payload"]["note"] = {"APPROVE": "Exact-scope approval recorded. The Customer must confirm again; current eligibility and stock will be rechecked.", "REJECT": "The Founder rejected this proposal. No business action was executed.", "REQUEST_REVISION": "The Founder requested corrected needs and a fresh proposal/review."}[review["decision"]]
             coordination_state = {"APPROVE": "PENDING_VALIDATION", "REJECT": "CANCELLED", "REQUEST_REVISION": "CLARIFICATION_REQUIRED"}[review["decision"]]
