@@ -6,6 +6,32 @@ The installation-blocked sections below retain the earlier attempt as history.
 
 English primary. [中文阅读副本](zh-CN/WINDOWS_LLM.md).
 
+## Current real CS exchange steps · 29 October 2026
+
+Use current source from this CS checkpoint, not old frozen ZIP/standalone-only
+instructions below. No reinstall/download is required on this prepared laptop.
+Keep existing var/llm.strata.json and saved profile. Start only an already installed
+model with `scripts/windows.ps1 -Action StartModel`; reuse it if already ready.
+Then `scripts/windows.ps1 -Action Start -Mode strata -Port 5761 -Database
+var/<new-unique-run>/live.sqlite3`. No LiveMc needed: this run keeps MC MOCK.
+Application health/configured LIVE is distinct from model readiness/inference.
+
+Customer After-sales care → Describe your service request: choose owned order,
+explicit exchange intent + hydration/cleansing + AUD budget + fragrance requirement.
+Inspect interpreted constraints. Missing/unsupported input clarifies/escalates;
+correct using the saved natural request form (new revision, no automatic retry).
+Founder Customer requests → Start advice handoff. Inspect independently verified
+live product/facts, then original Customer confirmation→Founder exact approval→
+Customer final simulated confirmation. No model grants authority. Existing structured
+mock entry remains; old structured live records can be converted by natural correction.
+
+Actual isolated5761 browser once-only path and stopped-model failures passed;
+5760 mock browser still worked without model.264 tests/source/JS passed. Full evidence
+and same-environment prerequisites: VERIFICATION.md. Stop only the owned app with
+`scripts/windows.ps1 -Action Stop -Port 5761`. Leave pre-existing/shared models
+running; this run stopped only its recorded new instance with --if-instance-id.
+No new ZIP/Canvas/Mac/venue/remote-access or broader semantic acceptance is claimed.
+
 ## CO failure checkpoint — no model setup required · 29 October 2026
 
 Current KAN-15-co-handoff-failures source adds bounded mock CS-to-BA failure handling.

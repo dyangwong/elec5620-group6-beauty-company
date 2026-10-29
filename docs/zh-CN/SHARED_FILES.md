@@ -18,6 +18,16 @@
 
 可添加归属明确的模块内 helper/测试。不为本地便利擅自搬共享商品函数；先列影响的导入/契约，另做集成。
 
+## CS 意图／真实换货共享例外 · 2026-10-29
+
+Danny／M1明确授权KAN-15 CS／CO共享集成、AI辅助：新adapters/cs_intent.py、modules/cs_flow.py，
+共享llm／mock增量、BA目录快照helper、CS建议保存helper／旧真实入口保护、CO分阶段方法、
+Company能力／HTTP／会话／UI及test_cs_live.py。test_llm／test_mc仅更正旧CS能力／禁用预期，
+不改MC业务。合约／CS＋CO＋GR追溯及双语同更。未改AP／效果／结构／依赖／配置／任务登记。
+保留Siyuan Lei CS、Guiyu Liu CO和原贡献，不领取／重分配KAN-11／KAN-14／starter。
+相关负责人评审待办，不由测试推断；Danny授权自己PR在全部必需检查后正常保护合入，不自我Approve，
+不改保护规则。
+
 ## CO 失败边界共享例外 · 2026-10-29
 
 Danny／M1 明确授权 KAN-15 有界增量，AI 辅助：modules/coordination.py、新 tests/test_co.py，

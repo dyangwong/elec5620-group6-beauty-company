@@ -68,7 +68,7 @@ database, session, ZIP, Git directory or customer media belongs in this repo.
 - Default adapters are deterministic mocks. KAN-15 includes opt-in BA needs/advice,
   bounded live MC text, optional FFmpeg template MP4 and BA/MC recording recovery.
   Read the latest STATUS/VERIFICATION before historical notes; do not rebuild those
-  slices. CS intent/live handoff remains unconnected. Template MP4 is not AI-generated
+  slices. Bounded CS exchange intent/live handoff is implemented; read its current evidence. Template MP4 is not AI-generated
   scenes or audio; no real settlement/publication or complete Stage 2 is claimed.
 - Real/local model deployment is deferred, not an onboarding prerequisite. Do not
   install/download/connect providers or request keys as part of a starter task.
@@ -169,9 +169,9 @@ owns GR-INT-02 shared deployment/adapter/configuration work by explicit request.
 Other members preserve injected BA/MC calls and module-local fakes, and document
 CS intent examples; they do not start duplicate provider/model integration.
 A need to change a shared signature is a bounded request to Danny, not a reason
-to implement a separate client. CS has no independent live intent port yet.
+to implement a separate client. CS now has the shared interpret_service_request v1 port for the bounded exchange scene.
 For Danny explicitly continuing GR-INT-02, use that guide/shared task rather than
-automatically selecting BA-START-01. BA/MC bounded live paths are evidenced; CS
-intent/live handoff, conditional BA review and final release acceptance remain.
+automatically selecting BA-START-01. BA/MC and bounded CS exchange live paths are evidenced; broader CS,
+conditional BA review and final release acceptance remain.
 Read the current STATUS/VERIFICATION and STAGE2_READINESS checkpoints; they distinguish
 implemented slices from older gaps and version-specific Windows/model evidence.

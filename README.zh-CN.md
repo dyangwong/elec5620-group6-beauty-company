@@ -12,7 +12,7 @@ Group 6 的 **AI-Powered One-Person Beauty Commerce and Content Company** 初始
 
 **当前已有可演示的有界原型，尚非完整Stage2提交。** 默认适配器仍是确定性mock；
 独立BA及有界MC文字已有真实本地模型证据，可选FFmpeg生成可播放静音模板MP4并精确审批，
-MC生成保存恢复也已验证。CS意图／真实CS→BA尚未连接；无生产结算、发货或公开发布，
+MC生成保存恢复也已验证。有界CS自然换货意图／真实CS→CO→BA已验证，更广CS仍待验；无生产结算、发货或公开发布，
 Stage1设计采纳仍PROPOSED。见[当前就绪盘点](docs/zh-CN/STAGE2_READINESS.md)、
 [验证证据](docs/zh-CN/VERIFICATION.md)及[Windows步骤](docs/zh-CN/WINDOWS_LLM.md)。
 最新本地实现与较早冻结ZIP／main覆盖不同。

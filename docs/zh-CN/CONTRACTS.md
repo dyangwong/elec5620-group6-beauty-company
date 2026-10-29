@@ -2,6 +2,34 @@
 
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../CONTRACTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
+## CS 意图v1与分阶段真实交接 · 2026-10-29
+
+新增共享`interpret_service_request(message: str) -> dict`复用StrataLlm._complete／配置／错误。
+精确字段：intent=EXCHANGE|CLARIFY|UNSUPPORTED，intentSource=原文引文|null，
+needs={concern,budget,fragranceFree,sources}；沿用需求提取格式（AUD元、明确null、各字段原文证据）。
+不传或接受可信身份／订单／政策／库存／商品／权限。独立有界词法核验需求／无香，混合需求／预算
+不猜测，额外权限字段拒绝。否定／混合／退款／退货／取消／医疗请求澄清或转人工，非通用语义验证器。
+
+POST /api/after-sales/intake仅orderId／message（Customer，201）；
+POST /api/after-sales/{id}/revise-intent仅message／contextRevision（owner）。先验关联／政策，
+保存INTERPRETING元数据，释放DB连接再推理，保存前复核当前会话／角色／来源／归属／版本／政策，
+记录READY／CLARIFICATION_REQUIRED／UNSUPPORTED／FAILED。CS仍ASSESSING／NEEDS_INFORMATION／
+UNRESOLVED。READY是待客户检查的解释，非审批；显示约束供更正。同样入口复用记录，更改需明确新版本。
+
+Founder POST /api/after-sales/{id}/coordinate仅contextRevision，真实模式必填，旧mock空体兼容。
+真实需当前READY意图和政策；CO.prepare_external提交一次SENT只读尝试，释放连接后以目录快照调用
+BA.recommend_from_catalogue，再验会话／角色／来源／归属／版本／政策及当前商品／事实／库存，
+CO.finish_external与CS结果原子保存。SENT仅待处理尝试证据，不是接收结果或效果；SENT／终态重复不
+重发。客户新版本作废旧待回交接及精确审批，旧响应／确认不可重开；旧CustomerService.coordinate
+真实入口返回CS_STAGED_HANDOFF_REQUIRED。
+
+未改结构／依赖／提供方／客户端／配置或AP／效果合约，默认结构化／mock保留。
+能力标记LIVE／MOCK／NOT_CONNECTED，intent.simulated／advice.simulated分别保留起源；
+payload.simulated仍指模拟交易。模型不可用／超时／无效如实失败、不回退；SQLite写错误503
+CS_STORAGE_UNAVAILABLE，不伪称痕迹已存。中断／最终保存失败保留INTERPRETING／SENT，需明确新版本
+更正，未实现通用自动／仅保存CO恢复。确认→精确AP→客户再确认→一次模拟效果沿用原CS／AP服务。
+本新验证路径取代下方历史禁用说明。
+
 ## CO 只读建议失败边界 · 2026-10-29
 
 `Coordination.advice_handoff(db, rid, needs, advisor)` 签名及调用方事务不变。

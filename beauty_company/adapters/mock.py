@@ -4,6 +4,10 @@
 class MockLlm:
     simulated = True
 
+    def interpret_service_request(self, message):
+        from .cs_intent import mock_intent
+        return mock_intent(message)
+
     def extract_needs(self, messages):
         from .needs import mock_extract
         return mock_extract(messages)

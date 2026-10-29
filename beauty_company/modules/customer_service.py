@@ -84,6 +84,8 @@ class CustomerService:
 
     def coordinate(self, db, actor, rid):
         require_role(actor, "FOUNDER")
+        if not self.advisor.simulated:
+            raise DomainError("Use the staged CS handoff outside the write transaction.", 409, "CS_STAGED_HANDOFF_REQUIRED")
         record = Store.get(db, rid, "CS")
         if record["status"] != "ASSESSING":
             return record
@@ -93,13 +95,17 @@ class CustomerService:
         except DomainError as error:
             return self._blocked(db, record, error)
         advice = self.co.advice_handoff(db, record["payload"]["coordinationId"], record["payload"]["needs"], self.advisor)
+        return self._receive_advice(db, record, advice)
+
+    @staticmethod
+    def _receive_advice(db, record, advice):
         record["payload"]["advice"] = advice
         record["status"] = "AWAITING_CONFIRMATION" if advice["status"] == "COMPLETED" else "UNRESOLVED"
         record["payload"]["note"] = "Advice handoff recorded. Awaiting current Customer confirmation." if advice["status"] == "COMPLETED" else advice["message"]
         if advice["status"] == "COMPLETED":
             record["payload"]["actionRef"] = new_id("ACT")
         Store.save(db, record)
-        Store.event(db, rid, "CS", "ADVICE_RECEIVED", {"status": record["status"], "executionOccurred": False})
+        Store.event(db, record["id"], "CS", "ADVICE_RECEIVED", {"status": record["status"], "executionOccurred": False})
         return record
 
     def confirm(self, actor, rid, data):

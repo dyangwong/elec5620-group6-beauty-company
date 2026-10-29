@@ -15,6 +15,7 @@ from .modules.beauty_advisor import BeautyAdvisor, catalogue, validated_needs
 from .modules.ba_intake import BaIntake
 from .modules.coordination import Coordination
 from .modules.customer_service import CustomerService
+from .modules.cs_flow import CsFlow
 from .modules.marketing import Marketing
 from .modules.mc_generation import McGeneration
 from .store import Store, password_hash
@@ -32,6 +33,7 @@ class Company:
         self.ap = Approval()
         self.co = Coordination()
         self.cs = CustomerService(self.store, self.ba, self.co, self.ap, MockAfterSales(self.store))
+        self.cs_flow = CsFlow(self.store, self.cs, self.llm)
         self.mc = Marketing(self.llm, media or MockMedia(), self.ap)
         self.mc_generation = McGeneration(self.store, self.mc)
 
@@ -52,7 +54,7 @@ class Company:
         live = not self.ba.simulated
         mc_live = not self.mc.simulated
         return {"simulated": not (live or mc_live), "model": "Local shared model" if live or mc_live else "Deterministic mock",
-                "ba": "LIVE" if live else "MOCK", "mc": "LIVE" if mc_live else "MOCK", "csIntent": "NOT_CONNECTED",
+                "ba": "LIVE" if live else "MOCK", "mc": "LIVE" if mc_live else "MOCK", "csIntent": ("MOCK" if self.cs_flow.simulated else "LIVE") if callable(getattr(self.llm, "interpret_service_request", None)) else "NOT_CONNECTED",
                 "baNeeds": ("LIVE" if live else "MOCK") if callable(getattr(self.llm, "extract_needs", None)) else "NOT_CONNECTED",
                 "media": "TEMPLATE_VIDEO" if self.mc.template_video else "Storyboard placeholder", "commerce": "SIMULATED",
                 "optionalFeatures": {"BA-F-03": False, "CS-F-03": False, "MC-F-03": False,

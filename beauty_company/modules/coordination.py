@@ -168,3 +168,65 @@ class Coordination:
                      "status": handoff["status"], "businessExecution": False,
                      **({"failure": deepcopy(handoff["failure"])} if handoff.get("failure") else {})})
         return deepcopy(result)
+
+    @staticmethod
+    def prepare_external(db, rid, needs, simulated):
+        """Commit this read-only intent before external inference; no generic dispatcher."""
+        record = Store.get(db, rid, 'CO')
+        origin = Store.get(db, record['payload']['originId'], 'CS')
+        context = Coordination._context(needs)
+        if (origin['owner_id'] != record['owner_id'] or origin['payload'].get('coordinationId') != rid
+                or context is None or Coordination._context(origin['payload'].get('needs')) != context
+                or origin['status'] != 'ASSESSING' or type(simulated) is not bool):
+            raise DomainError('The current handoff scope is invalid.', 409, 'STALE_SCOPE')
+        if any(h.get('originId') == origin['id'] and h.get('contextRevision') == origin['revision']
+               for h in record['payload']['handoffs']):
+            return None  # SENT/outcome already exists; never automatically dispatch twice.
+        handoff = {'handoffId':new_id('HO'), 'fromRole':'CS','toRole':'BA','originId':origin['id'],
+            'contextRevision':origin['revision'],'handoffTime':now(),'operation':'READ_ONLY_ADVICE',
+            'authorisedContext':context,'status':'SENT','dispatched':True,'simulated':simulated}
+        record['payload']['handoffs'].append(handoff)
+        record['payload']['originRevision'] = record['revision'] = origin['revision']
+        record['status'] = 'HANDOFF_SENT'
+        Store.save(db, record)
+        Store.event(db, rid, 'CO', 'HANDOFF_SENT', deepcopy(handoff))
+        return deepcopy(handoff)
+
+    @staticmethod
+    def finish_external(db, rid, handoff_id, result):
+        record = Store.get(db, rid, 'CO')
+        origin = Store.get(db, record['payload']['originId'], 'CS')
+        handoff = next((h for h in record['payload']['handoffs'] if h.get('handoffId') == handoff_id), None)
+        if (not handoff or handoff['status'] != 'SENT' or origin['owner_id'] != record['owner_id']
+                or origin['payload'].get('coordinationId') != rid or handoff['contextRevision'] != origin['revision']
+                or Coordination._context(origin['payload'].get('needs')) != handoff['authorisedContext']):
+            raise DomainError('The handoff scope changed; the old response was discarded.',409,'STALE_SCOPE')
+        mode = handoff['simulated']
+        if Coordination._verified_success(db, result, handoff['authorisedContext'], mode):
+            result = deepcopy(result)
+            result['message'] = 'Supported read-only advice was checked. Customer confirmation and exact-scope approval remain required.'
+            handoff.update(status='COMPLETED', result=result)
+            record['status'] = 'PENDING_VALIDATION'
+        else:
+            incomplete = (isinstance(result, dict) and result.get('status') == 'INCOMPLETE'
+                          and result.get('simulated') is mode and set(result) <= {'status','message','simulated','errorCode'})
+            code = ({'LLM_TIMEOUT':'CO_TARGET_TIMEOUT', 'LLM_UNAVAILABLE':'CO_TARGET_UNAVAILABLE',
+                     'LLM_HTTP':'CO_TARGET_FAILED','LLM_INVALID_OUTPUT':'CO_INVALID_RESULT',
+                     'LLM_CAPABILITY_UNAVAILABLE':'CO_TARGET_UNAVAILABLE'}.get(result.get('errorCode'), 'CO_ADVICE_INCOMPLETE')
+                    if incomplete else 'CO_INVALID_RESULT')
+            result = Coordination._failure(record, handoff, code, mode,
+                                            result.get('errorCode') if isinstance(result,dict) else None)
+        Store.save(db, record)
+        Store.event(db, rid, 'CO', 'ADVICE_RESULT_RECORDED' if handoff['status']=='COMPLETED' else 'HANDOFF_FAILED',
+                    {'handoffId':handoff_id,'contextRevision':origin['revision'],'status':handoff['status'],'businessExecution':False})
+        return deepcopy(result)
+
+    @staticmethod
+    def supersede_pending(db, rid, current_revision):
+        record = Store.get(db, rid, 'CO')
+        for handoff in record['payload']['handoffs']:
+            if handoff['status'] == 'SENT' and handoff.get('contextRevision') != current_revision:
+                handoff['status'] = 'SUPERSEDED'
+                handoff['failure'] = {'code':'STALE_SCOPE','reason':'The Customer revised this request; the old response cannot apply.',
+                                      'recovery':'USE_CURRENT_REVISION','businessExecution':False}
+        Store.save(db, record)

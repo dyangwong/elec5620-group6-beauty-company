@@ -2,6 +2,18 @@
 
 English primary. [中文阅读副本](zh-CN/STAGE2_READINESS.md).
 
+## Current CS checkpoint after the audit · 29 October 2026
+
+The current KAN-15-cs-live-handoff source supersedes the historical CS
+NOT_CONNECTED/live-blocked gap below for the bounded natural exchange scene only.
+Actual Windows CS intent→CO/live BA→Customer/exact AP/final Customer→one simulated
+effect passed; model-off failures and264 offline tests passed. See STATUS and
+VERIFICATION for version-specific facts; PR14 baseline is c276fc3, no old branch
+replayed into main. Full CS/CO/semantic/NFR acceptance, conditional BA review,
+current-source final ZIP/Canvas/venue and real Agile/contribution evidence still
+require separate closeout. No Stage2 completion percentage or full-module Done is
+inferred; broad registry states remain37 PARTIAL/4 NOT_STARTED.
+
 ## Current-source update after this audit · 29 October 2026
 
 The audit below describes historical a6833c3 code and its then-reproduced CO gap.

@@ -16,7 +16,7 @@ authorised local work. Real/local model setup is deferred and is not a prerequis
 Default adapters are deterministic mocks. Opt-in standalone BA and bounded MC text
 have actual local-model evidence; optional FFmpeg produces a playable silent
 template MP4 with exact review, and MC generation-save recovery is verified.
-CS intent/live CS-to-BA remains unconnected. No production settlement, shipment
+Bounded CS natural exchange intent and live CS-to-CO-to-BA are now verified; broader CS acceptance remains. No production settlement, shipment
 or public posting exists; Stage 1 design acceptance remains PROPOSED.
 See the [current readiness audit](docs/STAGE2_READINESS.md),
 [verification evidence](docs/VERIFICATION.md) and [Windows steps](docs/WINDOWS_LLM.md).

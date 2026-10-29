@@ -2,6 +2,43 @@
 
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../VERIFICATION.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
+## 真实 CS 换货集成 · 2026-10-29 — 本次新证据
+
+Danny／M1 明确授权 KAN-15／GR-INT-02 本切片，AI 辅助。从已获取的干净 main
+c276fc35f600edf060e9d75e6833c4e22ef2015f（PR14）建立 KAN-15-cs-live-handoff；保留旧游戏本
+分支／历史及原队友贡献，不认领／重分配 starter。2026-10-29 实际 Jira 为 Verification／Danyang Wang，
+保持该状态，不标 Done；发布／CI／合入收据见本轮 PR。
+
+本次目视 CS-CL／ACT／SEQ／STM 的公开 PDF 实际页24／37／43／50；此前 CO 页27／47／48／53属历史
+设计证据，非完整 UML 审计。
+
+| 检查 | 实际结果 |
+|---|---|
+| 修改前 | 干净 main c276fc3，**237项／78.055秒**；来源120文件／41组、哈希／成员交接／JS通过。 |
+| 最终源码 | 模型已实际关闭，**264项／84.530秒**通过；test_cs_live.py 新增27项，来源123文件／41组及JS通过。旧CS／CO业务测试未改。三处旧预期按新接口更正：Strata CS未连接→LIVE、继承mock的MC替身CS→MOCK、旧真实交接禁用→Founder角色拒绝；未删安全测试凑数量。 |
+| 合约／失败 | 精确意图／需求字段及原文证据，无权限字段，保守需求／无香核验、混合需求／预算、模糊／不支持／否定、会话／CSRF／角色／归属／政策、缺失能力、不可用／超时／无效输出／不回退。两段推理均释放DB连接，目标回调中并发写库测试通过。 |
+| 旧版本／重复／保存 | 旧意图／建议／确认不能跨版本，更正作废旧审批；并发／重复入口／交接只一次模型尝试。真实SQLite审计ABORT：派发意图写失败阻止推理；最终意图保存失败留INTERPRETING；交接结果保存失败保留已提交SENT，不重新推理或生成审批。503 CS_STORAGE_UNAVAILABLE不声称已存完成。旧真实服务入口拒绝写事务内推理；既有一次性／AP恢复仍通过。 |
+| 实际网页5761 | 新忽略live.sqlite3；CS-7b9121eb3bc0 r1：真实意图READY／simulated:false，预算6000分、无香必需；Founder通过CO调用真实BA→P-101 AUD48、两条原文事实、catalogue:P-101:v1、AVAILABLE。客户确认→AP-cceab8a5fb31 r1；Founder批准ORD-1001→P-101精确范围→DEC-6ad2d0800f42 DELIVERED；客户最终确认→RESOLVED／CO COMPLETED。无真实交易／发货。 |
+| 独立读回／重放 | 直接数据库核验商品ID／名称／价格／版本／tone／无香／原文事实／需求证据；建议时库存12，当前11对应一次效果。再三次认证确认／交接仍**一个审批／已提交决定／效果**，终态重放不重新推理。 |
+| 真实澄清／不支持 | customer-2／ORD-2001、CS-b91669cdd7a9：r1只有换货→NEEDS_INFORMATION；r2退款→UNSUPPORTED／UNRESOLVED；r3完整更正→READY。均实际模型HTTP调用，与上述网页主线区分。 |
+| 实际停机 | 仅用--if-instance-id停止本轮新实例2973d663358f4500a58de13d1c8ac5f7，8080关闭；本轮应用同库重启。r3 Founder BA交接→UNRESOLVED、CO_TARGET_UNAVAILABLE／上游LLM_UNAVAILABLE、simulated:false；客户r4明确新解释→FAILED／LLM_UNAVAILABLE／false。网页显示模型解释失败，无确认／审批。库中仍只有此前授权测试的一次效果／决定。应用健康ok／配置LIVE与模型就绪不同。 |
+| 默认mock5760 | 模型关闭时实际网页CS-a4a745e083c5 r1自然入口→READY，Founder交接→AWAITING_CONFIRMATION／P-101；意图及建议均明确simulated:true。此库无审批／效果，旧结构化换货由完整回归覆盖。 |
+| 环境 | 仅停本轮5760／5761，原配置／数据库SHA-256及56模型文件大小／时间清单一致。保留原分支，无模型／工具安装下载升级、配置覆盖、结构／依赖或其他进程更改。 |
+
+同一游戏本Windows11 Pro build26200，Python3.14.5、Node22.19.0；复用Strata0.2.1／
+Terminal0.1.46.1／CUDA13 engine0.1.46／模型Python3.12.15／qwen3.8-flash-next-gyro-gyro-s。
+既有8K／单请求／1536MiB余量／vision-MTP和120秒／512输出配置不变。引擎日志有实际prompt／decode，
+原始尾部私留；其中90／59 token完成并stop仅是请求证据，不代表吞吐／延迟基准或长期稳定性。
+
+开发中纠正：新测试误用kind而非已有decision；新词法检查变量覆盖意图引文；完整回归揭示旧MC替身
+CS标记预期。不改AP／MC逻辑。受控HTTP辅助工具误期望200而非自然创建201，复用已存请求，未删库重建。
+前一263项记录被新增分阶段意图审计回滚和旧结构化记录入口后的264项取代。
+
+原日志／库／读回／引擎／保护清单在忽略var/cs-live-20261029，截图仅本地；密钥／会话／库／模型／ZIP
+不发布。未实现通用语义／医疗验证、多轮记忆、退款／通知／可选项、通用异步CO队列／保存恢复或物理取消。
+中断INTERPRETING／SENT需客户明确新版本更正，不自动重发推理。完整CS／CO、41组／NFR、BA条件审批、
+新冻结包／Canvas／现场、Mac真实路径、远程访问及更广稳定性待验。测试绿不代表Stage2完成。
+Jira实际Verification／Danyang；合入后短评链接PR，不将任务／epic标Done；远程CI／合入收据见PR。
 
 ## Mac 集成复核 · 2026-10-29
 

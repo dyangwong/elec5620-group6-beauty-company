@@ -164,7 +164,7 @@ class LlmTests(unittest.TestCase):
         health = json.loads(Router(self.company).handle("GET", "/api/health", {"host": "127.0.0.1"}).body)
         self.assertEqual(health["capabilities"]["ba"], "LIVE")
         self.assertEqual(health["capabilities"]["mc"], "MOCK")
-        self.assertEqual(health["capabilities"]["csIntent"], "NOT_CONNECTED")
+        self.assertEqual(health["capabilities"]["csIntent"], "LIVE")
         self.assertEqual(health["capabilities"]["commerce"], "SIMULATED")
 
     def test_http_auth_and_live_cs_guard(self):
@@ -175,7 +175,7 @@ class LlmTests(unittest.TestCase):
         response = router.handle("POST", "/api/consultations", headers, json.dumps(NEEDS).encode())
         self.assertEqual(json.loads(response.body)["status"], "COMPLETED")
         response = router.handle("POST", "/api/after-sales/id/coordinate", headers, b"{}")
-        self.assertEqual(json.loads(response.body)["error"]["code"], "LIVE_HANDOFF_NOT_CONNECTED")
+        self.assertEqual(json.loads(response.body)["error"]["code"], "FORBIDDEN")
         token, csrf, _ = self.company.login("founder", "founder-demo")
         headers.update(cookie="beauty_session=" + token, **{"x-csrf-token": csrf})
         self.assertEqual(router.handle("POST", "/api/consultations", headers, json.dumps(NEEDS).encode()).status, 403)

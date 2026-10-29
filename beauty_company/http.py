@@ -107,6 +107,9 @@ class Router:
                 return json_response(self.company.set_fault(actor, data.get("fault")))
             if path == "/api/consultations/intake":
                 return json_response(self.company.ba_intake.start(actor, data), 201)
+            authenticate = lambda: self.company.session(headers.get("cookie"))[0]
+            if path == "/api/after-sales/intake":
+                return json_response(self.company.cs_flow.start(actor, data, authenticate=authenticate), 201)
             if path == "/api/campaigns":
                 return json_response(self.company.campaign(actor, data), 201)
             parts = path.strip("/").split("/")
@@ -136,22 +139,20 @@ class Router:
                 if parts[3] == "recover":
                     return json_response(self.company.recover_decision(actor, parts[2], data))
             if len(parts) == 4 and parts[:2] == ["api", "after-sales"]:
+                if parts[3] == "coordinate":
+                    return json_response(self.company.cs_flow.coordinate(actor, parts[2], data, authenticate))
+                if parts[3] == "revise-intent":
+                    return json_response(self.company.cs_flow.start(actor, data, parts[2], authenticate))
                 if parts[3] == "confirm":
                     return json_response(self.company.cs.confirm(actor, parts[2], data))
                 if parts[3] == "reconcile":
                     return json_response(self.company.cs.reconcile(actor, parts[2]))
             if path == "/api/consultations":
                 return json_response(self.company.consult(actor, data), 201)
-            if (not self.company.ba.simulated and len(parts) == 4 and parts[:2] == ["api", "after-sales"]
-                    and parts[3] in {"coordinate", "revise"}):
-                raise DomainError("Live BA is enabled only for standalone consultations. Use mock mode for CS handoffs until CS/CO review.",
-                                  503, "LIVE_HANDOFF_NOT_CONNECTED")
             with self.company.store.transaction() as db:
                 if path == "/api/after-sales":
                     return json_response(self.company.cs.assess(db, actor, data), 201)
                 if len(parts) == 4 and parts[:2] == ["api", "after-sales"]:
-                    if parts[3] == "coordinate":
-                        return json_response(self.company.cs.coordinate(db, actor, parts[2]))
                     if parts[3] == "revise":
                         return json_response(self.company.cs.revise(db, actor, parts[2], data))
             raise DomainError("Endpoint not found.", 404, "NOT_FOUND")

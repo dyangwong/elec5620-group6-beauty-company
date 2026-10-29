@@ -22,6 +22,20 @@ New module-local helpers/tests may be added when their ownership is explicit.
 Do not move shared catalogue functions merely to make a local task easier: record
 the affected imports/contracts and integrate that change separately.
 
+## CS intent/live exchange shared exception · 29 October 2026
+
+Danny / M1 explicitly authorised KAN-15 CS/CO/shared integration with AI assistance:
+new adapters/cs_intent.py and modules/cs_flow.py; additive shared llm/mock methods,
+BA catalogue-snapshot helper, CS advice-save helper/live legacy guard, staged CO
+methods, Company capability/facade, HTTP/session/UI and tests/test_cs_live.py.
+Only obsolete CS availability/guard expectations changed in test_llm.py/test_mc.py;
+no MC business logic change. Contracts/CS+CO+GR traceability and English/Chinese
+guidance updated together. No AP/effect/schema/dependency/config/task-registry change.
+Siyuan Lei CS, Guiyu Liu CO and all original member contributions remain; no KAN-11,
+KAN-14 or starter claim/reassignment. Affected-owner review remains pending, not
+inferred from tests. Danny explicitly authorises his own PR exception after all
+required checks, with normal protected merge; no self-Approve/protection change.
+
 ## CO failure boundary exception · 29 October 2026
 
 Danny / M1 explicitly authorised this bounded KAN-15 shared increment, AI-assisted:
