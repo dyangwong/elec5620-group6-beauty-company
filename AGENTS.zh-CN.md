@@ -1,6 +1,6 @@
 # 编程 Agent 入口
 
-中文阅读副本，依据 2026-10-21 英文主版同步。以[英文主版](AGENTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](AGENTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
 这是 ELEC5620 Group 6 Stage 2 的初始本地实现。默认读取英文 `START_HERE.md`。
 开始成员功能前，将用户明确声明的完整姓名、成员编号或模块与 `docs/team.json` 对照，
@@ -28,7 +28,7 @@
 ## 必须保持的规则
 
 - 只有 BA、CS、MC 三个 AI 业务角色，AP、CO 是共享控制。
-- 默认适配器是确定性 mock；KAN-15 新增可选独立 BA 传输，已验证一条真实 BA 路径（docs/zh-CN/WINDOWS_LLM_RUNTIME.md）。不可称为已完成的真实多 Agent 系统、生成视频或真实结算/发布。
+- 默认适配器是确定性 mock；KAN-15 已包含可选 BA 需求／建议、有界 MC 真实文本、FFmpeg 模板 MP4 和 BA／MC 保存恢复。先读 STATUS／VERIFICATION 最新检查点，不重复实现这些切片。CS 意图／真实交接仍未接通；模板 MP4 不代表 AI 场景／音频，不声称真实结算／发布或完整 Stage 2 已完成。
 - 真实/本地模型部署暂缓，首批任务不安装、下载、连接模型或索要 key。
 - 独立验证证据；UNKNOWN 库存不能视为可用。
 - 服务端会话决定身份；不能相信请求体/头中的用户 ID 或角色。服务端检查角色与记录归属。
@@ -107,5 +107,6 @@ GitHub for Jira 只显示开发关联，不给编程 Agent Jira 读写权。通�
 模型相关修改先读 docs/LLM_INTEGRATION.md。Danyang Wang 已明确独自负责 GR-INT-02
 共享部署／adapter／配置。其他成员保留 BA／MC 注入调用和模块 fake，CS 提供意图样例，
 不重复接模型／供应商。共享签名变化向 Danny 提出限定请求，不另建客户端；CS 尚无独立真实意图接口。
-Danny 明确继续 GR-INT-02 时走该指南及共享任务，不自动切到 BA-START-01；独立本地 BA 已验证，
-MC／CS 真实集成仍待完成，见 docs/zh-CN/WINDOWS_LLM_RUNTIME.md。
+Danny 明确继续 GR-INT-02 时走该指南及共享任务，不自动切到 BA-START-01。BA／MC 有界真实路径已有证据；
+CS 意图／真实交接、BA 条件审批和最终发布验收仍待完成。先读 STATUS／VERIFICATION 和 STAGE2_READINESS
+最新检查点，区分已有切片、历史缺口及各版本的 Windows／模型证据。

@@ -2,6 +2,28 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
 
+
+## Integration publication checkpoint · 29 October 2026
+
+Danny authorised review/publication of the ten gaming-laptop commits through
+5073dbb, under KAN-15. Original teammate history/attribution and task claims remain.
+The integration branch fixes one test-only Mac path-alias assertion and updates
+agent capability/handoff guidance plus the short Jira reporting convention.
+Default Mac Python 3.9.6 passed all 237 tests (29.466 s), provenance (120 files /
+41 groups) and JS checks. Actual mock browser BA clarification/confirmation and
+MC failed-save -> app restart -> same-revision generation recovery passed; zero
+business effects, one pending MC review, stock 12/8/0. Windows/live/template-video
+results below remain version-specific prior evidence, not new Mac model/render tests.
+Remote CI, review exception and merge receipts belong on the PR/Jira after they occur.
+
+For the next gaming-laptop session: preserve local dirty work, the old KAN-15 branch,
+models/configs/DBs; fetch main and start a new task branch from the merged baseline.
+Do not merge/rebase the old transfer branch just to synchronise after squash merge.
+Next bounded implementation: CS intent and live handoff for the existing exchange
+path, retaining identity/policy/Customer/AP controls and explicit failure outcomes.
+Conditional BA review and final release/Canvas rehearsal remain separate. This
+checkpoint does not implement or claim those gaps, reassign starters or complete KAN-15.
+
 ## CO retained handoff failures · 29 October 2026 — current checkpoint
 
 Danny / M1 explicitly authorised the bounded CO shared exception under KAN-15,

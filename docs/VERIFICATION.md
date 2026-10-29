@@ -2,6 +2,35 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/VERIFICATION.md).
 
+
+## Mac integration review · 29 October 2026
+
+Source restored from the verified standalone handoff bundle at 5073dbb; ten commits
+above fetched main 515bfa5. All six transfer-artifact hashes, 120 source-file sizes/
+SHA-256 values, complete bundle and git fsck passed. Publication is explicitly
+requested by Danny; this is AI-assisted review/self-check, not teammate endorsement.
+
+The original Mac full run had one failing assertion: VideoConfig resolves the
+/var -> /private/var alias, while its test compared an unresolved expected path.
+Canonical TMPDIR proved the diagnosis without changing source. The integration
+fix resolves the expected output path; no production behaviour changes. With the
+normal Mac temporary directory, all **237 tests passed in 29.466 s** on Python
+3.9.6. Provenance (120 files / 41 case groups), JS syntax and whitespace passed.
+
+Actual isolated mock browser, port 5760: BA missing-budget/fragrance questions ->
+same-ID clarification -> explicit Customer confirmation -> COMPLETED/r3/P-101.
+MC final-save fixture -> RECORDING_FAILED with no visible generated content/review;
+app restart retained the draft; Recover saved generation -> same r1 REVIEW_PENDING.
+Independent DB readback: two records, one PENDING MC review, zero effects, stocks
+12/8/0. No model, FFmpeg render, real commerce or new Canvas rehearsal was run here.
+The 191-test frozen-source live BA/MC/MP4 rehearsal below remains eb8f0de evidence;
+237-test Windows transfer evidence is recorded in the handoff, not a new Mac live run.
+
+New-history scan: 152 blobs, no excluded runtime/private-key paths or private-key/
+GitHub-token signatures found; bounded scan, not a comprehensive secret audit.
+Remote CI/exact head/review-layer exception/merge receipts are recorded on the PR;
+Jira uses a short final checkpoint and stays Verification until full task acceptance.
+
 ## CO retained handoff failures · 29 October 2026 — new evidence
 
 Branch KAN-15-co-handoff-failures; clean source base

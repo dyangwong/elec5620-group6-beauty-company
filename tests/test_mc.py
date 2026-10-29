@@ -553,7 +553,7 @@ class TemplateVideoTests(unittest.TestCase):
         from beauty_company.adapters.template_video import VideoConfig
         path=self.root/'local.json'; values={'ffmpeg':'bin/ffmpeg','ffprobe':'bin/ffprobe','font':'font.ttf','output_dir':'output'}
         path.write_text(json.dumps(values)); config=VideoConfig.load(path)
-        self.assertEqual(Path(config.output_dir),self.root/'output')
+        self.assertEqual(Path(config.output_dir),(self.root/'output').resolve())
         for timeout in (True,0,301):
             path.write_text(json.dumps({**values,'timeout_seconds':timeout}))
             with self.assertRaises(ValueError): VideoConfig.load(path)

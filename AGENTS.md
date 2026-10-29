@@ -65,10 +65,11 @@ database, session, ZIP, Git directory or customer media belongs in this repo.
 ## Invariants
 
 - Exactly three AI business roles: BA, CS and MC. AP and CO are shared controls.
-- Default adapters are deterministic mocks. KAN-15 adds opt-in standalone BA
-  transport; one real BA path is verified (docs/WINDOWS_LLM_RUNTIME.md). Never
-  describe it as a completed live multi-agent system or generated video. No real
-  settlement/publication.
+- Default adapters are deterministic mocks. KAN-15 includes opt-in BA needs/advice,
+  bounded live MC text, optional FFmpeg template MP4 and BA/MC recording recovery.
+  Read the latest STATUS/VERIFICATION before historical notes; do not rebuild those
+  slices. CS intent/live handoff remains unconnected. Template MP4 is not AI-generated
+  scenes or audio; no real settlement/publication or complete Stage 2 is claimed.
 - Real/local model deployment is deferred, not an onboarding prerequisite. Do not
   install/download/connect providers or request keys as part of a starter task.
 - Validate evidence independently of model output; UNKNOWN stock is not available.
@@ -170,5 +171,7 @@ CS intent examples; they do not start duplicate provider/model integration.
 A need to change a shared signature is a bounded request to Danny, not a reason
 to implement a separate client. CS has no independent live intent port yet.
 For Danny explicitly continuing GR-INT-02, use that guide/shared task rather than
-automatically selecting BA-START-01. Standalone local BA runtime is now verified;
-MC/CS live integration remains pending (docs/WINDOWS_LLM_RUNTIME.md).
+automatically selecting BA-START-01. BA/MC bounded live paths are evidenced; CS
+intent/live handoff, conditional BA review and final release acceptance remain.
+Read the current STATUS/VERIFICATION and STAGE2_READINESS checkpoints; they distinguish
+implemented slices from older gaps and version-specific Windows/model evidence.

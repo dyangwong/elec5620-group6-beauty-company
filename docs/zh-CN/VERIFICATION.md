@@ -2,6 +2,28 @@
 
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../VERIFICATION.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
+
+## Mac 集成复核 · 2026-10-29
+
+从已校验独立交接 bundle 恢复 5073dbb，比已获取 main 515bfa5 多十个提交。六项交接文件哈希、
+120 个源码文件大小／SHA-256、完整 bundle 和 git fsck 均通过。Danny 明确要求发布；这是 AI 辅助
+复核／自检，不冒充队友认可。
+
+Mac 原始完整运行有一处断言失败：VideoConfig 会解析 /var→/private/var 别名，而测试预期路径未解析。
+不改源码、改用规范 TMPDIR 后验证了原因。本次将测试预期输出路径 resolve，不改变运行行为。
+使用正常 Mac 临时目录，Python 3.9.6 的 **237 项全部通过（29.466 秒）**；来源核验
+（120 文件／41 组）、JS 语法和空白检查通过。
+
+隔离 5760 mock 网页：BA 缺预算／香精要求→同 ID 澄清→客户明确确认→r3 COMPLETED／P-101。
+MC 保存失败样例→RECORDING_FAILED，不显示未提交生成内容／审批；应用重启保留草稿，
+Recover saved generation 后仍为 r1，进入 REVIEW_PENDING。独立读库：两条记录、一条待审 MC、
+零业务效果、库存 12／8／0。本轮未运行模型、FFmpeg 渲染、真实交易或新 Canvas 演练。
+下方 191 项冻结包真实 BA／MC／MP4 演练属于 eb8f0de；237 项 Windows 交接证据不是本轮 Mac 真实运行。
+
+新增历史的 152 个 blob 未发现禁入运行文件路径、私钥／GitHub token 特征；只是有界检查，不代表全面密钥审计。
+新远程 CI／准确 head／本人 PR 审阅层例外／合并回执记录在 PR，Jira 只补简短最终节点；
+完整任务验收前保持 Verification。
+
 ## CO 交接失败保留 · 2026-10-29 — 本次新证据
 
 分支 KAN-15-co-handoff-failures；干净起点 d8d1826cd8e0edbe3899f9d68a4da6b90b2c5987；
