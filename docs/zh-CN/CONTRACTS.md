@@ -2,6 +2,38 @@
 
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../CONTRACTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
+## MC 生成恢复检查点 · 2026-10-29
+
+依据 MC-ACT-01／MC-STM-01（公开 PDF 第 39、51–52 页）及 MC-T-06，Danny 授权共享例外。
+所有 HTTP 模式（含默认 mock）统一使用 Company.campaign 分阶段流程；既有注入式 MC
+submit／submit_draft／revise 服务接口兼容保留，不因此自动具有 HTTP 持久恢复能力。
+
+| POST `/api/campaigns/{id}/…` | 精确请求体 | 行为 |
+|---|---|---|
+| recover | 正整数 contextRevision | 同一已存结果／修订，不调用生成器；复核当前目录、实际文字／分镜、原模式和精确媒体 manifest／文件哈希后仅恢复一个待审。已保存则返回当前状态，保留后续决策。 |
+| retry | 正整数 contextRevision | 仅无待保存结果／审批／决策的中断或失败生成；同 ID、修订 +1，按当前配置显式重新生成。有草稿返回 409 RECOVERY_AVAILABLE，生成重试不能替换既有审批权限。 |
+| cancel | 正整数 contextRevision | 仅活动草稿；修订 +1、CANCELLED，保留历史、旧审批失效。同一已取消当前修订重复调用幂等；不追溯取消已决终态。取消后需新建 campaign。 |
+
+均验证 Founder 会话、owner 和 CSRF，拒绝额外结果／模式或非法修订。revise 仍接收
+brief／productId／contextRevision，更换范围并重新待审，拒绝已取消记录。默认 mock 保留空白修订
+INCOMPLETE 行为；模型失败保留原模式。
+
+GENERATING 在无写锁推理前保存范围。现有 JSON payload.pendingGeneration 保存修订／状态／结果／模式，
+无需 schema 迁移；快照及操作返回只展示元数据，历史中也不暴露未最终保存文字／媒体／审批。
+验证后的草稿、待审回执及审计同一事务提交。最终事务失败返回 503 MC_STORAGE_UNAVAILABLE，
+可写时记录 RECORDING_FAILED；完全写故障可能留下 GENERATING 与已存草稿。阶段保存失败则无草稿，
+不伪造可恢复结果；初始范围保存失败可能没有新记录。GENERATION_FAILED、CONTENT_REJECTED、
+INCOMPLETE 保持区别。
+
+Founder 专用一次性 mc_recording 是显式本地最终保存演练：503 MC_RECORDING_FAILED，草稿保留、
+无待审；与真实 SQLite 失败测试区分。取消保存失败返回 503 MC_CANCELLATION_NOT_RECORDED。
+原模板媒体配置未启用返回 503 MC_MEDIA_RECOVERY_UNAVAILABLE，保留待恢复结果；无效／已变化证据
+或文件被扣留，不进入待审，需要修正后新生成。恢复不批准、不发布、不执行。
+
+生成恢复与 AP 决策持久化／投递恢复分开。未添加物理中止、部分模型／渲染断点续作、孤立文件清理、
+完整 MC 决策／本地保存恢复、自动重试或通用语义校验器。
+
+
 ## MC 模板 MP4 检查点 · 2026-10-29
 
 Company(path, llm=None, media=None) 新可选注入保留默认 MockMedia。模板模式（含 mock

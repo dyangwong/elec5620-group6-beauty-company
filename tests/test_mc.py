@@ -438,12 +438,14 @@ class LiveMarketingTests(unittest.TestCase):
         def fail(db,item):
             if item['status']=='REVIEW_PENDING': raise sqlite3.OperationalError('Private database detail')
             return original(db,item)
-        with patch.object(Store,'save',side_effect=fail), self.assertRaises(sqlite3.OperationalError):
+        with patch.object(Store,'save',side_effect=fail), self.assertRaises(DomainError) as caught:
             self.company.campaign(FOUNDER,self.data)
         with self.company.store.read() as db:
             self.assertEqual(db.execute('SELECT count(*) FROM approvals').fetchone()[0],0)
             saved=Store.get(db,db.execute("SELECT id FROM records WHERE kind='MC'").fetchone()[0])
-        self.assertEqual(saved['status'],'DRAFTING'); self.assertNotIn('script',saved['payload'])
+        self.assertEqual(caught.exception.code,'MC_STORAGE_UNAVAILABLE')
+        self.assertEqual(saved['status'],'RECORDING_FAILED'); self.assertNotIn('script',saved['payload'])
+        self.assertIn('pendingGeneration',saved['payload'])
 
     def test_mc_t_01_http_live_route_requires_founder_csrf_and_exact_fields(self):
         router=Router(self.company); base={'Host':'127.0.0.1:5711','Content-Type':'application/json'}
@@ -591,3 +593,257 @@ class TemplateVideoTests(unittest.TestCase):
         self.assertEqual(record['status'],'GENERATION_FAILED')
         self.assertEqual(record['payload']['failure']['code'],'MEDIA_CONTENT_REJECTED')
         self.assertNotIn('approvalId',record['payload'])
+
+    def test_mc_t_06_template_recovery_uses_same_artifact_after_restart_without_render(self):
+        self.company.set_fault(FOUNDER,'mc_recording')
+        with patch.object(self.media,'generate',side_effect=self.artifact):
+            with self.assertRaises(DomainError): self.company.campaign(FOUNDER,self.data)
+        with self.company.store.read() as db:
+            rid=db.execute("SELECT id FROM records WHERE kind='MC'").fetchone()[0]
+            pending=Store.get(db,rid)['payload']['pendingGeneration']['payload']['media']
+        restarted=Company(self.root/'test.sqlite3',media=self.media)
+        with patch.object(restarted.llm,'generate_script',side_effect=AssertionError('No model')), \
+                patch.object(self.media,'generate',side_effect=AssertionError('No renderer')):
+            result=restarted.mc_generation.recover(FOUNDER,rid,{'contextRevision':1})
+        self.assertFalse(result['payload']['textSimulated']); self.assertFalse(result['payload']['mediaSimulated'])
+        self.assertEqual(result['payload']['media'],pending)
+        with self.company.store.read() as db:
+            review=self.company.ap.get(db,result['payload']['approvalId'])
+        self.assertEqual(review['action']['mediaSha256'],pending['sha256'])
+        restarted.mc_generation.cancel(FOUNDER,rid,{'contextRevision':1})
+        with self.assertRaises(DomainError): restarted.campaign_media(FOUNDER,rid,1)
+
+    def test_mc_t_06_template_recovery_requires_original_config_and_untampered_artifact(self):
+        self.company.set_fault(FOUNDER,'mc_recording')
+        with patch.object(self.media,'generate',side_effect=self.artifact):
+            with self.assertRaises(DomainError): self.company.campaign(FOUNDER,self.data)
+        with self.company.store.read() as db: rid=db.execute("SELECT id FROM records WHERE kind='MC'").fetchone()[0]
+        with self.assertRaises(DomainError) as caught:
+            Company(self.root/'test.sqlite3').mc_generation.recover(FOUNDER,rid,{'contextRevision':1})
+        self.assertEqual(caught.exception.code,'MC_MEDIA_RECOVERY_UNAVAILABLE')
+        with self.company.store.read() as db: self.assertIn('pendingGeneration',Store.get(db,rid)['payload'])
+        (self.media.root/('a'*32)/'draft.mp4').write_bytes(b'MODIFIED')
+        result=self.company.mc_generation.recover(FOUNDER,rid,{'contextRevision':1})
+        self.assertEqual(result['status'],'CONTENT_REJECTED'); self.assertNotIn('media',result['payload'])
+        with self.company.store.read() as db: self.assertEqual(db.execute('SELECT count(*) FROM approvals').fetchone()[0],0)
+
+
+class McRecoveryTests(unittest.TestCase):
+    """Durable generation recovery, real SQLite rollback and exact-revision controls."""
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
+        self.path = Path(self.temp.name)/'recovery.sqlite3'
+        self.company = Company(self.path, llm=LivePlanFixture())
+        self.data = {'brief': 'A calm Fragrance-free introduction.', 'productId': 'P-101'}
+
+    def saved(self, rid):
+        with self.company.store.read() as db: return Store.get(db, rid, 'MC')
+
+    def pending(self):
+        self.company.set_fault(FOUNDER, 'mc_recording')
+        with self.assertRaises(DomainError) as caught: self.company.campaign(FOUNDER, self.data)
+        self.assertEqual(caught.exception.code, 'MC_RECORDING_FAILED')
+        with self.company.store.read() as db:
+            rid=db.execute("SELECT id FROM records WHERE kind='MC' ORDER BY rowid DESC").fetchone()[0]
+        self.assertEqual(self.saved(rid)['status'], 'RECORDING_FAILED')
+        self.assertNotIn('approvalId', self.saved(rid)['payload'])
+        return rid
+
+    def counts(self, rid):
+        with self.company.store.read() as db:
+            return (db.execute('SELECT count(*) FROM approvals WHERE origin_id=?',(rid,)).fetchone()[0],
+                    db.execute('SELECT count(*) FROM effects').fetchone()[0])
+
+    def test_mc_t_06_restart_recovery_keeps_live_mode_with_mock_configuration_and_no_generation(self):
+        rid=self.pending(); self.company=Company(self.path)
+        with patch.object(self.company.llm,'generate_script',side_effect=AssertionError('No inference')), \
+                patch.object(self.company.mc.media,'generate',side_effect=AssertionError('No render')):
+            result=self.company.mc_generation.recover(FOUNDER,rid,{'contextRevision':1})
+        self.assertEqual(result['status'],'REVIEW_PENDING')
+        self.assertFalse(result['payload']['textSimulated']); self.assertTrue(result['payload']['mediaSimulated'])
+        self.assertEqual(self.counts(rid),(1,0))
+
+    def test_mc_t_06_real_audit_abort_rolls_back_review_and_recovers_once(self):
+        with self.company.store.transaction() as db:
+            db.execute("CREATE TRIGGER fail_mc BEFORE INSERT ON events WHEN NEW.event='GENERATION_RECORDED' BEGIN SELECT RAISE(ABORT,'private storage detail'); END")
+        with self.assertRaises(DomainError) as caught: self.company.campaign(FOUNDER,self.data)
+        self.assertEqual(caught.exception.code,'MC_STORAGE_UNAVAILABLE'); self.assertNotIn('private',str(caught.exception))
+        with self.company.store.transaction() as db:
+            rid=db.execute("SELECT id FROM records WHERE kind='MC'").fetchone()[0]
+            db.execute('DROP TRIGGER fail_mc')
+        self.assertEqual(self.saved(rid)['status'],'RECORDING_FAILED'); self.assertEqual(self.counts(rid),(0,0))
+        self.assertIn('pendingGeneration',self.saved(rid)['payload'])
+        recovered=Company(self.path).mc_generation.recover(FOUNDER,rid,{'contextRevision':1})
+        repeated=self.company.mc_generation.recover(FOUNDER,rid,{'contextRevision':1})
+        self.assertEqual(recovered['payload']['approvalId'],repeated['payload']['approvalId'])
+        self.assertEqual(self.counts(rid),(1,0))
+
+    def test_mc_t_06_stage_failure_has_no_draft_and_explicit_retry_is_new_revision(self):
+        original=Store.save
+        def fail(db,record):
+            if record['payload'].get('pendingGeneration'): raise sqlite3.OperationalError('staging outage')
+            return original(db,record)
+        with patch.object(Store,'save',side_effect=fail), self.assertRaises(DomainError):
+            self.company.campaign(FOUNDER,self.data)
+        with self.company.store.read() as db: rid=db.execute("SELECT id FROM records WHERE kind='MC'").fetchone()[0]
+        self.assertNotIn('pendingGeneration',self.saved(rid)['payload']); self.assertEqual(self.counts(rid),(0,0))
+        with self.assertRaises(DomainError) as caught:
+            self.company.mc_generation.recover(FOUNDER,rid,{'contextRevision':1})
+        self.assertEqual(caught.exception.code,'NO_PENDING_RESULT')
+        with patch.object(self.company.llm,'generate_script',wraps=self.company.llm.generate_script) as model:
+            result=self.company.mc_generation.retry(FOUNDER,rid,{'contextRevision':1})
+        self.assertEqual(model.call_count,1); self.assertEqual(result['revision'],2)
+        with self.assertRaises(DomainError): self.company.mc_generation.retry(FOUNDER,rid,{'contextRevision':1})
+        self.assertEqual(self.counts(rid),(1,0))
+
+    def test_mc_t_06_total_final_write_outage_leaves_pending_generating_without_false_save_claim(self):
+        with self.company.store.transaction() as db:
+            db.execute("CREATE TRIGGER fail_final BEFORE INSERT ON events WHEN NEW.event='GENERATION_RECORDED' BEGIN SELECT RAISE(ABORT,'outage'); END")
+            db.execute("CREATE TRIGGER fail_mark BEFORE UPDATE ON records WHEN NEW.status='RECORDING_FAILED' BEGIN SELECT RAISE(ABORT,'outage'); END")
+        with self.assertRaises(DomainError): self.company.campaign(FOUNDER,self.data)
+        with self.company.store.transaction() as db:
+            rid=db.execute("SELECT id FROM records WHERE kind='MC'").fetchone()[0]
+            db.execute('DROP TRIGGER fail_final'); db.execute('DROP TRIGGER fail_mark')
+        self.assertEqual(self.saved(rid)['status'],'GENERATING'); self.assertEqual(self.counts(rid),(0,0))
+        self.assertEqual(self.company.mc_generation.recover(FOUNDER,rid,{'contextRevision':1})['status'],'REVIEW_PENDING')
+
+    def test_mc_t_06_concurrent_recovery_is_one_review_one_recording_event(self):
+        rid=self.pending()
+        with ThreadPoolExecutor(3) as pool:
+            results=list(pool.map(lambda _:self.company.mc_generation.recover(FOUNDER,rid,{'contextRevision':1}),range(3)))
+        self.assertEqual(len({r['payload']['approvalId'] for r in results}),1)
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM events WHERE entity_id=? AND event='GENERATION_RECORDED'",(rid,)).fetchone()[0],1)
+        self.assertEqual(self.counts(rid),(1,0))
+
+    def test_mc_t_06_cancel_running_request_suppresses_late_result_and_is_idempotent(self):
+        entered=threading.Event(); release=threading.Event(); original=self.company.llm.generate_script
+        def delayed(brief,product):
+            entered.set(); self.assertTrue(release.wait(10)); return original(brief,product)
+        with patch.object(self.company.llm,'generate_script',side_effect=delayed), ThreadPoolExecutor(1) as pool:
+            future=pool.submit(self.company.campaign,FOUNDER,self.data)
+            try:
+                self.assertTrue(entered.wait(5))
+                with self.company.store.read() as db: rid=db.execute("SELECT id FROM records WHERE kind='MC'").fetchone()[0]
+                cancelled=self.company.mc_generation.cancel(FOUNDER,rid,{'contextRevision':1})
+                again=self.company.mc_generation.cancel(FOUNDER,rid,{'contextRevision':2})
+            finally: release.set()
+            with self.assertRaises(DomainError) as caught: future.result(5)
+        self.assertEqual(caught.exception.code,'STALE_SCOPE'); self.assertEqual(cancelled['revision'],again['revision'])
+        self.assertEqual(self.saved(rid)['status'],'CANCELLED'); self.assertEqual(self.counts(rid),(0,0))
+        for op in (self.company.mc_generation.retry,self.company.mc_generation.recover):
+            with self.assertRaises(DomainError): op(FOUNDER,rid,{'contextRevision':2})
+        with self.assertRaises(DomainError): self.company.campaign(FOUNDER,{**self.data,'contextRevision':2},rid)
+
+    def test_mc_t_06_pending_result_cannot_be_retried_or_recovered_at_old_revision(self):
+        rid=self.pending()
+        with self.assertRaises(DomainError) as caught: self.company.mc_generation.retry(FOUNDER,rid,{'contextRevision':1})
+        self.assertEqual(caught.exception.code,'RECOVERY_AVAILABLE')
+        result=self.company.campaign(FOUNDER,{**self.data,'contextRevision':1,'brief':'An energetic focus on 50 ml.'},rid)
+        self.assertEqual(result['revision'],2)
+        with self.assertRaises(DomainError) as caught: self.company.mc_generation.recover(FOUNDER,rid,{'contextRevision':1})
+        self.assertEqual(caught.exception.code,'STALE_SCOPE'); self.assertEqual(self.counts(rid),(1,0))
+
+    def test_mc_t_03_recovery_revalidates_saved_text_actual_fields_and_mode(self):
+        for field in ('script','frames','mode','envelope'):
+            rid=self.pending()
+            with self.company.store.transaction() as db:
+                current=Store.get(db,rid); pending=current['payload']['pendingGeneration']; value=pending['payload']
+                if field=='script': value['script']+=' Unsupported cure.'
+                elif field=='frames': value['media']['frames'][0]['caption']='Unsupported cure'
+                elif field=='mode': value['textSimulated']=True
+                else: pending['textSimulated']=True
+                Store.save(db,current)
+            if field=='envelope':
+                with self.assertRaises(DomainError): self.company.mc_generation.recover(FOUNDER,rid,{'contextRevision':1})
+            else:
+                result=self.company.mc_generation.recover(FOUNDER,rid,{'contextRevision':1})
+                self.assertEqual(result['status'],'CONTENT_REJECTED'); self.assertNotIn('script',result['payload'])
+            self.assertEqual(self.counts(rid),(0,0))
+
+    def test_mc_t_03_recovery_rechecks_current_catalogue(self):
+        rid=self.pending()
+        with self.company.store.transaction() as db: db.execute("UPDATE products SET version=2 WHERE id='P-101'")
+        result=self.company.mc_generation.recover(FOUNDER,rid,{'contextRevision':1})
+        self.assertEqual(result['status'],'INCOMPLETE'); self.assertEqual(result['payload']['failure']['code'],'MC_STALE_EVIDENCE')
+        self.assertNotIn('script',result['payload']); self.assertEqual(self.counts(rid),(0,0))
+
+    def test_mc_t_06_snapshot_and_history_withhold_uncommitted_content(self):
+        rid=self.pending()
+        before=self.company.snapshot(FOUNDER)['records'][0]
+        self.assertNotIn('payload',before['payload']['pendingGeneration']); self.assertNotIn('script',before['payload'])
+        self.company.mc_generation.cancel(FOUNDER,rid,{'contextRevision':1})
+        after=self.company.snapshot(FOUNDER)['records'][0]
+        self.assertNotIn('payload',after['payload']['history'][0]['payload']['pendingGeneration'])
+        self.assertEqual(self.counts(rid),(0,0))
+
+    def test_mc_t_06_failed_generation_recovery_keeps_failure_live_label_without_fallback(self):
+        self.company.set_fault(FOUNDER,'mc_recording')
+        with patch.object(self.company.llm,'generate_script',side_effect=ModelError('Unavailable',503,'LLM_UNAVAILABLE')):
+            with self.assertRaises(DomainError): self.company.campaign(FOUNDER,self.data)
+        with self.company.store.read() as db: rid=db.execute("SELECT id FROM records WHERE kind='MC'").fetchone()[0]
+        self.company=Company(self.path)
+        with patch.object(self.company.llm,'generate_script',side_effect=AssertionError('No fallback')):
+            result=self.company.mc_generation.recover(FOUNDER,rid,{'contextRevision':1})
+        self.assertEqual(result['status'],'GENERATION_FAILED'); self.assertFalse(result['payload']['simulated'])
+        self.assertEqual(result['payload']['failure']['code'],'LLM_UNAVAILABLE'); self.assertEqual(self.counts(rid),(0,0))
+
+    def test_mc_t_06_mock_http_uses_same_durable_recovery(self):
+        self.company=Company(self.path); rid=self.pending()
+        result=self.company.mc_generation.recover(FOUNDER,rid,{'contextRevision':1})
+        self.assertTrue(result['payload']['textSimulated']); self.assertTrue(result['payload']['mediaSimulated'])
+        self.assertEqual(self.counts(rid),(1,0))
+
+    def test_mc_t_06_pending_review_cancel_supersedes_authority_and_old_media_scope(self):
+        result=self.company.campaign(FOUNDER,self.data); rid=result['id']; review=result['payload']['approvalId']
+        self.company.mc_generation.cancel(FOUNDER,rid,{'contextRevision':1})
+        with self.assertRaises(DomainError):
+            self.company.decide(FOUNDER,review,{'contextRevision':1,'decision':'APPROVE','reason':'Stale'})
+        with self.company.store.read() as db: self.assertEqual(self.company.ap.get(db,review)['status'],'SUPERSEDED')
+        self.assertEqual(self.saved(rid)['status'],'CANCELLED')
+
+    def test_mc_t_06_recovery_after_committed_decision_does_not_restore_pending_or_duplicate(self):
+        rid=self.pending(); result=self.company.mc_generation.recover(FOUNDER,rid,{'contextRevision':1})
+        self.company.decide(FOUNDER,result['payload']['approvalId'],{'contextRevision':1,'decision':'APPROVE','reason':'Unit test scope'})
+        after=self.company.mc_generation.recover(FOUNDER,rid,{'contextRevision':1})
+        self.assertEqual(after['status'],'APPROVED'); self.assertEqual(self.counts(rid),(1,0))
+        with self.assertRaises(DomainError): self.company.mc_generation.cancel(FOUNDER,rid,{'contextRevision':1})
+
+    def test_mc_t_06_failed_cancellation_does_not_claim_cancelled(self):
+        rid=self.pending()
+        with patch.object(Store,'save',side_effect=sqlite3.OperationalError('Outage')):
+            with self.assertRaises(DomainError) as caught: self.company.mc_generation.cancel(FOUNDER,rid,{'contextRevision':1})
+        self.assertEqual(caught.exception.code,'MC_CANCELLATION_NOT_RECORDED')
+        self.assertEqual(self.saved(rid)['status'],'RECORDING_FAILED'); self.assertEqual(self.saved(rid)['revision'],1)
+
+    def test_mc_t_06_http_controls_require_session_csrf_owner_revision_and_exact_fields(self):
+        rid=self.pending(); router=Router(self.company); base={'Host':'127.0.0.1:5740','Content-Type':'application/json'}
+        for op in ('recover','retry','cancel'):
+            path=f'/api/campaigns/{rid}/{op}'; body=json.dumps({'contextRevision':1}).encode()
+            self.assertEqual(router.handle('POST',path,base,body).status,401)
+            token,csrf,_=self.company.login('customer','customer-demo')
+            headers={**base,'Cookie':'beauty_session='+token,'X-CSRF-Token':csrf}
+            self.assertEqual(router.handle('POST',path,headers,body).status,403)
+            token,csrf,_=self.company.login('founder','founder-demo')
+            headers={**base,'Cookie':'beauty_session='+token,'X-CSRF-Token':csrf}
+            self.assertEqual(router.handle('POST',path,{**headers,'X-CSRF-Token':''},body).status,403)
+            for bad in ({},{'contextRevision':True},{'contextRevision':1,'result':{}},{'contextRevision':1,'simulated':True}):
+                self.assertEqual(router.handle('POST',path,headers,json.dumps(bad).encode()).status,400)
+            with self.assertRaises(DomainError) as caught:
+                getattr(self.company.mc_generation,op)(Actor('other','FOUNDER','Other'),rid,{'contextRevision':1})
+            self.assertEqual(caught.exception.status,403)
+        response=router.handle('POST',f'/api/campaigns/{rid}/recover',headers,json.dumps({'contextRevision':1}).encode())
+        self.assertEqual(response.status,200); self.assertEqual(self.counts(rid),(1,0))
+
+    def test_mc_t_06_generation_retry_cannot_replace_a_saved_decision_or_review(self):
+        record=self.company.campaign(FOUNDER,self.data); rid=record['id']
+        with self.company.store.transaction() as db:
+            current=Store.get(db,rid); current['status']='RECORDING_FAILED'
+            current['payload']['decisionId']='retained-decision-envelope'
+            Store.save(db,current)
+        with patch.object(self.company.llm,'generate_script',side_effect=AssertionError('No re-generation')):
+            with self.assertRaises(DomainError) as caught:
+                self.company.mc_generation.retry(FOUNDER,rid,{'contextRevision':1})
+        self.assertEqual(caught.exception.code,'INVALID_STATE')
+        self.assertEqual(self.saved(rid)['revision'],1)
+        self.assertEqual(self.saved(rid)['payload']['approvalId'],record['payload']['approvalId'])

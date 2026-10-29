@@ -2,6 +2,52 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/VERIFICATION.md).
 
+## MC generation recovery checkpoint · 29 October 2026
+
+New MC generation-persistence evidence; historical ZIP/media/AP evidence below
+retains its original scope. Danny / M1, AI-assisted, KAN-15-mc-save-recovery;
+clean base ca1737b9e3264f0d93c8e41516a2c15cd39c02f7; fetched main unchanged at
+515bfa537e31a01b9e9a24400a7112f8103babb3. MC task/teammate attribution unchanged.
+
+| This run | Actual result |
+|---|---|
+| Before edits | Windows Verify 191 tests passed in 57.685 s. |
+| Final suite | **210 tests passed in 66.961 s**, including 57 MC tests (19 new regressions). Source checks 117 files / 41 groups, hashes/handoff and JS syntax passed. Initial MC-only 56 passed in 9.797 s before the final review-authority guard test; no test removed. One old final-save assertion now expects durable RECORDING_FAILED/503 instead of raw SQLite error/DRAFTING. |
+| Storage boundaries | Real SQLite audit ABORT after review insertion rolled back record/review/audit together, leaving a recoverable draft. Total final-write outage retained GENERATING/pending without falsely claiming failure was saved. Staging failure retained no draft; explicit retry is new revision. Concurrent/repeated recovery retained one review/event; existing review/decision cannot be replaced by generation retry. |
+| Default mock browser / 5740 | MC-5f929d55f172 r1: explicit one-shot final-save fixture -> RECORDING_FAILED/no review -> actual app restart -> browser recovery, AP-c85f47d8de10 PENDING. Three further authenticated recoveries retained same ID. |
+| Actual SQLite failure / 5740 | MC-596579a178a6 r1: a test-DB trigger aborted final GENERATION_RECORDED audit, HTTP 503 MC_STORAGE_UNAVAILABLE, no review. Trigger removed; app restarted; browser recovery created AP-084a5a2f9a55. Browser cancellation advanced to r2 CANCELLED, old review SUPERSEDED; raw history retained. |
+| No saved draft / 5740 | MC-95429dbd1fb8 r1: actual stage-update trigger failure, GENERATING/no pending result/no review. Trigger removed; app restarted; browser explicit retry r2 -> AP-c7f4c29db6d1 PENDING. Three repeated recoveries did not duplicate it. Both temporary triggers removed; originals were never targeted. |
+| Real MC generation / 5741 | MC-7dbc0096d878 r1, energetic / factRefs=[50 ml], exact catalogue-literal text and three frames independently recomposed/current catalogue checked. Real text + template MP4 -> explicit final-save failure, no review. Existing Strata model/tools reused. |
+| Model off + app restart + actual browser recovery | Stopped only owned instance 1340b2d713ce4100ad47c3abc53ceb6c with guard; port 8080 closed, app restarted with same DB/media config. Recover -> AP-802103339dca PENDING, no committed decision. TextSimulated=false, mediaSimulated=false, videoModelUsed=false. Three further recoveries retained one review. |
+| Same actual file | Artifact dfad0c0d2bc74ce68419de2f3bf92981 under new ignored run media-output, 63,274 bytes, SHA-256 e838d2915c120ddc4a0c249c658b8dcbe81ebdef2025ea9306d8fa23a615c39d, identical before/after recovery; script/frames/manifest also identical. Browser readyState=4, duration=15 s, actual playback advanced to 7.550395 s without error; actual browser-downloaded file matched. The model service was unavailable; recovery reused the saved artifact without invoking either generator. Unit tests also fail if either generator is called. Silent 720x1280/24 fps template, no AI scenes/audio. |
+| Model-off new request and retry | MC-ed37efde1777 r1 then explicit browser retry r2: GENERATION_FAILED / LLM_UNAVAILABLE, original live flags, no script/media/review/fallback. App health still ok. |
+| Scope/security/stale work | Tests cover owner/Founder/session/CSRF/exact fields, saved text/frame/mode tampering, changed catalogue, missing media configuration/artifact, raw pending-history projection, failed cancellation and late response suppression. In-flight cancellation was exercised with an offline blocked provider double, not physical GPU abort. |
+| Effects/environment | Both DBs zero effects and zero committed decisions, stocks 12/8/0 unchanged. Only owned 5740/5741 apps and exact model instance stopped; original config/database hashes and 56 model-file size/mtime inventory matched. No model/tool download, upgrade, new dependency, schema change, real payment/shipment/publication. |
+
+Same gaming laptop: Windows 11 Pro build 26200, app Python 3.14.5, Node v22.19.0;
+existing Strata 0.2.1 / Terminal 0.1.46.1 / engine 0.1.46 CUDA13 / model Python3.12.15,
+qwen3.8-flash-next-gyro-gyro-s; 8192 context, single request, 1536 MiB reserve,
+route-tail-skip7, saved vision/MTP settings unchanged, 120 s / 512 output tokens.
+FFmpeg/ffprobe 9.0.2 and Windows Arial reused. Engine recorded the actual MC request:
+330 prompt tokens, 49 generated, prompt/decode 7702+2136 ms (not browser latency).
+
+Issues corrected during this round: an extracted validation block left a claims
+reference out of scope; shared HTTP routing initially changed blank mock-revision
+failure classification; cancelled/failed UI initially retained an ambiguous generic
+generation message. Existing checks exposed them and the final suite/UI checks passed.
+Browser download verification waited about 192 s but completed and hashed correctly;
+this is a local automation observation, not an established application latency limit.
+
+Raw logs/readbacks/triggers inventory/engine copy remain ignored in
+var/mc-recovery-20261029; local outputs contain screenshots/video. Only sanitised
+summaries tracked. No new ZIP produced; eb8f0de package remains frozen and predates
+this code. Jira unverified / update pending, no read/write by instruction;
+no push/PR/merge/Canvas. **Remaining:** no partial generation/render checkpoint
+resume, provider-process abort guarantee, full MC committed-decision/local-save
+recovery matrix, orphan cleanup, free prose/AI scenes/audio/general quality acceptance,
+fresh-package/other-computer/venue or complete MC/Stage 2 acceptance. MC-T-06 stays PARTIAL.
+
+
 ## Frozen-source ZIP rehearsal · 29 October 2026
 
 Current local deployment evidence, distinct from the historical sections below.

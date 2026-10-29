@@ -22,6 +22,17 @@ New module-local helpers/tests may be added when their ownership is explicit.
 Do not move shared catalogue functions merely to make a local task easier: record
 the affected imports/contracts and integrate that change separately.
 
+## MC generation recovery checkpoint · 29 October 2026
+
+Danny / M1 authorised this bounded MC generation-save recovery exception under
+KAN-15: new modules/mc_generation.py, extracted reusable Marketing checks,
+Company facade/snapshot/fault additions, unified campaign HTTP routes and recovery/
+retry/cancel UI. New tests stay in tests/test_mc.py; affected contract/traceability
+and bilingual guides updated together. No AP implementation/schema/BA/CS/CO/model
+transport/dependency change. Original MC attribution/task ownership remain;
+affected MC/shared-owner review pending. Local only: no external Jira/PR/merge.
+
+
 ## MC template MP4 checkpoint · 29 October 2026
 
 Danny / M1 authorised the MC-F-02 template MP4 exception under KAN-15. New optional

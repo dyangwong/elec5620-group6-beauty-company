@@ -16,6 +16,7 @@ from .modules.ba_intake import BaIntake
 from .modules.coordination import Coordination
 from .modules.customer_service import CustomerService
 from .modules.marketing import Marketing
+from .modules.mc_generation import McGeneration
 from .store import Store, password_hash
 
 RECORDING_FAILED_MESSAGE = ("The decision could not be recorded. No approval was delivered and no business work "
@@ -32,6 +33,7 @@ class Company:
         self.co = Coordination()
         self.cs = CustomerService(self.store, self.ba, self.co, self.ap, MockAfterSales(self.store))
         self.mc = Marketing(self.llm, media or MockMedia(), self.ap)
+        self.mc_generation = McGeneration(self.store, self.mc)
 
     def login(self, username, password):
         if not isinstance(username, str) or not isinstance(password, str) or len(password) > 200:
@@ -57,62 +59,7 @@ class Company:
                                      "AP-F-03": False, "CO-F-03": False}}
 
     def campaign(self, actor, data, rid=None):
-        """Opt-in MC HTTP path: persist scope, infer without a write lock, revalidate/save/review."""
-        require_role(actor, "FOUNDER")
-        expected = {"brief", "productId", *({"contextRevision"} if rid else set())}
-        if not isinstance(data, dict) or set(data) != expected:
-            raise DomainError("Supply only the displayed campaign fields.")
-        brief = text_value(data["brief"], "Campaign brief")
-        product_id = text_value(data["productId"], "Product ID", 100)
-        with self.store.transaction() as db:
-            history = []
-            if rid:
-                record = Store.get(db, rid, "MC")
-                if record["owner_id"] != actor.id:
-                    raise DomainError("Only the campaign owner may revise this draft.", 403, "FORBIDDEN")
-                if revision_value(data["contextRevision"]) != record["revision"]:
-                    raise DomainError("The draft revision changed.", 409, "STALE_SCOPE")
-                history = deepcopy(record["payload"].get("history", []))
-                history.append({"revision": record["revision"], "status": record["status"],
-                                "payload": deepcopy({k: v for k, v in record["payload"].items() if k != "history"})})
-                self.ap.supersede(db, record["payload"].get("approvalId"))
-                record["revision"] += 1
-            else:
-                rid = Store.create(db, "MC", actor.id, "DRAFTING", {}, "MC")
-                record = Store.get(db, rid, "MC")
-            record["status"] = "DRAFTING"
-            record["payload"] = {"brief": brief, "productId": product_id, "simulated": self.mc.simulated,
-                                 "textSimulated": self.mc.simulated, "mediaSimulated": not self.mc.template_video, "history": history}
-            Store.save(db, record)
-            Store.event(db, rid, "MC", "TEXT_GENERATION_STARTED", {"revision": record["revision"], "simulated": self.mc.simulated})
-        try:
-            with self.store.read() as db:
-                payload = self.mc.generate(db, {"brief": brief, "productId": product_id})
-        except DomainError as error:
-            payload = {**record["payload"], "failure": {"code": error.code, "reason": str(error)}}
-            status = error.code if error.code in {"INCOMPLETE", "CONTENT_REJECTED", "GENERATION_FAILED"} else (
-                "CONTENT_REJECTED" if error.code == "LLM_INVALID_OUTPUT" else "GENERATION_FAILED")
-        else:
-            status = "DRAFTING"
-        with self.store.transaction() as db:
-            current = Store.get(db, rid, "MC")
-            if current["revision"] != record["revision"] or current["status"] != "DRAFTING":
-                raise DomainError("This generated draft is stale. Output was discarded.", 409, "STALE_SCOPE")
-            if status == "DRAFTING":
-                product = next((p for p in catalogue(db) if p["id"] == product_id), None)
-                if product != payload["product"]:
-                    payload = {**record["payload"], "failure": {"code": "MC_STALE_EVIDENCE",
-                               "reason": "Catalogue changed during generation. Revise with fresh evidence."}}
-                    status = "INCOMPLETE"
-            payload["history"] = history
-            current["payload"] = payload
-            if status == "DRAFTING":
-                self.mc._review(db, current)
-            else:
-                current["status"] = status
-                Store.save(db, current)
-                Store.event(db, rid, "MC", "TEXT_GENERATION_FAILED", {"revision": current["revision"], "code": payload["failure"]["code"]})
-            return current
+        return self.mc_generation.start(actor, data, rid)
 
     def campaign_media(self, actor, rid, revision):
         require_role(actor, "FOUNDER")
@@ -167,7 +114,8 @@ class Company:
             ids = [r["id"] for r in db.execute(query, (actor.id,) if actor.role != "FOUNDER" else ())]
             records = [Store.get(db, rid) for rid in ids]
             records = [self.ba_intake.public_record(record) if record["kind"] == "BA"
-                       and record["payload"].get("naturalNeeds") else record for record in records]
+                       and record["payload"].get("naturalNeeds") else self.mc_generation.public_record(record) if record["kind"] == "MC"
+                       else record for record in records]
             approval_ids = [r["id"] for r in db.execute("SELECT id,origin_id FROM approvals ORDER BY created DESC") if actor.role == "FOUNDER" or r["origin_id"] in ids]
             approvals = []
             for rid in approval_ids:
@@ -258,7 +206,7 @@ class Company:
 
     def set_fault(self, actor, fault):
         require_role(actor, "FOUNDER")
-        if not isinstance(fault, str) or fault not in {"after_sales_timeout", "outcome_recording", "approval_delivery", "approval_recording", "ba_recording", "none"}:
+        if not isinstance(fault, str) or fault not in {"after_sales_timeout", "outcome_recording", "approval_delivery", "approval_recording", "ba_recording", "mc_recording", "none"}:
             raise DomainError("Unsupported simulation fixture.")
         with self.store.transaction() as db:
             db.execute("DELETE FROM faults")

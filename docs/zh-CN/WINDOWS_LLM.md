@@ -1,4 +1,35 @@
 # Windows 部署与 KAN-15 交接
+## MC 生成恢复检查点 · 2026-10-29
+
+当前源码增加 MC 生成恢复；下方冻结 eb8f0de ZIP 不含本增量。复用已安装模型／工具，
+无需新安装、下载或依赖。选新忽略数据库和空闲 loopback 端口；实测 5740 mock、5741
+显式真实 MC／模板视频，独立数据在 var/mc-recovery-20261029。
+
+Activity trail 选择 **MC final generation save failure (draft retained)**、Apply fixture，
+然后 Content studio→生成。应为 RECORDING_FAILED、有可恢复元数据、无待审文字／媒体／审批 ID。
+仅停止／启动本轮应用，使用同一数据库／配置，点击 **Recover saved generation**。
+应核验并保存内容及唯一精确待审 REVIEW_PENDING，不是批准；重复恢复 ID 不变。
+还实际验证了 SQLite 审计写入失败后的网页／重启恢复，触发器仅在独立测试库存在且已移除。
+
+真实 MC：仅在既有模型所属 profile 停止时启动，并使用
+`-Mode strata -LiveMc -LlmConfig <既有本地 JSON> -VideoConfig <本地 JSON>`。
+记录实例 ID／归属；完整生成结果已持久保存后，仅以保护条件停止本轮模型并重启本轮应用。
+恢复必须复用同一文字、artifact／文件哈希，不推理／渲染。保留原媒体输出目录，重启时提供其模板配置；
+否则返回 MC_MEDIA_RECOVERY_UNAVAILABLE、保留待恢复草稿。模型就绪及应用健康不能代替恢复证据。
+
+阶段保存失败或持久结果前中断，不提供 Recover。先刷新，GENERATING 本身不能证明 worker 已停止。
+**Retry generation as new revision** 显式使旧工作失效并可重新调用生成器；模型关闭后重试仍应
+GENERATION_FAILED／LLM_UNAVAILABLE，真实标签不变、无 mock 回退。无效内容需显式修订。
+
+**Cancel this campaign** 保存新取消修订，使迟到结果／旧审批无效；物理模型／渲染进程仍可能结束并
+留下忽略文件。取消保存失败不能视为已取消；取消后需新建 campaign。已批准／拒绝终态通过显式修订，
+不追溯取消。本功能不发布内容。
+
+原始测试日志／读回在 var/mc-recovery-20261029，仅停止本轮应用回执／精确模型实例，保留原环境。
+完整 MC 已提交决策恢复、部分渲染断点续作不在本范围。精确接口／证据见 CONTRACTS.md／VERIFICATION.md；
+Jira 未核实且未改动。
+
+
 ## 冻结源码 ZIP 彩排 · 2026-10-29
 
 **当前已实测包：**eb8f0de8d412344e828daf9032898c2dbb6155ee，

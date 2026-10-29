@@ -5,6 +5,48 @@ ACL repair. See [current runtime evidence and recovery commands](WINDOWS_LLM_RUN
 The installation-blocked sections below retain the earlier attempt as history.
 
 English primary. [中文阅读副本](zh-CN/WINDOWS_LLM.md).
+## MC generation recovery checkpoint · 29 October 2026
+
+Current source adds MC generation recovery; the frozen eb8f0de ZIP below does not
+contain it. Reuse the installed model/tools; no new setup/download/dependency is
+needed. Use a new ignored DB and free loopback port. Actual tests used 5740 mock
+and 5741 opt-in real MC/template video, with var/mc-recovery-20261029 local data.
+
+In Activity trail select **MC final generation save failure (draft retained)** and
+Apply fixture, then Content studio -> Create draft. Expect RECORDING_FAILED,
+recoverable metadata and no review-ready script/media/review ID. Stop/start only
+that owned app using the same DB/config; choose **Recover saved generation**.
+Expect validated content and REVIEW_PENDING with one exact review, never approval.
+Repeated recovery must retain that ID. A real SQLite audit-abort/browser restart
+was also verified; that trigger existed only in an isolated test DB and was removed.
+
+For real MC: start the existing owner profile only if stopped, then use
+`-Mode strata -LiveMc -LlmConfig <existing local JSON> -VideoConfig <local JSON>`.
+Record the runtime instance ID/ownership. After the complete generated outcome has
+been staged, stop only that owned model instance with the guard below and restart
+only the app. Recovery must reuse the same text and artifact/file hash without
+inference/rendering. Preserve the original media output directory and supply its
+template configuration on restart; without it the draft stays recoverable with
+MC_MEDIA_RECOVERY_UNAVAILABLE. Model readiness and app health do not prove recovery.
+
+If staging failed or work was interrupted before a durable outcome, no Recover
+button is offered. Refresh first: GENERATING alone cannot prove the worker stopped.
+**Retry generation as new revision** explicitly supersedes old work and may call
+the generators again; model-off retry must remain GENERATION_FAILED / LLM_UNAVAILABLE
+with live flags and no mock fallback. Correct invalid content via explicit revision.
+
+**Cancel this campaign** saves a new cancelled revision and suppresses late
+replies/old review authority; a physical model/render process may still finish and
+leave ignored artifacts. A failed cancel is not confirmation of cancellation.
+Cancelled campaigns require a new campaign. Approved/rejected terminal drafts use
+explicit revision instead of retroactive cancellation. No publication occurs.
+
+Test-only raw logs/readbacks remain under var/mc-recovery-20261029. Only owned
+app receipts and exact model instance were stopped; original environment retained.
+Full committed-MC-decision recovery and partial-render resume are outside this slice.
+See CONTRACTS.md/VERIFICATION.md for exact routes/evidence; Jira unchanged/unverified.
+
+
 ## Frozen-source ZIP rehearsal · 29 October 2026
 
 **Current tested package:** eb8f0de8d412344e828daf9032898c2dbb6155ee,

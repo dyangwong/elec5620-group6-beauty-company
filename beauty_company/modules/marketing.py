@@ -1,4 +1,4 @@
-"""MC-M-01: grounded script/storyboard with exact-revision review; media stays mock."""
+"""MC-M-01: grounded text and optional template media with exact-revision review."""
 from copy import deepcopy
 
 from ..contracts import DomainError, require_role, revision_value, text_value
@@ -30,37 +30,8 @@ class Marketing:
         except (RuntimeError, TimeoutError, ConnectionError):
             raise DomainError("Marketing text generation is unavailable.", 409, "GENERATION_FAILED")
 
-        if not self.simulated:
-            try:
-                validate_live_script(script, brief, product)
-            except (ValueError, TypeError, KeyError):
-                raise DomainError("Generated marketing text/captions could not be independently verified.",
-                                  409, "CONTENT_REJECTED") from None
-
-        if not isinstance(script, dict) or not isinstance(script.get("script"), str) or not script["script"].strip():
-            raise DomainError("Malformed generated output was withheld.", 409, "CONTENT_REJECTED")
-
-        claims = script.get("claims")
-        if not isinstance(claims, list) or not claims or any(not isinstance(c, str) or c not in product["facts"] for c in claims):
-            raise DomainError("Unsupported generated claims were withheld.", 409, "CONTENT_REJECTED")
-        expected_script = f"Meet {product['name']}. " + ". ".join(product["facts"]) + "."
-        if self.simulated and (script["script"] != expected_script or claims != product["facts"]):
-            raise DomainError("Generated script does not match authorised catalogue evidence.", 409, "CONTENT_REJECTED")
-
-        storyboard = script.get("storyboard")
-        if not isinstance(storyboard, list) or not storyboard or any(not isinstance(frame, dict) for frame in storyboard):
-            raise DomainError("Malformed storyboard was withheld.", 409, "CONTENT_REJECTED")
-        expected_captions = [product["name"], product["facts"][0], "Explore the product details"]
-        if self.simulated and (len(storyboard) != 3 or any(frame.get("caption") != caption for frame, caption in zip(storyboard, expected_captions))):
-            raise DomainError("Storyboard contains unsupported content.", 409, "CONTENT_REJECTED")
-        if self.simulated and any(frame.get("direction") != direction for frame, direction in zip(storyboard, ["Product introduction", "Catalogue-supported benefit", "Draft closing card"])):
-            raise DomainError("Storyboard directions are not supported.", 409, "CONTENT_REJECTED")
-
-        if self.simulated and any(set(frame) != {"shot", "duration", "caption", "direction"}
-               or type(frame["shot"]) is not int or frame["shot"] != index
-               or frame["duration"] != duration
-               for index, (frame, duration) in enumerate(zip(storyboard, ["0–5 s", "5–10 s", "10–15 s"]), 1)):
-            raise DomainError("Storyboard metadata is not supported by this mock fixture.", 409, "CONTENT_REJECTED")
+        self.validate_script(script, brief, product, self.simulated)
+        storyboard = script["storyboard"]
         verified_storyboard = deepcopy(storyboard)
 
         try:
@@ -79,10 +50,73 @@ class Marketing:
             raise DomainError("Mock media frames do not match the verified storyboard.", 409, "GENERATION_FAILED")
 
         return {"brief": brief, "product": product, "script": script["script"],
-                "claims": claims, "media": deepcopy(media), "simulated": self.simulated,
+                "claims": script["claims"], "media": deepcopy(media), "simulated": self.simulated,
                 "textSimulated": self.simulated, "mediaSimulated": not self.template_video,
                 **({"textPlan": deepcopy(script["textPlan"])} if not self.simulated else {}),
                 "evidence": {"catalogueRef": f"catalogue:{product['id']}:v{product['version']}", "facts": product["facts"]}}
+
+    @staticmethod
+    def validate_script(script, brief, product, simulated):
+        if not simulated:
+            try:
+                validate_live_script(script, brief, product)
+            except (ValueError, TypeError, KeyError):
+                raise DomainError("Generated marketing text/captions could not be independently verified.",
+                                  409, "CONTENT_REJECTED") from None
+
+        if not isinstance(script, dict) or not isinstance(script.get("script"), str) or not script["script"].strip():
+            raise DomainError("Malformed generated output was withheld.", 409, "CONTENT_REJECTED")
+
+        claims = script.get("claims")
+        if not isinstance(claims, list) or not claims or any(not isinstance(c, str) or c not in product["facts"] for c in claims):
+            raise DomainError("Unsupported generated claims were withheld.", 409, "CONTENT_REJECTED")
+        expected_script = f"Meet {product['name']}. " + ". ".join(product["facts"]) + "."
+        if simulated and (script["script"] != expected_script or claims != product["facts"]):
+            raise DomainError("Generated script does not match authorised catalogue evidence.", 409, "CONTENT_REJECTED")
+
+        storyboard = script.get("storyboard")
+        if not isinstance(storyboard, list) or not storyboard or any(not isinstance(frame, dict) for frame in storyboard):
+            raise DomainError("Malformed storyboard was withheld.", 409, "CONTENT_REJECTED")
+        expected_captions = [product["name"], product["facts"][0], "Explore the product details"]
+        if simulated and (len(storyboard) != 3 or any(frame.get("caption") != caption for frame, caption in zip(storyboard, expected_captions))):
+            raise DomainError("Storyboard contains unsupported content.", 409, "CONTENT_REJECTED")
+        if simulated and any(frame.get("direction") != direction for frame, direction in zip(storyboard, ["Product introduction", "Catalogue-supported benefit", "Draft closing card"])):
+            raise DomainError("Storyboard directions are not supported.", 409, "CONTENT_REJECTED")
+
+        if simulated and any(set(frame) != {"shot", "duration", "caption", "direction"}
+               or type(frame["shot"]) is not int or frame["shot"] != index
+               or frame["duration"] != duration
+               for index, (frame, duration) in enumerate(zip(storyboard, ["0–5 s", "5–10 s", "10–15 s"]), 1)):
+            raise DomainError("Storyboard metadata is not supported by this mock fixture.", 409, "CONTENT_REJECTED")
+
+    def validate_saved(self, db, payload, scope):
+        """Recheck staged bytes/evidence without invoking either generator."""
+        simulated = scope["textSimulated"]
+        video = not scope["mediaSimulated"]
+        expected = {"brief", "product", "script", "claims", "media", "simulated",
+                    "textSimulated", "mediaSimulated", "evidence"} | ({"textPlan"} if not simulated else set())
+        if (not isinstance(payload, dict) or set(payload) != expected or payload["brief"] != scope["brief"]
+                or payload["simulated"] is not simulated or payload["textSimulated"] is not simulated
+                or payload["mediaSimulated"] is not scope["mediaSimulated"]):
+            raise DomainError("Saved generation scope or mode is invalid. Revise the draft.", 409, "INVALID_SAVED_RESULT")
+        product = next((p for p in catalogue(db) if p["id"] == scope["productId"]), None)
+        if (not product or product != payload["product"] or payload["evidence"] != {
+                "catalogueRef": f"catalogue:{product['id']}:v{product['version']}", "facts": product["facts"]}):
+            raise DomainError("Catalogue changed. Revise using current evidence.", 409, "MC_STALE_EVIDENCE")
+        media = payload["media"]
+        if not isinstance(media, dict):
+            raise DomainError("Saved media is invalid.", 409, "INVALID_SAVED_RESULT")
+        script = {"script": payload["script"], "claims": payload["claims"], "storyboard": media.get("frames"),
+                  "simulated": simulated, **({"textPlan": payload["textPlan"]} if not simulated else {})}
+        self.validate_script(script, scope["brief"], product, simulated)
+        if video:
+            if not self.template_video:
+                raise DomainError("Restore the original template media configuration before recovery.",
+                                  503, "MC_MEDIA_RECOVERY_UNAVAILABLE")
+            self.media.validate(media, script)
+        elif (media.get("kind") != "MOCK_STORYBOARD" or media.get("simulated") is not True
+                or media.get("label") != "Storyboard placeholder; no video file has been generated."):
+            raise DomainError("Saved mock media is invalid.", 409, "INVALID_SAVED_RESULT")
 
     def submit(self, db, actor, data):
         require_role(actor, "FOUNDER")

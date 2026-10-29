@@ -1,6 +1,38 @@
 # Current implementation status
 
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
+## MC generation recovery checkpoint · 29 October 2026
+
+Danny / M1 authorised this bounded KAN-15 increment on KAN-15-mc-save-recovery,
+from clean ca1737b9e3264f0d93c8e41516a2c15cd39c02f7. Fetched main remained
+515bfa537e31a01b9e9a24400a7112f8103babb3. Original Zhengdu Wei MC work/attribution
+and task claims remain; AI-assisted shared-file exception, affected-owner review pending.
+
+MC HTTP now persists a server-owned generated outcome before final draft/review
+recording. The webpage distinguishes generation, failed generation and recoverable
+recording failure. Recover checks saved text/evidence/media and resumes pending
+review without model/render calls. No draft means an explicit new-revision retry.
+Cancellation advances revision, supersedes old review and suppresses late results;
+it does not guarantee GPU/subprocess abort. Repeated recovery creates no duplicate review.
+
+210 full Windows tests passed (191 previous + 19), including 57 MC tests;
+source verification 117 files / 41 groups and JS syntax passed. Actual browser:
+mock fixture and real SQLite final-transaction failure -> restart -> recovery;
+stage failure/no draft -> restart -> explicit retry; cancellation; real MC text/MP4
+-> retained recording failure -> model off + app restart -> same artifact pending
+review. New and retried model-off requests remained failed/live with no fallback.
+Both test DBs had zero effects/decisions and unchanged stock. Detailed evidence:
+VERIFICATION.md. Only owned services stopped; original configs/databases/model
+inventory preserved. No download, upgrade, dependency or schema change.
+
+Stop condition reached for this generation-recovery slice. Full MC acceptance is
+still PARTIAL: partial-generation checkpoint resume, committed MC decision/local-save
+recovery matrix, orphan cleanup, free prose, AI scenes/audio, broader media quality,
+new ZIP/other-machine/venue and complete Stage 2 acceptance remain open. The eb8f0de
+ZIP is frozen historical evidence and does not contain this increment. Jira
+unverified / update pending; no access/update, push, PR, merge or Canvas operation.
+
+
 ## Frozen-source ZIP rehearsal · 29 October 2026
 
 **New evidence:** source **eb8f0de8d412344e828daf9032898c2dbb6155ee** was packaged

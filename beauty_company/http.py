@@ -107,12 +107,14 @@ class Router:
                 return json_response(self.company.set_fault(actor, data.get("fault")))
             if path == "/api/consultations/intake":
                 return json_response(self.company.ba_intake.start(actor, data), 201)
-            if path == "/api/campaigns" and (not self.company.mc.simulated or self.company.mc.template_video):
+            if path == "/api/campaigns":
                 return json_response(self.company.campaign(actor, data), 201)
             parts = path.strip("/").split("/")
-            if ((not self.company.mc.simulated or self.company.mc.template_video) and len(parts) == 4 and parts[:2] == ["api", "campaigns"]
-                    and parts[3] == "revise"):
-                return json_response(self.company.campaign(actor, data, parts[2]))
+            if len(parts) == 4 and parts[:2] == ["api", "campaigns"]:
+                if parts[3] == "revise":
+                    return json_response(self.company.campaign(actor, data, parts[2]))
+                if parts[3] in {"recover", "retry", "cancel"}:
+                    return json_response(getattr(self.company.mc_generation, parts[3])(actor, parts[2], data))
             if len(parts) == 4 and parts[:2] == ["api", "consultations"]:
                 if parts[3] == "clarify":
                     return json_response(self.company.ba_intake.clarify(actor, parts[2], data))
@@ -147,15 +149,11 @@ class Router:
             with self.company.store.transaction() as db:
                 if path == "/api/after-sales":
                     return json_response(self.company.cs.assess(db, actor, data), 201)
-                if path == "/api/campaigns":
-                    return json_response(self.company.mc.submit(db, actor, data), 201)
                 if len(parts) == 4 and parts[:2] == ["api", "after-sales"]:
                     if parts[3] == "coordinate":
                         return json_response(self.company.cs.coordinate(db, actor, parts[2]))
                     if parts[3] == "revise":
                         return json_response(self.company.cs.revise(db, actor, parts[2], data))
-                if len(parts) == 4 and parts[:2] == ["api", "campaigns"] and parts[3] == "revise":
-                    return json_response(self.company.mc.revise(db, actor, parts[2], data))
             raise DomainError("Endpoint not found.", 404, "NOT_FOUND")
         except DomainError as error:
             return json_response({"error": {"code": error.code, "message": str(error)}}, error.status)

@@ -2,6 +2,28 @@
 
 English primary. [中文阅读副本](zh-CN/LLM_INTEGRATION.md).
 
+## MC generation recovery checkpoint · 29 October 2026
+
+No new model/provider/prompt/configuration interface or installation is added.
+The existing MC generate_script and optional media generator run only during
+explicit generation/retry. Storage-only recovery uses the staged original modes,
+revalidates actual bounded text/frames and current catalogue, and verifies the same
+template artifact/manifest/hash. It can restore live text while the app uses mock
+configuration without invoking a mock generator; media recovery requires access
+to the original configured output root. Historical mode is never relabelled.
+
+Shared Company.campaign delegates to module-local McGeneration for all HTTP modes.
+Only durable outcome metadata reaches snapshots; no uncommitted content/authority.
+Recover/retry/cancel are owner-Founder/session/CSRF/current-revision controlled.
+Generation-save recovery resumes pending review only, separate from AP decisions.
+Explicit retry is new generation/new revision; cancellation suppresses late output
+but does not guarantee physical provider/renderer abort. No automatic retry/fallback.
+Actual model-off + app-restart recovery reused the same real text/MP4; a new request
+and explicit retry still failed LLM_UNAVAILABLE with live flags. See VERIFICATION.md.
+Full MC local decision-save recovery, free prose and AI scene/audio generation remain
+open. BA and live-CS guard/NOT_CONNECTED intent are unchanged; review pending.
+
+
 ## MC template MP4 checkpoint · 29 October 2026
 
 No shared-model prompt/transport/interface change. The optional template adapter

@@ -2,6 +2,33 @@
 
 English is the maintained primary version. [中文阅读副本](../zh-CN/modules/MC.md).
 
+## MC generation recovery checkpoint · 29 October 2026
+
+Danny explicitly authorised MC generation persistence/recovery/cancellation under
+KAN-15, preserving Zhengdu Wei's original work and claims. New module-local
+mc_generation.py orchestrates the existing Marketing validation/review; AP business
+rules, schema, BA/CS/CO and model transport/config remain unchanged. Shared facade,
+HTTP and UI changes are recorded in SHARED_FILES.md; affected-owner review pending.
+
+GENERATING -> durable server outcome -> independent current evidence/file recheck
+-> atomic draft/REVIEW_PENDING receipt. Final failure is RECORDING_FAILED when
+recordable. Recovery resumes this same saved generation without text/render calls;
+no saved outcome requires explicit retry/new revision. Current review/decision is
+never inherited or replaced by generation retry. Cancel advances revision and
+suppresses late output; it does not promise physical GPU/render abort. No publication.
+
+210 full tests passed, including 57 MC tests; actual mock SQLite failure/
+restart/recovery/no-draft retry/cancel and real MC model-off restart/same-MP4 recovery
+passed. All browser reviews remained pending or superseded, with zero effects and
+unchanged stock. See VERIFICATION.md, CONTRACTS.md and WINDOWS_LLM.md for exact
+evidence/commands. Earlier below “no MC recovery UI” statements are historical.
+
+**MC-T-06 remains PARTIAL.** This is generation-save recovery, not every possible
+MC local decision-save/approval-delivery recovery. No partial generation/render
+checkpointing, orphan cleanup, unrestricted prose, AI scenes/audio, wider media
+quality, current-source ZIP/other-machine/venue or complete MC/Stage 2 acceptance.
+
+
 ## MC template MP4 checkpoint · 29 October 2026
 
 This Danny-authorised KAN-15 increment adds MC-F-02 template media, preserving

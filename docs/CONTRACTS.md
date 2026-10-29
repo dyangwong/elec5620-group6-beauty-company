@@ -2,6 +2,46 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/CONTRACTS.md).
 
+## MC generation recovery checkpoint · 29 October 2026
+
+MC-ACT-01 / MC-STM-01 (public PDF pages 39, 51–52), MC-T-06, Danny-authorised
+shared exception. All HTTP modes, including default mock, now use the same staged
+Company.campaign orchestration; legacy injected MC submit/submit_draft/revise service
+methods remain compatible and do not independently acquire durable HTTP recovery.
+
+| POST `/api/campaigns/{id}/…` | Exact body | Behaviour |
+|---|---|---|
+| recover | positive integer contextRevision | Same saved outcome/revision, no generator calls; validates current catalogue, actual text/frames, original modes and exact template artifact/manifest/hash before resuming one pending review. Already recorded generation returns current state, preserving later decisions. |
+| retry | positive integer contextRevision | Interrupted/failed generation with no pending result/review/decision; same ID, revision +1, explicit new generation using current configuration. Saved result returns 409 RECOVERY_AVAILABLE; existing review authority cannot be replaced by generation retry. |
+| cancel | positive integer contextRevision | Active draft only; revision +1, CANCELLED, prior history retained, old review superseded. Current-revision repetition is idempotent. Decided terminal drafts cannot be cancelled retroactively. Cancelled campaigns require a new campaign. |
+
+Founder session, owner and CSRF checks apply. Extra caller-supplied results/modes
+or malformed revision are rejected. Revise still takes brief/productId/contextRevision;
+it replaces scope and starts fresh review, refusing cancelled records. Default mock
+retains blank-revision INCOMPLETE behaviour; provider failures retain originating mode.
+
+GENERATING records the scope before inference outside the write lock. A
+server-owned payload.pendingGeneration stores revision/status/outcome/modes in the
+existing JSON payload; no schema migration. Snapshot/controls expose only its
+metadata, including in history, never uncommitted text/media or approval. The final
+validated draft, review receipt and audit save atomically. Failed final transaction
+returns 503 MC_STORAGE_UNAVAILABLE and records RECORDING_FAILED when possible;
+total write outage can leave GENERATING with a saved draft. Failed staging leaves
+no draft and does not invent one. Initial scope-write failure may leave no new record.
+GENERATION_FAILED, CONTENT_REJECTED and INCOMPLETE remain distinct failed outcomes.
+
+Founder-only one-shot mc_recording is an explicit local final-save fixture: 503
+MC_RECORDING_FAILED with durable pending outcome and no review. It is separate from
+real SQLite failure tests. Failed cancellation returns 503 MC_CANCELLATION_NOT_RECORDED.
+Missing original template-media configuration returns 503 MC_MEDIA_RECOVERY_UNAVAILABLE,
+preserving pending data. Invalid/currently changed evidence or artifact is withheld,
+never reviewed; use a fresh correction. Recover never approves, publishes or executes.
+
+Generation recovery is separate from AP decision persistence/delivery recovery.
+No physical provider abort, partial model/render resume, orphan cleanup, full MC
+decision/local-save recovery, automatic retry or general semantic verifier is added.
+
+
 ## MC template MP4 checkpoint · 29 October 2026
 
 Optional Company(path, llm=None, media=None) injection preserves MockMedia default.

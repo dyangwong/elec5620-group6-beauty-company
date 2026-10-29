@@ -18,6 +18,15 @@
 
 可添加归属明确的模块内 helper/测试。不为本地便利擅自搬共享商品函数；先列影响的导入/契约，另做集成。
 
+## MC 生成恢复检查点 · 2026-10-29
+
+Danny / M1 授权 KAN-15 下 MC 生成保存恢复有界例外：新增 modules/mc_generation.py、复用抽出的
+Marketing 校验、Company facade／快照／故障演练扩展、统一campaign HTTP和恢复／重试／取消网页。
+新增测试在tests/test_mc.py，相关契约／追溯及双语说明同步。未改AP实现／schema／BA／CS／CO／
+模型传输／依赖，保留原MC归属／任务登记，受影响MC／共享维护者评审待办。
+仅本地，不外部Jira／PR／合并。
+
+
 ## MC 模板 MP4 检查点 · 2026-10-29
 
 Danny / M1 授权 KAN-15 的 MC-F-02 模板 MP4 共享例外。新增可选 template_video 适配器和

@@ -2,6 +2,44 @@
 
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../VERIFICATION.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
+## MC 生成恢复检查点 · 2026-10-29
+
+本轮为 MC 生成持久化新证据，下方历史 ZIP／媒体／AP 证据保持原范围。Danny / M1、AI 辅助，
+分支 KAN-15-mc-save-recovery，干净基线 ca1737b9e3264f0d93c8e41516a2c15cd39c02f7，
+获取后 main 仍为 515bfa537e31a01b9e9a24400a7112f8103babb3，任务及队友归属不变。
+
+| 本次检查 | 实际结果 |
+|---|---|
+| 修改前 | Windows Verify 191 项通过，57.685 秒。 |
+| 最终完整测试 | **210 项通过，66.961 秒**，含 MC 57 项（新 19 项）。来源 117 文件／41 组、指纹／交接和 JS 通过。最终审批权限保护测试前的 MC 专项为 56 项／9.797 秒；未删除测试。一个旧最终保存断言改为持久 RECORDING_FAILED／503，不再预期原始 SQLite 异常／DRAFTING。 |
+| 存储边界 | 真实 SQLite 审计 ABORT 在插入待审后回滚草稿／待审／审计整个事务，保留草稿。完整最终写故障留下 GENERATING／pending，不伪称失败已存。阶段失败无草稿；明确重试新修订。并发／重复恢复仅一个待审／事件；生成重试不能替换既有审批／决策。 |
+| 默认 mock 网页／5740 | MC-5f929d55f172 r1，一次最终保存演练故障→RECORDING_FAILED／无待审→实际重启→网页恢复 AP-c85f47d8de10 PENDING；再三次已认证恢复保持同 ID。 |
+| 真实 SQLite 失败／5740 | MC-596579a178a6 r1，测试库触发器使最终 GENERATION_RECORDED 审计失败，HTTP503 MC_STORAGE_UNAVAILABLE、无待审。移除触发器、重启后网页恢复 AP-084a5a2f9a55；网页取消到 r2 CANCELLED，旧待审 SUPERSEDED，原历史保留。 |
+| 无草稿／5740 | MC-95429dbd1fb8 r1，真实阶段更新触发器失败，GENERATING／无 pending／无待审。移除触发器、重启后网页明确重试 r2，AP-c7f4c29db6d1 PENDING；再三次恢复不重复。两个触发器均已移除，未作用于旧数据库。 |
+| 真实 MC／5741 | MC-7dbc0096d878 r1，energetic／factRefs=[50 ml]；按当前目录独立重构实际字面脚本／三帧。真实文字及模板 MP4→显式最终保存失败、无待审，复用既有 Strata／工具。 |
+| 模型停止＋应用重启＋实际网页恢复 | 以实例保护仅停止本轮 1340b2d713ce4100ad47c3abc53ceb6c，8080关闭，同 DB／媒体配置重启应用。Recover→AP-802103339dca PENDING，无已提交决策；textSimulated=false／mediaSimulated=false／videoModelUsed=false，三次重复恢复同一待审。 |
+| 同一真实文件 | 新忽略目录 media-output 的 artifact dfad0c0d2bc74ce68419de2f3bf92981，63,274 字节，SHA-256 e838d2915c120ddc4a0c249c658b8dcbe81ebdef2025ea9306d8fa23a615c39d，恢复前后相同，脚本／分镜／manifest 同样相同。网页 readyState=4、15 秒，实际播放到7.550395秒、无错误；实际浏览器下载哈希一致。恢复不需推理／渲染，单测也将任何生成器调用视为失败。静音720x1280／24fps模板，无AI场景／音频。 |
+| 模型关闭后新请求和重试 | MC-ed37efde1777 r1及网页明确重试r2均 GENERATION_FAILED／LLM_UNAVAILABLE，原真实标签，无脚本／媒体／待审／回退；应用健康仍ok。 |
+| 范围／安全／迟到结果 | 单测覆盖 owner／Founder／会话／CSRF／精确字段、已存文字／帧／模式篡改、目录改变、缺配置／文件、pending历史隐藏、取消保存失败及迟到结果抑制。运行中取消使用离线阻塞provider替身，不作为物理GPU中止证据。 |
+| 效果／环境 | 两库零业务效果、零已提交决策，库存12/8/0不变。仅停止本轮5740／5741及精确模型实例，原配置／数据库哈希和56项模型文件大小／mtime一致。无模型／工具下载、升级、新依赖、schema变更、真实支付／发货／发布。 |
+
+同一游戏本 Windows 11 Pro build26200、应用 Python3.14.5、Node v22.19.0；既有
+Strata0.2.1／Terminal0.1.46.1／engine0.1.46 CUDA13／模型Python3.12.15，
+qwen3.8-flash-next-gyro-gyro-s；8192 context、单请求、1536MiB reserve、route-tail-skip7，
+已存 vision／MTP 设置未改，120秒／512输出token。复用 FFmpeg／ffprobe9.0.2及Windows Arial。
+引擎实际MC请求330prompt／49生成token，prompt／decode7702+2136ms，不是浏览器端到端耗时。
+
+本轮发现并修正：抽出校验块时遗漏claims局部引用；共享HTTP初版改变空白mock修订失败分类；
+已取消／已失败界面沿用含糊的生成提示。既有检查发现问题，最终测试及网页检查通过。
+浏览器下载验证等待约192秒后完成且哈希正确，这是本地自动化观察，不是已确定的应用延迟上限。
+
+原始日志／读回／触发器清单／引擎副本在忽略目录var/mc-recovery-20261029，本地outputs保存截图／视频，
+只提交脱敏摘要。未生成新ZIP，冻结eb8f0de包早于本代码。Jira未核实／更新待办，按要求不读写；
+未推送／PR／合并／Canvas。**剩余：**部分生成／渲染断点续作、provider物理中止保证、完整MC已提交决策／
+本地保存恢复矩阵、孤立文件清理、自由文案／AI场景／音频／一般质量、新包／其他电脑／现场及完整MC／
+Stage2验收。MC-T-06仍PARTIAL。
+
+
 ## 冻结源码 ZIP 彩排 · 2026-10-29
 
 本地部署新证据，与下方历史记录区分。Danny / M1、AI 辅助 KAN-15 共享范围；GR-INT-03 是内部标签，
