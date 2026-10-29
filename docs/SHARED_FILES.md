@@ -22,6 +22,53 @@ New module-local helpers/tests may be added when their ownership is explicit.
 Do not move shared catalogue functions merely to make a local task easier: record
 the affected imports/contracts and integrate that change separately.
 
+## CO failure boundary exception · 29 October 2026
+
+Danny / M1 explicitly authorised this bounded KAN-15 shared increment, AI-assisted:
+modules/coordination.py and new tests/test_co.py, plus exactly two existing
+web/app.js null guards for missing saved CS needs. Shared contracts, relevant
+CO-T rows and bilingual guides record the additive handoff/failure evidence.
+No CS business/AP/BA/MC service, HTTP signature, schema, provider, dependency,
+task registry or ownership change. Guiyu Liu / M5 remains the original CO owner;
+this is not a KAN-14/CO-START-01 claim. Affected CO/CS/shared-owner review pending,
+not inferred from tests. No Jira read/write, push/PR/merge this round.
+
+## MC generation recovery checkpoint · 29 October 2026
+
+Danny / M1 authorised this bounded MC generation-save recovery exception under
+KAN-15: new modules/mc_generation.py, extracted reusable Marketing checks,
+Company facade/snapshot/fault additions, unified campaign HTTP routes and recovery/
+retry/cancel UI. New tests stay in tests/test_mc.py; affected contract/traceability
+and bilingual guides updated together. No AP implementation/schema/BA/CS/CO/model
+transport/dependency change. Original MC attribution/task ownership remain;
+affected MC/shared-owner review pending. Local only: no external Jira/PR/merge.
+
+
+## MC template MP4 checkpoint · 29 October 2026
+
+Danny / M1 authorised the MC-F-02 template MP4 exception under KAN-15. New optional
+template_video adapter and media_tools.ps1; additive Company media injection/access,
+HTTP current-revision authenticated range/download route, CLI/Windows config switch,
+MC artifact validation/review hash fields and UI playback/download labels. Tests stay
+in test_mc.py. AP implementation, schema, BA/CS/CO services, task claims and model
+transport/config are unchanged. New dependency rationale/setup is documented;
+default mock remains independent. MC/shared-owner review pending; no endorsement
+or live Jira claim inferred. No push/PR/merge authorised in this local increment.
+
+
+## MC bounded live-text checkpoint · 29 October 2026
+
+Danny / M1 explicitly authorised bounded real MC text via KAN-15. Changes touch
+shared llm adapter + new pure mc_text contract, Company.campaign/mode, opt-in HTTP
+dispatch, CLI/Windows switch, MC service/current review action, UI labels/form
+fields and tests/test_mc.py. Existing AP implementation, schema, BA/CS/CO services,
+task registry, ownership and model config/installation are unchanged. Default mock
+and BA-only Strata are preserved. Original Zhengdu Wei MC code remains attributed.
+Affected MC/shared-file review is pending; no teammate endorsement, Jira update,
+remote PR or acceptance is inferred. This is not authority to add real CS intent,
+video, MC cancellation/recovery or unrestricted prose in the same increment.
+
+
 ## Shared surfaces
 
 `contracts.py`, `store.py`, `application.py`, `http.py`, `adapters/mock.py`,

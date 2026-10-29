@@ -2,6 +2,143 @@
 
 English primary. [中文阅读副本](zh-CN/LLM_INTEGRATION.md).
 
+## MC generation recovery checkpoint · 29 October 2026
+
+No new model/provider/prompt/configuration interface or installation is added.
+The existing MC generate_script and optional media generator run only during
+explicit generation/retry. Storage-only recovery uses the staged original modes,
+revalidates actual bounded text/frames and current catalogue, and verifies the same
+template artifact/manifest/hash. It can restore live text while the app uses mock
+configuration without invoking a mock generator; media recovery requires access
+to the original configured output root. Historical mode is never relabelled.
+
+Shared Company.campaign delegates to module-local McGeneration for all HTTP modes.
+Only durable outcome metadata reaches snapshots; no uncommitted content/authority.
+Recover/retry/cancel are owner-Founder/session/CSRF/current-revision controlled.
+Generation-save recovery resumes pending review only, separate from AP decisions.
+Explicit retry is new generation/new revision; cancellation suppresses late output
+but does not guarantee physical provider/renderer abort. No automatic retry/fallback.
+Actual model-off + app-restart recovery reused the same real text/MP4; a new request
+and explicit retry still failed LLM_UNAVAILABLE with live flags. See VERIFICATION.md.
+Full MC local decision-save recovery, free prose and AI scene/audio generation remain
+open. BA and live-CS guard/NOT_CONNECTED intent are unchanged; review pending.
+
+
+## MC template MP4 checkpoint · 29 October 2026
+
+No shared-model prompt/transport/interface change. The optional template adapter
+consumes only the already-validated script/storyboard; it uses local FFmpeg CPU
+encoding, not another AI provider. Mock text can render without a model; live text
+continues through the existing explicitly enabled shared model. No model download,
+upgrade, image/voice/video model, external assets or keys are involved.
+
+VideoConfig is separate ignored local configuration, resolved relative to its file.
+Only explicit --mc-video-config / Windows -VideoConfig enables rendering. The adapter
+checks tool/font availability, uses argument arrays (no shell), fixed filters and
+UTF-8 LF text files with literal expansion disabled. It probes H.264/yuv420p, fixed
+dimensions/frame count/duration, fully decodes output, saves a manifest and verifies
+actual bytes/hash before review. These are template technical checks, not general
+visual quality/claim verification. Actual captions were sampled visually on Windows.
+
+There is one optional external CLI dependency: pinned FFmpeg/ffprobe 9.0.2, using
+system Arial only locally. Rationale: produce genuine MP4 without a second model,
+new Python stack or GPU contention. Default app/testing requires none of these.
+Tool binaries, font copies, artifacts and logs remain ignored; docs/WINDOWS_LLM.md
+records source/hash, reproducible setup and remaining deployment/licensing prerequisites.
+MC/shared facade/HTTP/UI/script review remains pending; no AP/BA/CS/CO rules changed.
+
+
+## MC bounded live-text checkpoint · 29 October 2026
+
+This current opt-in supersedes older BA-only/MC-mock descriptions below; those
+dated checkpoints remain historical. Default mock and ordinary Strata defaults
+stay unchanged. `create_llm(..., mc_live=True)`, CLI `--mc-live`, or Windows
+`-LiveMc` require explicit Strata configuration; mock + live-MC is rejected.
+
+Shared `StrataLlm.generate_script(brief, evidence)` uses the existing local
+chat-completions transport, timeout, exact-model/finished-response checks and
+strict JSON. Only brief plus product `{id,name,facts,version}` enters this call,
+not sessions, identity, order, approval or database data. The model returns exactly
+`productId`, `style` (CALM/ENERGETIC/INFORMATIVE), literal `briefRef` (1–200 chars),
+distinct nonempty literal `factRefs`, and `featureFact` from those facts.
+
+`adapters/mc_text.py` composes a catalogue-literal script and three bounded shots
+from that plan. Marketing independently reconstructs/checks the **actual** script,
+claims, captions, directions and duration against its untouched catalogue/brief
+snapshot; checking only a separate claims array is insufficient. Style/brief quotes
+do not prove general semantic correctness. Founder still assesses creative fit.
+No unrestricted prose/medical claim verifier or generated video is introduced.
+
+The live HTTP facade persists DRAFTING scope, generates outside a write transaction,
+then rechecks current revision/status and the catalogue before one save/review
+transaction. Changed revision discards old output; changed evidence saves INCOMPLETE.
+Provider timeout/unavailability/invalid plan retains a failed record with original
+live mode and no text/media/approval; no fallback or automatic retry. Mock media
+remains independently checked and explicitly labelled. Final save failure may leave
+DRAFTING without output/review; no durable MC recovery is claimed in this slice.
+
+Capabilities separately report `mc=LIVE`, `textSimulated=false`, `mediaSimulated=true`;
+top-level simulated=false refers to text, not all capabilities. Health mode becomes
+LIVE_TEXT_WITH_MOCK_MEDIA, a configuration label, not readiness/inference evidence.
+Default BA-only Strata retains LIVE_BA_MOCK_MC. CS intent/real handoff limits remain.
+Existing AP stores REVIEW_TEXT_DRAFT bound to ID/revision, textMode=LIVE and
+mediaKind=MOCK_STORYBOARD; review receipt, decision and delivery remain distinct.
+No AP implementation, database schema, dependency, model install or task ownership
+change. Shared adapter/facade/HTTP/UI/script contract changes await affected-owner
+review before publication. Actual limited Windows evidence is in VERIFICATION.md.
+
+
+## BA lifecycle checkpoint · 29 October 2026
+
+Round 2 adds natural BA revision/cancellation and persistence recovery around the
+existing extraction/propose calls; it adds no provider dependency, prompt, key,
+model download or live CS/MC capability. Full replacement input starts a fresh
+interpretation scope and requires Customer confirmation. Cancelled/stale outputs
+are discarded before staging/final save. A model request may still consume GPU
+time after cancellation; no physical provider-abort guarantee is claimed.
+
+Recovery accepts only the displayed revision and reads a saved server draft. It
+never invokes extract_needs/propose, rechecks current authoritative evidence and
+retains the draft's originating mode. With no saved draft, **retry** is a separate,
+explicit new model attempt with a new revision and fresh needs confirmation.
+Raw drafts are withheld from HTTP snapshots. Actual live recovery was verified
+after model shutdown and application restart; a separate new consultation still
+failed truthfully with LLM_UNAVAILABLE. Evidence and limits: VERIFICATION.md.
+CS intent remains NOT_CONNECTED, MC MOCK, and the live CS handoff guard remains.
+
+## Earlier round 1 · BA needs checkpoint · 29 October 2026
+
+Danny authorised a bounded KAN-15 standalone BA perception/clarification slice.
+It does not claim BA-START-01 or connect CS/MC. The additive optional capability
+`extract_needs(messages: list[str]) -> dict` reuses `StrataLlm._complete`, the same
+loopback configuration, strict JSON/envelope checks, timeout and no-redirect
+transport as `propose`. No new client, dependency, URL or key is introduced.
+Existing injected objects implementing only the v1 propose/script methods still
+work with their old callers. Natural intake with a missing extraction method
+saves INCOMPLETE / LLM_CAPABILITY_UNAVAILABLE; it never substitutes MockLlm.
+Health adds `capabilities.baNeeds=LIVE|MOCK|NOT_CONNECTED`; configuration is not
+model readiness. MC remains MOCK, csIntent NOT_CONNECTED and the live CS handoff
+guard is unchanged.
+
+Extraction v1.1 has exactly concern (HYDRATION/CLEANSING/null), budget (positive
+AUD dollars, at most two decimal places and 10,000, or null), fragranceFree
+(boolean/null), sources (exactly those three keys, literal user quotation/null).
+Every non-null value requires a short source (at most 600 characters) found in
+the saved original messages; budget also needs an explicit budget/currency cue
+and matching literal amount; other currencies/conversion are refused. No user
+identity, credentials, order, policy, product or database handle enters extraction.
+Nulls generate fixed focused questions. English/Chinese mock grammar is a small,
+labelled fixture; unsupported/ambiguous input requires clarification or safe stop.
+Quotations and schema checks do not prove unrestricted semantic correctness or
+medical safety. Customer confirmation is mandatory; recommendation then independently
+checks authorised product ID, literal facts, price, constraints and current stock.
+
+Natural intake uses only the Customer-reviewed three fields and original first
+message for recommendation; the conversation stays stored separately. No general
+multi-turn model memory, arbitrary generated prose grounding, live CS intent or
+real MC/media is claimed. Actual Windows model and failure evidence is in
+VERIFICATION.md; the 28 October source ZIP predates this feature and is historical.
+
 [KAN-15 / GR-INT-02](https://uni-team6-elec5620.atlassian.net/browse/KAN-15) · owner: Danyang Wang · local model deployed; one actual BA path verified, broader integration pending.
 
 ## Owner and present boundary

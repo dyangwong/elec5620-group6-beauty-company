@@ -7,6 +7,37 @@ Jira mappings are identified explicitly; unmapped labels are not Jira issues. ST
 Jira keys. `tasks.json` currently contains only the five executable starter briefs.
 Finishing a starter does not automatically authorise every later item below.
 
+## Current CO slice closed locally · 29 October 2026
+
+The first CO priority in the older audit/order below has now been implemented and
+verified for existing synchronous read-only CS-to-BA only: 237 full tests and
+independent mock browser failure/restart/correction evidence. See STATUS.md and
+VERIFICATION.md. Do not restart that slice or generalise it into a queue framework.
+Generic CO lifecycle/retry remains open. Next separate choices remain conditional
+BA review or a bounded CS gap, then current-source review/release and remaining
+case/NFR/media/Agile evidence; no new module scope is automatically authorised by
+this checkpoint. Historical planning/order below is retained for provenance.
+
+## Current audit and bounded priorities · 29 October 2026
+
+[STAGE2_READINESS.md](STAGE2_READINESS.md) supersedes the broad initial planning
+snapshot below for current implementation/evidence. Real bounded BA/MC, optional
+template MP4 and durable generation recovery are implemented; MC decision
+redelivery after origin-save failure exists and was newly diagnosed successfully.
+Do not implement those again merely because an older row says pending.
+
+Proposed order: (1) retain CO invalid/unavailable/malformed handoff outcomes;
+(2) bounded core BA review and CS intent/live handoff/resolution gaps, in separate
+scopes; (3) close satisfied cases/NFR/model and media-review evidence;
+(4) reviewed release-source ZIP/fresh-directory/venue plus actual Agile/contribution
+materials. Exact stop conditions are in the audit. Optional ON remains tracked,
+not a prerequisite for the next CO fix. These are proposals, not assignments,
+Jira tickets or task claims. No external updates or code implemented this round.
+
+The following starter-era rows retain historical planning context, not a current
+list of wholly unimplemented capabilities.
+
+
 ## Full Stage 1 feature coverage remains the target
 
 | Chain | Core still to complete after its starter | Optional feature retained |

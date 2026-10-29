@@ -18,6 +18,42 @@
 
 可添加归属明确的模块内 helper/测试。不为本地便利擅自搬共享商品函数；先列影响的导入/契约，另做集成。
 
+## CO 失败边界共享例外 · 2026-10-29
+
+Danny／M1 明确授权 KAN-15 有界增量，AI 辅助：modules/coordination.py、新 tests/test_co.py，
+及 web/app.js 既有 CS needs 显示的两处空值保护。共享合约、相关 CO-T 行和双语文档记录新增证据。
+未改 CS 业务／AP／BA／MC 服务、HTTP 签名、结构、提供方、依赖、任务登记或归属。
+Guiyu Liu／M5 保留 CO 原归属，不是 KAN-14／CO-START-01 认领。
+CO／CS／共享负责人评审待办，不能由测试推断；本轮未读写 Jira、推送／PR／合并。
+
+## MC 生成恢复检查点 · 2026-10-29
+
+Danny / M1 授权 KAN-15 下 MC 生成保存恢复有界例外：新增 modules/mc_generation.py、复用抽出的
+Marketing 校验、Company facade／快照／故障演练扩展、统一campaign HTTP和恢复／重试／取消网页。
+新增测试在tests/test_mc.py，相关契约／追溯及双语说明同步。未改AP实现／schema／BA／CS／CO／
+模型传输／依赖，保留原MC归属／任务登记，受影响MC／共享维护者评审待办。
+仅本地，不外部Jira／PR／合并。
+
+
+## MC 模板 MP4 检查点 · 2026-10-29
+
+Danny / M1 授权 KAN-15 的 MC-F-02 模板 MP4 共享例外。新增可选 template_video 适配器和
+media_tools.ps1；Company 媒体注入／访问、HTTP 当前修订认证范围下载、CLI／Windows 开关、MC
+文件校验／审批哈希及 UI 播放／下载标签增量修改，测试在 test_mc.py。AP 实现、结构、BA／CS／
+CO 服务、任务登记、模型传输／配置不变。记录可选依赖理由和安装，默认 mock 独立。相关评审
+待办，不推断认可或 Jira claim，本轮不推送／PR／合并。
+
+
+## MC 有界真实文字检查点 · 2026-10-29
+
+Danny / M1 明确授权 KAN-15 有界真实 MC 文字。本轮涉及共享 llm 适配器、新纯 mc_text
+契约、Company.campaign/mode、可选 HTTP 分发、CLI／Windows 开关、MC 服务／当前审批 action、
+UI 标签／表单及 tests/test_mc.py。既有 AP 实现、数据库结构、BA／CS／CO 服务、任务登记／归属、
+模型配置／安装不变；保留默认 mock、BA-only Strata 及 Zhengdu Wei 原 MC 工作署名。
+相关 MC／共享文件评审待办，不推断队友认可、Jira 更新、远程 PR 或验收。本授权不包含同轮增加
+真实 CS 意图、视频、MC 取消／恢复或自由文案。
+
+
 ## 共同文件
 
 `contracts.py`、`store.py`、`application.py`、`http.py`、`adapters/mock.py`、

@@ -12,11 +12,15 @@ It maps the five report members to their modules and prepared first tasks. Tell
 your agent your full name/member ID/module; it can read the task packet and begin
 authorised local work. Real/local model setup is deferred and is not a prerequisite.
 
-**Current status: initial working simulation, not the completed Stage 2 submission.**
-Default model responses are deterministic mocks. KAN-15 adds opt-in standalone
-BA transport; one actual model-backed BA path now passes. See [runtime repair and evidence](docs/WINDOWS_LLM_RUNTIME.md) and [Windows setup](docs/WINDOWS_LLM.md). Media is a storyboard placeholder,
-not a video file. No production settlement, shipment or public posting exists.
-The implementation baseline remains PROPOSED until the team records acceptance.
+**Current status: a demonstrable bounded prototype, not a completed Stage 2 submission.**
+Default adapters are deterministic mocks. Opt-in standalone BA and bounded MC text
+have actual local-model evidence; optional FFmpeg produces a playable silent
+template MP4 with exact review, and MC generation-save recovery is verified.
+CS intent/live CS-to-BA remains unconnected. No production settlement, shipment
+or public posting exists; Stage 1 design acceptance remains PROPOSED.
+See the [current readiness audit](docs/STAGE2_READINESS.md),
+[verification evidence](docs/VERIFICATION.md) and [Windows steps](docs/WINDOWS_LLM.md).
+The latest local implementation and older frozen ZIP/main have different coverage.
 
 ## Run locally
 
@@ -68,7 +72,7 @@ opaque sessions, ownership checks and CSRF checks still enforce the role boundar
 Use separate browser profiles/private windows for simultaneous Founder/Customer
 sessions; ordinary tabs share cookies. Refresh after another session changes data.
 
-For a separate MC slice, Founder opens **Content studio**, creates a mock draft,
+For a separate default-mock MC slice, Founder opens **Content studio**, creates a mock draft,
 reviews its exact revision, then revises it to demonstrate fresh review. No video
 or public post is generated. A mock draft approval is scoped only to that draft.
 

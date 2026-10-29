@@ -2,6 +2,380 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/VERIFICATION.md).
 
+
+## Mac integration review · 29 October 2026
+
+Source restored from the verified standalone handoff bundle at 5073dbb; ten commits
+above fetched main 515bfa5. All six transfer-artifact hashes, 120 source-file sizes/
+SHA-256 values, complete bundle and git fsck passed. Publication is explicitly
+requested by Danny; this is AI-assisted review/self-check, not teammate endorsement.
+
+The original Mac full run had one failing assertion: VideoConfig resolves the
+/var -> /private/var alias, while its test compared an unresolved expected path.
+Canonical TMPDIR proved the diagnosis without changing source. The integration
+fix resolves the expected output path; no production behaviour changes. With the
+normal Mac temporary directory, all **237 tests passed in 29.466 s** on Python
+3.9.6. Provenance (120 files / 41 case groups), JS syntax and whitespace passed.
+
+Actual isolated mock browser, port 5760: BA missing-budget/fragrance questions ->
+same-ID clarification -> explicit Customer confirmation -> COMPLETED/r3/P-101.
+MC final-save fixture -> RECORDING_FAILED with no visible generated content/review;
+app restart retained the draft; Recover saved generation -> same r1 REVIEW_PENDING.
+Independent DB readback: two records, one PENDING MC review, zero effects, stocks
+12/8/0. No model, FFmpeg render, real commerce or new Canvas rehearsal was run here.
+The 191-test frozen-source live BA/MC/MP4 rehearsal below remains eb8f0de evidence;
+237-test Windows transfer evidence is recorded in the handoff, not a new Mac live run.
+
+New-history scan: 152 blobs, no excluded runtime/private-key paths or private-key/
+GitHub-token signatures found; bounded scan, not a comprehensive secret audit.
+Remote CI/exact head/review-layer exception/merge receipts are recorded on the PR;
+Jira uses a short final checkpoint and stays Verification until full task acceptance.
+
+## CO retained handoff failures · 29 October 2026 — new evidence
+
+Branch KAN-15-co-handoff-failures; clean source base
+d8d1826cd8e0edbe3899f9d68a4da6b90b2c5987, fetched main unchanged at
+515bfa537e31a01b9e9a24400a7112f8103babb3. The commit containing this checkpoint
+identifies the exact final source; this is local evidence, not remote CI/review.
+Danny / M1 authorised this AI-assisted KAN-15 exception; Guiyu Liu attribution and
+starter claims unchanged. CO-CL/ACT/SEQ/STM physical PDF pages 27/47/48/53 visually
+checked this round; prior selected-page audit remains historical, not a full UML audit.
+
+| This run | Observed result |
+|---|---|
+| Before edits | Full Windows Verify: **210 passed / 66.927 s**. |
+| Final code | **237 passed / 82.653 s**, including **27 new tests in tests/test_co.py**; CO-only 27 / 11.444 s. Existing workflow subset 29 / 4.786 s. No existing test changed/removed. Provenance **120 source files / 41 tracked groups**, source hashes/five-member handoff and JS syntax passed. |
+| Context/origin | Missing/non-object/invalid fields and budget types rejected without dispatch; canonical AUD cents preserved; only four needs fields forwarded. Saved CS link/owner/current revision, stale scope, mutation and invalid replay covered. |
+| Target/outcome | Missing/noncallable/broken lookup/bad mode, timeout/unavailable/unexpected errors, malformed/failed/incomplete output covered. Original valid mode retained; no fallback or raw exception text. Product/version/availability/budget/need/facts/current evidence independently checked. Arbitrary receiver prose replaced by a safe control message. |
+| Replay/storage | Repeated/concurrent calls retain one attempt/target dispatch. Corrected CS revision retains failure history. Real SQLite audit ABORT before dispatch, after result and after failed outcome, plus query_only outage, verify atomic rollback and 503 CO_STORAGE_UNAVAILABLE with no saved-trace claim. Existing successful exchange/AP/once-only/reconcile/storage recovery regressions still pass. |
+| Actual browser / loopback 5750 | New browser.sqlite3, actual current Company/HTTP/UI and an explicit scratch-only mock receiver double. CS-e6a20b8dc2e0 / CO-a5e41e057102: r1 timeout -> UNRESOLVED/ESCALATED; own app restart retains it. Three further authenticated coordinate calls retain exactly one attempt. r2 unavailable -> CO_TARGET_UNAVAILABLE; r3 malformed -> CO_INVALID_RESULT; both UNRESOLVED/ESCALATED. No Customer confirmation or review offered on failures. |
+| Invalid context / browser | Only this disposable CS r4 needs was deliberately set to null by test harness. Page stayed usable; handoff saved CO_INVALID_CONTEXT/CLARIFICATION_REQUIRED, dispatched=false, CS UNRESOLVED. No original DB targeted. This is controlled corruption evidence, not a production fault toggle. |
+| Explicit correction / browser | Customer revised to r5, Founder initiated fresh handoff -> P-101 AUD48, catalogue:P-101:v1, AVAILABLE, mock-labelled advice. Customer confirmed -> CS REVIEW_PENDING, CO AWAITING_APPROVAL, one AP-700222059d80 PENDING. All four failed attempts retained plus one completed read-only advice attempt. No Founder approval or exchange execution this browser run. |
+| Effects/environment | Independent DB zero committed decisions/effects; stocks 12/8/0 unchanged. Only owned fixture process restarted/stopped. Original config/database SHA-256 and 56 model-file size/mtime inventory matched. Model port8080 stayed off; no original service terminated, model/tool install/download/upgrade, dependency/schema change or credential access. |
+
+Same laptop: Windows 11 Pro build 26200; app Python 3.14.5; Node v22.19.0.
+Existing Strata 0.2.1 / engine 0.1.46 CUDA13 / model Python3.12.15 /
+qwen3.8-flash-next-gyro-gyro-s are historical installed-version evidence, not rerun
+inference or model-readiness claims. BA/MC default MOCK, commerce simulated, CS
+intent NOT_CONNECTED and production live CS handoff still blocked.
+
+Reproduce automated checks from repository root:
+`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/windows.ps1 -Action Verify`.
+No model service is needed. The browser fault receiver and null-needs injection are
+scratch-only test harnesses, not supported application switches. Unit tests recreate
+controlled targets and actual SQLite failures without touching existing data.
+Normal mock correction uses the existing Customer **Correct the needs and request a
+new proposal**, then a fresh Founder **Start advice handoff**; no blind retry control.
+
+Raw logs/readbacks/independent DB/owned-process receipt remain ignored under
+var/co-handoff-20261029; screenshots remain local outputs. No raw sessions, config,
+DB, model or receiver fixture enters Git. Evidence boundaries: this synchronous
+read-only call writes intent before dispatch **inside the caller's existing SQLite
+transaction**; it does not independently commit durable intent for external effects.
+No async callback/provider cancellation guarantee, general role dispatcher, queue,
+full CO cancellation/escalation/recovery lifecycle or optional retry was added.
+Audit-write failure has truthful rollback/error evidence; generic CO storage-only
+recovery is not newly implemented. CO case groups stay PARTIAL (CO-T-02/03 now
+PARTIAL rather than NOT_STARTED); no full Stage 2 completion claim. Frozen eb8f0de
+ZIP predates this source; fresh current release/live-model/other-machine/venue
+regressions remain open. Jira unverified / update pending; no read/write, push,
+PR, merge or Canvas. Shared-owner review pending.
+
+## MC generation recovery checkpoint · 29 October 2026
+
+New MC generation-persistence evidence; historical ZIP/media/AP evidence below
+retains its original scope. Danny / M1, AI-assisted, KAN-15-mc-save-recovery;
+clean base ca1737b9e3264f0d93c8e41516a2c15cd39c02f7; fetched main unchanged at
+515bfa537e31a01b9e9a24400a7112f8103babb3. MC task/teammate attribution unchanged.
+
+| This run | Actual result |
+|---|---|
+| Before edits | Windows Verify 191 tests passed in 57.685 s. |
+| Final suite | **210 tests passed in 66.961 s**, including 57 MC tests (19 new regressions). Source checks 117 files / 41 groups, hashes/handoff and JS syntax passed. Initial MC-only 56 passed in 9.797 s before the final review-authority guard test; no test removed. One old final-save assertion now expects durable RECORDING_FAILED/503 instead of raw SQLite error/DRAFTING. |
+| Storage boundaries | Real SQLite audit ABORT after review insertion rolled back record/review/audit together, leaving a recoverable draft. Total final-write outage retained GENERATING/pending without falsely claiming failure was saved. Staging failure retained no draft; explicit retry is new revision. Concurrent/repeated recovery retained one review/event; existing review/decision cannot be replaced by generation retry. |
+| Default mock browser / 5740 | MC-5f929d55f172 r1: explicit one-shot final-save fixture -> RECORDING_FAILED/no review -> actual app restart -> browser recovery, AP-c85f47d8de10 PENDING. Three further authenticated recoveries retained same ID. |
+| Actual SQLite failure / 5740 | MC-596579a178a6 r1: a test-DB trigger aborted final GENERATION_RECORDED audit, HTTP 503 MC_STORAGE_UNAVAILABLE, no review. Trigger removed; app restarted; browser recovery created AP-084a5a2f9a55. Browser cancellation advanced to r2 CANCELLED, old review SUPERSEDED; raw history retained. |
+| No saved draft / 5740 | MC-95429dbd1fb8 r1: actual stage-update trigger failure, GENERATING/no pending result/no review. Trigger removed; app restarted; browser explicit retry r2 -> AP-c7f4c29db6d1 PENDING. Three repeated recoveries did not duplicate it. Both temporary triggers removed; originals were never targeted. |
+| Real MC generation / 5741 | MC-7dbc0096d878 r1, energetic / factRefs=[50 ml], exact catalogue-literal text and three frames independently recomposed/current catalogue checked. Real text + template MP4 -> explicit final-save failure, no review. Existing Strata model/tools reused. |
+| Model off + app restart + actual browser recovery | Stopped only owned instance 1340b2d713ce4100ad47c3abc53ceb6c with guard; port 8080 closed, app restarted with same DB/media config. Recover -> AP-802103339dca PENDING, no committed decision. TextSimulated=false, mediaSimulated=false, videoModelUsed=false. Three further recoveries retained one review. |
+| Same actual file | Artifact dfad0c0d2bc74ce68419de2f3bf92981 under new ignored run media-output, 63,274 bytes, SHA-256 e838d2915c120ddc4a0c249c658b8dcbe81ebdef2025ea9306d8fa23a615c39d, identical before/after recovery; script/frames/manifest also identical. Browser readyState=4, duration=15 s, actual playback advanced to 7.550395 s without error; actual browser-downloaded file matched. The model service was unavailable; recovery reused the saved artifact without invoking either generator. Unit tests also fail if either generator is called. Silent 720x1280/24 fps template, no AI scenes/audio. |
+| Model-off new request and retry | MC-ed37efde1777 r1 then explicit browser retry r2: GENERATION_FAILED / LLM_UNAVAILABLE, original live flags, no script/media/review/fallback. App health still ok. |
+| Scope/security/stale work | Tests cover owner/Founder/session/CSRF/exact fields, saved text/frame/mode tampering, changed catalogue, missing media configuration/artifact, raw pending-history projection, failed cancellation and late response suppression. In-flight cancellation was exercised with an offline blocked provider double, not physical GPU abort. |
+| Effects/environment | Both DBs zero effects and zero committed decisions, stocks 12/8/0 unchanged. Only owned 5740/5741 apps and exact model instance stopped; original config/database hashes and 56 model-file size/mtime inventory matched. No model/tool download, upgrade, new dependency, schema change, real payment/shipment/publication. |
+
+Same gaming laptop: Windows 11 Pro build 26200, app Python 3.14.5, Node v22.19.0;
+existing Strata 0.2.1 / Terminal 0.1.46.1 / engine 0.1.46 CUDA13 / model Python3.12.15,
+qwen3.8-flash-next-gyro-gyro-s; 8192 context, single request, 1536 MiB reserve,
+route-tail-skip7, saved vision/MTP settings unchanged, 120 s / 512 output tokens.
+FFmpeg/ffprobe 9.0.2 and Windows Arial reused. Engine recorded the actual MC request:
+330 prompt tokens, 49 generated, prompt/decode 7702+2136 ms (not browser latency).
+
+Issues corrected during this round: an extracted validation block left a claims
+reference out of scope; shared HTTP routing initially changed blank mock-revision
+failure classification; cancelled/failed UI initially retained an ambiguous generic
+generation message. Existing checks exposed them and the final suite/UI checks passed.
+Browser download verification waited about 192 s but completed and hashed correctly;
+this is a local automation observation, not an established application latency limit.
+
+Raw logs/readbacks/triggers inventory/engine copy remain ignored in
+var/mc-recovery-20261029; local outputs contain screenshots/video. Only sanitised
+summaries tracked. No new ZIP produced; eb8f0de package remains frozen and predates
+this code. Jira unverified / update pending, no read/write by instruction;
+no push/PR/merge/Canvas. **Remaining:** no partial generation/render checkpoint
+resume, provider-process abort guarantee, full MC committed-decision/local-save
+recovery matrix, orphan cleanup, free prose/AI scenes/audio/general quality acceptance,
+fresh-package/other-computer/venue or complete MC/Stage 2 acceptance. MC-T-06 stays PARTIAL.
+
+
+## Frozen-source ZIP rehearsal · 29 October 2026
+
+Current local deployment evidence, distinct from the historical sections below.
+Danny / M1, AI-assisted KAN-15 shared scope; internal GR-INT-03 is not a Jira key.
+Branch KAN-15-zip-rehearsal-eb8f0de. Clean frozen source:
+**eb8f0de8d412344e828daf9032898c2dbb6155ee**; fetched main:
+515bfa537e31a01b9e9a24400a7112f8103babb3. No application code changes.
+
+| This run | Actual evidence |
+|---|---|
+| Archive | `elec5620-source-eb8f0de.zip`, 5,658,127 bytes, 116 files; SHA-256 **bf7d8b0324c9797e2adb03d0727a89aa31325ebb5a22223fd7a528760d25bba4**. All member bytes matched clean committed source; no .git/venv/var/DB/credentials/weights/binaries/media/old outputs. Repackaging to the same path was refused, checksum unchanged. Public redacted reference files retained. |
+| Fresh execution origin | `D:\elec5620_project\rehearsals\20261029-eb8f0de\fresh source`; independent venv, configs, mock/live DBs and media-output. Actual interpreter/import/server executable belonged to this root, no old checkout on Python import path. Repeated Setup preserved configs; extracted source hashes remained unchanged. |
+| Complete fresh Windows Verify | **191 tests passed in 56.564 s**, source verification 116 files / 41 groups, provenance/handoff and JS syntax passed. Existing tests unchanged; count equals frozen media checkpoint. |
+| Mock browser / port 5730 | CS-6a4c29fa9998 r1, AP-c326a7d02bb7, DEC-ea6386a58ce9 APPROVED/DELIVERED. Exact ORD-1001 to P-101 scope; before final Customer confirmation, effects=0/stock=12. After confirmation: RESOLVED, SIMULATED_EXCHANGE_REQUEST_ACCEPTED, effects=1/stock=11. Three further authenticated confirmations retained exactly one effect and stock=11. |
+| Real BA browser / port 5731 | BA-e753089f2935 r2 COMPLETED, simulated=false, after natural requirement extraction and explicit Customer confirmation. P-101 / AUD48; catalogue version, stock, constraints, price and literal facts independently checked. |
+| Real MC / port 5731 | MC-9a09e9cd654b r1; energetic brief, factRefs=[50 ml]. Text simulated=false, media simulated=false, videoModelUsed=false. New artifact 292986dbf7ec491888c42998a6de9a57 generated inside fresh var/media-output. No old media copied. |
+| Actual MP4 and approval | 63,274 bytes, SHA-256 **e838d2915c120ddc4a0c249c658b8dcbe81ebdef2025ea9306d8fa23a615c39d**, 15 s, 720x1280, 24 fps, H.264/yuv420p, silent. Probe/full decode/three sampled frames checked. Browser reached 15 s/ended=true/readyState=4; actual browser and authenticated HTTP downloads matched hash. AP-eb1cb4015f7c / DEC-1c3f48eabe4c APPROVED/DELIVERED bound to exact revision/file/script hash. Deterministic template bytes match a historical sample; file/UUID/root were newly generated. |
+| Authorisation and effects | Danny explicitly authorised both concrete test reviews and simulated Customer confirmation before browser clicks. No publication/payment/shipment. Live DB effects=0, stocks=12/8/0. |
+| Model-off failure | Only this run's exact model instance 6a7bb9a13bae4235a54b2ef260b7a2b8 stopped with instance guard. App remained healthy/configured LIVE, model port closed. New browser request BA-6a52c5553047 r1 saved INCOMPLETE / LLM_UNAVAILABLE, simulated=false, no result/recommendation/fallback. Previous success and authenticated MP4 access retained. |
+| Existing CS limit | Intent NOT_CONNECTED; live coordinate probe returned 503 LIVE_HANDOFF_NOT_CONNECTED and created no record. No real CS/commerce expansion. |
+| Cleanup | Only owned 5730/5731 app receipts and exact owned model instance stopped. Original config/database SHA-256 values and 56 model-file size/mtime entries matched; frozen ZIP/extracted-source hashes unchanged. |
+
+Environment: newly detected Windows 11 Pro 10.0.26200/build 26200; fresh app
+Python 3.14.5, Node v22.19.0; reused FFmpeg/ffprobe 9.0.2, Windows Arial.
+Existing model installation: Strata 0.2.1 / Terminal 0.1.46.1 / engine 0.1.46 CUDA13,
+model Python 3.12.15, qwen3.8-flash-next-gyro-gyro-s. Saved 8192 context, single
+request, no vision/MTP, 1536 MiB reserve, route-tail-skip7; 120 s / 512 output tokens.
+No model/tool reinstall, upgrade, download or weight-directory copy this run.
+Engine logged BA extraction 285/85 prompt/generated tokens (6684+4927 ms), BA
+proposal 295/25 (3050+895 ms), MC 330/50 (2408+1442 ms); engine timings are not
+end-to-end browser latency. Configuration/health alone was not counted as inference.
+
+Raw logs, DB readbacks, inventory and manifests remain ignored under
+`var/rehearsal-20261029-eb8f0de`; independent databases/configs/media remain under
+the fresh root. Only this sanitised summary is tracked. Frozen package source is
+eb8f0de; later documentation-only commit/receipt is not included in that ZIP.
+Jira unverified / update pending: no read/write by instruction; no push/PR/merge/Canvas.
+
+**Not newly verified:** AP recording-failure recovery (historical evidence remains),
+all BA/MC lifecycle/failure combinations, full MC recovery, free creative semantics,
+AI-generated scenes/audio, other computers/OS/browser combinations, venue network,
+Canvas download, clean-machine/offline-first setup or complete Stage 2 acceptance.
+This run's retained-failure case is model unavailability, not storage recovery.
+
+
+## MC template MP4 evidence · 29 October 2026
+
+New local media checkpoint, not a reclassification of the earlier placeholder.
+Danny / M1 authorised this bounded KAN-15 increment; clean base
+950ad9205d0a4522d7dc775fb2d049fc3ef9c5d9, branch KAN-15-mc-template-video.
+Fetched main remained 515bfa537e31a01b9e9a24400a7112f8103babb3. AI-assisted work;
+original teammate attribution/task claims remain. Jira unverified / update pending,
+with no external read/write by user instruction. No push/PR/merge/Canvas operation.
+
+| New check | Actual result |
+|---|---|
+| Before changes | 181 tests passed in 31.465 s on Windows Python 3.14.5 |
+| Final Windows Verify | **191 tests passed in 53.115 s** (181 previous + 10 media regressions); source verification 116 files / 41 groups, source hashes/handoff and JS syntax passed. MC-only suite 38 passed. Source/JS/diff checks repeated after bilingual docs. |
+| Offline new media cases | Hash-bound exact review; unavailable/timeout/process failure without fallback; modified bytes/path identifiers refused; actual returned frame mutation rejected; stale URL and failed revision; session/Founder guard and HTTP byte ranges; explicit config/timeout bounds; mock-text rendering; incorrect probe dimensions withheld. Stub bytes in unit tests are explicitly not playable-video evidence. |
+| Optional tool install | FFmpeg/ffprobe 9.0.2 portable, publisher archive 114768076 bytes (about 109.45 MiB), SHA-256 60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba; installed directory 329221735 bytes (about 313.97 MiB). First preparation needs archive + expanded files, about 424 MiB before outputs. Existing Windows Arial used locally; no font/binary redistribution in source. Repeated Setup preserved existing config hash without download/overwrite. No Python dependency or system PATH change. |
+| Actual mock text / template file, new DB / 5720 | MC-ea97fa92b3ee revision 1 APPROVED/DELIVERED. Text simulated=true, media simulated=false, video model=false. MP4 62392 bytes, SHA-256 4973c74e7bcf4f690583034481e2ac4236a773164ce5851408719c8ee254cdce. Browser duration 15 s, 720x1280, playback advanced to 8.833 s; actual downloaded file hash matched. Three extracted shots visually inspected. |
+| Actual local-model text / template file, new DB / 5721 | MC-24849de55d1e: revision 1 CALM/Fragrance-free; delivered REQUEST_REVISION. Revision 2 ENERGETIC/50 ml, new artifact/hash/review. Revision 3 repeats that grounded scope with corrected LF text-file layout; a third new artifact/hash/review, prior reviews SUPERSEDED. Actual model output and saved catalogue/script/frames independently checked. |
+| Final MP4 and actual browser approval | Revision 3, 63274 bytes, SHA-256 **e838d2915c120ddc4a0c249c658b8dcbe81ebdef2025ea9306d8fa23a615c39d**; 15 s, 720x1280, 24 fps, H.264/yuv420p, no audio. FFprobe metadata and full FFmpeg decode passed. All three final shots visually checked; browser reached currentTime=15, ended=true, readyState=4. AP-b460e73848cc APPROVED/DELIVERED, decision DEC-76662eeae6e9 bound to exact revision/file/script hash. Approved state independently read from SQLite. |
+| Authenticated download and stale links | Final actual HTTP download matched stored/current file SHA-256. Previous revision URLs 1 and 2 returned 409 instead of serving old or replacement bytes. Earlier mock file was also downloaded through the actual browser and hashed. |
+| Actual missing encoder / separate local config | Existing installed binary/config untouched. Only this run's mock app restarted with a config pointing at an intentionally absent encoder. Browser creation saved MC-b6c143192c82 GENERATION_FAILED / MEDIA_UNAVAILABLE, no script/media/approval, no mock fallback. Prior approved file/record retained. |
+| Model-off persistence and cleanup | This run's exact model instance stopped after inference. Final saved file remained browser-accessible/playable without model inference. Only owned 5720/5721 app receipts and exact model instance were stopped. Original config/database hashes and 56 model-file size/mtime inventory matched the before-run record. Both test DBs had zero effects and stock 12/8/0 unchanged. |
+
+Reused Windows 11 Pro 25H2 build 26200.9711, app Python 3.14.5, model Python
+3.12.15, Strata 0.2.1 / Terminal 0.1.46.1 / engine 0.1.46 CUDA 13, model
+qwen3.8-flash-next-gyro-gyro-s; saved 8192 context, single request, no vision/MTP,
+1536 MiB reserve, route-tail-skip 7; 120-second model timeout / 512 output tokens.
+No model download, upgrade, copy or configuration change. Engine recorded the
+three MC requests with 61/40/40 generated tokens; reported prompt/decode times
+6906+2383 ms, 1939+1016 ms and 328+844 ms (engine measurements, not browser latency).
+
+Issues found and corrected: one new test referenced an undefined Customer fixture;
+tool diagnostic piped version output through Select-Object, prematurely closing the
+pipe and producing a false nonzero exit; actual visual inspection found Windows
+CRLF doubled text spacing, so renderer files now use explicit UTF-8 LF and a
+regression checks those bytes. Final MP4 revision 3 is the corrected layout.
+
+During resumption, a browser session became invalid and a decision request returned
+401; this was not counted as approval. Reload/re-authentication showed the review
+still pending. The automation approval review then required explicit human consent
+for the exact test revision; Danny supplied it before the successful browser click.
+No alternate endpoint bypassed that block. Same-host apps with different databases
+share the browser cookie name: re-authenticate when switching ports; do not assume
+ports isolate sessions. This is a test-environment condition, not a model failure.
+
+Raw evidence stays ignored in var/mc-video-20261029, actual MP4/manifest/job files
+in var/mc-media and tools in var/media-tools. Local outputs contain the final MP4
+and browser screenshots. Only this sanitised summary is tracked. Setup/Start/Stop
+and dependency/license prerequisites are in WINDOWS_LLM.md; source ZIP excludes
+all binaries/fonts/models/configs/databases/media/logs. No new ZIP/hash acceptance
+is claimed; the old f7bb141 archive predates these increments.
+
+**Remaining:** text-card template only, no enacted camera movement/product imagery/
+video-model scenes/audio, general creative/medical semantics or media-quality
+validation, MC cancellation and durable generation/final-save recovery, orphan
+cleanup/historical media downloads, wider browser/OS/new-ZIP/venue acceptance.
+Final save may leave DRAFTING without output/review. Technical checks and a green
+suite do not complete MC-T-04/05/06 or Stage 2; those cases remain PARTIAL.
+
+
+## MC bounded live-text checkpoint · 29 October 2026
+
+This is new **local MC text** evidence, separate from prior BA and ZIP checkpoints.
+Branch KAN-15-mc-live-text, starting clean at 4f43f38a89637248874f4ed308441a5502e464ff;
+fetched origin/main unchanged at 515bfa537e31a01b9e9a24400a7112f8103babb3. Danny / M1
+authorised the shared-file exception, with AI assistance; task assignments unchanged.
+
+| New check | Actual result |
+|---|---|
+| Windows repository Verify | **181 tests, all passed in 49.886 s**; prior 169 + 12 new MC tests. Source verification 114 files / 41 tracked groups, source hashes and handoff checks passed. JS syntax passed, including after review-label correction. MC-only suite 28 passed. |
+| Offline live-MC failure/boundary tests | Explicit opt-in/default preservation; strict/minimal shared transport; invalid plan/no fallback; actual script/caption/direction/duration mutation; immutable evidence; owner/role/CSRF/exact fields; pending/decision/revision; concurrent generation vs revision; changed catalogue; final-save transaction rollback; unavailable/timeout/invalid-output retention. These use test doubles, not live inference. |
+| Default mock, actual Founder browser, new DB / 5710 | MC-b3315edc057a revision 1 APPROVED; simulated/textSimulated/mediaSimulated true. Existing mock review/decision delivery passed. |
+| Actual shared model, new DB / 5711 | MC-931edb7409b9 revision 1: CALM, featured Fragrance-free, all three literal catalogue facts; brief asked only Fragrance-free but model retained other authorised facts. This creative instruction mismatch is visible for Founder review, not passed as semantic compliance. Founder REQUEST_REVISION delivered. |
+| Actual model new revision and approval | Same MC ID revision 2: ENERGETIC, factRefs=[50 ml], featured caption 50 ml; actual script changed to “Meet Daily Hydration Cream. 50 ml. Explore the product details.” New AP-31e86c3715fa APPROVED/DELIVERED; prior AP-d0e8fc30ccdd SUPERSEDED with its recorded revision request retained. |
+| Independent persisted output checks | Reconstructed actual script/claims/three frames against untouched current P-101:v1 catalogue; mode false for text, true for media. Exact draft ID/revision/live-text/mock-media review actions checked; two distinct decisions, zero effects, stocks 12/8/0 unchanged. |
+| Exact owned model stopped; new browser create | App healthy/configured LIVE_TEXT_WITH_MOCK_MEDIA; port 8080 closed. MC-de418646a5b9 GENERATION_FAILED / LLM_UNAVAILABLE / textSimulated=false, no script/claims/media/approval; no mock fallback. |
+| Environment and cleanup | Windows 11 Pro 25H2 build 26200.9711; app Python 3.14.5; Strata 0.2.1, Terminal 0.1.46.1, engine 0.1.46 CUDA 13 / Python 3.12.15; model qwen3.8-flash-next-gyro-gyro-s. Existing 8192 context, single request, no vision/MTP, 1536 MiB reserve, route-tail-skip 7, 120 s / 512 output tokens reused. No install/download/dependency/config changes. Only owned 5710/5711 apps and guarded model instance stopped. Original config/database hashes and 56 model-file size/mtime inventory matched. No captured browser warnings/errors. |
+
+Engine logs recorded the two MC generations: prompts 326/332 tokens, outputs 53/41
+tokens, reported prompt/decode 6135+2062 ms and 1803+1260 ms (engine measurements,
+not full browser latency). Adapter checks exact configured model ID and completed
+JSON; actual persisted content and model-off failure independently distinguish this
+from fixtures or health-only checks. Initial implementation tests exposed a missing
+text_value import; corrected before the passing suite. Form create/revise fields
+and live review title were also corrected before final browser acceptance.
+
+Raw logs, DBs, exact-instance receipts, before/after hashes, engine log and
+evidence-summary.json remain ignored in var/mc-live-20261029; screenshots are local
+outputs. No sessions/keys/model files are tracked. Reproduce using WINDOWS_LLM.md.
+No new ZIP/checksum is claimed: old f7bb141 archive predates BA/MC increments.
+
+**Not verified/completed:** free-form creative prose, unrestricted/multilingual brief
+semantics, medical safety, real video/media quality, MC cancellation or durable
+generation-save recovery/full lifecycle, whole MC/Stage 2 acceptance, fresh-ZIP or
+another-machine/venue acceptance of this increment. Final-save rollback can leave
+DRAFTING with no output/review; existing AP recovery must not be described as an
+MC generation-recovery button. No real CS intent/handoff added. Jira unverified /
+update pending (no access/write requested); no push, PR, merge or Canvas upload.
+
+
+## BA lifecycle checkpoint · 29 October 2026
+
+First-round completion was rechecked before edits: clean local 478d522694ca381b2ba3c3c5e3711a77fb04133a,
+147 passing tests and explicit normal app/model stop receipts (model exit 0).
+No project crash was observed; these records do not establish Codex desktop-window
+stability. Then fetched main 515bfa537e31a01b9e9a24400a7112f8103babb3 and branched
+`KAN-15-ba-lifecycle-recovery` from 478d522, preserving all earlier local work.
+
+| New round-2 check | Actual result |
+|---|---|
+| Repository Windows Verify, Python 3.14.5 | **169 tests passed in 46.561 s**: 147 previous + 22 new; source verification 113 files / 41 groups and JS passed |
+| New offline lifecycle/failure cases | Same-ID complete replacement/history, completed cancel refusal, cancellation during extraction and recommendation, revision races, owner/session/CSRF/input guards, repeat/concurrent recovery, mode preservation, failed staging/final/failure/cancel writes, no-draft explicit retry and invalid/unsupported saved evidence |
+| Real SQLite trigger aborts final advice audit in an isolated unit database | Result UPDATE rolled back with audit; durable draft retained, no COMPLETED/current result; removing the test trigger then recovering committed exactly once, without inference |
+| Actual mock browser, fresh database / port 5700 | P-101 at revision 2 -> replacement `Gentle cleansing.` at revision 3 withheld old advice/asked missing fields -> answer revision 4 -> new Customer confirmation revision 5 / P-102; history retained P-101 |
+| Actual mock cancellation and recovery | Another consultation CANCELLED/revision 2, no continuation controls; declared Founder BA-save fixture -> INCOMPLETE + hidden draft -> same-database app restart -> browser recovery COMPLETED at the same revision |
+| Actual model in-flight cancellation, fresh database / port 5701 | Refresh exposed ACTIVE revision 1 with cancel enabled; cancellation saved revision 2; late original intake returned HTTP 409; events contain only creation/cancel, no interpretation/advice result |
+| Actual model final-save simulation and persistence recovery | New consultation used real extraction and proposal; fixture retained live draft, no current result. Exact owned model instance stopped, app restarted with same test DB, model port 8080 closed. Browser recovered COMPLETED / simulated=false / P-101 at unchanged revision 2 |
+| Independent SQLite/HTTP verification | Catalogue ID/version/price/constraints/reasons checked; live result price 4800 cents under budget 6000. Three further recoveries per mode retained one advice event; zero approvals/effects; stocks P-101=12, P-102=8, P-103=0 |
+| Separate new live request after model shutdown | App health ok, mode still configured LIVE; saved INCOMPLETE / LLM_UNAVAILABLE / simulated=false with no recommendation; no mock fallback |
+| Browser console / cleanup | No captured warnings/errors; original config/database hashes and 56-file model size/mtime inventory preserved; only owned 5700/5701 apps and this run's exact model instance stopped |
+
+Reused Windows 11 Pro 25H2 build 26200.9711, Strata 0.2.1 / Terminal 0.1.46.1 /
+engine 0.1.46 CUDA 13 / bundled Python 3.12.15, exact model
+qwen3.8-flash-next-gyro-gyro-s, saved 8192 context, single request, no vision/MTP,
+1536 MiB reserve, route-tail-skip 7. No upgrade, download, weight/config copy or
+new dependency. Recorded engine generation and strict configured-model validation
+support real inference; model-off recovery is persistence of that prior live output,
+not a new live inference or proof of model availability.
+
+Intermediate observations: one old failed-save test initially expected the previous
+raw exception/ACTIVE gap; it was updated to require the new safe 503, durable draft,
+INCOMPLETE and successful storage-only recovery. A first timed live cancellation
+occurred after extraction completed, so was not counted as in-flight; a second
+same-call browser submit/refresh/cancel sequence produced the verified late 409.
+The browser save-failure fixture is explicitly a simulation; genuine SQLite write
+and audit failures are separately verified in isolated tests, not by damaging disk.
+
+Raw logs, process receipts, before/after hashes, engine log, record snapshots and
+evidence-summary.json remain ignored under `var/ba-lifecycle-20261029/` (browser
+screenshots in local outputs). Only sanitised evidence is tracked. Relevant shared
+changes: BA service, HTTP routes, facade draft projection/fixture and UI concurrent
+refresh/cancel; no schema/provider/teammate module change. Review pending.
+
+Not established: complete legacy structured-route lifecycle, BA review, full
+catalogue/inventory faults, unrestricted language/medical safety, physical GPU
+abort, automatic recovery/retry, guarantees during total disk loss, cross-machine
+or new-feature ZIP/Canvas acceptance. CS/AP/MC existing offline suites passed;
+their browser chains were not rerun. All BA groups remain partial as appropriate;
+BA-START-01/task ownership unchanged; Jira unverified/update pending, no access or
+external publication. This does not prove Stage 2 complete.
+
+## Earlier round 1 · BA needs checkpoint · 29 October 2026
+
+New local KAN-15 slice, not BA-START-01 acceptance or Stage 2 completion. Branch
+`KAN-15-ba-needs-clarification`; starting source a577c98c010142882abc22b552c73de92e3d51d0
+over fetched main 515bfa537e31a01b9e9a24400a7112f8103babb3. The local code commit
+containing this checkpoint identifies the delivered implementation; older ZIP
+receipts below do not include it. No Jira access/update or external publication.
+
+| New check | Actual result |
+|---|---|
+| Windows 11 Pro 25H2 build 26200.9711; application Python 3.14.5 | Full unittest discovery: 147 passed in 27.301 s; 24 new BA tests, old 123 retained |
+| `scripts/check_repository.py`; `node --check beauty_company/web/app.js` | 113 source files, 41 tracked groups, source fingerprints/handoff passed; JS passed, including final confirmation-label adjustment |
+| Real browser mock, port 5690, fresh ignored database | Dry-skin text -> two missing questions -> same ID revision 2 after answer -> no product until Customer confirmation -> revision 3 COMPLETED / P-101 / simulated=true |
+| Real browser Strata, port 5691, separate fresh ignored database | Same flow; two actual extraction requests, then one recommendation; literal sources saved, explicit needsConfirmed, revision 3 COMPLETED / simulated=false |
+| Independent read-only SQLite checks after both paths | Budget 6000 cents, P-101 price 4800, catalogue:P-101:v1, stock AVAILABLE=12; reasons literal subset of product facts; zero approvals/effects, stock unchanged |
+| Existing model stopped with this run's exact instance ID; app retained | App health status ok with LIVE configuration; browser saved INCOMPLETE / LLM_UNAVAILABLE / simulated=false, no result or mock fallback |
+| Exercised browser console | No captured warnings/errors |
+| Local originals / cleanup | Original preexisting config/database hashes and 56-file weight size/mtime inventory preserved; only this run's two apps/model stopped |
+
+Reused Strata 0.2.1, Terminal 0.1.46.1, engine 0.1.46 CUDA 13, bundled model Python
+3.12.15, qwen3.8-flash-next-gyro-gyro-s, saved 8192 context / one request / vision
+and MTP off / 1536 MiB reserve / route-tail-skip 7. No install/upgrade/download or
+model-folder copy. Actual engine log recorded generation during the browser flow;
+strict adapter envelope verifies the exact configured model ID. This is bounded
+English evidence, not a broad model-quality or Chinese-live evaluation.
+
+New offline tests cover focused missing fields, sufficient-but-unconfirmed input,
+English/Chinese mock fixtures, ambiguous budget, sentence punctuation, Customer
+field correction, same-ID restart resumption, owner/session/CSRF restrictions,
+extra/invalid inputs and limits, two concurrent stale-result cases, current
+catalogue changes, invalid/hallucinated source output, unavailable capability/model,
+no fallback, and failed final save without false completion. Transport fakes use
+strict model envelopes; they are separate from the actual-model browser evidence.
+
+Failures found and resolved: an ambiguity-regex change initially rejected the
+sentence-ending period after an amount (146-test intermediate run: five failures,
+five errors); fixed with an explicit punctuation/partial-decimal regression. The
+verification helper initially used a nonexistent provenance filename and assumed
+top-level health capabilities; rerun using check_repository.py and the actual
+capabilities envelope passed. No application error was disguised as successful.
+
+Raw logs, test databases, before/after manifests, model log and browser record
+snapshots remain ignored under `var/ba-needs-20261029/`; browser screenshots are
+local outputs. Only this sanitised summary and necessary source/docs are tracked.
+
+Not newly verified/completed: full cancellation/completed-record revision, BA
+review lifecycle, arbitrary natural language or medical-scope detection, full
+provider/catalogue/inventory fault matrix, optional alternatives, automatic BA
+storage recovery (final save rollback can leave ACTIVE), macOS/second-machine
+acceptance, new-feature ZIP/Canvas rehearsal. CS/AP/MC existing cases passed in
+the full offline suite, but their browser flows were not repeated this round.
+MC remains mock; CS intent and real CS handoff remain unconnected/restricted.
+Affected-owner review and publication remain pending. Jira unverified/update pending.
+
 The dated sections below are historical records; later publication updates supersede
 earlier no-remote/byte-identical-packaging statements.
 
@@ -534,3 +908,134 @@ self-checking is not a self-Approve or an independent human review. The previous
 #12-only authorisation is not being reused. PR #13's remote head, fresh CI, actual
 merge and Jira receipts are recorded on GitHub/Jira after they occur. Whole MC, CS
 and GR acceptance and real CS/MC model integration remain open.
+
+## GR-INT-03 source ZIP / fresh-directory Windows rehearsal · 28 October 2026
+
+**Scope/version.** Danny / M1 authorised local deployment verification and local
+commits only. Internal GR-INT-03 is not a Jira key; repository mapping has no
+deployment child key. Jira unverified / update pending; external Jira was neither
+read nor written by explicit request. No BA starter/teammate claim, business
+feature, live CS/MC, Canvas upload, push or merge. Clean local main e141427
+fast-forwarded to current origin/main **515bfa537e31a01b9e9a24400a7112f8103babb3**;
+no newer main existed at fetch. Branch: GR-INT-03-zip-windows.
+
+**New environment evidence.** Windows 11 Pro 25H2 / 26200.9711 x64; system and new
+venv Python 3.14.5; Windows PowerShell 5.1; Git 2.51.0.windows.1; Node 22.19.0;
+driver 617.42, RTX 5070 Ti Laptop 12227 MiB. Initial D free 210.60 GiB. No existing
+project/model process or listener on the selected ports was found. Baseline
+Windows Verify passed **123 tests in 36.202 s**, provenance **110 source files /
+41 tracked cases**, and JavaScript syntax. The Mac 123-test timing is historical,
+not substituted for this run. Counts include 12 AP HTTP, 11 CS HTTP and 16 MC
+tests in addition to the earlier 84-test suite; no tests were changed.
+
+**Archive/extraction.** Existing scripts/package_source.py produced 5,565,726 bytes,
+110 files, from that clean source. SHA-256:
+`6d6517d837137db65def0223db449f8e0a8dd5c3943e1ecd15be1fb1fa040fb0`.
+Names exactly matched the tracked file list; every member matched source bytes.
+No .git/.venv/var/database/key/model/old output/private report was included.
+Reusing the output name exited 2 and preserved its hash. Extracted into previously
+nonexistent `D:\elec5620_project\rehearsals\20261028-515bfa5\fresh source retry`.
+Both setup runs passed; the config hash stayed unchanged. New venv executable and
+beauty_company.__file__ both resolved inside that directory, with inherited Python
+and BEAUTY path overrides removed. Complete new-directory Verify passed **123
+tests in 40.384 s**, 110-file/41-case provenance and JS syntax, without .git.
+
+An initial external-controller list comparison counted the trailing empty Git
+entry and aborted before extraction/startup. The empty destination and original
+ZIP were retained; filtering that empty entry fixed the controller, not project
+code. Separately, the browser sandbox refused writing a screenshot on D; the
+screenshot was saved under the authorised C output directory instead. Neither
+attempt is counted as an application failure or a successful deployment probe.
+
+**Actual mock browser workflow.** New app on 127.0.0.1:5670, new
+var/mock-browser.sqlite3. Customer login -> ORD-1001 intake -> Founder CS/CO-to-BA
+handoff -> grounded Mock recommendation -> current Customer confirmation -> exact
+AP review. The existing approval_recording fixture caused RECORDING_FAILED.
+Independent SQLite: no decision ID, no committed-decision audit/effect, stock 12.
+Only this app was stopped/restarted with the same DB. Its persisted failure view
+offered Recover saved decision. Browser recovery saved APPROVED/DELIVERED, one
+decision audit, zero effects, stock 12; three repeated actual HTTP recoveries kept
+the same decision. Later Customer browser confirmation saved RESOLVED and one
+simulated actionRef effect; three repeated confirmations kept one effect and
+stock **12 -> 11**. Exact action/revision/actionRef and product/fact/price/budget/
+fragrance/version were independently checked in SQLite. This is the actual newly
+merged AP web recovery, superseding the 25 October absent-button limitation.
+
+**Actual fresh-app/model path.** The old model runtime was stopped; the existing
+owner-private profile was verified and started using its model workspace's
+StartModel in 20.535 s (includes checks). No reinstall/download/weight migration.
+Official runtime ready and /v1/models reported qwen3.8-flash-next-gyro-gyro-s.
+Strata 0.2.1, Terminal 0.1.46.1, bundled Python 3.12.15, engine 0.1.46 CUDA 13;
+8192 context, one request, vision/MTP off, saved VRAM reserve 1536 MiB unchanged.
+The fresh app used 127.0.0.1:5671 and new var/live-browser.sqlite3. An initial
+health-only launch used absolute -LlmConfig against the original private config;
+before any BA consultation it was restarted with a separately created fresh
+var/llm.rehearsal.json (120 s / 512 tokens / loopback8080 / exact model ID). Setup
+also preserved that existing file's hash. No old app config is needed thereafter.
+
+Actual Customer browser submission saved **COMPLETED / simulated:false / P-101**,
+with **Live BA recommendation**. Independent SQLite checked saved product/facts,
+integer-cent price/budget, fragrance, stock and version; zero approval/effect.
+The current engine log recorded **297 prompt tokens in 7496 ms and 25 generated
+tokens in 1223 ms**. One sample is not a general benchmark. A loaded snapshot had
+1967 MiB free VRAM and about 4.0 GiB available RAM. MC stayed MOCK, csIntent
+NOT_CONNECTED, and an actual fresh-app CS coordinate request still returned
+503 / LIVE_HANDOFF_NOT_CONNECTED. Real CS/MC was not connected or expanded.
+
+**Dependencies/limits.** Mock runs from packaged code/static assets with new local
+state and installed Python; Node is verification-only, Git packaging-only. Live
+BA additionally depends on the pre-existing Windows Strata installation, model
+files/profile/private runtime/driver and loopback service; it does not depend on
+old workspace application imports or an old app config. No deployment-script or
+business-code change was necessary; only existing bilingual guides/status/evidence
+were updated. Original config/database hashes and the 56-file model size/mtime
+inventory remained unchanged at the browser checkpoint. Raw evidence stays in
+ignored var/rehearsal-20261028-515bfa5/ and the fresh directories' var folders.
+
+The original 41 acceptance groups remain tracked at their existing statuses; this
+does not promote full cases/modules to PASSED. Formal Canvas upload/download,
+final package identity/re-extraction, clean machine/network, teaching-team software/
+cached-model approval, overnight/sleep/reboot/long-context/concurrent use, real
+CS/MC and broader Stage 2 acceptance remain separate. A later documentation-only
+source package must retain its own commit, SHA-256 and fresh-directory recheck
+receipt outside the ZIP rather than pretending the earlier archive hash applies.
+
+## Frozen rehearsal package receipt · 28 October 2026
+
+The final documentation-inclusive ZIP is frozen at source commit
+`f7bb141f6e35c7846989adccf58841b9e128a978` (local branch GR-INT-03-zip-windows),
+110 files / **5,579,703 bytes**, SHA-256:
+`5be88639cdd33415dadc77c0e6bfdc286b34b50e4635be2568ee01f4543e6ba3`.
+Its non-document files are byte-identical to the validated main 515bfa5 source.
+This after-the-fact receipt is a subsequent documentation-only commit: it does
+not change the ZIP or pretend its source commit equals the later receipt HEAD.
+
+A second unused extraction at
+`D:\elec5620_project\rehearsals\20261028-f7bb141\final fresh source`
+passed repeated Setup/config preservation and independent import-origin checks.
+Its new venv ran **123 tests in 36.100 s**, provenance (110 files / 41 cases)
+and JavaScript syntax successfully, without .git or old application imports.
+
+Actual authenticated HTTP on final extracted ports 5680/mock and 5681/live
+repeated the CS -> BA -> Customer -> AP -> simulated-effect chain. AP recording
+failed with no authority/effect; after app restart, saved-intent recovery plus
+three repeats kept one decision and zero effects. Customer confirmation plus
+three repeats kept one effect, same actionRef and stock 12 -> 11. The earlier
+515bfa5 package has the actual browser acceptance; this final-package repeat is
+actual HTTP automation, not another browser acceptance claim.
+
+One actual final-package BA request saved COMPLETED/simulated:false/P-101 in
+**2.780 s**, using the same existing model instance and a separate new-directory
+config. Independent SQLite readback verified full saved payload, facts, stock,
+price/budget, fragrance and version; zero approvals/effects. After the run-owned
+model was stopped with its exact instance guard, the final app remained healthy;
+another request saved **INCOMPLETE/LLM_UNAVAILABLE/simulated:false**, with no
+product and no mock fallback. Both final apps and the run-owned model stopped.
+Original config/database hashes and all 56 model-file size/mtime entries match
+the preflight inventory. No code/script/model/dependency change was necessary.
+
+Raw final reports/logs/DBs are ignored. Archive and machine-readable source/hash/
+verification receipt were copied to the local handoff output directory. No Jira
+read/write, remote push/PR/merge or Canvas upload occurred. GR-INT-03 remains an
+internal rehearsal label; formal Canvas download, venue prerequisites/permission,
+clean-machine/network, real CS/MC and wider Stage 2 acceptance remain unverified.

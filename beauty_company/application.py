@@ -4,16 +4,19 @@ import hmac
 import json
 import secrets
 import time
+from copy import deepcopy
 from http.cookies import CookieError, SimpleCookie
 
 from .adapters.after_sales import MockAfterSales
 from .adapters.mock import MockLlm, MockMedia
-from .contracts import Actor, DomainError, require_role, revision_value
+from .contracts import Actor, DomainError, require_role, revision_value, text_value
 from .modules.approval import Approval
 from .modules.beauty_advisor import BeautyAdvisor, catalogue, validated_needs
+from .modules.ba_intake import BaIntake
 from .modules.coordination import Coordination
 from .modules.customer_service import CustomerService
 from .modules.marketing import Marketing
+from .modules.mc_generation import McGeneration
 from .store import Store, password_hash
 
 RECORDING_FAILED_MESSAGE = ("The decision could not be recorded. No approval was delivered and no business work "
@@ -21,14 +24,16 @@ RECORDING_FAILED_MESSAGE = ("The decision could not be recorded. No approval was
 
 
 class Company:
-    def __init__(self, path, llm=None):
+    def __init__(self, path, llm=None, media=None):
         self.store = Store(path)
         self.llm = llm or MockLlm()
         self.ba = BeautyAdvisor(self.llm)
+        self.ba_intake = BaIntake(self.store, self.ba)
         self.ap = Approval()
         self.co = Coordination()
         self.cs = CustomerService(self.store, self.ba, self.co, self.ap, MockAfterSales(self.store))
-        self.mc = Marketing(self.llm, MockMedia(), self.ap)
+        self.mc = Marketing(self.llm, media or MockMedia(), self.ap)
+        self.mc_generation = McGeneration(self.store, self.mc)
 
     def login(self, username, password):
         if not isinstance(username, str) or not isinstance(password, str) or len(password) > 200:
@@ -45,11 +50,29 @@ class Company:
 
     def mode(self):
         live = not self.ba.simulated
-        return {"simulated": not live, "model": "Local BA model" if live else "Deterministic mock",
-                "ba": "LIVE" if live else "MOCK", "mc": "MOCK", "csIntent": "NOT_CONNECTED",
-                "media": "Storyboard placeholder", "commerce": "SIMULATED",
+        mc_live = not self.mc.simulated
+        return {"simulated": not (live or mc_live), "model": "Local shared model" if live or mc_live else "Deterministic mock",
+                "ba": "LIVE" if live else "MOCK", "mc": "LIVE" if mc_live else "MOCK", "csIntent": "NOT_CONNECTED",
+                "baNeeds": ("LIVE" if live else "MOCK") if callable(getattr(self.llm, "extract_needs", None)) else "NOT_CONNECTED",
+                "media": "TEMPLATE_VIDEO" if self.mc.template_video else "Storyboard placeholder", "commerce": "SIMULATED",
                 "optionalFeatures": {"BA-F-03": False, "CS-F-03": False, "MC-F-03": False,
                                      "AP-F-03": False, "CO-F-03": False}}
+
+    def campaign(self, actor, data, rid=None):
+        return self.mc_generation.start(actor, data, rid)
+
+    def campaign_media(self, actor, rid, revision):
+        require_role(actor, "FOUNDER")
+        with self.store.read() as db:
+            record = Store.get(db, rid, "MC")
+            if record["owner_id"] != actor.id:
+                raise DomainError("Only the campaign owner may preview this draft.", 403, "FORBIDDEN")
+            if revision != record["revision"]:
+                raise DomainError("The media revision is stale. Open the current draft.", 409, "STALE_SCOPE")
+            media = record["payload"].get("media", {})
+            if media.get("kind") != "TEMPLATE_VIDEO" or not self.mc.template_video:
+                raise DomainError("No template video is available for this revision.", 404, "NOT_FOUND")
+            return self.mc.media.read(media)
 
     def consult(self, actor, data):
         """BA first live slice: no write lock during inference; recheck before save."""
@@ -90,6 +113,9 @@ class Company:
             query = "SELECT id FROM records" + (" WHERE owner_id=?" if actor.role != "FOUNDER" else "") + " ORDER BY created DESC,id"
             ids = [r["id"] for r in db.execute(query, (actor.id,) if actor.role != "FOUNDER" else ())]
             records = [Store.get(db, rid) for rid in ids]
+            records = [self.ba_intake.public_record(record) if record["kind"] == "BA"
+                       and record["payload"].get("naturalNeeds") else self.mc_generation.public_record(record) if record["kind"] == "MC"
+                       else record for record in records]
             approval_ids = [r["id"] for r in db.execute("SELECT id,origin_id FROM approvals ORDER BY created DESC") if actor.role == "FOUNDER" or r["origin_id"] in ids]
             approvals = []
             for rid in approval_ids:
@@ -180,7 +206,7 @@ class Company:
 
     def set_fault(self, actor, fault):
         require_role(actor, "FOUNDER")
-        if not isinstance(fault, str) or fault not in {"after_sales_timeout", "outcome_recording", "approval_delivery", "approval_recording", "none"}:
+        if not isinstance(fault, str) or fault not in {"after_sales_timeout", "outcome_recording", "approval_delivery", "approval_recording", "ba_recording", "mc_recording", "none"}:
             raise DomainError("Unsupported simulation fixture.")
         with self.store.transaction() as db:
             db.execute("DELETE FROM faults")

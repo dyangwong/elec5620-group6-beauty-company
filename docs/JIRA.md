@@ -76,6 +76,10 @@ at each checkpoint instead of trusting a local snapshot.
 Each progress update states the actual task key, date, actor, work completed,
 test/evidence or PR link, blockers and next action. Update at these checkpoints
 and when a material blocker/scope change occurs; no recurring schedule is required.
+At Danny's 29 October request, keep these updates short: normally one comment per
+bounded work checkpoint with date/revision, change, actual checks and next gap.
+Link detailed evidence in the PR/repository rather than repeating long reports.
+Do not create a new issue for every small fix or change unrelated tasks/owners.
 For changed scope or ownership, reconcile Jira and the versioned brief/registry
 in the same work cycle, preserving the Stage 1 source and recording deviations.
 

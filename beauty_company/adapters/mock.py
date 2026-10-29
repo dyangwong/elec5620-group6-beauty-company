@@ -4,6 +4,10 @@
 class MockLlm:
     simulated = True
 
+    def extract_needs(self, messages):
+        from .needs import mock_extract
+        return mock_extract(messages)
+
     def propose(self, context, evidence):
         if not evidence:
             return {"productId": None, "factRefs": [], "simulated": True}

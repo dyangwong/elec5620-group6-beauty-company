@@ -2,6 +2,205 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/CONTRACTS.md).
 
+## CO read-only advice failure boundary · 29 October 2026
+
+`Coordination.advice_handoff(db, rid, needs, advisor)` retains its signature and
+caller-owned transaction. It requires the linked, same-owner current CS origin;
+new dispatch requires ASSESSING. Only message/concern/budget/fragranceFree pass,
+with budget already integer AUD cents. Different valid saved scope returns 409
+STALE_SCOPE. Same origin/revision reuses its saved result without target/events;
+an explicit CS revision is required for another attempt. No HTTP/schema changes.
+
+Each payload.handoffs entry retains handoffId/fromRole/toRole/originId/
+contextRevision/handoffTime/operation/authorisedContext/status/dispatched/result;
+payload.originRevision and CO revision follow CS. Operation is READ_ONLY_ADVICE.
+Invalid context returns safe INCOMPLETE/CO_INVALID_CONTEXT and CO
+CLARIFICATION_REQUIRED, dispatched=false. Missing/invalid receiver, timeout,
+unavailable/unexpected failure or unverifiable/incomplete result returns safe
+INCOMPLETE, FAILED handoff and CO ESCALATED with allowlisted reason/recovery,
+businessExecution=false. Only safe upstream codes are retained; no raw exception
+or untrusted result prose. CS existing caller saves UNRESOLVED, without actionRef,
+Customer confirmation or AP review. Valid originating mode is retained, no fallback.
+
+Success requires current catalogue product equality, available stock, explicit
+needs/budget/fact support, correct evidence reference/constraints and timezone-aware
+observation. Receiver prose becomes a safe CO control message. Only the read-only
+handoff is COMPLETED; CO PENDING_VALIDATION still awaits downstream CS outcome.
+HANDOFF_SENT precedes target call; HANDOFF_FAILED/ADVICE_RESULT_RECORDED saves its
+outcome. These writes commit with existing CS transaction, not an independent
+external-effect journal. SQLite persistence failure returns 503
+CO_STORAGE_UNAVAILABLE, rolls back and claims no saved trace. No durable staged
+CO recovery/new dispatcher/automatic retry is implied. See VERIFICATION.md.
+
+## MC generation recovery checkpoint · 29 October 2026
+
+MC-ACT-01 / MC-STM-01 (public PDF pages 39, 51–52), MC-T-06, Danny-authorised
+shared exception. All HTTP modes, including default mock, now use the same staged
+Company.campaign orchestration; legacy injected MC submit/submit_draft/revise service
+methods remain compatible and do not independently acquire durable HTTP recovery.
+
+| POST `/api/campaigns/{id}/…` | Exact body | Behaviour |
+|---|---|---|
+| recover | positive integer contextRevision | Same saved outcome/revision, no generator calls; validates current catalogue, actual text/frames, original modes and exact template artifact/manifest/hash before resuming one pending review. Already recorded generation returns current state, preserving later decisions. |
+| retry | positive integer contextRevision | Interrupted/failed generation with no pending result/review/decision; same ID, revision +1, explicit new generation using current configuration. Saved result returns 409 RECOVERY_AVAILABLE; existing review authority cannot be replaced by generation retry. |
+| cancel | positive integer contextRevision | Active draft only; revision +1, CANCELLED, prior history retained, old review superseded. Current-revision repetition is idempotent. Decided terminal drafts cannot be cancelled retroactively. Cancelled campaigns require a new campaign. |
+
+Founder session, owner and CSRF checks apply. Extra caller-supplied results/modes
+or malformed revision are rejected. Revise still takes brief/productId/contextRevision;
+it replaces scope and starts fresh review, refusing cancelled records. Default mock
+retains blank-revision INCOMPLETE behaviour; provider failures retain originating mode.
+
+GENERATING records the scope before inference outside the write lock. A
+server-owned payload.pendingGeneration stores revision/status/outcome/modes in the
+existing JSON payload; no schema migration. Snapshot/controls expose only its
+metadata, including in history, never uncommitted text/media or approval. The final
+validated draft, review receipt and audit save atomically. Failed final transaction
+returns 503 MC_STORAGE_UNAVAILABLE and records RECORDING_FAILED when possible;
+total write outage can leave GENERATING with a saved draft. Failed staging leaves
+no draft and does not invent one. Initial scope-write failure may leave no new record.
+GENERATION_FAILED, CONTENT_REJECTED and INCOMPLETE remain distinct failed outcomes.
+
+Founder-only one-shot mc_recording is an explicit local final-save fixture: 503
+MC_RECORDING_FAILED with durable pending outcome and no review. It is separate from
+real SQLite failure tests. Failed cancellation returns 503 MC_CANCELLATION_NOT_RECORDED.
+Missing original template-media configuration returns 503 MC_MEDIA_RECOVERY_UNAVAILABLE,
+preserving pending data. Invalid/currently changed evidence or artifact is withheld,
+never reviewed; use a fresh correction. Recover never approves, publishes or executes.
+
+Generation recovery is separate from AP decision persistence/delivery recovery.
+No physical provider abort, partial model/render resume, orphan cleanup, full MC
+decision/local-save recovery, automatic retry or general semantic verifier is added.
+
+
+## MC template MP4 checkpoint · 29 October 2026
+
+Optional Company(path, llm=None, media=None) injection preserves MockMedia default.
+Template mode (even with mock text) uses Company.campaign outside the write lock;
+text-only Strata/default mock paths remain compatible. Media adds kind=TEMPLATE_VIDEO,
+simulated=false, modelGenerated=false, exact frames, opaque artifactId, bytes/MIME,
+sha256, scriptSha256 and fixed template metadata. textSimulated/mediaSimulated are
+separate; legacy record simulated refers to text. Configured media capability is
+TEMPLATE_VIDEO; health TEXT_WITH_TEMPLATE_VIDEO proves configuration, not rendering.
+
+Existing review action additionally binds mediaKind=TEMPLATE_VIDEO, textMode,
+mediaSha256 and scriptSha256, alongside draft ID/revision. AP logic is unchanged.
+Only a fully validated file and manifest can enter the saved payload/review transaction.
+Failed render/timeout/format results retain GENERATION_FAILED with an explicit MEDIA_*
+code, without output or review. No fallback or automatic retry is introduced.
+
+GET /api/campaigns/{id}/media/{revision} requires the owning Founder session, current
+revision and a saved template artifact; current drafts can be previewed before a
+decision. It serves video/mp4 with session-protected/no-store responses and single byte-range
+support (200/206/416). Authentication failure 401, wrong role/owner 403, stale URL
+409, missing record/media 404, unavailable/modified artifact 503. Path/URL inputs
+cannot select filesystem paths. Downloads recheck manifest/size/hash, and never
+substitute a new file for an old revision. Preview/download is not publication.
+Files for superseded, failed or uncommitted work may remain ignored for diagnosis;
+there is no orphan cleanup, historical download API or durable media-save recovery.
+Missing artifacts are refused; this does not retroactively erase historical decisions.
+
+
+## MC bounded live-text checkpoint · 29 October 2026
+
+Additive, explicitly opted-in MC live route; default mock callers retain their
+existing paths. Founder session/CSRF and owner guards apply.
+
+| POST | Exact body | Result |
+|---|---|---|
+| `/api/campaigns` | `brief`, `productId` | 201 with persisted MC draft/failure record |
+| `/api/campaigns/{id}/revise` | `brief`, `productId`, positive integer `contextRevision` | 200, same ID/new revision; old review superseded, history preserved; stale scope 409 |
+
+No caller-supplied mode, result or approval fields. Success payload includes
+script/claims/product/evidence, textPlan, simulated=false, textSimulated=false,
+mediaSimulated=true and labelled mock media. Exact three-shot composition is
+described in LLM_INTEGRATION.md. Current catalogue and revision/status are checked
+before save/review. Live review action is REVIEW_TEXT_DRAFT with draftId,
+draftRevision, textMode=LIVE, mediaKind=MOCK_STORYBOARD. Pending review is not approval;
+approved text/mock preview is not video generation or permission to publish.
+
+Known provider failures produce persisted GENERATION_FAILED or CONTENT_REJECTED;
+missing/changed evidence can produce INCOMPLETE. No output/review is invented on
+failure. Whole-result final transaction rollback leaves earlier DRAFTING scope,
+not successful content or approval; generic HTTP 500 requires refreshing the saved
+record. No cancellation, durable result staging/recovery or automatic retry is
+provided here. Default mock may keep its older failure contract. Mode belongs to
+each saved record; current capability flags alone never relabel historical results.
+
+
+## BA lifecycle checkpoint · 29 October 2026
+
+Additive operations on the owning Customer's **natural-needs** BA records;
+Customer session, CSRF and exact positive-integer contextRevision remain required.
+Legacy structured consultations and CS/CO callers retain their contracts.
+
+| POST `/api/consultations/{id}/…` | Exact JSON body | Guard and result |
+|---|---|---|
+| `revise` | `contextRevision`, `message` | ACTIVE/CLARIFYING/INCOMPLETE/COMPLETED; same ID, revision +1, replace the full current message scope, re-extract and require new confirmation |
+| `cancel` | `contextRevision` | ACTIVE/CLARIFYING/INCOMPLETE only; revision +1, CANCELLED; repeat at the cancelled current revision returns unchanged |
+| `recover` | `contextRevision` | Current durable draft in ACTIVE/INCOMPLETE; storage-only finalisation, no inference; already recorded current revision returns unchanged |
+| `retry` | `contextRevision` | ACTIVE/INCOMPLETE with no draft; new revision and explicit new extraction, then Customer confirmation; pending draft returns 409 RECOVERY_AVAILABLE |
+
+This follows BA-STM-01 panel B (PDF page 49): COMPLETED is resumable by revision,
+but not cancellable; CANCELLED requires a fresh consultation. Cancellation suppresses
+late output; it does not abort an already running GPU request or undo earlier delivery.
+Replacing the request never silently inherits old constraints. History retains old
+input, confirmed needs, applicable result and mode, clearly labelled historical.
+Old/cancelled revisions return 409 and cannot stage or deliver a result.
+
+Inference finishes outside write transactions. A server-owned `pendingOutcome`
+draft is first committed in the existing payload; final result and audit commit
+together only after current revision/status/confirmed scope/catalogue/fact/stock
+checks. This adds no schema or model interface. Snapshot projection exposes only
+draft kind/revision/mode, never its uncommitted advice value. Caller-supplied result,
+mode or extra fields are refused. Recovery preserves the original mock/live label
+even after configuration changes, and refreshes the inventory observation once.
+Repeated recovery returns the saved outcome/observation, not a new availability check.
+
+If final persistence fails, return 503 BA_STORAGE_UNAVAILABLE and save INCOMPLETE /
+BA_RECORDING_FAILED when possible; if even failure recording is unavailable, ACTIVE
+with a draft may remain. If draft staging also failed, no draft is invented: recovery
+returns NO_PENDING_RESULT; explicit retry makes a new inference attempt. An ACTIVE
+record is not proof of a crashed process; retry explicitly supersedes possible
+ongoing work. Failed cancellation returns 503 BA_CANCELLATION_NOT_RECORDED and does
+not claim the request stopped. No automatic retry or commerce effect is introduced.
+
+Founder-only `ba_recording` is a declared one-shot final-advice-save simulation,
+retaining a recoverable draft. It does not damage storage or affect AP/CS operations.
+Web refresh/cancel remain usable during inference; response sequencing prevents an
+older snapshot from replacing a later refresh. Shared review remains pending.
+
+## Earlier round 1 · BA needs checkpoint · 29 October 2026
+
+Additive standalone BA intake (Customer session + CSRF, same owner). The existing
+structured `/api/consultations` route and CS/CO callers retain their contracts.
+
+| POST path | Exact JSON body | Saved behaviour |
+|---|---|---|
+| `/api/consultations/intake` | `message` | 201 record; ACTIVE during inference, then CLARIFYING or INCOMPLETE |
+| `/api/consultations/{id}/clarify` | `message`, `contextRevision` | Same ID, revision increment, old result invalidated, re-extract |
+| `/api/consultations/{id}/confirm-needs` | `contextRevision`, `concern`, `budget`, `fragranceFree` | Explicit Customer review/correction, revision increment, then independently validated advice |
+
+Messages are 1–2,000 characters, at most eight messages / 8,000 characters total.
+Only ACTIVE/CLARIFYING/INCOMPLETE natural-needs records accept clarification.
+Confirmation requires CLARIFYING and `needsReady=true`; a complete extraction
+alone never recommends. `contextRevision` is a positive integer, not a boolean.
+Stale revisions return 409 STALE_SCOPE; another Customer receives 404, Founder 403.
+Unsupported/extra body fields are rejected. Completed records require a new
+consultation; no cancel or completed-record revision API is supplied in this slice.
+
+`payload.messages` retains original text; `proposedNeeds` includes bounded literal
+sources and remains an unconfirmed hypothesis. UI shows fixed missing-field
+questions, then editable confirmation fields. Confirmation stores `needsConfirmed`
+and authoritative Customer-reviewed `needs` before recommendation. Request and
+extraction budgets use AUD dollars; saved confirmed needs/catalogue use cents.
+Provider work is outside write transactions. Revision/status and current catalogue
+are rechecked before saving; stale inference cannot overwrite the current revision.
+Unavailable/timeout/invalid output saves INCOMPLETE with no successful recommendation
+or mock fallback. If the final database write fails, its transaction rolls back:
+the saved record can remain ACTIVE, never falsely COMPLETED. Automatic storage
+recovery and a dedicated recovery button are not implemented for this new BA path.
+See VERIFICATION.md for actual checks; this does not complete all BA cases.
+
 Read Stage 1 section 8.2 and the original state vocabularies in
 `reference/stage1-baseline.txt`. Python uses snake_case at the code boundary;
 JSON uses camelCase where an explicit contract field is needed. This is a partial
@@ -90,7 +289,7 @@ EXECUTING request can be queried; an unresolved lookup escalates without retry.
 
 ## Implemented state subsets
 
-- BA: CLARIFYING, COMPLETED, INCOMPLETE. Full lifecycle remains pending.
+- BA: ACTIVE → CLARIFYING (missing questions or explicit-confirmation gate) → ACTIVE → COMPLETED/INCOMPLETE for natural intake; full lifecycle remains pending.
 - CS: ASSESSING → AWAITING_CONFIRMATION → REVIEW_PENDING → current approval →
   AWAITING_CONFIRMATION → EXECUTING → RESOLVED; failure states RECONCILING,
   RECORDING_FAILED, UNRESOLVED; review REJECTED/NEEDS_INFORMATION.

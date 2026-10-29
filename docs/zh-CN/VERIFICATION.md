@@ -1,6 +1,307 @@
 # 本地验证记录
 
-中文阅读副本，依据 2026-10-26 英文主版同步。以[英文主版](../VERIFICATION.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../VERIFICATION.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+
+
+## Mac 集成复核 · 2026-10-29
+
+从已校验独立交接 bundle 恢复 5073dbb，比已获取 main 515bfa5 多十个提交。六项交接文件哈希、
+120 个源码文件大小／SHA-256、完整 bundle 和 git fsck 均通过。Danny 明确要求发布；这是 AI 辅助
+复核／自检，不冒充队友认可。
+
+Mac 原始完整运行有一处断言失败：VideoConfig 会解析 /var→/private/var 别名，而测试预期路径未解析。
+不改源码、改用规范 TMPDIR 后验证了原因。本次将测试预期输出路径 resolve，不改变运行行为。
+使用正常 Mac 临时目录，Python 3.9.6 的 **237 项全部通过（29.466 秒）**；来源核验
+（120 文件／41 组）、JS 语法和空白检查通过。
+
+隔离 5760 mock 网页：BA 缺预算／香精要求→同 ID 澄清→客户明确确认→r3 COMPLETED／P-101。
+MC 保存失败样例→RECORDING_FAILED，不显示未提交生成内容／审批；应用重启保留草稿，
+Recover saved generation 后仍为 r1，进入 REVIEW_PENDING。独立读库：两条记录、一条待审 MC、
+零业务效果、库存 12／8／0。本轮未运行模型、FFmpeg 渲染、真实交易或新 Canvas 演练。
+下方 191 项冻结包真实 BA／MC／MP4 演练属于 eb8f0de；237 项 Windows 交接证据不是本轮 Mac 真实运行。
+
+新增历史的 152 个 blob 未发现禁入运行文件路径、私钥／GitHub token 特征；只是有界检查，不代表全面密钥审计。
+新远程 CI／准确 head／本人 PR 审阅层例外／合并回执记录在 PR，Jira 只补简短最终节点；
+完整任务验收前保持 Verification。
+
+## CO 交接失败保留 · 2026-10-29 — 本次新证据
+
+分支 KAN-15-co-handoff-failures；干净起点 d8d1826cd8e0edbe3899f9d68a4da6b90b2c5987；
+获取后 main 仍 515bfa537e31a01b9e9a24400a7112f8103babb3。包含本节的提交标识最终源码；
+这是本地证据，非远程 CI／评审。Danny／M1 授权 KAN-15 共享例外、AI 辅助，Guiyu Liu 归属及认领不变。
+本次目视核对 CO-CL／ACT／SEQ／STM 的 PDF 实际页 27／47／48／53；旧选页盘点属历史，非完整 UML 审计。
+
+| 本次检查 | 实际结果 |
+|---|---|
+| 修改前 | Windows Verify **210 项／66.927 秒**通过。 |
+| 最终源码 | **237 项／82.653 秒**通过；新增 tests/test_co.py **27 项**，CO 单测 27／11.444 秒；既有流程子集 29／4.786 秒。未改／删旧测试。来源 **120 文件／41 组**、哈希／五人交接及 JS 语法通过。 |
+| 上下文／来源 | 缺失／非对象／无效字段、错误预算类型不派发；保留整数 AUD 分，仅转四个需求字段。覆盖已存 CS 关联／归属／版本、过期范围、输入输出变异与无效重放。 |
+| 目标／结果 | 无目标／不可调用／属性异常／模式错误、超时／不可用／异常、畸形／失败／未完成结果均覆盖。保留有效原始模式，不回退、不泄漏异常原文。商品／版本／可用性／预算／需求／事实／当前证据独立校验；目标自由说明替换为安全控制文案。 |
+| 重复／保存 | 重复／并发保留一次尝试和一次目标调用，更正版本保留历史。真实 SQLite audit ABORT 分别作用于派发前、成功结果后、失败结果后，另验 query_only；原子回滚并返回 503 CO_STORAGE_UNAVAILABLE，不声称痕迹已存。既有换货／AP／一次性／核对／保存恢复回归仍通过。 |
+| 实际网页／5750 | 新 browser.sqlite3，实际当前 Company／HTTP／UI，使用明确的仅本地 scratch mock 目标替身。CS-e6a20b8dc2e0／CO-a5e41e057102：r1 超时→UNRESOLVED／ESCALATED，重启仍保留；再三次认证 coordinate 调用仍一次尝试。r2 不可用→CO_TARGET_UNAVAILABLE；r3 畸形→CO_INVALID_RESULT；均 UNRESOLVED／ESCALATED。失败时无确认或审批入口。 |
+| 空上下文／网页 | 仅本轮一次性测试库 CS r4 needs 被设为 null；网页仍可用，保留 CO_INVALID_CONTEXT／CLARIFICATION_REQUIRED、dispatched=false，CS UNRESOLVED。未操作原数据库；这是受控损坏测试，非产品开关。 |
+| 明确更正／网页 | 客户更正 r5，Founder 新交接→P-101 AUD48、catalogue:P-101:v1、AVAILABLE、mock 标签。客户确认→CS REVIEW_PENDING、CO AWAITING_APPROVAL，一项 AP-700222059d80 PENDING。保留四次失败与一次完成的只读建议。未点击 Founder 批准、未执行换货。 |
+| 效果／环境 | 测试库提交决定／效果均零，库存 12／8／0 不变。仅重启／停止本轮服务。原配置／数据库 SHA-256 及 56 个模型文件大小／时间清单一致。8080 模型未启动，未结束原服务、安装／下载／升级、增加依赖／结构或读取凭证。 |
+
+同一游戏本：Windows 11 Pro build 26200，应用 Python3.14.5，Node v22.19.0。
+Strata0.2.1／engine0.1.46 CUDA13／模型 Python3.12.15／qwen3.8-flash-next-gyro-gyro-s
+为历史安装版本证据，不代表本轮推理或模型就绪。BA／MC 默认 MOCK，交易模拟，CS 意图 NOT_CONNECTED，
+产品真实 CS 交接仍阻止。
+
+仓库根目录复现自动检查：
+`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/windows.ps1 -Action Verify`，不需模型。
+网页故障替身和 null 注入仅为 scratch 验收工具，非应用支持开关；单测独立复现目标和真实 SQLite 故障。
+正常 mock 更正沿用客户 **Correct the needs and request a new proposal**，再由 Founder
+**Start advice handoff**；未增加盲重试入口。
+
+原始日志／读回／测试库／进程收据留在忽略目录 var/co-handoff-20261029，截图留本地 outputs。
+会话／配置／库／模型／故障替身不入 Git。边界：同步只读调用在**调用方既有 SQLite 事务内**先写意图再
+调用，未为外部效果独立提交持久意图。未增加异步回调／提供方取消保证、通用调度、队列、完整 CO
+取消／升级／恢复或可选重试。审计保存失败有真实回滚／错误证据，未新实现通用 CO 仅保存恢复。
+用例仍 PARTIAL，CO-T-02／03 从 NOT_STARTED 改 PARTIAL，不能据此声称 Stage2 完成。
+冻结 eb8f0de ZIP 早于本源码，当前新包／真实模型／其他电脑／现场回归待验。Jira 未核实／更新待办，
+未读写／推送／PR／合并／Canvas；相关负责人评审待办。
+
+## MC 生成恢复检查点 · 2026-10-29
+
+本轮为 MC 生成持久化新证据，下方历史 ZIP／媒体／AP 证据保持原范围。Danny / M1、AI 辅助，
+分支 KAN-15-mc-save-recovery，干净基线 ca1737b9e3264f0d93c8e41516a2c15cd39c02f7，
+获取后 main 仍为 515bfa537e31a01b9e9a24400a7112f8103babb3，任务及队友归属不变。
+
+| 本次检查 | 实际结果 |
+|---|---|
+| 修改前 | Windows Verify 191 项通过，57.685 秒。 |
+| 最终完整测试 | **210 项通过，66.961 秒**，含 MC 57 项（新 19 项）。来源 117 文件／41 组、指纹／交接和 JS 通过。最终审批权限保护测试前的 MC 专项为 56 项／9.797 秒；未删除测试。一个旧最终保存断言改为持久 RECORDING_FAILED／503，不再预期原始 SQLite 异常／DRAFTING。 |
+| 存储边界 | 真实 SQLite 审计 ABORT 在插入待审后回滚草稿／待审／审计整个事务，保留草稿。完整最终写故障留下 GENERATING／pending，不伪称失败已存。阶段失败无草稿；明确重试新修订。并发／重复恢复仅一个待审／事件；生成重试不能替换既有审批／决策。 |
+| 默认 mock 网页／5740 | MC-5f929d55f172 r1，一次最终保存演练故障→RECORDING_FAILED／无待审→实际重启→网页恢复 AP-c85f47d8de10 PENDING；再三次已认证恢复保持同 ID。 |
+| 真实 SQLite 失败／5740 | MC-596579a178a6 r1，测试库触发器使最终 GENERATION_RECORDED 审计失败，HTTP503 MC_STORAGE_UNAVAILABLE、无待审。移除触发器、重启后网页恢复 AP-084a5a2f9a55；网页取消到 r2 CANCELLED，旧待审 SUPERSEDED，原历史保留。 |
+| 无草稿／5740 | MC-95429dbd1fb8 r1，真实阶段更新触发器失败，GENERATING／无 pending／无待审。移除触发器、重启后网页明确重试 r2，AP-c7f4c29db6d1 PENDING；再三次恢复不重复。两个触发器均已移除，未作用于旧数据库。 |
+| 真实 MC／5741 | MC-7dbc0096d878 r1，energetic／factRefs=[50 ml]；按当前目录独立重构实际字面脚本／三帧。真实文字及模板 MP4→显式最终保存失败、无待审，复用既有 Strata／工具。 |
+| 模型停止＋应用重启＋实际网页恢复 | 以实例保护仅停止本轮 1340b2d713ce4100ad47c3abc53ceb6c，8080关闭，同 DB／媒体配置重启应用。Recover→AP-802103339dca PENDING，无已提交决策；textSimulated=false／mediaSimulated=false／videoModelUsed=false，三次重复恢复同一待审。 |
+| 同一真实文件 | 新忽略目录 media-output 的 artifact dfad0c0d2bc74ce68419de2f3bf92981，63,274 字节，SHA-256 e838d2915c120ddc4a0c249c658b8dcbe81ebdef2025ea9306d8fa23a615c39d，恢复前后相同，脚本／分镜／manifest 同样相同。网页 readyState=4、15 秒，实际播放到7.550395秒、无错误；实际浏览器下载哈希一致。恢复不需推理／渲染，单测也将任何生成器调用视为失败。静音720x1280／24fps模板，无AI场景／音频。 |
+| 模型关闭后新请求和重试 | MC-ed37efde1777 r1及网页明确重试r2均 GENERATION_FAILED／LLM_UNAVAILABLE，原真实标签，无脚本／媒体／待审／回退；应用健康仍ok。 |
+| 范围／安全／迟到结果 | 单测覆盖 owner／Founder／会话／CSRF／精确字段、已存文字／帧／模式篡改、目录改变、缺配置／文件、pending历史隐藏、取消保存失败及迟到结果抑制。运行中取消使用离线阻塞provider替身，不作为物理GPU中止证据。 |
+| 效果／环境 | 两库零业务效果、零已提交决策，库存12/8/0不变。仅停止本轮5740／5741及精确模型实例，原配置／数据库哈希和56项模型文件大小／mtime一致。无模型／工具下载、升级、新依赖、schema变更、真实支付／发货／发布。 |
+
+同一游戏本 Windows 11 Pro build26200、应用 Python3.14.5、Node v22.19.0；既有
+Strata0.2.1／Terminal0.1.46.1／engine0.1.46 CUDA13／模型Python3.12.15，
+qwen3.8-flash-next-gyro-gyro-s；8192 context、单请求、1536MiB reserve、route-tail-skip7，
+已存 vision／MTP 设置未改，120秒／512输出token。复用 FFmpeg／ffprobe9.0.2及Windows Arial。
+引擎实际MC请求330prompt／49生成token，prompt／decode7702+2136ms，不是浏览器端到端耗时。
+
+本轮发现并修正：抽出校验块时遗漏claims局部引用；共享HTTP初版改变空白mock修订失败分类；
+已取消／已失败界面沿用含糊的生成提示。既有检查发现问题，最终测试及网页检查通过。
+浏览器下载验证等待约192秒后完成且哈希正确，这是本地自动化观察，不是已确定的应用延迟上限。
+
+原始日志／读回／触发器清单／引擎副本在忽略目录var/mc-recovery-20261029，本地outputs保存截图／视频，
+只提交脱敏摘要。未生成新ZIP，冻结eb8f0de包早于本代码。Jira未核实／更新待办，按要求不读写；
+未推送／PR／合并／Canvas。**剩余：**部分生成／渲染断点续作、provider物理中止保证、完整MC已提交决策／
+本地保存恢复矩阵、孤立文件清理、自由文案／AI场景／音频／一般质量、新包／其他电脑／现场及完整MC／
+Stage2验收。MC-T-06仍PARTIAL。
+
+
+## 冻结源码 ZIP 彩排 · 2026-10-29
+
+本地部署新证据，与下方历史记录区分。Danny / M1、AI 辅助 KAN-15 共享范围；GR-INT-03 是内部标签，
+不是 Jira key。分支 KAN-15-zip-rehearsal-eb8f0de，干净冻结源码
+**eb8f0de8d412344e828daf9032898c2dbb6155ee**，获取后 main 为
+515bfa537e31a01b9e9a24400a7112f8103babb3。本轮未改应用代码。
+
+| 本次检查 | 实际证据 |
+|---|---|
+| 压缩包 | elec5620-source-eb8f0de.zip，5,658,127 字节，116 文件；SHA-256 **bf7d8b0324c9797e2adb03d0727a89aa31325ebb5a22223fd7a528760d25bba4**。逐文件匹配干净已提交源码；不含 .git/venv/var/数据库/凭证/权重/二进制/媒体/旧输出，保留公开脱敏参考文件。同路径重复打包被拒绝，哈希不变。 |
+| 新目录执行来源 | `D:\elec5620_project\rehearsals\20261029-eb8f0de\fresh source`，独立 venv／配置／mock 与 live 数据库／media-output。实际解释器、模块及服务器执行路径均在新目录，Python 导入路径无旧仓库。重复 Setup 保留配置；解压源码哈希不变。 |
+| 新目录完整 Windows Verify | **191 项通过，56.564 秒**；来源 116 文件／41 组、来源指纹／交接和 JS 语法通过。未改测试，数量与冻结媒体检查点一致。 |
+| mock 网页／5730 | CS-6a4c29fa9998 r1，AP-c326a7d02bb7，DEC-ea6386a58ce9 APPROVED/DELIVERED，精确 ORD-1001→P-101。客户最终确认前 effects=0／stock=12；确认后 RESOLVED、SIMULATED_EXCHANGE_REQUEST_ACCEPTED、effects=1／stock=11。再重复三次已认证确认，仍一个效果、stock=11。 |
+| 真实 BA 网页／5731 | BA-e753089f2935 r2 COMPLETED、simulated=false；自然需求提取后客户显式确认。P-101／AUD48；独立检查目录版本、库存、条件、价格和字面事实。 |
+| 真实 MC／5731 | MC-9a09e9cd654b r1，energetic 需求，factRefs=[50 ml]；textSimulated=false、mediaSimulated=false、videoModelUsed=false。新 artifact 292986dbf7ec491888c42998a6de9a57 在新目录 var/media-output 生成，未复制旧媒体。 |
+| MP4 与审批 | 63,274 字节，SHA-256 **e838d2915c120ddc4a0c249c658b8dcbe81ebdef2025ea9306d8fa23a615c39d**；15 秒、720x1280、24 fps、H.264/yuv420p、静音。probe／完整解码／三帧检查通过；浏览器到 15 秒、ended=true／readyState=4。实际浏览器及已认证 HTTP 下载哈希相符。AP-eb1cb4015f7c／DEC-1c3f48eabe4c APPROVED/DELIVERED，绑定精确修订／文件／脚本哈希。确定性模板字节与历史样本一致，但文件／UUID／目录是新生成。 |
+| 授权与效果 | Danny 在网页操作前明确授权两项具体测试审批及客户模拟确认。无发布、支付、发货；live 数据库 effects=0，库存=12/8/0。 |
+| 模型关闭失败 | 仅以实例保护停止本轮模型 6a7bb9a13bae4235a54b2ef260b7a2b8。应用仍健康／配置 LIVE，模型端口关闭。新网页请求 BA-6a52c5553047 r1 保存 INCOMPLETE／LLM_UNAVAILABLE、simulated=false，无结果／推荐／回退。既有成功及已认证 MP4 访问保留。 |
+| 既有 CS 限制 | 意图 NOT_CONNECTED；真实 coordinate 探测返回 503 LIVE_HANDOFF_NOT_CONNECTED，不产生记录。未扩展真实 CS／交易。 |
+| 清理 | 仅停止本轮 5730／5731 应用及精确模型实例。原配置／数据库 SHA-256、56 项模型文件大小／mtime 一致；冻结包及解压源码哈希不变。 |
+
+环境：本次检测 Windows 11 Pro 10.0.26200／build 26200，新 venv Python 3.14.5、Node v22.19.0；
+复用 FFmpeg／ffprobe 9.0.2、Windows Arial。既有模型安装 Strata 0.2.1／Terminal 0.1.46.1／
+engine 0.1.46 CUDA13，模型 Python 3.12.15、qwen3.8-flash-next-gyro-gyro-s；
+已存 8192 context、单请求、vision／MTP 关闭、1536 MiB reserve、route-tail-skip7，120 秒／512 输出 token。
+本轮未重新安装、升级、下载工具／模型或复制权重目录。
+引擎记录 BA 提取 prompt285／生成85 token（6684+4927 ms）、BA 推荐295／25（3050+895 ms）、
+MC330／50（2408+1442 ms）。这些不是浏览器端到端耗时，不以配置／健康代替实际推理证据。
+
+原始日志、数据库读回、清单留在忽略目录 var/rehearsal-20261029-eb8f0de；独立数据库／配置／媒体
+留在新目录，仅提交脱敏摘要。冻结包源码是 eb8f0de，后续仅文档提交／回执不在该 ZIP 内。
+Jira 未核实／更新待办，按要求不读写；未推送／PR／合并／上传 Canvas。
+
+**本轮未新验证：**AP 保存失败恢复（保留历史证据）、全部 BA／MC 生命周期／失败组合、MC 完整恢复、
+自由创意语义、AI 场景／音频、其他电脑／系统／浏览器、现场网络、Canvas 下载、全新电脑／首次离线安装
+或完整 Stage 2 验收。本次保留失败场景是模型不可用，不是存储恢复。
+
+
+## MC 模板 MP4 验证证据 · 2026-10-29
+
+这是本轮本地媒体新证据，不将历史占位分镜重新算成视频。Danny / M1 授权 KAN-15 有界增量，
+干净基线 950ad9205d0a4522d7dc775fb2d049fc3ef9c5d9，分支 KAN-15-mc-template-video；
+获取后 main 仍为 515bfa537e31a01b9e9a24400a7112f8103babb3。AI 辅助，保留原归属／任务登记。
+Jira 未核实／更新待办，按要求不访问／修改；未推送、PR、合并或上传 Canvas。
+
+| 本次检查 | 实际结果 |
+|---|---|
+| 修改前 | Windows Python 3.14.5，181 项通过，31.465 秒 |
+| 最终 Windows Verify | **191 项通过，53.115 秒**（原 181 + 新媒体 10）；来源 116 文件／41 组、来源哈希／交接及 JS 语法通过；MC 单独 38 项通过。双语文档后重查来源／JS／差异。 |
+| 新离线测试 | 精确视频哈希审批、工具不可用／超时／进程失败无回退、文件篡改／路径标识拒绝、分镜篡改拒绝、过期链接／失败修改、会话／Founder／范围响应、配置／超时边界、mock 文字制作和错误格式拒绝。测试替身字节明确不是可播放证据。 |
+| 实际 mock 文字／模板文件，新库 5720 | MC-ea97fa92b3ee 修订 1 APPROVED/DELIVERED；文字模拟、媒体真实制作、无视频模型。62392 字节，SHA-256 4973c74e7bcf4f690583034481e2ac4236a773164ce5851408719c8ee254cdce。浏览器时长 15 秒、720x1280，播放推进至 8.833 秒；实际浏览器下载哈希匹配，抽查三镜头。 |
+| 实际本地模型／模板文件，新库 5721 | MC-24849de55d1e 修订 1 CALM／Fragrance-free，REQUEST_REVISION 已投递；修订 2 ENERGETIC／50 ml，新文件／哈希／审批；修订 3 同一有据内容、修正 LF 排版，再建新文件／审批，前两审批 SUPERSEDED。独立核对模型输出、保存目录、脚本和分镜。 |
+| 最终 MP4 及网页批准 | 修订 3，63274 字节，SHA-256 **e838d2915c120ddc4a0c249c658b8dcbe81ebdef2025ea9306d8fa23a615c39d**；15 秒、720x1280、24 fps、H.264/yuv420p、无音频。FFprobe／完整解码通过；三镜头视觉检查，浏览器 currentTime=15、ended=true、readyState=4。AP-b460e73848cc APPROVED/DELIVERED、DEC-76662eeae6e9，绑定精确修订／视频／脚本哈希，SQLite 另行确认。 |
+| 下载及旧链接 | 最终真实 HTTP 下载哈希与当前保存文件匹配；修订 1／2 链接返回 409，不替换为新文件。此前 mock 成片也实际通过浏览器下载并核对哈希。 |
+| 实际编码器缺失 | 不改已安装工具／原配置，只以独立配置指向故意不存在的工具重启本轮 mock。网页保存 MC-b6c143192c82 GENERATION_FAILED / MEDIA_UNAVAILABLE，无脚本／媒体／审批、不回退；保留原已批准文件和记录。 |
+| 停模型及清理 | 停止本轮准确模型实例后，保存视频仍可网页访问／播放，无新推理。仅停本轮 5720／5721 及准确模型实例；原配置／数据库哈希、56 个模型文件大小／mtime 匹配；两个测试库业务效果 0，库存 12/8/0 不变。 |
+
+可选 FFmpeg/ffprobe 9.0.2 下载 114768076 字节（约 109.45 MiB），解压目录 329221735 字节
+（约 313.97 MiB），首次保留包和目录约需 424 MiB，加媒体输出。包 SHA-256
+60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba，核对发行方
+GitHub digest。仅本地使用系统 Arial，源码不分发字体／工具；重复 Setup 保留配置哈希、无重复
+下载或覆盖，未增加 Python 依赖或修改 PATH。
+
+复用 Windows 11 Pro 25H2 build 26200.9711、应用 Python 3.14.5、模型 Python 3.12.15、
+Strata 0.2.1／Terminal 0.1.46.1／engine 0.1.46 CUDA 13、qwen3.8-flash-next-gyro-gyro-s。
+保持 8192 context、单请求、关闭 vision/MTP、1536 MiB reserve、route-tail-skip 7、模型超时
+120 秒／512 输出 token；无模型下载／升级／复制或配置变更。三次 MC 引擎输出 61/40/40 token，
+prompt/decode 耗时 6906+2383、1939+1016、328+844 毫秒，不是完整网页耗时。
+
+发现并修正：新增测试误用了未定义账户；版本诊断经 Select-Object 提前关闭输出管道造成假失败；
+实际抽帧发现 Windows CRLF 使行距翻倍，改为明确 UTF-8 LF 并回归校验，最终修订 3 为修正版本。
+恢复中断后会话失效导致一次决策 401，未计入批准；刷新重登确认仍待审。自动审批审核随后要求对
+精确测试修订明确确认，Danny 回答后才成功点击，未用其他入口绕过。同一主机不同数据库端口共享
+浏览器 cookie 名，切换时应重登，不能认为端口隔离会话；这是测试环境条件，不是模型故障。
+
+原日志在忽略的 var/mc-video-20261029，成片／清单／作业在 var/mc-media，工具在
+var/media-tools，本地 outputs 有最终 MP4／截图，仓库仅保存脱敏摘要。安装／启动／停止及许可
+前置见 WINDOWS_LLM.md；源码 ZIP 排除工具／字体／模型／配置／数据库／媒体／日志。没有新 ZIP
+校验或验收，旧 f7bb141 包早于本增量。
+
+**待办：**仅文字卡模板，不实际执行相机动作，无商品图像／视频模型场景／音频、一般创作／医疗
+语义或媒体质量验证、MC 取消和生成／最终保存持久恢复、孤立文件清理／历史下载、更广浏览器／
+OS／新 ZIP／现场验收。最终保存可能留下无输出／审批的 DRAFTING；技术检查和测试通过不代表
+MC-T-04/05/06 或 Stage 2 完成，这些仍 PARTIAL。
+
+
+## MC 有界真实文字检查点 · 2026-10-29
+
+本次是**本地 MC 文字**新证据，区别于历史 BA／ZIP 检查点。分支 KAN-15-mc-live-text，
+从干净 4f43f38a89637248874f4ed308441a5502e464ff 开始；获取远程后 origin/main 仍为
+515bfa537e31a01b9e9a24400a7112f8103babb3。Danny / M1 明确授权共享文件例外，AI 辅助，
+任务归属不变。
+
+| 本次检查 | 实际结果 |
+|---|---|
+| Windows Verify | **181 项全部通过，49.886 秒**，原 169 + 新 MC 12；来源 114 文件／41 组、来源哈希及交接检查通过。JS 语法通过，审批标签修正后再查通过；MC 单独 28 项通过。 |
+| 离线边界／失败 | 显式开启／默认兼容、最小 DTO 严格传输、无效方案无回退、实际脚本／字幕／方向／时长篡改、独立证据、身份权限／CSRF／精确字段、审批／修订、并发过期结果、目录变化、最终保存回滚及不可用／超时／无效结果留存。这些是测试替身，不算真实推理。 |
+| 实际 mock 网页／新库 5710 | MC-b3315edc057a 修订 1 APPROVED，文字／媒体均模拟，原审批及投递通过。 |
+| 真实模型／新库 5711 | MC-931edb7409b9 修订 1 CALM，重点 Fragrance-free，仍选择三个目录事实。brief 要求仅 Fragrance-free，但模型保留其他授权事实；此创意不符显示给 Founder，不能宣称语义遵循通过。Founder REQUEST_REVISION 已投递。 |
+| 真实新修订及审批 | 同 MC 修订 2 ENERGETIC，factRefs=[50 ml]，重点字幕 50 ml；脚本变为 “Meet Daily Hydration Cream. 50 ml. Explore the product details.” AP-31e86c3715fa APPROVED/DELIVERED；旧 AP-d0e8fc30ccdd SUPERSEDED，保留修改要求决策。 |
+| 独立数据库核验 | 使用当前 P-101:v1 原目录重建实际脚本／声明／三分镜，文字非模拟、媒体模拟。审批绑定准确草稿／修订／真实文字／mock 媒体；两条不同决策，业务效果 0，库存 12/8/0 不变。 |
+| 停止准确所启模型后新网页创建 | 应用健康、配置 LIVE_TEXT_WITH_MOCK_MEDIA，8080 关闭；MC-de418646a5b9 GENERATION_FAILED / LLM_UNAVAILABLE / textSimulated=false，无脚本／声明／媒体／审批，不回退 mock。 |
+| 环境和清理 | Windows 11 Pro 25H2 build 26200.9711、应用 Python 3.14.5；Strata 0.2.1、Terminal 0.1.46.1、engine 0.1.46 CUDA 13／Python 3.12.15，qwen3.8-flash-next-gyro-gyro-s。复用 8192 context、单请求、关闭 vision/MTP、1536 MiB reserve、route-tail-skip 7、120 秒／512 输出 token；无安装／下载／新依赖／配置改写。仅停止本轮 5710／5711 和准确模型实例。原配置／数据库哈希和 56 模型文件大小／mtime 匹配；无捕获的浏览器警告／错误。 |
+
+引擎两次 MC 生成记录 prompt 326／332 token、输出 53／41 token，prompt/decode 时间为
+6135+2062 毫秒和 1803+1260 毫秒，是引擎测量，不是完整网页耗时。适配器核对精确配置模型与
+完整 JSON；实际保存内容和模型停机失败另行核验，区别于替身／仅健康检查。初次测试发现漏导入
+text_value，修正后全通过；创建／修订字段和真实审批标题也在最终网页验收前修正。
+
+原始日志、测试库、实例回执、前后哈希、引擎日志和 evidence-summary.json 在忽略目录
+var/mc-live-20261029，截图在本地 outputs。未跟踪会话／密钥／模型。复现见 WINDOWS_LLM.md。
+未生成新 ZIP／校验值，旧 f7bb141 包早于 BA／MC 增量。
+
+**未验证／未完成：**自由创作文案、一般／多语言 brief 语义、医疗安全、真实视频／媒体质量、MC
+取消和生成保存的持久恢复／完整生命周期、完整 MC／Stage 2 验收、新增量 ZIP／其他电脑／现场
+验收。最终保存回滚可能保留无输出／审批的 DRAFTING，已有 AP 恢复不能称为 MC 生成恢复按钮。
+未接入真实 CS 意图／交接。Jira 未核实／更新待办（本轮不访问／修改），未推送／PR／合并／
+上传 Canvas。
+
+
+## BA 生命周期检查点 · 2026-10-29
+
+动工前复核第一轮：本地 478d522694ca381b2ba3c3c5e3711a77fb04133a 干净，147 项通过，
+应用/模型有主动正常停止回执（模型退出 0）。未见项目闪退证据，但这些记录不能证明 Codex 窗口稳定性。
+随后获取 main 515bfa537e31a01b9e9a24400a7112f8103babb3，从 478d522 建立
+KAN-15-ba-lifecycle-recovery，保留早先本地工作。
+
+| 本次第二轮检查 | 实测结果 |
+|---|---|
+| 仓库 Windows Verify，Python 3.14.5 | **169 项通过，46.561 秒**：旧 147 + 新 22；来源 113 文件/41 组及 JS 通过 |
+| 新离线生命周期/失败用例 | 同 ID 完整替换/历史、完成后拒绝取消、提取/推荐中取消、修订竞态、归属/会话/CSRF/输入、重复/并发恢复、模式保留、暂存/最终/失败状态/取消写入失败、无草稿显式重试及无效/不支持的持久证据 |
+| 独立单测库的真实 SQLite 触发器中止最终建议审计 | 建议 UPDATE 与审计一起回滚，持久草稿保留，无 COMPLETED/当前结果；移除测试触发器后仅恢复保存一次、不推理 |
+| 实际 mock 网页，新数据库/5700 | 修订 2 为 P-101 -> 修订 3 替换 Gentle cleansing. 后无当前旧建议、重问缺失条件 -> 修订 4 回答 -> 新确认后修订 5/P-102，历史保留 P-101 |
+| 实际 mock 取消与恢复 | 另一咨询 CANCELLED/修订 2，无继续控件；声明的 Founder 保存故障 -> INCOMPLETE/隐藏草稿 -> 同库重启应用 -> 网页同修订恢复 COMPLETED |
+| 实际模型推理中取消，新数据库/5701 | 刷新显示 ACTIVE/修订 1，取消仍可用；取消保存修订 2，原受理晚到 HTTP 409；事件仅创建/取消，无解释或推荐结果 |
+| 真实模型最终保存模拟及持久恢复 | 新咨询真实提取/推荐；故障保留 live 草稿，无当前结果。精确停止本轮模型、同库重启应用、8080 关闭后，网页在原修订 2 恢复 COMPLETED/simulated=false/P-101 |
+| 独立 SQLite/HTTP 校验 | 校验目录 ID/版本/价格/条件/原因；真实结果价格 4800 澳分、预算 6000；每模式再恢复 3 次仍一条建议事件；审批/效果为零；库存 P-101=12、P-102=8、P-103=0 |
+| 停模型后另发新真实请求 | 应用健康 ok、配置仍 LIVE；保存 INCOMPLETE/LLM_UNAVAILABLE/simulated=false，无推荐或 mock 回退 |
+| 网页控制台/收尾 | 未捕获警告/错误；原配置/数据库哈希及 56 文件模型大小/mtime 清单保留；只停止本轮 5700/5701 应用和精确模型实例 |
+
+复用 Windows 11 Pro 25H2/26200.9711、Strata 0.2.1、Terminal 0.1.46.1、engine 0.1.46 CUDA 13、
+模型 Python 3.12.15、精确模型 qwen3.8-flash-next-gyro-gyro-s；保存的 8192 上下文、单请求、
+vision/MTP 关闭、1536 MiB 预留、route-tail-skip 7。没有升级、下载、复制权重/配置或新增依赖。
+引擎生成记录及精确模型包校验支持真实推理证据；停模型后恢复是在保存早先真实输出，不是新的推理，
+也不证明此时模型就绪。
+
+中间观察：一项旧保存失败测试最初仍期待原始异常/ACTIVE 缺口，已改为要求安全 503、持久草稿、
+INCOMPLETE 及只保存恢复成功。首次定时取消时提取已完成，未算推理中取消；第二次同批网页提交/
+刷新/取消产生已核实的晚到 409。网页保存故障明确为模拟；真正 SQLite 写入/审计失败由独立测试
+验证，没有破坏磁盘制造故障。
+
+原始日志、进程回执、前后哈希、引擎日志、记录快照、evidence-summary.json 均在忽略目录
+var/ba-lifecycle-20261029/，截图为本地输出；仓库只加入脱敏摘要。共享变更仅 BA 服务、HTTP、
+门面草稿投影/故障选项、网页并发刷新/取消；无表结构/供应方/队友业务模块变化，评审待办。
+
+尚未证明：旧结构化入口完整生命周期、BA 审批、完整目录/库存故障、任意语言/医疗安全、物理 GPU
+中断、自动恢复/重试、磁盘完全故障时的持久保证、跨电脑或新功能 ZIP/Canvas 验收。现有 CS/AP/MC
+离线全过，本轮未重跑其网页链路。各 BA 组按实际仍部分完成；BA-START-01/任务归属未改；
+Jira 未核实／更新待办，未访问或对外发布，不代表 Stage 2 完成。
+
+## 较早的第一轮 · BA 需求检查点 · 2026-10-29
+
+本轮是本地 KAN-15 切片，不代表 BA-START-01 或 Stage 2 完成。分支
+KAN-15-ba-needs-clarification，起点 a577c98c010142882abc22b552c73de92e3d51d0，
+基于本轮获取的 main 515bfa537e31a01b9e9a24400a7112f8103babb3。包含本检查点的本地
+代码提交标识实际交付版本；以下旧 ZIP 不含新功能。本轮没有 Jira 访问/更新及对外发布。
+
+| 本次新检查 | 实测结果 |
+|---|---|
+| Windows 11 Pro 25H2 / 26200.9711，应用 Python 3.14.5 | 全量 147 项通过，27.301 秒；旧 123 项保留、新增 BA 24 项 |
+| scripts/check_repository.py；node --check beauty_company/web/app.js | 113 源文件、41 用例组、来源指纹/交接检查通过；JS 通过，包括最终确认标签调整 |
+| 实际 mock 网页、5690、新忽略数据库 | 干皮原文 -> 两条追问 -> 回答后同 ID 修订 2 -> 明确确认前无商品 -> 修订 3 COMPLETED/P-101/simulated=true |
+| 实际 Strata 网页、5691、另一新忽略数据库 | 相同流程；两次真实提取、一次推荐；保存原文引用及 needsConfirmed，修订 3 COMPLETED/simulated=false |
+| 两条主线后独立只读 SQLite 检查 | 预算 6000 澳分、P-101 4800 澳分、catalogue:P-101:v1、AVAILABLE/库存 12；原因均为目录字面事实；审批/效果均为零，库存未变 |
+| 按本轮精确实例 ID 停模型、保留应用 | 应用健康仍 ok、配置 LIVE；网页保存 INCOMPLETE/LLM_UNAVAILABLE/simulated=false，无结果或 mock 回退 |
+| 已操作网页控制台 | 未捕获警告/错误 |
+| 原数据保护与收尾 | 原有配置/数据库哈希及 56 文件权重大小/mtime 清单保留；只停止本轮两个应用及模型 |
+
+复用 Strata 0.2.1、Terminal 0.1.46.1、engine 0.1.46 CUDA 13、模型 Python 3.12.15、
+qwen3.8-flash-next-gyro-gyro-s；保存的 8192 上下文/单请求/vision 与 MTP 关闭/
+1536 MiB 预留/route-tail-skip 7。没有安装、升级、下载或复制模型目录。
+网页操作期间引擎日志有实际生成记录，严格 adapter 响应包核对精确模型 ID。
+这是有限英文证据，不是通用模型质量或中文真实模型评估。
+
+新增离线覆盖：缺失字段、信息齐全仍未确认、中英文 mock、歧义预算、句末标点、
+客户更正字段、重启后同 ID 恢复、归属/会话/CSRF、额外/无效输入及长度、两类并发旧结果、
+当前目录变化、无效/虚构引用、缺失能力/模型失败、不回退及最终保存失败不得虚报成功。
+传输测试用严格响应包 fake，与上述真实模型网页证据分开。
+
+已定位并修复：歧义预算正则一度拒绝数字后句号，中间 146 项运行出现 5 个 failure、
+5 个 error；修正边界并加入句号/部分小数回归后，全量通过。验收助手还曾使用不存在的
+来源检查文件名、误读 health 顶层字段；改用 check_repository.py 与实际 capabilities
+包后重验通过。未将应用失败伪装成功。
+
+原始日志、数据库、前后清单、模型日志、网页记录快照保留在忽略目录
+var/ba-needs-20261029/，截图为本地输出；仓库只保留必要源码、文档和本脱敏摘要。
+
+尚未新验证/完成：完整取消/已完成记录修改、BA 审批生命周期、任意语言或医疗范围检测、
+完整模型/目录/库存故障矩阵、可选替代品、BA 自动存储恢复（最终保存回滚可留 ACTIVE）、
+macOS/另一电脑验收及包含本功能的新 ZIP/Canvas 演练。现有 CS/AP/MC 离线用例全量通过，
+本轮未重跑其网页链路。MC 仍 mock，CS 意图未连接、真实 CS 交接受限。
+共享文件评审/发布待办，Jira 未核实／更新待办。
 
 以下为按日期保留的历史记录；后续发布更新覆盖早期“无远端/字节一致打包”的现状描述。
 
@@ -363,3 +664,93 @@ Danny 本次明确要求合并 #11 和 #13；自己的 #13 在最新 main 的新
 可使用已有的本人 PR 审阅层例外。自检不是自我 Approve，也不是独立人工审阅，
 没有将此前仅限 #12 的授权套用到 #13。#13 的远程提交、新 CI、实际合并和 Jira 回执
 在发生后记于 GitHub／Jira。完整 MC、CS、GR 验收及真实 CS／MC 模型集成仍未完成。
+
+## GR-INT-03 源码 ZIP／全新目录 Windows 演练 · 2026-10-28
+
+Danny / M1 授权本地部署验证与本地提交。GR-INT-03 为内部标签，不是 Jira key；仓库未映射
+部署子任务编号。Jira 未核实／更新待办，按要求本轮不查询或修改外部 Jira。不领取 BA
+starter、不改队友归属、不新增业务／真实 CS/MC、不上传 Canvas、不推送或合并。
+原干净 main e141427 已快进到最新远程 **515bfa537e31a01b9e9a24400a7112f8103babb3**，
+获取时没有更新 main。独立分支 GR-INT-03-zip-windows。
+
+本轮环境：Windows 11 Pro 25H2／26200.9711 x64；系统／新环境 Python 3.14.5；Windows
+PowerShell 5.1；Git 2.51.0.windows.1；Node 22.19.0；RTX 5070 Ti Laptop 12227 MiB，
+驱动 617.42，初始 D 盘剩余 210.60 GiB。未发现既有项目／模型进程或所选端口监听。
+Windows 基线 **123 项测试，36.202 秒**，来源 **110 文件／41 用例组** 和 JS 检查通过。
+数量为此前 84 项加 12 AP HTTP、11 CS HTTP、16 MC，未改测试；Mac 耗时不冒充本机结果。
+
+现有打包器在干净源码上生成 5,565,726 字节／110 文件的 ZIP，SHA-256 为
+`6d6517d837137db65def0223db449f8e0a8dd5c3943e1ecd15be1fb1fa040fb0`。
+文件名与追踪清单完全一致，成员字节与源码一致；无 .git／.venv／var／数据库／密钥／模型／
+旧输出／未脱敏报告。同名再打包退出 2 且原哈希不变。解压到全新含空格目录
+`D:\elec5620_project\rehearsals\20261028-515bfa5\fresh source retry`，两次 Setup
+成功且配置哈希不变，Python 可执行文件与模块均来自该新目录，移除了继承的 Python／
+BEAUTY 路径覆盖。无 .git 的新目录完整核验 **123 项测试，40.384 秒**，来源和 JS 均通过。
+首次外部控制器把 Git 末尾空项计入清单，尚未解压／启动即停止；保留空目录与 ZIP，过滤
+空项后修正的是控制器，不是项目代码。浏览器沙箱另拒绝向 D 写截图，改存已授权 C 输出
+目录；这不是应用失败，也未将这些尝试计为成功部署证据。
+
+实际网页 mock 主线：新 5670 应用／mock-browser.sqlite3，Customer 登录／ORD-1001 ->
+Founder 发起 CS/CO→BA -> Mock recommendation -> Customer 当前提案确认 -> AP 精确
+范围审核。已有 approval_recording 注入令决定 RECORDING_FAILED；SQLite 确认无决定 ID、
+无提交审计／效果，库存 12。只停启本轮新应用并保留同一库，失败状态仍在；网页恢复后
+APPROVED／DELIVERED，一条决定审计、零效果、库存 12；另 3 次 HTTP 恢复保持同一决定。
+后续 Customer 网页确认才 RESOLVED，产生一条 actionRef 模拟效果；再 3 次确认仍一条
+效果，库存 **12→11**。独立核对 action／revision／actionRef、商品事实／整数分价格预算／
+无香／库存版本。本轮已实际验证当前 AP 网页恢复，25 日“无按钮”为历史限制。
+
+真实 BA：原模型 runtime 已停止，核验 owner-private profile 后用原环境 StartModel 复用
+安装，在 20.535 秒内就绪（含检查），无重装／下载／权重迁移。官方 runtime 和 /v1/models
+确认 exact ID qwen3.8-flash-next-gyro-gyro-s。Strata 0.2.1／Terminal 0.1.46.1／其 Python
+3.12.15／engine 0.1.46 CUDA 13，8192 上下文、单请求、vision/MTP off、1536 MiB reserve
+不变。新 5671 应用／live-browser.sqlite3 最初只做健康检查时使用旧配置绝对路径；任何
+真实 BA 调用前已用新目录自己创建的 llm.rehearsal.json 重启，120 秒／512 tokens／
+loopback8080／准确 ID，Setup 也保留该文件哈希。此后应用不需要旧应用配置。
+
+实际 Customer 网页咨询保存 **COMPLETED／simulated:false／P-101**，显示 **Live BA
+recommendation**；SQLite 独立校验事实、价格预算、无香、库存／版本，零审批／效果。
+本次引擎日志为 297 输入 tokens／7496 ms、25 输出 tokens／1223 ms，不推广为基准性能。
+加载后的单次资源快照为可用显存 1967 MiB、可用系统 RAM 约 4.0 GiB。MC 仍 MOCK、
+csIntent 为 NOT_CONNECTED，新应用实际 live CS coordinate 返回 503／
+LIVE_HANDOFF_NOT_CONNECTED；未扩展真实 CS/MC。
+
+依赖：mock 只需新包代码／静态资源、Python 和全新本地状态，Node 只核验、Git 只打包。
+live 另外依赖旧模型环境的安装、86.39 GiB 权重、profile／私有 runtime、驱动及本机服务；
+不依赖旧应用导入路径或旧应用配置。无需修部署脚本或业务代码，仅更新现有双语说明／
+状态／证据。网页检查点时原配置／数据库哈希与 56 个模型文件大小／修改时间清单不变。
+原始证据在忽略目录 var/rehearsal-20261028-515bfa5/ 和新目录 var 中。
+
+41 个用例组保留原状态，不因演练通过提升整个模块。实际 Canvas 上传／下载、最终包
+冻结／重新解压、全新电脑／网络、教学团队预装软件／缓存模型许可、长期／睡眠／重启／
+长上下文／多人、真实 CS/MC 和完整 Stage 2 仍分别待验。后续仅文档更新的源码包也必须
+在 ZIP 外记录自己的准确提交／SHA-256／新目录复验回执，不能沿用本包哈希冒充。
+
+## 冻结演练包回执 · 2026-10-28
+
+包含新部署说明的最终 ZIP 源码冻结在本地提交
+`f7bb141f6e35c7846989adccf58841b9e128a978`，分支 GR-INT-03-zip-windows；
+110 文件／**5,579,703 字节**，SHA-256 为
+`5be88639cdd33415dadc77c0e6bfdc286b34b50e4635be2568ee01f4543e6ba3`。
+非文档文件与已验证 main 515bfa5 字节一致。本回执为之后的仅文档提交，不改变冻结 ZIP，
+也不把包的源码提交冒充为之后回执提交 HEAD。
+
+第二个全新目录 `D:\elec5620_project\rehearsals\20261028-f7bb141\final fresh source`
+两次 Setup 保留配置，导入路径独立；新环境完整 **123 项测试／36.100 秒**、来源
+110 文件／41 用例组与 JS 检查通过，无 .git 或旧应用导入依赖。
+
+最终包从 5680/mock、5681/live 执行实际认证 HTTP 复验：CS→BA→客户确认→AP→模拟效果。
+AP 保存失败时无有效决定／效果；应用重启后恢复，另 3 次重复恢复仍一条决定／零效果；
+Customer 确认并另重复 3 次后仍只有一次效果、同一 actionRef，库存 12→11。此前 515bfa5
+包的流程为实际网页；此次最终包为真实 HTTP 自动化复验，不冒充另一轮网页验收。
+
+最终包一次真实 BA 在 **2.780 秒**内保存 COMPLETED／simulated:false／P-101，复用同一
+已安装模型实例和新目录独立配置；SQLite 逐项校验保存内容／事实／库存／价格预算／无香／
+版本，零审批／效果。按实例身份停止本轮模型后，应用仍健康，新咨询如实保存
+**INCOMPLETE／LLM_UNAVAILABLE／simulated:false**，无商品、未回退 mock。
+最终两个应用和本轮模型均停止；原配置／数据库哈希及 56 个模型大小／修改时间清单不变。
+无需修改业务／部署脚本／模型／依赖。
+
+原始最终报告／日志／数据库保留忽略目录，ZIP 与机器可读版本／哈希／结果回执已复制到
+本地交接输出目录。未读写 Jira、未推送／发起／合并 PR、未上传 Canvas。GR-INT-03 仍为
+内部演练标签；正式 Canvas 下载、现场条件／许可、全新电脑／网络、真实 CS/MC 和完整
+Stage 2 仍未验收。
