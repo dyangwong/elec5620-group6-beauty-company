@@ -2,6 +2,51 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/VERIFICATION.md).
 
+## Frozen-source ZIP rehearsal · 29 October 2026
+
+Current local deployment evidence, distinct from the historical sections below.
+Danny / M1, AI-assisted KAN-15 shared scope; internal GR-INT-03 is not a Jira key.
+Branch KAN-15-zip-rehearsal-eb8f0de. Clean frozen source:
+**eb8f0de8d412344e828daf9032898c2dbb6155ee**; fetched main:
+515bfa537e31a01b9e9a24400a7112f8103babb3. No application code changes.
+
+| This run | Actual evidence |
+|---|---|
+| Archive | `elec5620-source-eb8f0de.zip`, 5,658,127 bytes, 116 files; SHA-256 **bf7d8b0324c9797e2adb03d0727a89aa31325ebb5a22223fd7a528760d25bba4**. All member bytes matched clean committed source; no .git/venv/var/DB/credentials/weights/binaries/media/old outputs. Repackaging to the same path was refused, checksum unchanged. Public redacted reference files retained. |
+| Fresh execution origin | `D:\elec5620_project\rehearsals\20261029-eb8f0de\fresh source`; independent venv, configs, mock/live DBs and media-output. Actual interpreter/import/server executable belonged to this root, no old checkout on Python import path. Repeated Setup preserved configs; extracted source hashes remained unchanged. |
+| Complete fresh Windows Verify | **191 tests passed in 56.564 s**, source verification 116 files / 41 groups, provenance/handoff and JS syntax passed. Existing tests unchanged; count equals frozen media checkpoint. |
+| Mock browser / port 5730 | CS-6a4c29fa9998 r1, AP-c326a7d02bb7, DEC-ea6386a58ce9 APPROVED/DELIVERED. Exact ORD-1001 to P-101 scope; before final Customer confirmation, effects=0/stock=12. After confirmation: RESOLVED, SIMULATED_EXCHANGE_REQUEST_ACCEPTED, effects=1/stock=11. Three further authenticated confirmations retained exactly one effect and stock=11. |
+| Real BA browser / port 5731 | BA-e753089f2935 r2 COMPLETED, simulated=false, after natural requirement extraction and explicit Customer confirmation. P-101 / AUD48; catalogue version, stock, constraints, price and literal facts independently checked. |
+| Real MC / port 5731 | MC-9a09e9cd654b r1; energetic brief, factRefs=[50 ml]. Text simulated=false, media simulated=false, videoModelUsed=false. New artifact 292986dbf7ec491888c42998a6de9a57 generated inside fresh var/media-output. No old media copied. |
+| Actual MP4 and approval | 63,274 bytes, SHA-256 **e838d2915c120ddc4a0c249c658b8dcbe81ebdef2025ea9306d8fa23a615c39d**, 15 s, 720x1280, 24 fps, H.264/yuv420p, silent. Probe/full decode/three sampled frames checked. Browser reached 15 s/ended=true/readyState=4; actual browser and authenticated HTTP downloads matched hash. AP-eb1cb4015f7c / DEC-1c3f48eabe4c APPROVED/DELIVERED bound to exact revision/file/script hash. Deterministic template bytes match a historical sample; file/UUID/root were newly generated. |
+| Authorisation and effects | Danny explicitly authorised both concrete test reviews and simulated Customer confirmation before browser clicks. No publication/payment/shipment. Live DB effects=0, stocks=12/8/0. |
+| Model-off failure | Only this run's exact model instance 6a7bb9a13bae4235a54b2ef260b7a2b8 stopped with instance guard. App remained healthy/configured LIVE, model port closed. New browser request BA-6a52c5553047 r1 saved INCOMPLETE / LLM_UNAVAILABLE, simulated=false, no result/recommendation/fallback. Previous success and authenticated MP4 access retained. |
+| Existing CS limit | Intent NOT_CONNECTED; live coordinate probe returned 503 LIVE_HANDOFF_NOT_CONNECTED and created no record. No real CS/commerce expansion. |
+| Cleanup | Only owned 5730/5731 app receipts and exact owned model instance stopped. Original config/database SHA-256 values and 56 model-file size/mtime entries matched; frozen ZIP/extracted-source hashes unchanged. |
+
+Environment: newly detected Windows 11 Pro 10.0.26200/build 26200; fresh app
+Python 3.14.5, Node v22.19.0; reused FFmpeg/ffprobe 9.0.2, Windows Arial.
+Existing model installation: Strata 0.2.1 / Terminal 0.1.46.1 / engine 0.1.46 CUDA13,
+model Python 3.12.15, qwen3.8-flash-next-gyro-gyro-s. Saved 8192 context, single
+request, no vision/MTP, 1536 MiB reserve, route-tail-skip7; 120 s / 512 output tokens.
+No model/tool reinstall, upgrade, download or weight-directory copy this run.
+Engine logged BA extraction 285/85 prompt/generated tokens (6684+4927 ms), BA
+proposal 295/25 (3050+895 ms), MC 330/50 (2408+1442 ms); engine timings are not
+end-to-end browser latency. Configuration/health alone was not counted as inference.
+
+Raw logs, DB readbacks, inventory and manifests remain ignored under
+`var/rehearsal-20261029-eb8f0de`; independent databases/configs/media remain under
+the fresh root. Only this sanitised summary is tracked. Frozen package source is
+eb8f0de; later documentation-only commit/receipt is not included in that ZIP.
+Jira unverified / update pending: no read/write by instruction; no push/PR/merge/Canvas.
+
+**Not newly verified:** AP recording-failure recovery (historical evidence remains),
+all BA/MC lifecycle/failure combinations, full MC recovery, free creative semantics,
+AI-generated scenes/audio, other computers/OS/browser combinations, venue network,
+Canvas download, clean-machine/offline-first setup or complete Stage 2 acceptance.
+This run's retained-failure case is model unavailability, not storage recovery.
+
+
 ## MC template MP4 evidence · 29 October 2026
 
 New local media checkpoint, not a reclassification of the earlier placeholder.

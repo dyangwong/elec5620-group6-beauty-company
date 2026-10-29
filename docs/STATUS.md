@@ -1,6 +1,38 @@
 # Current implementation status
 
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
+## Frozen-source ZIP rehearsal · 29 October 2026
+
+**New evidence:** source **eb8f0de8d412344e828daf9032898c2dbb6155ee** was packaged
+cleanly and actually run from a new extraction with its own venv/configs/databases.
+Branch KAN-15-zip-rehearsal-eb8f0de; fetched main remained
+515bfa537e31a01b9e9a24400a7112f8103babb3. Danny / M1 authorised this shared
+deployment rehearsal (internal GR-INT-03, not a Jira key), with AI assistance.
+No application fix or new business feature was needed; teammate attribution remains.
+
+Fresh-directory Windows Verify passed **191 tests in 56.564 s**; provenance
+116 files / 41 groups and JavaScript syntax passed. Actual browser checks passed:
+mock CS/BA/customer confirmations/AP/one simulated effect; standalone real BA;
+real bounded MC text plus new playable/downloadable template MP4 and exact approval.
+Three duplicate confirmations retained one effect. With the owned model stopped,
+a new BA request saved INCOMPLETE / LLM_UNAVAILABLE, simulated=false, no result
+or mock fallback. Live CS handoff remained blocked; CS intent remains NOT_CONNECTED.
+
+ZIP SHA-256: `bf7d8b0324c9797e2adb03d0727a89aa31325ebb5a22223fd7a528760d25bba4`
+(5,658,127 bytes / 116 files). See WINDOWS_LLM.md for current execution steps and
+VERIFICATION.md for exact records and limits. This supersedes historical statements
+below that the MC increments have not had a new-ZIP rehearsal. The frozen ZIP
+contains source/docs as of eb8f0de; this later documentation receipt is separate.
+
+Existing model supervision/weights, FFmpeg 9.0.2 and Windows Arial remain external
+prerequisites. Only owned apps/model were stopped; original configs/databases and
+56 model-file inventory entries were preserved. No reinstall/download/copy of models.
+Another computer, venue/Canvas-download acceptance, first-time offline installation,
+free prose, AI scenes/audio and full MC recovery remain unverified/incomplete.
+This does not complete Stage 2. Jira unverified / update pending (no access/update
+this run by instruction); no push, PR, merge or Canvas upload.
+
+
 ## MC template MP4 checkpoint · 29 October 2026
 
 Danny / M1 authorised a bounded MC-F-02 media increment on KAN-15-mc-template-video,

@@ -1,4 +1,80 @@
 # Windows 部署与 KAN-15 交接
+## 冻结源码 ZIP 彩排 · 2026-10-29
+
+**当前已实测包：**eb8f0de8d412344e828daf9032898c2dbb6155ee，
+elec5620-source-eb8f0de.zip，5,658,127 字节／116 文件，SHA-256
+`bf7d8b0324c9797e2adb03d0727a89aa31325ebb5a22223fd7a528760d25bba4`。
+实际新解压目录 `D:\elec5620_project\rehearsals\20261029-eb8f0de\fresh source`，
+191 项测试及 mock 全流程、真实 BA、真实 MC 文字／模板 MP4／审批和模型不可用保存失败通过。
+精确记录／限制见 VERIFICATION.md，下方早期日期章节保留为历史。未需要修复应用脚本。
+冻结 ZIP 不改写，包内文档截至 eb8f0de；本次后续回执需单独随包交接。
+旧 f7bb141 包不含最新 BA／MC 增量。
+
+**提前准备：**Python 3.14.5（含 venv）、PowerShell、浏览器、用于 JS 检查的 Node v22.19.0，
+既有模型管理环境／运行时／权重、可选 FFmpeg／ffprobe 9.0.2 和本机 Windows Arial。
+本轮不需下载 Python 包。ZIP 仅含源码，不是模型合集或全新电脑安装器。保留旧模型工作区和媒体工具路径；
+本路线不运行 InstallModel、升级、重复复制权重或 media_tools Setup。未新增网络／局域网暴露。
+macOS／其他电脑／现场及首次离线准备仍未验收。
+
+**现场执行：**核对 ZIP 哈希，选不存在的解压目录，不覆盖解压；执行下方“在全新目录执行”的
+Setup／Verify／导入来源命令，确认打印路径均在新目录。选空闲端口和新数据库名，占用时停止操作。
+Setup／Start 保留已有文件，不会重置旧演示。本轮端口 5730／5731，数据库
+var/mock-demo.sqlite3、var/live-demo.sqlite3。
+
+从新解压目录独占创建忽略配置。遇到已存在文件，检查复用或另选名称，禁止覆盖：
+
+```powershell
+$modelHome = 'D:\elec5620_project\elec5620-group6-beauty-company'
+function New-DemoConfig([string]$Path, $Value) {
+    if (-not [IO.Path]::IsPathRooted($Path)) { $Path = Join-Path $PWD.Path $Path }
+    $stream = [IO.File]::Open([IO.Path]::GetFullPath($Path), 'CreateNew', 'Write', 'None')
+    try {
+        $bytes = [Text.Encoding]::UTF8.GetBytes(($Value | ConvertTo-Json))
+        $stream.Write($bytes, 0, $bytes.Length)
+    } finally { $stream.Dispose() }
+}
+New-DemoConfig 'var/llm.live.json' @{
+    base_url='http://127.0.0.1:8080/v1'; model='qwen3.8-flash-next-gyro-gyro-s'
+    timeout_seconds=120; max_tokens=512; api_key_env='BEAUTY_LLM_API_KEY'
+}
+$toolBin = Join-Path $modelHome 'var/media-tools/ffmpeg-9.0.2-essentials_build/bin'
+New-DemoConfig 'var/media.local.json' @{
+    ffmpeg=(Join-Path $toolBin 'ffmpeg.exe'); ffprobe=(Join-Path $toolBin 'ffprobe.exe')
+    font='C:\Windows\Fonts\arial.ttf'; output_dir='media-output'; timeout_seconds=120
+}
+.\scripts\windows.ps1 -Action Start -Mode mock -Port 5730 -Database var/mock-demo.sqlite3
+# 先检查既有模型运行状态，ready 则复用，stopped 时从模型所属工作区启动：
+& "$modelHome\scripts\windows.ps1" -Action StartModel
+(Invoke-RestMethod 'http://127.0.0.1:8080/v1/models' -TimeoutSec 10).data.id
+.\scripts\windows.ps1 -Action Start -Mode strata -LiveMc -Port 5731 -Database var/live-demo.sqlite3 -LlmConfig var/llm.live.json -VideoConfig var/media.local.json
+```
+
+应用代码／数据库／配置／输出全部在新目录，仅模型服务、明确指定的工具及字体是外部依赖。
+相对 output_dir 从配置所在目录解析，因此写入新 var/media-output。独立配置建立后不依赖旧应用配置。
+本机服务无需密钥；未来密钥仅放指定环境变量。配置、会话、数据库、模型、工具、字体、媒体和日志不打包。
+
+5730：Customer 提交 ORD-1001→Founder 启动建议交接→Customer 确认建议→Founder 精确审批→
+Customer 最终模拟确认。最终确认前零效果，后为一个，重复确认不增加。
+5731：Product advice 输入自然补水／无香／AUD60 需求并明确确认，检查保存的真实 BA 事实；
+Founder 在 Content studio 请求仅用目录事实“50 ml”的 energetic teaser，核对真实文字／模板标签、
+播放／下载／哈希后审批具体修订。同一主机不同端口／角色切换需重新登录，数据库不共享但 cookie 名相同。
+视频为静音文字卡模板，不是 AI 生成场景或语音。
+
+分别确认应用健康、模型就绪和真实推理保存成功。仅当本轮启动且仍拥有同一实例时，按下方“停止与诊断”
+的官方实例保护命令停止模型；不停止先前／共享模型。新 BA 应保存 INCOMPLETE／LLM_UNAVAILABLE，
+无结果或 mock 回退，旧 MP4 仍可访问。CS 意图仍 NOT_CONNECTED，真实 CS 交接仍阻止。
+
+```powershell
+# 从新目录仅停止本轮对应回执的应用：
+.\scripts\windows.ps1 -Action Stop -Port 5730
+.\scripts\windows.ps1 -Action Stop -Port 5731
+```
+
+保留新 var 诊断，分别检查新应用日志、数据库模式／状态和模型引擎日志。
+AP 恢复保留历史证据，本轮 ZIP 未重做；MC 完整恢复及完整 Stage 2 仍开放。
+Jira 未核实／更新待办，本轮不访问／更新；不推送、PR、合并或上传 Canvas。
+
+
 ## MC 模板 MP4 检查点 · 2026-10-29
 
 媒体工具为独立可选操作，普通 Setup／Start／Verify 不会安装。需要 Windows PowerShell、

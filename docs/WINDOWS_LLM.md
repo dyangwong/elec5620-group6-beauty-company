@@ -5,6 +5,100 @@ ACL repair. See [current runtime evidence and recovery commands](WINDOWS_LLM_RUN
 The installation-blocked sections below retain the earlier attempt as history.
 
 English primary. [中文阅读副本](zh-CN/WINDOWS_LLM.md).
+## Frozen-source ZIP rehearsal · 29 October 2026
+
+**Current tested package:** eb8f0de8d412344e828daf9032898c2dbb6155ee,
+`elec5620-source-eb8f0de.zip`, 5,658,127 bytes / 116 files,
+SHA-256 `bf7d8b0324c9797e2adb03d0727a89aa31325ebb5a22223fd7a528760d25bba4`.
+Fresh extraction actually used:
+`D:\elec5620_project\rehearsals\20261029-eb8f0de\fresh source`.
+191 tests passed there; mock end-to-end, real BA, real MC text/template MP4/review
+and model-off retained failure passed. Exact records/limits: VERIFICATION.md.
+Earlier dated sections below are history. No application script repair was needed.
+Keep this frozen ZIP unchanged: its docs are from eb8f0de; this later receipt must
+travel separately. The old f7bb141 ZIP does not include the current BA/MC increments.
+
+**Prepare before the venue:** Python 3.14.5 with venv, PowerShell, browser, and Node
+v22.19.0 for JS checks; existing model supervisor/runtime/weights and optional
+FFmpeg/ffprobe 9.0.2 + local Windows Arial. No Python package download was required.
+The ZIP is source-only, not a bundled model or clean-machine installer. Keep the
+old model workspace and portable media-tool paths available. Do not InstallModel,
+upgrade, duplicate weights, or run media_tools Setup during this rehearsed route.
+No network access/LAN exposure was added. macOS/other-machine/venue acceptance
+and offline first-time preparation remain unverified.
+
+**At the venue:** verify the ZIP hash, choose a nonexistent extraction directory,
+expand without overwrite, and use the Setup/Verify/import-origin commands in
+“Execute from a new extraction directory” below. Confirm both printed paths point
+inside the extraction. Choose free ports and new DB names; stop if occupied.
+Existing Setup/Start preserve local files; they do not reset an old demonstration.
+Our ports were 5730/5731; DBs var/mock-demo.sqlite3 and var/live-demo.sqlite3.
+
+From the new extraction, create ignored local configs exclusively (existing files
+must be inspected/reused or a new filename chosen, never overwritten):
+
+```powershell
+$modelHome = 'D:\elec5620_project\elec5620-group6-beauty-company'
+function New-DemoConfig([string]$Path, $Value) {
+    if (-not [IO.Path]::IsPathRooted($Path)) { $Path = Join-Path $PWD.Path $Path }
+    $stream = [IO.File]::Open([IO.Path]::GetFullPath($Path), 'CreateNew', 'Write', 'None')
+    try {
+        $bytes = [Text.Encoding]::UTF8.GetBytes(($Value | ConvertTo-Json))
+        $stream.Write($bytes, 0, $bytes.Length)
+    } finally { $stream.Dispose() }
+}
+New-DemoConfig 'var/llm.live.json' @{
+    base_url='http://127.0.0.1:8080/v1'; model='qwen3.8-flash-next-gyro-gyro-s'
+    timeout_seconds=120; max_tokens=512; api_key_env='BEAUTY_LLM_API_KEY'
+}
+$toolBin = Join-Path $modelHome 'var/media-tools/ffmpeg-9.0.2-essentials_build/bin'
+New-DemoConfig 'var/media.local.json' @{
+    ffmpeg=(Join-Path $toolBin 'ffmpeg.exe'); ffprobe=(Join-Path $toolBin 'ffprobe.exe')
+    font='C:\Windows\Fonts\arial.ttf'; output_dir='media-output'; timeout_seconds=120
+}
+.\scripts\windows.ps1 -Action Start -Mode mock -Port 5730 -Database var/mock-demo.sqlite3
+# Inspect existing model runtime first; reuse if ready. If stopped, start from its owner:
+& "$modelHome\scripts\windows.ps1" -Action StartModel
+(Invoke-RestMethod 'http://127.0.0.1:8080/v1/models' -TimeoutSec 10).data.id
+.\scripts\windows.ps1 -Action Start -Mode strata -LiveMc -Port 5731 -Database var/live-demo.sqlite3 -LlmConfig var/llm.live.json -VideoConfig var/media.local.json
+```
+
+All application code/DB/config/output lives in the extraction; only the separate
+model service and explicitly named tools/font remain external. Relative media
+output_dir resolves beside its config, so output goes to fresh var/media-output.
+No original app config is needed after these independent configs are created.
+This local service needed no key; any future key stays in the named environment
+variable. Do not package configs/sessions/DBs/model/tools/fonts/media/logs.
+
+On 5730 exercise Customer ORD-1001 -> Founder advice handoff -> Customer proposal
+confirmation -> Founder exact review -> Customer final simulated confirmation.
+Before final confirmation expect zero effects; afterwards one, including replays.
+On 5731 use Product advice natural hydration/fragrance-free/AUD60 requirements,
+confirm explicitly, then inspect saved real BA facts. As Founder use Content studio
+with an energetic teaser limited to catalogue fact “50 ml”; check real-text/template
+labels, play/download/hash the MP4, and review the exact revision. Re-authenticate
+when changing ports/roles: different DBs on the same hostname share a cookie name.
+This is a silent text-card template, not AI-generated scenes or speech.
+
+Check application health, model readiness and actual saved inference separately.
+Only if this run started the model and the exact instance is still owned, stop it
+with the guarded official command described under “Stop and diagnose” below;
+leave a pre-existing/shared model running. New BA must save INCOMPLETE /
+LLM_UNAVAILABLE without result or mock fallback; previous MP4 remains accessible.
+CS intent remains NOT_CONNECTED and live CS handoff remains blocked.
+
+```powershell
+# From the extraction, stop only apps started using these owned receipts:
+.\scripts\windows.ps1 -Action Stop -Port 5730
+.\scripts\windows.ps1 -Action Stop -Port 5731
+```
+
+Retain new var for diagnosis; inspect fresh app logs, DB mode/status and separate
+model engine logs. AP recovery has historical evidence but was not re-exercised in
+this ZIP run; full MC recovery and full Stage 2 acceptance remain open. No Jira
+access/update (unverified / update pending), push, PR, merge or Canvas upload.
+
+
 ## MC template MP4 checkpoint · 29 October 2026
 
 Optional media setup is a separate action, never part of normal Setup/Start/Verify.

@@ -2,6 +2,44 @@
 
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../VERIFICATION.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
+## 冻结源码 ZIP 彩排 · 2026-10-29
+
+本地部署新证据，与下方历史记录区分。Danny / M1、AI 辅助 KAN-15 共享范围；GR-INT-03 是内部标签，
+不是 Jira key。分支 KAN-15-zip-rehearsal-eb8f0de，干净冻结源码
+**eb8f0de8d412344e828daf9032898c2dbb6155ee**，获取后 main 为
+515bfa537e31a01b9e9a24400a7112f8103babb3。本轮未改应用代码。
+
+| 本次检查 | 实际证据 |
+|---|---|
+| 压缩包 | elec5620-source-eb8f0de.zip，5,658,127 字节，116 文件；SHA-256 **bf7d8b0324c9797e2adb03d0727a89aa31325ebb5a22223fd7a528760d25bba4**。逐文件匹配干净已提交源码；不含 .git/venv/var/数据库/凭证/权重/二进制/媒体/旧输出，保留公开脱敏参考文件。同路径重复打包被拒绝，哈希不变。 |
+| 新目录执行来源 | `D:\elec5620_project\rehearsals\20261029-eb8f0de\fresh source`，独立 venv／配置／mock 与 live 数据库／media-output。实际解释器、模块及服务器执行路径均在新目录，Python 导入路径无旧仓库。重复 Setup 保留配置；解压源码哈希不变。 |
+| 新目录完整 Windows Verify | **191 项通过，56.564 秒**；来源 116 文件／41 组、来源指纹／交接和 JS 语法通过。未改测试，数量与冻结媒体检查点一致。 |
+| mock 网页／5730 | CS-6a4c29fa9998 r1，AP-c326a7d02bb7，DEC-ea6386a58ce9 APPROVED/DELIVERED，精确 ORD-1001→P-101。客户最终确认前 effects=0／stock=12；确认后 RESOLVED、SIMULATED_EXCHANGE_REQUEST_ACCEPTED、effects=1／stock=11。再重复三次已认证确认，仍一个效果、stock=11。 |
+| 真实 BA 网页／5731 | BA-e753089f2935 r2 COMPLETED、simulated=false；自然需求提取后客户显式确认。P-101／AUD48；独立检查目录版本、库存、条件、价格和字面事实。 |
+| 真实 MC／5731 | MC-9a09e9cd654b r1，energetic 需求，factRefs=[50 ml]；textSimulated=false、mediaSimulated=false、videoModelUsed=false。新 artifact 292986dbf7ec491888c42998a6de9a57 在新目录 var/media-output 生成，未复制旧媒体。 |
+| MP4 与审批 | 63,274 字节，SHA-256 **e838d2915c120ddc4a0c249c658b8dcbe81ebdef2025ea9306d8fa23a615c39d**；15 秒、720x1280、24 fps、H.264/yuv420p、静音。probe／完整解码／三帧检查通过；浏览器到 15 秒、ended=true／readyState=4。实际浏览器及已认证 HTTP 下载哈希相符。AP-eb1cb4015f7c／DEC-1c3f48eabe4c APPROVED/DELIVERED，绑定精确修订／文件／脚本哈希。确定性模板字节与历史样本一致，但文件／UUID／目录是新生成。 |
+| 授权与效果 | Danny 在网页操作前明确授权两项具体测试审批及客户模拟确认。无发布、支付、发货；live 数据库 effects=0，库存=12/8/0。 |
+| 模型关闭失败 | 仅以实例保护停止本轮模型 6a7bb9a13bae4235a54b2ef260b7a2b8。应用仍健康／配置 LIVE，模型端口关闭。新网页请求 BA-6a52c5553047 r1 保存 INCOMPLETE／LLM_UNAVAILABLE、simulated=false，无结果／推荐／回退。既有成功及已认证 MP4 访问保留。 |
+| 既有 CS 限制 | 意图 NOT_CONNECTED；真实 coordinate 探测返回 503 LIVE_HANDOFF_NOT_CONNECTED，不产生记录。未扩展真实 CS／交易。 |
+| 清理 | 仅停止本轮 5730／5731 应用及精确模型实例。原配置／数据库 SHA-256、56 项模型文件大小／mtime 一致；冻结包及解压源码哈希不变。 |
+
+环境：本次检测 Windows 11 Pro 10.0.26200／build 26200，新 venv Python 3.14.5、Node v22.19.0；
+复用 FFmpeg／ffprobe 9.0.2、Windows Arial。既有模型安装 Strata 0.2.1／Terminal 0.1.46.1／
+engine 0.1.46 CUDA13，模型 Python 3.12.15、qwen3.8-flash-next-gyro-gyro-s；
+已存 8192 context、单请求、vision／MTP 关闭、1536 MiB reserve、route-tail-skip7，120 秒／512 输出 token。
+本轮未重新安装、升级、下载工具／模型或复制权重目录。
+引擎记录 BA 提取 prompt285／生成85 token（6684+4927 ms）、BA 推荐295／25（3050+895 ms）、
+MC330／50（2408+1442 ms）。这些不是浏览器端到端耗时，不以配置／健康代替实际推理证据。
+
+原始日志、数据库读回、清单留在忽略目录 var/rehearsal-20261029-eb8f0de；独立数据库／配置／媒体
+留在新目录，仅提交脱敏摘要。冻结包源码是 eb8f0de，后续仅文档提交／回执不在该 ZIP 内。
+Jira 未核实／更新待办，按要求不读写；未推送／PR／合并／上传 Canvas。
+
+**本轮未新验证：**AP 保存失败恢复（保留历史证据）、全部 BA／MC 生命周期／失败组合、MC 完整恢复、
+自由创意语义、AI 场景／音频、其他电脑／系统／浏览器、现场网络、Canvas 下载、全新电脑／首次离线安装
+或完整 Stage 2 验收。本次保留失败场景是模型不可用，不是存储恢复。
+
+
 ## MC 模板 MP4 验证证据 · 2026-10-29
 
 这是本轮本地媒体新证据，不将历史占位分镜重新算成视频。Danny / M1 授权 KAN-15 有界增量，

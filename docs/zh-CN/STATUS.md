@@ -1,5 +1,30 @@
 # 当前实现状态
 
+## 冻结源码 ZIP 彩排 · 2026-10-29
+
+**本次新验证：**干净源码 **eb8f0de8d412344e828daf9032898c2dbb6155ee** 打包后，
+已从全新解压目录实际运行，使用独立 venv／配置／数据库。分支 KAN-15-zip-rehearsal-eb8f0de，
+获取后 main 仍为 515bfa537e31a01b9e9a24400a7112f8103babb3。Danny / M1 授权共享部署彩排，
+内部标签 GR-INT-03 不是 Jira key；AI 辅助，保留队友归属。未发现需要修复的应用代码问题，未新增业务功能。
+
+新目录 Windows Verify **191 项通过，56.564 秒**；来源 116 文件／41 组及 JS 语法通过。
+实际网页通过：mock CS→BA→客户确认→AP→再次客户确认→一次模拟效果；独立真实 BA；
+真实有界 MC 文字→新生成可播放／下载模板 MP4→精确审批。三次重复确认仍仅一个效果。
+停止本轮模型后，新 BA 保存 INCOMPLETE / LLM_UNAVAILABLE、simulated=false，无结果或 mock 回退。
+真实 CS 交接仍阻止，CS 意图仍 NOT_CONNECTED。
+
+ZIP SHA-256：`bf7d8b0324c9797e2adb03d0727a89aa31325ebb5a22223fd7a528760d25bba4`，
+5,658,127 字节／116 文件。当前步骤见 WINDOWS_LLM.md，精确记录及限制见 VERIFICATION.md。
+本检查点取代下方“MC 增量尚未新 ZIP 彩排”的历史说法。冻结包内源码／文档截至 eb8f0de，
+本次后续文档回执单独保存，不重新打包或改写已验证哈希。
+
+仍需既有模型管理环境／权重、FFmpeg 9.0.2 和 Windows Arial。仅停止本轮应用／模型；
+原配置／数据库及 56 项模型文件清单保留，未安装、下载或复制模型。
+其他电脑、现场／Canvas 下载验收、首次离线安装、自由文案、AI 场景／音频及 MC 完整恢复
+仍未验证或未完成，不等于 Stage 2 完成。Jira 未核实／更新待办，本轮按要求不访问／更新；
+未推送、PR、合并或上传 Canvas。
+
+
 ## MC 模板 MP4 检查点 · 2026-10-29
 
 Danny / M1 授权本次 MC-F-02 有界媒体增量，分支 KAN-15-mc-template-video，从干净
