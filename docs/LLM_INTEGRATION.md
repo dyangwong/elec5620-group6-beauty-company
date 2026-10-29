@@ -2,6 +2,30 @@
 
 English primary. [中文阅读副本](zh-CN/LLM_INTEGRATION.md).
 
+## MC template MP4 checkpoint · 29 October 2026
+
+No shared-model prompt/transport/interface change. The optional template adapter
+consumes only the already-validated script/storyboard; it uses local FFmpeg CPU
+encoding, not another AI provider. Mock text can render without a model; live text
+continues through the existing explicitly enabled shared model. No model download,
+upgrade, image/voice/video model, external assets or keys are involved.
+
+VideoConfig is separate ignored local configuration, resolved relative to its file.
+Only explicit --mc-video-config / Windows -VideoConfig enables rendering. The adapter
+checks tool/font availability, uses argument arrays (no shell), fixed filters and
+UTF-8 LF text files with literal expansion disabled. It probes H.264/yuv420p, fixed
+dimensions/frame count/duration, fully decodes output, saves a manifest and verifies
+actual bytes/hash before review. These are template technical checks, not general
+visual quality/claim verification. Actual captions were sampled visually on Windows.
+
+There is one optional external CLI dependency: pinned FFmpeg/ffprobe 9.0.2, using
+system Arial only locally. Rationale: produce genuine MP4 without a second model,
+new Python stack or GPU contention. Default app/testing requires none of these.
+Tool binaries, font copies, artifacts and logs remain ignored; docs/WINDOWS_LLM.md
+records source/hash, reproducible setup and remaining deployment/licensing prerequisites.
+MC/shared facade/HTTP/UI/script review remains pending; no AP/BA/CS/CO rules changed.
+
+
 ## MC bounded live-text checkpoint · 29 October 2026
 
 This current opt-in supersedes older BA-only/MC-mock descriptions below; those

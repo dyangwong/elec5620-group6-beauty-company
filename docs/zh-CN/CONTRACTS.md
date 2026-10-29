@@ -2,6 +2,26 @@
 
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../CONTRACTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
+## MC 模板 MP4 检查点 · 2026-10-29
+
+Company(path, llm=None, media=None) 新可选注入保留默认 MockMedia。模板模式（含 mock
+文字）走写事务外的 Company.campaign；仅真实文字／默认 mock 路径兼容。媒体增加
+kind=TEMPLATE_VIDEO、simulated=false、modelGenerated=false、精确 frames、不透明 artifactId、
+bytes／MIME、sha256、scriptSha256 和固定规格。textSimulated/mediaSimulated 分开，旧记录
+simulated 表示文字。能力标签 TEMPLATE_VIDEO、健康 TEXT_WITH_TEMPLATE_VIDEO 只表示配置。
+
+既有审批 action 增加 mediaKind=TEMPLATE_VIDEO、textMode、mediaSha256、scriptSha256，并
+绑定草稿 ID／修订，AP 实现不变。只有校验的文件／清单可进入保存／审批事务。失败／超时／格式
+异常保存 GENERATION_FAILED 及明确 MEDIA_* 代码，无输出／审批、不回退或自动重试。
+
+GET /api/campaigns/{id}/media/{revision} 要求所属 Founder 会话、当前版本和已保存模板文件；
+待审草稿允许内部预览，返回 video/mp4、no-store 及单范围字节响应 200/206/416。未登录 401、
+角色／owner 不符 403、过期链接 409、缺少记录／媒体 404、文件丢失／变化 503。调用方不能指定
+文件路径；下载重查清单／大小／哈希，不用新文件替换旧版本。预览／下载不代表发布。旧版、失败
+或未提交文件可保留在忽略目录供诊断；本轮没有孤立文件清理、历史下载或持久媒体保存恢复。
+文件缺失时拒绝访问，不倒改历史审批决策。
+
+
 ## MC 有界真实文字检查点 · 2026-10-29
 
 这是显式开启的 MC 真实文字增量；默认 mock 保留原路径。要求 Founder 会话／CSRF，修改时

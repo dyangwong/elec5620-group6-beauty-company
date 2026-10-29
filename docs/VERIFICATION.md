@@ -2,6 +2,65 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/VERIFICATION.md).
 
+## MC template MP4 evidence · 29 October 2026
+
+New local media checkpoint, not a reclassification of the earlier placeholder.
+Danny / M1 authorised this bounded KAN-15 increment; clean base
+950ad9205d0a4522d7dc775fb2d049fc3ef9c5d9, branch KAN-15-mc-template-video.
+Fetched main remained 515bfa537e31a01b9e9a24400a7112f8103babb3. AI-assisted work;
+original teammate attribution/task claims remain. Jira unverified / update pending,
+with no external read/write by user instruction. No push/PR/merge/Canvas operation.
+
+| New check | Actual result |
+|---|---|
+| Before changes | 181 tests passed in 31.465 s on Windows Python 3.14.5 |
+| Final Windows Verify | **191 tests passed in 53.115 s** (181 previous + 10 media regressions); source verification 116 files / 41 groups, source hashes/handoff and JS syntax passed. MC-only suite 38 passed. Source/JS/diff checks repeated after bilingual docs. |
+| Offline new media cases | Hash-bound exact review; unavailable/timeout/process failure without fallback; modified bytes/path identifiers refused; actual returned frame mutation rejected; stale URL and failed revision; session/Founder guard and HTTP byte ranges; explicit config/timeout bounds; mock-text rendering; incorrect probe dimensions withheld. Stub bytes in unit tests are explicitly not playable-video evidence. |
+| Optional tool install | FFmpeg/ffprobe 9.0.2 portable, publisher archive 114768076 bytes (about 109.45 MiB), SHA-256 60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba; installed directory 329221735 bytes (about 313.97 MiB). First preparation needs archive + expanded files, about 424 MiB before outputs. Existing Windows Arial used locally; no font/binary redistribution in source. Repeated Setup preserved existing config hash without download/overwrite. No Python dependency or system PATH change. |
+| Actual mock text / template file, new DB / 5720 | MC-ea97fa92b3ee revision 1 APPROVED/DELIVERED. Text simulated=true, media simulated=false, video model=false. MP4 62392 bytes, SHA-256 4973c74e7bcf4f690583034481e2ac4236a773164ce5851408719c8ee254cdce. Browser duration 15 s, 720x1280, playback advanced to 8.833 s; actual downloaded file hash matched. Three extracted shots visually inspected. |
+| Actual local-model text / template file, new DB / 5721 | MC-24849de55d1e: revision 1 CALM/Fragrance-free; delivered REQUEST_REVISION. Revision 2 ENERGETIC/50 ml, new artifact/hash/review. Revision 3 repeats that grounded scope with corrected LF text-file layout; a third new artifact/hash/review, prior reviews SUPERSEDED. Actual model output and saved catalogue/script/frames independently checked. |
+| Final MP4 and actual browser approval | Revision 3, 63274 bytes, SHA-256 **e838d2915c120ddc4a0c249c658b8dcbe81ebdef2025ea9306d8fa23a615c39d**; 15 s, 720x1280, 24 fps, H.264/yuv420p, no audio. FFprobe metadata and full FFmpeg decode passed. All three final shots visually checked; browser reached currentTime=15, ended=true, readyState=4. AP-b460e73848cc APPROVED/DELIVERED, decision DEC-76662eeae6e9 bound to exact revision/file/script hash. Approved state independently read from SQLite. |
+| Authenticated download and stale links | Final actual HTTP download matched stored/current file SHA-256. Previous revision URLs 1 and 2 returned 409 instead of serving old or replacement bytes. Earlier mock file was also downloaded through the actual browser and hashed. |
+| Actual missing encoder / separate local config | Existing installed binary/config untouched. Only this run's mock app restarted with a config pointing at an intentionally absent encoder. Browser creation saved MC-b6c143192c82 GENERATION_FAILED / MEDIA_UNAVAILABLE, no script/media/approval, no mock fallback. Prior approved file/record retained. |
+| Model-off persistence and cleanup | This run's exact model instance stopped after inference. Final saved file remained browser-accessible/playable without model inference. Only owned 5720/5721 app receipts and exact model instance were stopped. Original config/database hashes and 56 model-file size/mtime inventory matched the before-run record. Both test DBs had zero effects and stock 12/8/0 unchanged. |
+
+Reused Windows 11 Pro 25H2 build 26200.9711, app Python 3.14.5, model Python
+3.12.15, Strata 0.2.1 / Terminal 0.1.46.1 / engine 0.1.46 CUDA 13, model
+qwen3.8-flash-next-gyro-gyro-s; saved 8192 context, single request, no vision/MTP,
+1536 MiB reserve, route-tail-skip 7; 120-second model timeout / 512 output tokens.
+No model download, upgrade, copy or configuration change. Engine recorded the
+three MC requests with 61/40/40 generated tokens; reported prompt/decode times
+6906+2383 ms, 1939+1016 ms and 328+844 ms (engine measurements, not browser latency).
+
+Issues found and corrected: one new test referenced an undefined Customer fixture;
+tool diagnostic piped version output through Select-Object, prematurely closing the
+pipe and producing a false nonzero exit; actual visual inspection found Windows
+CRLF doubled text spacing, so renderer files now use explicit UTF-8 LF and a
+regression checks those bytes. Final MP4 revision 3 is the corrected layout.
+
+During resumption, a browser session became invalid and a decision request returned
+401; this was not counted as approval. Reload/re-authentication showed the review
+still pending. The automation approval review then required explicit human consent
+for the exact test revision; Danny supplied it before the successful browser click.
+No alternate endpoint bypassed that block. Same-host apps with different databases
+share the browser cookie name: re-authenticate when switching ports; do not assume
+ports isolate sessions. This is a test-environment condition, not a model failure.
+
+Raw evidence stays ignored in var/mc-video-20261029, actual MP4/manifest/job files
+in var/mc-media and tools in var/media-tools. Local outputs contain the final MP4
+and browser screenshots. Only this sanitised summary is tracked. Setup/Start/Stop
+and dependency/license prerequisites are in WINDOWS_LLM.md; source ZIP excludes
+all binaries/fonts/models/configs/databases/media/logs. No new ZIP/hash acceptance
+is claimed; the old f7bb141 archive predates these increments.
+
+**Remaining:** text-card template only, no enacted camera movement/product imagery/
+video-model scenes/audio, general creative/medical semantics or media-quality
+validation, MC cancellation and durable generation/final-save recovery, orphan
+cleanup/historical media downloads, wider browser/OS/new-ZIP/venue acceptance.
+Final save may leave DRAFTING without output/review. Technical checks and a green
+suite do not complete MC-T-04/05/06 or Stage 2; those cases remain PARTIAL.
+
+
 ## MC bounded live-text checkpoint · 29 October 2026
 
 This is new **local MC text** evidence, separate from prior BA and ZIP checkpoints.

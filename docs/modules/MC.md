@@ -2,6 +2,27 @@
 
 English is the maintained primary version. [中文阅读副本](../zh-CN/modules/MC.md).
 
+## MC template MP4 checkpoint · 29 October 2026
+
+This Danny-authorised KAN-15 increment adds MC-F-02 template media, preserving
+Zhengdu Wei's original module work/ownership. Current pipeline: validated mock or
+real text -> optional CPU template MP4 -> metadata/full decode/hash checks -> save
+current draft -> existing AP bound to exact file/script hash -> internal preview.
+Default MockMedia is unchanged. No second model, scene generation, photography,
+audio, publishing, optional MC-F-03 variants, general quality evaluator or full
+recovery/cancellation is implemented. Camera directions are displayed as text,
+not executed. Visual sampling covers the current fictional catalogue only.
+
+MC-T-04/05/06 remain PARTIAL: actual Windows file/playback/download and exact-scope
+review, unavailable tools, timeout/process/format failures and artifact tampering
+are covered to the documented extent. Missing artifact access fails safely;
+generation/final-save recovery and wider media/semantic/quality acceptance remain.
+Files from stale or failed work may remain ignored; they cannot be downloaded via
+a current record URL. Failed final DB save can retain DRAFTING without review.
+Reviewers must assess both text and the actual preview, not just presence of a hash.
+See WINDOWS_LLM.md for setup; VERIFICATION.md for new and historical evidence.
+
+
 ## MC bounded live-text checkpoint · 29 October 2026
 
 Danny explicitly authorised this shared-model increment; original Zhengdu Wei

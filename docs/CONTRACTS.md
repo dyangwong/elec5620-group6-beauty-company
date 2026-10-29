@@ -2,6 +2,34 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/CONTRACTS.md).
 
+## MC template MP4 checkpoint · 29 October 2026
+
+Optional Company(path, llm=None, media=None) injection preserves MockMedia default.
+Template mode (even with mock text) uses Company.campaign outside the write lock;
+text-only Strata/default mock paths remain compatible. Media adds kind=TEMPLATE_VIDEO,
+simulated=false, modelGenerated=false, exact frames, opaque artifactId, bytes/MIME,
+sha256, scriptSha256 and fixed template metadata. textSimulated/mediaSimulated are
+separate; legacy record simulated refers to text. Configured media capability is
+TEMPLATE_VIDEO; health TEXT_WITH_TEMPLATE_VIDEO proves configuration, not rendering.
+
+Existing review action additionally binds mediaKind=TEMPLATE_VIDEO, textMode,
+mediaSha256 and scriptSha256, alongside draft ID/revision. AP logic is unchanged.
+Only a fully validated file and manifest can enter the saved payload/review transaction.
+Failed render/timeout/format results retain GENERATION_FAILED with an explicit MEDIA_*
+code, without output or review. No fallback or automatic retry is introduced.
+
+GET /api/campaigns/{id}/media/{revision} requires the owning Founder session, current
+revision and a saved template artifact; current drafts can be previewed before a
+decision. It serves video/mp4 with session-protected/no-store responses and single byte-range
+support (200/206/416). Authentication failure 401, wrong role/owner 403, stale URL
+409, missing record/media 404, unavailable/modified artifact 503. Path/URL inputs
+cannot select filesystem paths. Downloads recheck manifest/size/hash, and never
+substitute a new file for an old revision. Preview/download is not publication.
+Files for superseded, failed or uncommitted work may remain ignored for diagnosis;
+there is no orphan cleanup, historical download API or durable media-save recovery.
+Missing artifacts are refused; this does not retroactively erase historical decisions.
+
+
 ## MC bounded live-text checkpoint · 29 October 2026
 
 Additive, explicitly opted-in MC live route; default mock callers retain their

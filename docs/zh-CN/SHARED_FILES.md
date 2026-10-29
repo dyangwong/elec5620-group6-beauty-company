@@ -18,6 +18,15 @@
 
 可添加归属明确的模块内 helper/测试。不为本地便利擅自搬共享商品函数；先列影响的导入/契约，另做集成。
 
+## MC 模板 MP4 检查点 · 2026-10-29
+
+Danny / M1 授权 KAN-15 的 MC-F-02 模板 MP4 共享例外。新增可选 template_video 适配器和
+media_tools.ps1；Company 媒体注入／访问、HTTP 当前修订认证范围下载、CLI／Windows 开关、MC
+文件校验／审批哈希及 UI 播放／下载标签增量修改，测试在 test_mc.py。AP 实现、结构、BA／CS／
+CO 服务、任务登记、模型传输／配置不变。记录可选依赖理由和安装，默认 mock 独立。相关评审
+待办，不推断认可或 Jira claim，本轮不推送／PR／合并。
+
+
 ## MC 有界真实文字检查点 · 2026-10-29
 
 Danny / M1 明确授权 KAN-15 有界真实 MC 文字。本轮涉及共享 llm 适配器、新纯 mc_text

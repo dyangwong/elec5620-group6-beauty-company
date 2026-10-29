@@ -1,4 +1,40 @@
 # Windows 部署与 KAN-15 交接
+## MC 模板 MP4 检查点 · 2026-10-29
+
+媒体工具为独立可选操作，普通 Setup／Start／Verify 不会安装。需要 Windows PowerShell、
+首次下载网络和本机 Windows Arial 字体，字体不随源码分发。
+
+```powershell
+.\scripts\media_tools.ps1 -Action Setup
+.\scripts\media_tools.ps1 -Action Diagnose
+# mock 文字 + 实际模板 MP4，无需模型：
+.\scripts\windows.ps1 -Action Start -Mode mock -Port 5720 -Database var/video-demo.sqlite3 -VideoConfig var/media.template.json
+# 或复用既有模型，真实文字 + 实际模板 MP4：
+.\scripts\windows.ps1 -Action StartModel
+.\scripts\windows.ps1 -Action Start -Mode strata -LiveMc -Port 5721 -Database var/video-live-demo.sqlite3 -LlmConfig var/llm.strata.json -VideoConfig var/media.template.json
+.\scripts\windows.ps1 -Action Stop -Port 5720
+.\scripts\windows.ps1 -Action Stop -Port 5721
+```
+
+选择空闲端口／新库名，保留原数据。重复工具 Setup 遇到原配置直接返回，不下载或覆盖，不改
+PATH／系统／模型；原有不完整工具目录留待诊断。固定包 ffmpeg-9.0.2-essentials_build.zip，
+114768076 字节，来自 https://github.com/GyanD/codexffmpeg/releases/download/9.0.2/ffmpeg-9.0.2-essentials_build.zip ，
+SHA-256 60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba，
+对照发行方 GitHub asset digest 核验。工具／许可证／说明在忽略的 var/media-tools，源码 ZIP
+不包含；另行分发二进制包需保留发行方许可声明。
+
+忽略配置 var/media.template.json 含 ffmpeg／ffprobe／font／output_dir／timeout_seconds，
+本机每个子进程 120 秒；相对路径相对配置文件，不是源码目录。CLI 加 --mc-video-config <本地 JSON>。
+另一新解压源码可传既有媒体配置绝对路径或独立准备工具配置，不复制整个模型环境。工具路径缺失
+允许应用启动，以便生成时保存 MEDIA_UNAVAILABLE；无效 JSON／结构拒绝启动。省略 VideoConfig
+保持 mock 媒体。只停本轮应用及准确模型实例，见 WINDOWS_LLM_RUNTIME.md。
+
+Founder 在 Content studio 创建、播放、下载、比较哈希／修订，再使用现有审批。修改生成新文件／
+哈希／审批，旧媒体 URL 返回 409。待审允许内部预览，下载不代表发布。模型就绪、工具存在、
+文件生成和浏览器可播放分别验。视频是静音文字卡及书面镜头建议，不实际执行相机运动。证据见
+VERIFICATION.md；新增量 ZIP、其他电脑、macOS、首次离线安装和现场验收未验证。
+
+
 ## MC 有界真实文字检查点 · 2026-10-29
 
 复用已安装模型／配置，不重新 InstallModel 或复制权重。当前源码根目录完成 Setup／Verify

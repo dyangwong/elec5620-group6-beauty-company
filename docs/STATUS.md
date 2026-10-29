@@ -1,6 +1,36 @@
 # Current implementation status
 
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
+## MC template MP4 checkpoint · 29 October 2026
+
+Danny / M1 authorised a bounded MC-F-02 media increment on KAN-15-mc-template-video,
+starting clean at 950ad9205d0a4522d7dc775fb2d049fc3ef9c5d9; fetched main remains
+515bfa537e31a01b9e9a24400a7112f8103babb3. No starter claim or ownership reassignment.
+
+An explicit optional FFmpeg adapter now renders **actual playable/downloadable MP4**
+from the independently checked storyboard. Output is a 15-second, 720x1280, 24 fps
+H.264/yuv420p silent three-card template, with fictional-product/draft labels and
+start/end fades. It does not execute the described camera motions, use photos,
+generate scenes with a video model, or synthesize voice. Text remains bounded.
+Default mock and BA-only/live-text-only configurations retain their existing paths.
+
+New files are format-probed, fully decoded and hash-bound to current-revision AP.
+Authenticated Founder preview/download checks the saved manifest, bytes and hash;
+old revision URLs are refused. Model/text and actual/template/mock media labels
+are separate. No publication or AP business-rule change. Failed rendering produces
+a retained failure with no media/review and no mock fallback. Actual Windows mock
+and shared-model browser rendering/playback, file download, revision/fresh review,
+approval and missing-encoder failure were exercised; detailed results below and
+in VERIFICATION.md. Full final suite: 191 tests; source/JS checks passed.
+
+Optional FFmpeg 9.0.2 is installed under ignored var/media-tools, not system PATH;
+Setup preserves existing config. Model installation/config/weights were reused,
+not upgraded. Full MC recovery/cancellation, free prose, general media quality,
+AI-generated moving scenes/audio, new-ZIP/other-machine/venue acceptance and full
+Stage 2 acceptance remain open. No Jira access/update, push, PR, merge or Canvas.
+This dated checkpoint supersedes earlier statements that all MC media is mock.
+
+
 ## MC bounded live-text checkpoint · 29 October 2026
 
 Danny / M1 explicitly authorised this bounded MC integration on `KAN-15-mc-live-text`,

@@ -15,6 +15,10 @@ class Marketing:
     def simulated(self):
         return getattr(self.llm, "mc_simulated", True)
 
+    @property
+    def template_video(self):
+        return getattr(self.media, "template_video", False) is True
+
     def generate(self, db, data):
         brief = text_value(data.get("brief"), "Campaign brief")
         product = next((p for p in catalogue(db) if p["id"] == data.get("productId")), None)
@@ -66,15 +70,17 @@ class Marketing:
         except (RuntimeError, TimeoutError, ConnectionError):
             raise DomainError("Mock media generation failed.", 409, "GENERATION_FAILED")
 
-        if not isinstance(media, dict) or media.get("kind") != "MOCK_STORYBOARD" or media.get("simulated") is not True:
+        if self.template_video:
+            self.media.validate(media, script)
+        elif not isinstance(media, dict) or media.get("kind") != "MOCK_STORYBOARD" or media.get("simulated") is not True:
             raise DomainError("Mock media result is invalid.", 409, "GENERATION_FAILED")
-        if (media.get("frames") != verified_storyboard
-                or media.get("label") != "Storyboard placeholder; no video file has been generated."):
+        if (media.get("frames") != verified_storyboard or (not self.template_video
+                and media.get("label") != "Storyboard placeholder; no video file has been generated.")):
             raise DomainError("Mock media frames do not match the verified storyboard.", 409, "GENERATION_FAILED")
 
         return {"brief": brief, "product": product, "script": script["script"],
                 "claims": claims, "media": deepcopy(media), "simulated": self.simulated,
-                "textSimulated": self.simulated, "mediaSimulated": True,
+                "textSimulated": self.simulated, "mediaSimulated": not self.template_video,
                 **({"textPlan": deepcopy(script["textPlan"])} if not self.simulated else {}),
                 "evidence": {"catalogueRef": f"catalogue:{product['id']}:v{product['version']}", "facts": product["facts"]}}
 
@@ -104,13 +110,16 @@ class Marketing:
 
     def _review(self, db, record):
         live = record["payload"].get("textSimulated") is False
+        video = record["payload"].get("media", {}).get("kind") == "TEMPLATE_VIDEO"
         record["payload"]["approvalId"] = self.ap.submit(db, "MC", record["id"], record["revision"],
             {"kind": "REVIEW_TEXT_DRAFT" if live else "REVIEW_MOCK_DRAFT", "draftId": record["id"],
-             "draftRevision": record["revision"], **({"textMode": "LIVE", "mediaKind": "MOCK_STORYBOARD"} if live else {})}, record["payload"]["evidence"])
+             "draftRevision": record["revision"], **({"textMode": "LIVE", "mediaKind": "MOCK_STORYBOARD"} if live else {}),
+             **({"textMode": "LIVE" if live else "MOCK", "mediaKind": "TEMPLATE_VIDEO", "mediaSha256": record["payload"]["media"]["sha256"],
+                 "scriptSha256": record["payload"]["media"]["scriptSha256"]} if video else {})}, record["payload"]["evidence"])
         record["status"] = "REVIEW_PENDING"
         Store.save(db, record)
-        Store.event(db, record["id"], "MC", "TEXT_DRAFT_SAVED_AND_SUBMITTED" if live else "MOCK_DRAFT_SAVED_AND_SUBMITTED",
-                    {"contextRevision": record["revision"], "simulated": not live, "videoGenerated": False})
+        Store.event(db, record["id"], "MC", "TEMPLATE_VIDEO_DRAFT_SAVED_AND_SUBMITTED" if video else "TEXT_DRAFT_SAVED_AND_SUBMITTED" if live else "MOCK_DRAFT_SAVED_AND_SUBMITTED",
+                    {"contextRevision": record["revision"], "simulated": not live, "videoGenerated": video, "videoModelUsed": False})
 
     def revise(self, db, actor, rid, data):
         require_role(actor, "FOUNDER")

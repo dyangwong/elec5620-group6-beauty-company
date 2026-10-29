@@ -22,6 +22,18 @@ New module-local helpers/tests may be added when their ownership is explicit.
 Do not move shared catalogue functions merely to make a local task easier: record
 the affected imports/contracts and integrate that change separately.
 
+## MC template MP4 checkpoint · 29 October 2026
+
+Danny / M1 authorised the MC-F-02 template MP4 exception under KAN-15. New optional
+template_video adapter and media_tools.ps1; additive Company media injection/access,
+HTTP current-revision authenticated range/download route, CLI/Windows config switch,
+MC artifact validation/review hash fields and UI playback/download labels. Tests stay
+in test_mc.py. AP implementation, schema, BA/CS/CO services, task claims and model
+transport/config are unchanged. New dependency rationale/setup is documented;
+default mock remains independent. MC/shared-owner review pending; no endorsement
+or live Jira claim inferred. No push/PR/merge authorised in this local increment.
+
+
 ## MC bounded live-text checkpoint · 29 October 2026
 
 Danny / M1 explicitly authorised bounded real MC text via KAN-15. Changes touch

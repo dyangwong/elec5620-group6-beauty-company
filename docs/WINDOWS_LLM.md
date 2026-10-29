@@ -5,6 +5,53 @@ ACL repair. See [current runtime evidence and recovery commands](WINDOWS_LLM_RUN
 The installation-blocked sections below retain the earlier attempt as history.
 
 English primary. [中文阅读副本](zh-CN/WINDOWS_LLM.md).
+## MC template MP4 checkpoint · 29 October 2026
+
+Optional media setup is a separate action, never part of normal Setup/Start/Verify.
+It requires Windows PowerShell, network only for the first portable-tool download,
+and the installed Windows Arial font (not redistributed in source).
+
+```powershell
+.\scripts\media_tools.ps1 -Action Setup
+.\scripts\media_tools.ps1 -Action Diagnose
+# Offline text fixture + actual template MP4, no model required:
+.\scripts\windows.ps1 -Action Start -Mode mock -Port 5720 -Database var/video-demo.sqlite3 -VideoConfig var/media.template.json
+# Or reuse the installed model, then real text + actual template MP4:
+.\scripts\windows.ps1 -Action StartModel
+.\scripts\windows.ps1 -Action Start -Mode strata -LiveMc -Port 5721 -Database var/video-live-demo.sqlite3 -LlmConfig var/llm.strata.json -VideoConfig var/media.template.json
+.\scripts\windows.ps1 -Action Stop -Port 5720
+.\scripts\windows.ps1 -Action Stop -Port 5721
+```
+
+Choose unused ports/new DB names; existing data is preserved. Repeated tool Setup
+returns immediately when config exists, without downloading or overwriting it.
+No PATH/system/model changes. Missing/partial existing tool installs are preserved
+for diagnosis. The pinned archive is ffmpeg-9.0.2-essentials_build.zip, 114768076 bytes,
+from https://github.com/GyanD/codexffmpeg/releases/download/9.0.2/ffmpeg-9.0.2-essentials_build.zip ;
+SHA-256 60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba,
+verified against the publisher's GitHub release-asset digest. Portable binaries,
+licenses and docs are under ignored var/media-tools; source ZIP excludes them.
+Retain publisher license notices with any separately distributed binary package.
+
+Local var/media.template.json contains explicit ffmpeg/ffprobe/font/output_dir and
+timeout_seconds (120 per subprocess tested); relative paths resolve against that config file,
+not the source checkout. CLI equivalent: append --mc-video-config <local JSON>.
+For another unpacked checkout, pass the absolute existing media-config path, or
+prepare its own tool config; do not copy the model/runtime into source. Startup
+with absent tool paths is permitted so generation can record MEDIA_UNAVAILABLE.
+Invalid config JSON/schema fails startup. Omitting VideoConfig preserves mock media.
+Stop only owned app receipts/exact model instance as in WINDOWS_LLM_RUNTIME.md.
+
+In Content studio sign in as Founder, create a video draft, play and download it,
+compare hash and exact revision, then use existing review. A revision makes a new
+file/hash/review; an old media URL returns 409. MP4 may be previewed while pending;
+download is internal review, not external publication. Model-ready, renderer-present,
+file-generated and browser-playable are distinct checks. Video output is silent
+text cards with written camera suggestions; it does not enact those motions.
+Actual Windows-only evidence is in VERIFICATION.md. New-source ZIP, other machines,
+macOS, offline first-time installation and venue acceptance remain unverified.
+
+
 ## MC bounded live-text checkpoint · 29 October 2026
 
 Reuse the installed model/config; do not rerun InstallModel or copy weights.

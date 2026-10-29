@@ -457,3 +457,137 @@ class LiveMarketingTests(unittest.TestCase):
             self.assertEqual(response.status,expected)
         response=router.handle('POST','/api/campaigns',headers,json.dumps({**self.data,'approved':True}).encode())
         self.assertEqual(response.status,400)
+
+
+class TemplateVideoTests(unittest.TestCase):
+    """Offline media boundaries. Stub bytes are never presented as playback evidence."""
+    def setUp(self):
+        from beauty_company.adapters.template_video import TemplateVideo, VideoConfig
+        self.temp = tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.config = VideoConfig('missing-ffmpeg', 'missing-ffprobe', 'missing-font', str(self.root/'artifacts'))
+        self.media = TemplateVideo(self.config)
+        self.company = Company(self.root/'test.sqlite3', llm=LivePlanFixture(), media=self.media)
+        self.data = {'brief':'A calm Fragrance-free introduction.', 'productId':'P-101'}
+
+    def artifact(self, script):
+        from beauty_company.adapters.template_video import LABEL, digest, script_digest
+        raw=b'OFFLINE STUB - NOT A PLAYABLE VIDEO'
+        aid='a'*32; job=self.media.root/aid; job.mkdir(parents=True,exist_ok=False)
+        (job/'draft.mp4').write_bytes(raw)
+        value={'kind':'TEMPLATE_VIDEO','simulated':False,'modelGenerated':False,'label':LABEL,
+               'frames':script['storyboard'],'artifactId':aid,'sha256':digest(raw),'scriptSha256':script_digest(script),
+               'bytes':len(raw),'mime':'video/mp4','durationSeconds':15,'width':720,'height':1280,'fps':24,'audio':False}
+        (job/'manifest.json').write_text(json.dumps(value),encoding='utf-8')
+        return value
+
+    def draft(self):
+        with patch.object(self.media,'generate',side_effect=self.artifact):
+            return self.company.campaign(FOUNDER,self.data)
+
+    def test_mc_t_04_template_hash_is_bound_to_existing_review(self):
+        record=self.draft(); value=record['payload']; self.assertFalse(value['mediaSimulated'])
+        self.assertEqual(record['status'],'REVIEW_PENDING'); self.assertFalse(value['media']['modelGenerated'])
+        with self.company.store.read() as db:
+            review=self.company.ap.get(db,value['approvalId'])
+        self.assertEqual(review['action']['mediaSha256'],value['media']['sha256'])
+        self.assertEqual(review['action']['scriptSha256'],value['media']['scriptSha256'])
+        self.assertEqual(review['action']['mediaKind'],'TEMPLATE_VIDEO')
+        self.company.decide(FOUNDER,review['id'],{'contextRevision':1,'decision':'APPROVE','reason':'Review offline stub scope only.'})
+        with self.company.store.read() as db:
+            saved=Store.get(db,record['id']); self.assertEqual(saved['status'],'APPROVED')
+            self.assertEqual(db.execute('SELECT count(*) FROM effects').fetchone()[0],0)
+
+    def test_mc_t_04_unavailable_timeout_and_encoder_failure_have_no_fallback_or_review(self):
+        from beauty_company.adapters.template_video import failed
+        record=self.company.campaign(FOUNDER,self.data)
+        self.assertEqual(record['payload']['failure']['code'],'MEDIA_UNAVAILABLE')
+        for code in ('MEDIA_TIMEOUT','MEDIA_GENERATION_FAILED','MEDIA_CONTENT_REJECTED'):
+            with self.subTest(code=code), patch.object(self.media,'generate',side_effect=failed(code)):
+                record=self.company.campaign(FOUNDER,self.data)
+            self.assertEqual(record['status'],'GENERATION_FAILED')
+            self.assertEqual(record['payload']['failure']['code'],code)
+            self.assertNotIn('media',record['payload']);self.assertNotIn('approvalId',record['payload'])
+
+    def test_mc_t_05_modified_file_or_manifest_cannot_be_downloaded(self):
+        record=self.draft(); value=record['payload']['media']; job=self.media.root/value['artifactId']
+        (job/'draft.mp4').write_bytes(b'MODIFIED')
+        with self.assertRaises(DomainError): self.company.campaign_media(FOUNDER,record['id'],1)
+        for identifier in ('../escape','a/b','A'*32):
+            with self.subTest(identifier=identifier),self.assertRaises(DomainError):
+                self.media.read({**value,'artifactId':identifier})
+
+    def test_mc_t_05_wrong_frames_or_script_hash_blocks_review(self):
+        original=self.artifact
+        def altered(script):
+            result=original(script);result['frames'][1]['caption']='Invented cure';return result
+        with patch.object(self.media,'generate',side_effect=altered):
+            record=self.company.campaign(FOUNDER,self.data)
+        self.assertEqual(record['status'],'GENERATION_FAILED');self.assertNotIn('approvalId',record['payload'])
+
+    def test_mc_t_06_stale_media_url_cannot_serve_previous_or_replacement_video(self):
+        record=self.draft()
+        with patch.object(self.media,'generate',side_effect=DomainError('Unavailable',503,'MEDIA_UNAVAILABLE')):
+            changed=self.company.campaign(FOUNDER,{**self.data,'contextRevision':1},record['id'])
+        self.assertEqual(changed['revision'],2)
+        with self.assertRaises(DomainError) as caught: self.company.campaign_media(FOUNDER,record['id'],1)
+        self.assertEqual(caught.exception.code,'STALE_SCOPE')
+        with self.assertRaises(DomainError): self.company.campaign_media(FOUNDER,record['id'],2)
+
+    def test_mc_t_04_authenticated_http_ranges_and_role_guards(self):
+        from beauty_company.http import Router
+        record=self.draft(); router=Router(self.company); token,csrf,_=self.company.login('founder','founder-demo')
+        path=f"/api/campaigns/{record['id']}/media/1"
+        headers={'Host':'127.0.0.1:5720','Cookie':'beauty_session='+token}
+        self.assertEqual(router.handle('GET',path,{'Host':'127.0.0.1:5720'}).status,401)
+        for requested,expected,length in [('bytes=0-9',206,10),('bytes=-5',206,5),('bytes=9999-',416,0),('bytes=0-1,2-3',416,0)]:
+            response=router.handle('GET',path,{**headers,'Range':requested})
+            self.assertEqual(response.status,expected);self.assertEqual(len(response.body),length)
+        raw=router.handle('GET',path,headers);self.assertEqual(raw.status,200)
+        self.assertEqual(raw.headers['Content-Type'],'video/mp4')
+        with self.assertRaises(DomainError): self.company.campaign_media(Actor("alex", "CUSTOMER", "Alex"),record['id'],1)
+
+    def test_mc_t_04_config_relative_paths_and_timeouts_are_explicit(self):
+        from beauty_company.adapters.template_video import VideoConfig
+        path=self.root/'local.json'; values={'ffmpeg':'bin/ffmpeg','ffprobe':'bin/ffprobe','font':'font.ttf','output_dir':'output'}
+        path.write_text(json.dumps(values)); config=VideoConfig.load(path)
+        self.assertEqual(Path(config.output_dir),self.root/'output')
+        for timeout in (True,0,301):
+            path.write_text(json.dumps({**values,'timeout_seconds':timeout}))
+            with self.assertRaises(ValueError): VideoConfig.load(path)
+
+    def test_mc_t_04_encoder_timeout_and_process_failure_are_retained(self):
+        import subprocess
+        for name in ('ffmpeg','ffprobe','font'): (self.root/name).touch()
+        from beauty_company.adapters.template_video import TemplateVideo,VideoConfig
+        adapter=TemplateVideo(VideoConfig(*(str(self.root/x) for x in ('ffmpeg','ffprobe','font')),str(self.root/'render')))
+        for failure in (subprocess.TimeoutExpired('ffmpeg',1),subprocess.CalledProcessError(1,'ffmpeg')):
+            with self.subTest(failure=type(failure).__name__), patch.object(adapter,'run',side_effect=failure):
+                self.company.mc.media=adapter
+                record=self.company.campaign(FOUNDER,self.data)
+            self.assertEqual(record['status'],'GENERATION_FAILED');self.assertNotIn('approvalId',record['payload'])
+
+        for text_file in adapter.root.rglob('*.txt'):
+            self.assertNotIn(b'\r', text_file.read_bytes())
+
+    def test_mc_t_04_mock_text_can_explicitly_render_without_a_live_model(self):
+        self.company=Company(self.root/'mock.sqlite3',media=self.media)
+        record=self.draft(); self.assertTrue(record['payload']['textSimulated'])
+        self.assertFalse(record['payload']['mediaSimulated'])
+        self.assertEqual(record['payload']['media']['kind'],'TEMPLATE_VIDEO')
+
+
+    def test_mc_t_05_wrong_probe_format_cannot_create_review(self):
+        import subprocess
+        from beauty_company.adapters.template_video import TemplateVideo, VideoConfig
+        for name in ('ffmpeg','ffprobe','font'): (self.root/name).touch()
+        adapter=TemplateVideo(VideoConfig(*(str(self.root/x) for x in ('ffmpeg','ffprobe','font')),str(self.root/'render')))
+        self.company.mc.media=adapter
+        bad={'streams':[{'codec_type':'video','codec_name':'h264','width':320,'height':240,'pix_fmt':'yuv420p','nb_frames':'360'}],
+             'format':{'duration':'15'}}
+        with patch.object(adapter,'run',side_effect=[subprocess.CompletedProcess([],0,b'',b''),
+                    subprocess.CompletedProcess([],0,json.dumps(bad).encode(),b'')]):
+            record=self.company.campaign(FOUNDER,self.data)
+        self.assertEqual(record['status'],'GENERATION_FAILED')
+        self.assertEqual(record['payload']['failure']['code'],'MEDIA_CONTENT_REJECTED')
+        self.assertNotIn('approvalId',record['payload'])

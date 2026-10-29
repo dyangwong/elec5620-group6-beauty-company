@@ -21,6 +21,31 @@ def json_response(value, status=200, headers=None):
                     {"Content-Type": "application/json; charset=utf-8", **(headers or {})})
 
 
+def video_response(raw, requested, rid, revision):
+    headers = {"Content-Type": "video/mp4", "Accept-Ranges": "bytes",
+               "Content-Disposition": f'inline; filename="{rid}-r{revision}.mp4"'}
+    if not requested:
+        return Response(200, raw, headers)
+    import re
+    match = re.fullmatch(r"bytes=([0-9]*)-([0-9]*)", requested)
+    try:
+        if not match or not any(match.groups()):
+            raise ValueError()
+        left, right = match.groups()
+        if not left:
+            count = int(right)
+            if count <= 0:
+                raise ValueError()
+            start, end = max(0, len(raw)-count), len(raw)-1
+        else:
+            start, end = int(left), min(int(right), len(raw)-1) if right else len(raw)-1
+        if not 0 <= start <= end < len(raw):
+            raise ValueError()
+    except ValueError:
+        return Response(416, b"", {**headers, "Content-Range": f"bytes */{len(raw)}"})
+    return Response(206, raw[start:end+1], {**headers, "Content-Range": f"bytes {start}-{end}/{len(raw)}"})
+
+
 class Router:
     def __init__(self, company):
         self.company = company
@@ -40,8 +65,9 @@ class Router:
                 return Response(200, (Path(__file__).parent / "web" / filename).read_bytes(), {"Content-Type": mime + "; charset=utf-8"})
             if method == "GET" and path == "/api/health":
                 capabilities = self.company.mode()
-                return json_response({"status": "ok", "mode": "SIMULATION_ONLY" if capabilities["simulated"] else
-                                      ("LIVE_TEXT_WITH_MOCK_MEDIA" if capabilities["mc"] == "LIVE" else "LIVE_BA_MOCK_MC"),
+                return json_response({"status": "ok", "mode": "SIMULATION_ONLY" if capabilities["simulated"] and capabilities["media"] != "TEMPLATE_VIDEO" else
+                                      ("TEXT_WITH_TEMPLATE_VIDEO" if capabilities["media"] == "TEMPLATE_VIDEO" else
+                                       "LIVE_TEXT_WITH_MOCK_MEDIA" if capabilities["mc"] == "LIVE" else "LIVE_BA_MOCK_MC"),
                                       "version": "0.1.0", "capabilities": capabilities})
             data = {}
             if method == "POST":
@@ -61,6 +87,12 @@ class Router:
             actor, csrf, token_hash = self.company.session(headers.get("cookie"))
             if method == "GET" and path == "/api/session":
                 return json_response({"actor": actor.__dict__, "csrf": csrf})
+            if method == "GET" and path.startswith("/api/campaigns/"):
+                media_parts = path.strip("/").split("/")
+                if (len(media_parts) == 5 and media_parts[3] == "media"
+                        and media_parts[4].isdigit() and len(media_parts[4]) < 10):
+                    raw = self.company.campaign_media(actor, media_parts[2], int(media_parts[4]))
+                    return video_response(raw, headers.get("range"), media_parts[2], int(media_parts[4]))
             if method == "GET" and path == "/api/snapshot":
                 return json_response(self.company.snapshot(actor))
             if method != "POST":
@@ -75,10 +107,10 @@ class Router:
                 return json_response(self.company.set_fault(actor, data.get("fault")))
             if path == "/api/consultations/intake":
                 return json_response(self.company.ba_intake.start(actor, data), 201)
-            if path == "/api/campaigns" and not self.company.mc.simulated:
+            if path == "/api/campaigns" and (not self.company.mc.simulated or self.company.mc.template_video):
                 return json_response(self.company.campaign(actor, data), 201)
             parts = path.strip("/").split("/")
-            if (not self.company.mc.simulated and len(parts) == 4 and parts[:2] == ["api", "campaigns"]
+            if ((not self.company.mc.simulated or self.company.mc.template_video) and len(parts) == 4 and parts[:2] == ["api", "campaigns"]
                     and parts[3] == "revise"):
                 return json_response(self.company.campaign(actor, data, parts[2]))
             if len(parts) == 4 and parts[:2] == ["api", "consultations"]:

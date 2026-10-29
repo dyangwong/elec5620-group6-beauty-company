@@ -23,7 +23,7 @@ RECORDING_FAILED_MESSAGE = ("The decision could not be recorded. No approval was
 
 
 class Company:
-    def __init__(self, path, llm=None):
+    def __init__(self, path, llm=None, media=None):
         self.store = Store(path)
         self.llm = llm or MockLlm()
         self.ba = BeautyAdvisor(self.llm)
@@ -31,7 +31,7 @@ class Company:
         self.ap = Approval()
         self.co = Coordination()
         self.cs = CustomerService(self.store, self.ba, self.co, self.ap, MockAfterSales(self.store))
-        self.mc = Marketing(self.llm, MockMedia(), self.ap)
+        self.mc = Marketing(self.llm, media or MockMedia(), self.ap)
 
     def login(self, username, password):
         if not isinstance(username, str) or not isinstance(password, str) or len(password) > 200:
@@ -52,7 +52,7 @@ class Company:
         return {"simulated": not (live or mc_live), "model": "Local shared model" if live or mc_live else "Deterministic mock",
                 "ba": "LIVE" if live else "MOCK", "mc": "LIVE" if mc_live else "MOCK", "csIntent": "NOT_CONNECTED",
                 "baNeeds": ("LIVE" if live else "MOCK") if callable(getattr(self.llm, "extract_needs", None)) else "NOT_CONNECTED",
-                "media": "Storyboard placeholder", "commerce": "SIMULATED",
+                "media": "TEMPLATE_VIDEO" if self.mc.template_video else "Storyboard placeholder", "commerce": "SIMULATED",
                 "optionalFeatures": {"BA-F-03": False, "CS-F-03": False, "MC-F-03": False,
                                      "AP-F-03": False, "CO-F-03": False}}
 
@@ -82,7 +82,7 @@ class Company:
                 record = Store.get(db, rid, "MC")
             record["status"] = "DRAFTING"
             record["payload"] = {"brief": brief, "productId": product_id, "simulated": self.mc.simulated,
-                                 "textSimulated": self.mc.simulated, "mediaSimulated": True, "history": history}
+                                 "textSimulated": self.mc.simulated, "mediaSimulated": not self.mc.template_video, "history": history}
             Store.save(db, record)
             Store.event(db, rid, "MC", "TEXT_GENERATION_STARTED", {"revision": record["revision"], "simulated": self.mc.simulated})
         try:
@@ -113,6 +113,19 @@ class Company:
                 Store.save(db, current)
                 Store.event(db, rid, "MC", "TEXT_GENERATION_FAILED", {"revision": current["revision"], "code": payload["failure"]["code"]})
             return current
+
+    def campaign_media(self, actor, rid, revision):
+        require_role(actor, "FOUNDER")
+        with self.store.read() as db:
+            record = Store.get(db, rid, "MC")
+            if record["owner_id"] != actor.id:
+                raise DomainError("Only the campaign owner may preview this draft.", 403, "FORBIDDEN")
+            if revision != record["revision"]:
+                raise DomainError("The media revision is stale. Open the current draft.", 409, "STALE_SCOPE")
+            media = record["payload"].get("media", {})
+            if media.get("kind") != "TEMPLATE_VIDEO" or not self.mc.template_video:
+                raise DomainError("No template video is available for this revision.", 404, "NOT_FOUND")
+            return self.mc.media.read(media)
 
     def consult(self, actor, data):
         """BA first live slice: no write lock during inference; recheck before save."""
