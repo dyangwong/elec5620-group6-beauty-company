@@ -2,6 +2,21 @@
 
 English is the maintained primary version. [中文阅读副本](../zh-CN/modules/CO.md).
 
+## Current staged live read-only handoff · 29 October 2026
+
+Danny-authorised KAN-15 exception, preserving Guiyu Liu / M5 attribution. The
+existing bounded failure helpers now also serve prepare_external/finish_external:
+commit one correlated SENT intent, release DB for snapshot BA inference, then
+revalidate source/owner/revision/policy/current catalogue and atomically save CO
+and CS outcomes. SENT is not a completion/receiver receipt. Replays do not dispatch;
+new Customer revision supersedes old pending attempts; stale replies cannot apply.
+The original synchronous mock advice_handoff contract remains. Live CS must use
+CsFlow, not the legacy service call inside a write transaction. Audit/write failures
+are explicit; interrupted SENT needs deliberate new-revision correction, no general
+CO staging-recovery/queue/retry/cancellation framework. Actual live browser once-only
+exchange, model-off failures and264 tests are evidenced in VERIFICATION. CO stays
+PARTIAL; old generic/lifecycle gaps remain. Owner review pending, no task claim.
+
 Default Stage 2 continuation: Guiyu Liu, at Danny's request; no shared claim is
 inferred. Begin with [CO-START-01](../tasks/CO-START-01.md) and
 [START_HERE](../../START_HERE.md). Complete only its declared slice first.

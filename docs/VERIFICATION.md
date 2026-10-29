@@ -2,6 +2,56 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/VERIFICATION.md).
 
+## Live CS exchange integration · 29 October 2026 — new evidence
+
+Danny / M1 explicitly authorised this AI-assisted KAN-15 / GR-INT-02 shared
+slice from clean main c276fc35f600edf060e9d75e6833c4e22ef2015f, branch
+KAN-15-cs-live-handoff. Remote main was fetched and matched PR14; old gaming-laptop
+branches/history and original teammate attribution remain. No starter/task claim
+or reassignment. Jira actually observed Verification / Danyang Wang on 29 October;
+retain that state, not Done. Publication/CI/merge receipt belongs on this PR.
+
+CS-CL/ACT/SEQ/STM physical public-report PDF pages 24/37/43/50 visually inspected
+this round. Existing selected CO pages 27/47/48/53 remain prior design evidence;
+this is not a complete UML audit.
+
+| Check | Actual result |
+|---|---|
+| Baseline | Clean fetched main c276fc3: **237 tests / 78.055 s**, baseline source **120 files /41 groups**, hashes/handoff and JS passed. |
+| Final code | **264 tests / 84.530 s**, model actually stopped; **27 new tests in test_cs_live.py**, 123 source files/41 groups, source hashes/member handoff and JS passed. Existing CS/CO/business tests unchanged. Three old expectations changed: Strata CS availability NOT_CONNECTED→LIVE, mock-inheriting MC double CS NOT_CONNECTED→MOCK, obsolete live guard→Founder-role denial. These reflect the new contract, not removed safety tests. |
+| Contract/failure guards | Exact intent/needs fields, literal sources, no authority fields, bounded concern/fragrance corroboration, mixed needs/budgets, ambiguous/unsupported/negative requests, session/CSRF/role/association/policy, missing capability, unavailable/timeout/invalid output, no fallback. Both calls release DB connections; tests write concurrently from target callbacks. |
+| Stale/replay/storage | Old intent/advice/confirmation discarded across revisions; correction supersedes old review. Concurrent/repeated intake/handoff makes one model attempt. Real SQLite audit ABORT before staged dispatch prevents inference; final-intent failure leaves INTERPRETING; final handoff-outcome failure leaves committed SENT and no redispatch/result/approval. 503 CS_STORAGE_UNAVAILABLE claims no saved completion. Legacy live service entry rejects write-transaction inference. Existing once-only effect/AP recovery regressions pass. |
+| Actual browser /5761 | Fresh ignored live.sqlite3; CS-7b9121eb3bc0 r1, CO via original linked record: real intent READY/simulated:false, budget6000 cents/fragrance required; Founder live BA → P-101 AUD48, facts Moisturises dry skin/Fragrance-free, catalogue:P-101:v1, AVAILABLE. Customer confirms, AP-cceab8a5fb31 r1 pending; Founder exact scope ORD-1001→P-101 approves; DEC-6ad2d0800f42 delivered; Customer final confirmation → RESOLVED, CO COMPLETED. No real transaction/shipment. |
+| Independent readback/replay | Actual DB product ID/name/price/version/tone/fragrance/literal facts and constraint evidence independently checked. Advice observed stock12; current stock11 matches exactly one effect. Three more authenticated confirmations/handoffs retained **one approval/committed decision/effect**. No model re-inference on terminal replay. |
+| Real CS clarification/unsupported | customer-2 /ORD-2001, CS-b91669cdd7a9: r1 “Please exchange my item.” →NEEDS_INFORMATION, r2 refund request →UNSUPPORTED/UNRESOLVED, r3 explicit supported correction →READY. These are actual shared-model HTTP calls; browser success mainline above remains separate. |
+| Actual model off | Stopped only newly started instance 2973d663358f4500a58de13d1c8ac5f7 using --if-instance-id; port8080 closed. Own app restart reused same DB. r3 Founder BA handoff →UNRESOLVED, CO_TARGET_UNAVAILABLE/upstream LLM_UNAVAILABLE, simulated:false. Customer explicit r4 interpretation →FAILED/LLM_UNAVAILABLE, simulated:false. Browser displayed Model service interpretation · failed, no confirmation/review. Total DB effects/decisions stayed one from the earlier authorised test. App health remained ok/configured LIVE, distinct from provider readiness. |
+| Default mock /5760 | Actual model-off Customer natural intake CS-a4a745e083c5 r1 →READY, Founder handoff →AWAITING_CONFIRMATION/mock P-101; both intent/advice explicitly simulated:true. No review/effect in this mock DB. Structured default exchange remains covered by complete regressions. |
+| Environment preservation | Only owned5760/5761 apps stopped; original config/database SHA-256 and 56 model-file size/mtime inventory matched. Original branches retained; no model/tool install/download/upgrade, config overwrite, schema/dependency change or unrelated process stop. |
+
+Same laptop: Windows11 Pro build26200; app Python3.14.5, Node22.19.0.
+Reused Strata0.2.1 / Terminal0.1.46.1 / CUDA13 engine0.1.46 / model Python3.12.15 /
+qwen3.8-flash-next-gyro-gyro-s, saved8K/single-request/1536MiB reserve/vision-MTP
+settings and120s/512-output config unchanged. Engine log records real prompt/decode
+activity for these calls; tail saved privately. Example recorded completions90/59
+tokens with stop, not a latency/throughput benchmark or long-run stability claim.
+
+During implementation: a new assertion used kind instead of existing decision;
+new lexical validation reused a variable and invalidated the intent quote; final
+full suite exposed an obsolete MC-double CS label. Corrected with no AP/MC logic
+change. Initial controlled API helper expected200 instead of natural intake's201;
+the saved request was reused, not deleted/recreated. Earlier263-test pass is
+superseded by264 after the staged-intent audit rollback test and legacy-record UI.
+
+Raw logs/DB/readbacks/engine tail/protection inventories remain ignored under
+var/cs-live-20261029; screenshots local only. No keys/sessions/DB/model/ZIP published.
+No general linguistic/medical verifier, multi-turn inference memory, refunds,
+notification, optional features, generic async CO queue/storage recovery or provider
+abort added. An interrupted INTERPRETING/SENT scope requires explicit Customer
+new-revision correction; it never automatically reissues inference. Full CS/CO,
+all41 groups/NFR, conditional BA review, new frozen ZIP/Canvas/venue, Mac live path,
+remote access and broad stability remain unverified. A green suite is not Stage2
+completion. Jira Verification/Danyang observed; short PR-linked update after merge,
+not task/epic Done. Current CI/merge receipt is on the PR.
 
 ## Mac integration review · 29 October 2026
 

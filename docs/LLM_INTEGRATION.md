@@ -2,6 +2,33 @@
 
 English primary. [中文阅读副本](zh-CN/LLM_INTEGRATION.md).
 
+## Current CS exchange slice · 29 October 2026
+
+Danny / M1 explicitly authorised this AI-assisted KAN-15 / GR-INT-02 shared
+slice from clean main c276fc35f600edf060e9d75e6833c4e22ef2015f, branch
+KAN-15-cs-live-handoff. Remote main was fetched and matched PR14; old gaming-laptop
+branches/history and original teammate attribution remain. No starter/task claim
+or reassignment. Jira actually observed Verification / Danyang Wang on 29 October;
+retain that state, not Done. Publication/CI/merge receipt belongs on this PR.
+
+CS now has the shared v1 interpret_service_request(message) capability; exact
+schema/routes and transaction/authority boundaries are in CONTRACTS.md. It sends
+only the current user message, reuses the one Strata transport, and never supplies
+trusted identity/order/policy or action authority. Unsupported/missing/failed
+intent is retained; ready needs are shown for review. Natural intake and staged
+CS→CO→BA infer without DB connections and revalidate current scope before save.
+Default MockLlm implements an explicitly labelled small fixture grammar; an absent
+capability never falls back. csIntent reports LIVE/MOCK/NOT_CONNECTED per capability.
+
+Actual Windows browser completed real CS intent + BA with original Customer/AP
+gates and one simulated effect; actual model-off CS/BA failed live. MC stayed MOCK
+in this run; prior actual MC text/template MP4/recovery evidence remains historical,
+not reimplemented. No new provider/config/SDK/download or remote exposure.
+264 offline tests and provenance/JS passed; detailed evidence/limits in VERIFICATION.
+Remaining broad CS, semantic/medical quality, optional features/settlement and final
+release acceptance are separate. Earlier “CS not connected” entries below are
+historical. This does not authorise another model client or starter task claim.
+
 ## MC generation recovery checkpoint · 29 October 2026
 
 No new model/provider/prompt/configuration interface or installation is added.

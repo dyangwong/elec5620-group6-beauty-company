@@ -308,7 +308,7 @@ class LiveMarketingTests(unittest.TestCase):
         self.assertTrue(result['simulated']); self.assertTrue(llm.mc_simulated)
         self.assertEqual(self.company.mode()['mc'], 'LIVE')
         self.assertEqual(self.company.mode()['ba'], 'MOCK')
-        self.assertEqual(self.company.mode()['csIntent'], 'NOT_CONNECTED')
+        self.assertEqual(self.company.mode()['csIntent'], 'MOCK')
 
     def test_mc_t_01_actual_shared_transport_receives_only_brief_and_product_evidence(self):
         with self.company.store.read() as db:

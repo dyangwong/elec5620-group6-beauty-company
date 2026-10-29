@@ -28,7 +28,7 @@
 ## 必须保持的规则
 
 - 只有 BA、CS、MC 三个 AI 业务角色，AP、CO 是共享控制。
-- 默认适配器是确定性 mock；KAN-15 已包含可选 BA 需求／建议、有界 MC 真实文本、FFmpeg 模板 MP4 和 BA／MC 保存恢复。先读 STATUS／VERIFICATION 最新检查点，不重复实现这些切片。CS 意图／真实交接仍未接通；模板 MP4 不代表 AI 场景／音频，不声称真实结算／发布或完整 Stage 2 已完成。
+- 默认适配器是确定性 mock；KAN-15 已包含可选 BA 需求／建议、有界 MC 真实文本、FFmpeg 模板 MP4 和 BA／MC 保存恢复。先读 STATUS／VERIFICATION 最新检查点，不重复实现这些切片。有界 CS 换货意图／真实交接已实现，先读当前证据；模板 MP4 不代表 AI 场景／音频，不声称真实结算／发布或完整 Stage 2 已完成。
 - 真实/本地模型部署暂缓，首批任务不安装、下载、连接模型或索要 key。
 - 独立验证证据；UNKNOWN 库存不能视为可用。
 - 服务端会话决定身份；不能相信请求体/头中的用户 ID 或角色。服务端检查角色与记录归属。
@@ -106,7 +106,7 @@ GitHub for Jira 只显示开发关联，不给编程 Agent Jira 读写权。通�
 
 模型相关修改先读 docs/LLM_INTEGRATION.md。Danyang Wang 已明确独自负责 GR-INT-02
 共享部署／adapter／配置。其他成员保留 BA／MC 注入调用和模块 fake，CS 提供意图样例，
-不重复接模型／供应商。共享签名变化向 Danny 提出限定请求，不另建客户端；CS 尚无独立真实意图接口。
+不重复接模型／供应商。共享签名变化向 Danny 提出限定请求，不另建客户端；CS 现有共享 interpret_service_request v1 有界换货接口。
 Danny 明确继续 GR-INT-02 时走该指南及共享任务，不自动切到 BA-START-01。BA／MC 有界真实路径已有证据；
-CS 意图／真实交接、BA 条件审批和最终发布验收仍待完成。先读 STATUS／VERIFICATION 和 STAGE2_READINESS
+有界 CS 意图／真实换货已验证；更广 CS、BA 条件审批和最终发布验收仍待完成。先读 STATUS／VERIFICATION 和 STAGE2_READINESS
 最新检查点，区分已有切片、历史缺口及各版本的 Windows／模型证据。

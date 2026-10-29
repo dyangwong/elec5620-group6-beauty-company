@@ -40,10 +40,14 @@ class BeautyAdvisor:
         return getattr(self.llm, "ba_simulated", getattr(self.llm, "simulated", True))
 
     def recommend(self, db, needs):
+        return self.recommend_from_catalogue(needs, catalogue(db))
+
+    def recommend_from_catalogue(self, needs, products):
+        """Read-only snapshot input: no DB handle is needed during inference."""
         if any(word in needs["message"].lower() for word in ("diagnose", "diagnosis", "treat eczema", "诊断", "治疗")):
-            return {"status": "INCOMPLETE", "message": "This consultation cannot provide medical diagnosis or treatment.", "simulated": True}
+            return {"status": "INCOMPLETE", "message": "This consultation cannot provide medical diagnosis or treatment.", "simulated": self.simulated}
         required_fact = "Moisturises dry skin" if needs["concern"] == "HYDRATION" else "Cleanses the skin"
-        candidates = [p for p in catalogue(db) if p["availability"] == "AVAILABLE"
+        candidates = [p for p in products if p["availability"] == "AVAILABLE"
                       and p["price"] <= needs["budget"] and required_fact in p["facts"]
                       and (not needs["fragranceFree"] or p["fragrance_free"])]
         try:

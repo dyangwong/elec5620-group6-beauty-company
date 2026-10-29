@@ -2,6 +2,48 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/CONTRACTS.md).
 
+## CS intent v1 and staged live handoff · 29 October 2026
+
+The additive shared `interpret_service_request(message: str) -> dict` reuses
+StrataLlm._complete/config/errors. Exact fields: intent=EXCHANGE|CLARIFY|UNSUPPORTED,
+intentSource=literal quotation|null, needs={concern,budget,fragranceFree,sources};
+needs uses the existing extraction schema (AUD dollars, explicit nulls, exact
+per-field user quotations). No trusted identity/order/policy/stock/product/authority
+is sent or accepted. Independent bounded cue checks corroborate concern/fragrance,
+withhold mixed concerns/budgets and reject authority fields. Negated/mixed/refund/
+return/cancel/medical requests clarify/escalate; this is not a universal semantic verifier.
+
+POST /api/after-sales/intake takes exactly orderId/message (Customer, 201).
+POST /api/after-sales/{id}/revise-intent takes exactly message/contextRevision (owner).
+Both verify association/policy first; save INTERPRETING metadata, release the DB
+connection for inference, then recheck current session/role/source/owner/revision/
+policy before retaining READY, CLARIFICATION_REQUIRED, UNSUPPORTED or FAILED.
+CS states remain ASSESSING/NEEDS_INFORMATION/UNRESOLVED. READY is a hypothesis,
+not approval: interpreted constraints are visible for Customer review/correction.
+Exact duplicate intake reuses its record; changed messages require explicit revision.
+
+Founder POST /api/after-sales/{id}/coordinate accepts only contextRevision, required
+for live. Legacy mock empty-body callers remain compatible. Live requires current
+READY intent and policy. CO.prepare_external commits one SENT read-only attempt;
+the application releases the connection and calls BA.recommend_from_catalogue
+with a snapshot, then rechecks session/role/source/owner/revision/policy and current
+catalogue/facts/stock before CO.finish_external and CS outcome save atomically.
+SENT is pending dispatch evidence, never an accepted result or effect. Repeated SENT/
+terminal attempts never redispatch. New Customer revision supersedes old pending
+handoffs and exact reviews; old responses/confirmations cannot reopen them.
+Legacy CustomerService.coordinate rejects live with CS_STAGED_HANDOFF_REQUIRED.
+
+No schema/new dependency/provider/client/config or AP/effect contract changed.
+Default structured/mock paths remain. CS capability mode is LIVE/MOCK/NOT_CONNECTED;
+intent.simulated and advice.simulated track their own origin; payload.simulated
+still describes simulated commerce. Model unavailable/timeout/invalid is retained
+without fallback. SQLite write errors return503 CS_STORAGE_UNAVAILABLE, never a
+false saved trace. Interrupted/final-save-failed scope stays INTERPRETING/SENT and
+needs explicit new-revision correction; no generic automatic/storage-only CO
+recovery is implied. Confirmation→exact AP→Customer reconfirmation→one simulated
+effect still uses the original CS/AP/after-sales services. Historical guards below
+are superseded only for this newly tested path.
+
 ## CO read-only advice failure boundary · 29 October 2026
 
 `Coordination.advice_handoff(db, rid, needs, advisor)` retains its signature and

@@ -2,6 +2,23 @@
 
 中文阅读副本，依据 2026-10-21 [英文主版](../LLM_INTEGRATION.md) 同步。
 
+## 当前 CS 换货切片 · 2026-10-29
+
+Danny／M1 明确授权 KAN-15／GR-INT-02 本切片，AI 辅助。从已获取的干净 main
+c276fc35f600edf060e9d75e6833c4e22ef2015f（PR14）建立 KAN-15-cs-live-handoff；保留旧游戏本
+分支／历史及原队友贡献，不认领／重分配 starter。2026-10-29 实际 Jira 为 Verification／Danyang Wang，
+保持该状态，不标 Done；发布／CI／合入收据见本轮 PR。
+
+CS现有共享v1 interpret_service_request(message)，精确格式／路由／事务和权限边界见CONTRACTS。
+仅发送当前用户消息，复用一个Strata传输，不传可信身份／订单／政策／动作权限。缺失／不支持／失败意图
+保留，READY需求显示供检查；自然入口及分阶段CS→CO→BA推理不持有DB连接，保存前复核当前范围。
+MockLlm明确标记小范围fixture语法，缺失能力不回退；csIntent逐能力报LIVE／MOCK／NOT_CONNECTED。
+
+Windows真实网页已完成CS意图＋BA、保留客户／AP边界并只一次模拟效果；实际停机CS／BA均真实失败。
+本轮MC仍MOCK，既有真实文本／模板MP4／恢复属历史、不重做。无新provider／配置／SDK／下载／远程暴露。
+264离线及来源／JS通过，详见VERIFICATION。更广CS、语义／医疗质量、可选项／结算和最终发布独立待验。
+下方CS未连接描述属历史，不授权另建模型客户端或领取starter。
+
 ## MC 生成恢复检查点 · 2026-10-29
 
 未新增模型／provider／prompt／配置接口或安装。既有MC generate_script及可选媒体生成器仅在明确

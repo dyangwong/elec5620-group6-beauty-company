@@ -13,6 +13,29 @@ Code: `beauty_company/modules/customer_service.py`, module-local
 Tests: `tests/test_cs.py`; existing `test_cs_t_*`, `test_gr_t_*` and recovery
 regressions in `tests/test_workflows.py` remain unchanged.
 
+## Current bounded live exchange integration · 29 October 2026
+
+Danny-authorised KAN-15 exception preserves Siyuan Lei / M2's original service,
+policy, confirmation and once-only simulated effect work. New CsFlow and shared
+CS-intent v1 connect natural intake and staged real CS→CO→BA, with no model grants
+of identity, eligibility, confirmation/review or execution. Missing/ambiguous input
+clarifies, unsupported requests seek Founder assistance, provider failures retain
+their mode. Both inferences run without a DB connection; current identity/session,
+origin/revision/policy/catalogue are rechecked before save. Explicit correction
+creates a new revision and supersedes old pending handoff/review; replay never
+automatically infers again. Legacy structured mock remains; its live coordinate
+entry refuses write-transaction inference. Natural revision can convert a legacy
+structured record without copying or deleting it.
+
+Actual browser real intent+BA→Customer confirmation→exact Founder approval→Customer
+final confirmation produced one simulated effect, not real shipment/payment.
+Actual stopped-model CS/BA failures and default mock browser passed; 264 full tests,
+including27 new CS integration tests. Exact contracts/evidence: CONTRACTS and
+VERIFICATION. Historical shared-HTTP and starter limits below retain their dates;
+CS intent “unconnected” is superseded for this bounded scene only. No refunds,
+settlement, optional notification, general cancellation/recovery or full CS/NFR
+acceptance is added. Attribution/task claims remain; affected-owner review pending.
+
 ## Implemented service slice
 
 The original success path remains: owning Customer exchange intake, explicit

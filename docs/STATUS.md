@@ -2,6 +2,37 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
 
+## Bounded live CS exchange checkpoint · 29 October 2026 — current
+
+Danny / M1 explicitly authorised this AI-assisted KAN-15 / GR-INT-02 shared
+slice from clean main c276fc35f600edf060e9d75e6833c4e22ef2015f, branch
+KAN-15-cs-live-handoff. Remote main was fetched and matched PR14; old gaming-laptop
+branches/history and original teammate attribution remain. No starter/task claim
+or reassignment. Jira actually observed Verification / Danyang Wang on 29 October;
+retain that state, not Done. Publication/CI/merge receipt belongs on this PR.
+
+CS natural intent and the existing simulated-exchange CS→CO→BA path now reuse the
+shared model. Natural intake verifies identity/order/policy first, retains missing,
+unsupported or failed interpretation, and shows the interpreted constraints.
+Founder explicitly starts staged read-only advice. Both model calls hold no DB
+connection; current session/role, owner, source, revision, policy and result evidence
+are rechecked before saving. Default mock/structured exchange remains. No model can
+grant eligibility, confirmation, approval or execution; commerce remains simulated.
+
+264 full Windows tests passed (237 baseline + 27 CS integration tests), provenance
+123 files / 41 groups and JS passed. Actual isolated browser: real CS intent → real
+BA via CO → Customer confirmation → exact Founder approval → final Customer
+confirmation, one effect. Repeated HTTP operations retained one decision/effect.
+Real clarification/unsupported/correction and actual model-off CS/BA failures also
+passed, with live failure metadata/no mock fallback. Mock browser still works with
+model off. See VERIFICATION.md for actual IDs and boundaries.
+
+Only this run's two apps and exact newly started model instance stopped; original
+config/database hashes and model inventory matched. No download/upgrade/dependency/
+schema change. Scope stops at this exchange path: refunds/settlement, notifications,
+optional features, general CO queues/recovery, conditional BA review, broad intent
+semantics, current-source Canvas/venue and complete Stage2 acceptance remain open.
+The older statements below that CS intent is unconnected are historical.
 
 ## Integration publication checkpoint · 29 October 2026
 

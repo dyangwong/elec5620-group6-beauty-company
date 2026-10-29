@@ -1,5 +1,22 @@
 # Windows 部署与 KAN-15 交接
 
+## 当前真实 CS 换货操作 · 2026-10-29
+
+使用本CS检查点源码，非下方旧冻结ZIP／独立BA说明。已部署游戏本不需重装／下载；保留既有
+var/llm.strata.json及模型profile。仅用`scripts/windows.ps1 -Action StartModel`启动已安装模型，
+已有ready则复用。再用`scripts/windows.ps1 -Action Start -Mode strata -Port 5761 -Database
+var/<新唯一目录>/live.sqlite3`；不加LiveMc，本轮MC仍MOCK。应用健康／配置LIVE不代表模型就绪或推理成功。
+
+客户After-sales care→Describe your service request，选择自己的订单，明确换货＋保湿／洁面＋AUD预算＋
+无香要求，检查所理解约束。缺失／不支持澄清或转人工，通过已存自然请求更正表单产生新版本，不自动重试。
+Founder Customer requests→Start advice handoff，检查独立核验的真实商品／事实；再沿用客户确认→
+Founder精确审批→客户最终模拟确认。模型不授权限。旧结构化mock保留，旧真实结构化记录可自然更正转换。
+
+5761隔离网页一次性主线／停机失败通过；5760模型关闭时mock仍工作；264项／来源／JS通过。
+完整证据／前提见VERIFICATION。只用`scripts/windows.ps1 -Action Stop -Port 5761`停自己的应用，
+保留预先／共享模型；本轮仅以--if-instance-id停自己记录的新模型实例。未声称新ZIP／Canvas／Mac／
+现场／远程或更广语义已验收。
+
 ## CO 失败检查点 — 不需模型部署 · 2026-10-29
 
 当前 KAN-15-co-handoff-failures 增加有界 mock CS→BA 失败处理。既有 Windows Verify 实测

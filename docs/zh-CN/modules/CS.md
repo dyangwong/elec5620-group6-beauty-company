@@ -12,6 +12,19 @@ Stage 1 负责人：Siyuan Lei（M2），CS-M-01 / CS-UC-01 / CS-F-01..03。
 `beauty_company/modules/cs_evidence.py`、`beauty_company/adapters/after_sales.py`。
 新增测试在 `tests/test_cs.py`；`tests/test_workflows.py` 原有全部回归测试保持不变。
 
+## 当前有界真实换货集成 · 2026-10-29
+
+Danny授权KAN-15例外，保留Siyuan Lei／M2原服务、政策、确认及一次模拟效果工作。新增CsFlow与共享
+CS意图v1接通自然入口和分阶段真实CS→CO→BA；模型不授身份、资格、确认／审批或执行。缺失／模糊澄清，
+不支持转Founder，模型失败保留原模式。两段推理无DB连接，保存前复核当前身份／会话／来源／版本／政策／
+目录。明确更正新建修订并作废旧待回交接／审批，重放不自动再推理。旧结构化mock保留；其真实coordinate
+入口拒绝写事务内推理；自然修订可转换旧结构化记录，不复制或删除。
+
+实际网页真实意图＋BA→客户确认→Founder精确批准→客户最终确认，仅一次模拟效果，无真实发货／支付。
+实际停机CS／BA失败及默认mock网页通过；完整264项，含新CS集成27项。精确合约／证据见CONTRACTS／
+VERIFICATION。下方starter／HTTP旧范围保留日期；“CS未连接”仅在本有界场景被取代。无退款／结算／
+可选通知／通用取消恢复或完整CS／NFR验收，归属／认领不变，负责人评审待办。
+
 ## 本次服务层实现
 
 保留原成功流程：本人订单、明确虚构政策、Founder 经 CO 发起 BA 建议、Customer
