@@ -668,3 +668,255 @@ class BaExtractionTransportTests(unittest.TestCase):
             bad={**value,'sources':{**value['sources'],key:None}}
             with self.subTest(key=key),self.assertRaises(ValueError):
                 validate_extraction(bad,[FULL])
+
+
+
+class BaConditionalReviewTests(unittest.TestCase):
+    # Reuse fixture helpers, not inherited tests (loader below uses an independent class).
+    def unresolved(self):
+        record = self.start()
+        with patch.object(self.company.llm, 'propose', return_value={'productId': 'invented'}):
+            return self.confirm(record)
+
+    def request_review(self, record, **changes):
+        return self.company.ba_review.request(CUSTOMER, record['id'], {
+            'contextRevision': record['revision'], 'consent': True,
+            'issue': 'Please review the unresolved product match.', **changes})
+
+    def decision(self, record, kind='APPROVE'):
+        return self.company.decide(FOUNDER, record['payload']['approvalId'], {
+            'contextRevision': record['revision'], 'decision': kind, 'reason': 'Synthetic scope-only test.'})
+
+    def assert_no_commerce(self):
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute('SELECT count(*) FROM effects').fetchone()[0], 0)
+            self.assertEqual(db.execute("SELECT stock FROM products WHERE id='P-101'").fetchone()[0], 12)
+            self.assertEqual(db.execute("SELECT product_id FROM orders WHERE id='ORD-1001'").fetchone()[0], 'P-103')
+
+    def test_review_routine_advice_never_needs_ap(self):
+        record = self.confirm(self.start())
+        self.assertEqual(record['status'], 'COMPLETED')
+        with self.assertRaises(DomainError) as caught:
+            self.request_review(record)
+        self.assertEqual(caught.exception.code, 'REVIEW_NOT_AVAILABLE')
+        self.no_effects()
+
+    def test_review_consent_scope_owner_and_input_are_enforced(self):
+        record = self.unresolved()
+        for consent in (False, None, 1, 'true'):
+            with self.subTest(consent=consent), self.assertRaises(DomainError) as caught:
+                self.request_review(record, consent=consent)
+            self.assertEqual(caught.exception.code, 'CONSENT_REQUIRED')
+        for actor in (OTHER, FOUNDER):
+            with self.assertRaises(DomainError):
+                self.company.ba_review.request(actor, record['id'], {
+                    'contextRevision':record['revision'],'consent':True,'issue':'Product question'})
+        with self.assertRaises(DomainError):
+            self.request_review(record, approvalId='injected')
+        with self.assertRaises(DomainError):
+            self.request_review(record, contextRevision=1)
+        self.no_effects()
+
+    def test_review_receipt_is_minimal_pending_and_replay_once(self):
+        record = self.unresolved()
+        with patch.object(self.company.llm, 'propose') as model:
+            pending = self.request_review(record)
+            again = self.request_review(pending)
+            self.assertEqual(again['payload']['approvalId'], pending['payload']['approvalId'])
+            model.assert_not_called()
+        self.assertEqual(pending['status'], 'REVIEW_PENDING')
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute('SELECT count(*) FROM approvals').fetchone()[0], 1)
+            review = self.company.ap.get(db, pending['payload']['approvalId'])
+            self.assertEqual(set(review['evidence']), {'needs','issue','outcomeCode','adviceSimulated'})
+            self.assertNotIn('invented', json.dumps(review))
+            self.assertNotIn(FULL, json.dumps(review))
+            self.assertIsNone(review['decision_id'])
+        with self.assertRaises(DomainError):
+            self.confirm(pending)
+        self.assert_no_commerce()
+
+    def test_review_missing_needs_draft_and_medical_cannot_escalate(self):
+        missing = self.start('Hydration please.')
+        with self.assertRaises(DomainError):
+            self.request_review(missing)
+        medical = self.start('Diagnose my skin. Budget AUD 60, fragrance-free.')
+        with self.assertRaises(DomainError) as caught:
+            self.request_review(medical)
+        self.assertEqual(caught.exception.code, 'MEDICAL_SCOPE')
+        record=self.unresolved()
+        with self.assertRaises(DomainError) as caught:
+            self.request_review(record, issue='Please diagnose my skin')
+        self.assertEqual(caught.exception.code,'MEDICAL_SCOPE')
+        with self.company.store.transaction() as db:
+            item=Store.get(db, record['id']); item['payload']['pendingOutcome']={'kind':'ADVICE'}; Store.save(db,item)
+        with self.assertRaises(DomainError):
+            self.request_review(item)
+        self.no_effects()
+
+    def test_review_unavailable_has_no_receipt_or_pending_state(self):
+        record=self.unresolved()
+        with patch.object(self.company.ap, 'submit', side_effect=OSError('private service failure')):
+            with self.assertRaises(DomainError) as caught:
+                self.request_review(record)
+        self.assertEqual(caught.exception.code, 'BA_REVIEW_UNAVAILABLE')
+        self.assertNotIn('private',str(caught.exception))
+        self.assertEqual(self.saved(record['id'])['status'],'INCOMPLETE')
+        self.no_effects()
+
+    def test_review_receipt_and_origin_save_are_atomic(self):
+        record=self.unresolved()
+        with self.company.store.transaction() as db:
+            db.execute("CREATE TRIGGER fail_review_audit BEFORE INSERT ON events WHEN NEW.event='REVIEW_ACKNOWLEDGED' BEGIN SELECT RAISE(ABORT,'test write failure'); END")
+        with self.assertRaises(DomainError) as caught:
+            self.request_review(record)
+        self.assertEqual(caught.exception.code,'BA_REVIEW_UNAVAILABLE')
+        self.assertNotIn('approvalId',self.saved(record['id'])['payload'])
+        self.no_effects()
+
+    def test_review_approve_only_reopens_confirmation_fresh_model_and_stock(self):
+        record=self.request_review(self.unresolved())
+        with patch.object(self.company.llm,'propose',wraps=self.company.llm.propose) as model:
+            self.decision(record)
+            self.assertEqual(model.call_count,0)
+            approved=self.saved(record['id'])
+            self.assertEqual(approved['status'],'CLARIFYING')
+            self.assertEqual(approved['payload']['result']['status'],'INCOMPLETE')
+            final=self.confirm(approved)
+            self.assertEqual(final['status'],'COMPLETED')
+            self.assertEqual(model.call_count,1)
+        self.assertGreater(final['revision'],record['revision'])
+        self.assertNotIn('approvalId',final['payload'])
+        self.assertEqual(final['payload']['history'][-1]['decision'],'APPROVE')
+        self.assert_no_commerce()
+
+    def test_review_approval_cannot_override_no_stock_or_invalid_output(self):
+        record=self.request_review(self.unresolved()); self.decision(record)
+        with self.company.store.transaction() as db:
+            db.execute("UPDATE products SET stock=0 WHERE id='P-101'")
+        final=self.confirm(self.saved(record['id']))
+        self.assertEqual(final['status'],'INCOMPLETE')
+        self.assertNotIn('product',final['payload']['result'])
+        again=self.request_review(final); self.decision(again)
+        with patch.object(self.company.llm,'propose',return_value={'productId':'invented','factRefs':['cures disease']}):
+            final=self.confirm(self.saved(record['id']))
+        self.assertEqual(final['status'],'INCOMPLETE')
+        self.assertNotIn('product',final['payload']['result'])
+
+    def test_review_approved_model_unavailable_retains_live_failure(self):
+        record=self.request_review(self.unresolved()); self.decision(record)
+        self.company.llm.ba_simulated=False
+        with patch.object(self.company.llm,'propose',side_effect=ModelError('Unavailable',503,'LLM_UNAVAILABLE')):
+            final=self.confirm(self.saved(record['id']))
+        self.assertEqual(final['status'],'INCOMPLETE')
+        self.assertEqual(final['payload']['result']['errorCode'],'LLM_UNAVAILABLE')
+        self.assertIs(final['payload']['result']['simulated'],False)
+        self.assert_no_commerce()
+
+    def test_review_reject_and_request_revision_never_enable_confirmation(self):
+        for decision in ('REJECT','REQUEST_REVISION'):
+            with self.subTest(decision=decision):
+                record=self.request_review(self.unresolved()); self.decision(record,decision)
+                current=self.saved(record['id'])
+                self.assertEqual(current['status'],'INCOMPLETE' if decision=='REJECT' else 'CLARIFYING')
+                with self.assertRaises(DomainError): self.confirm(current)
+                revised=self.intake.revise(CUSTOMER,record['id'],{'contextRevision':record['revision'],'message':FULL})
+                self.assertNotIn('approvalId',revised['payload'])
+                self.assertEqual(self.confirm(revised)['status'],'COMPLETED')
+        self.assert_no_commerce()
+
+    def test_review_revoked_or_same_revision_source_change_refuses_decision(self):
+        record=self.request_review(self.unresolved())
+        with self.company.store.transaction() as db:
+            current=Store.get(db,record['id']); current['payload']['needs']['budget']=1; Store.save(db,current)
+        with self.assertRaises(DomainError) as caught: self.decision(record)
+        self.assertEqual(caught.exception.code,'STALE_SCOPE')
+        with self.company.store.read() as db:
+            self.assertIsNone(self.company.ap.get(db,record['payload']['approvalId'])['decision_id'])
+        self.assert_no_commerce()
+
+    def test_review_cancel_or_revision_suppresses_old_delivery_and_recovery(self):
+        for operation in ('cancel','revise'):
+            with self.subTest(operation=operation):
+                record=self.request_review(self.unresolved()); self.company.set_fault(FOUNDER,'approval_delivery')
+                review=self.decision(record); self.assertEqual(review['delivery'],'FAILED')
+                data={'contextRevision':record['revision']}
+                if operation=='revise': data['message']=FULL
+                current=getattr(self.intake,operation)(CUSTOMER,record['id'],data)
+                old=self.company.redeliver(FOUNDER,review['id']); self.assertEqual(old['delivery'],'STALE')
+                self.assertNotIn('decisionId',self.saved(record['id'])['payload'])
+                self.assertNotEqual(current['status'],'COMPLETED')
+        self.assert_no_commerce()
+
+    def test_review_recording_recovery_delivery_and_duplicates_reuse_ap(self):
+        record=self.request_review(self.unresolved()); self.company.set_fault(FOUNDER,'approval_recording')
+        with self.assertRaises(DomainError) as caught: self.decision(record)
+        self.assertEqual(caught.exception.code,'RECORDING_FAILED')
+        self.assertEqual(self.saved(record['id'])['status'],'REVIEW_PENDING')
+        self.company=Company(self.path); self.intake=self.company.ba_intake
+        rid=record['payload']['approvalId']
+        review=self.company.recover_decision(FOUNDER,rid,{'contextRevision':record['revision']})
+        self.assertEqual(review['delivery'],'DELIVERED')
+        for _ in range(3):
+            self.assertEqual(self.company.redeliver(FOUNDER,rid)['decision_id'],review['decision_id'])
+            self.assertEqual(self.company.recover_decision(FOUNDER,rid,{'contextRevision':record['revision']})['decision_id'],review['decision_id'])
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM events WHERE event='DECISION_COMMITTED'").fetchone()[0],1)
+        self.assert_no_commerce()
+
+    def test_review_stale_failed_recording_intent_cannot_recover(self):
+        record=self.request_review(self.unresolved()); self.company.set_fault(FOUNDER,'approval_recording')
+        with self.assertRaises(DomainError): self.decision(record)
+        self.intake.cancel(CUSTOMER,record['id'],{'contextRevision':record['revision']})
+        with self.assertRaises(DomainError):
+            self.company.recover_decision(FOUNDER,record['payload']['approvalId'],{'contextRevision':record['revision']})
+        self.assert_no_commerce()
+
+    def test_review_concurrent_requests_persist_one_receipt(self):
+        record=self.unresolved()
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            results=list(pool.map(lambda _:self.request_review(record),range(2)))
+        self.assertEqual(results[0]['payload']['approvalId'],results[1]['payload']['approvalId'])
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute('SELECT count(*) FROM approvals').fetchone()[0],1)
+
+    def test_review_reassessment_closes_db_during_model_and_rechecks_identity(self):
+        from contextlib import contextmanager
+        record=self.request_review(self.unresolved()); self.decision(record)
+        original=self.company.store.read
+        opened=[]
+        @contextmanager
+        def monitored():
+            with original() as db:
+                opened.append(True)
+                try: yield db
+                finally: opened.pop()
+        def model(context,evidence):
+            self.assertFalse(opened)
+            with self.company.store.transaction() as db:
+                db.execute("UPDATE users SET role='FOUNDER' WHERE id='customer'")
+            return {'productId':'P-101','factRefs':['Fragrance-free']}
+        with patch.object(self.company.store,'read',monitored),patch.object(self.company.llm,'propose',side_effect=model):
+            with self.assertRaises(DomainError) as caught: self.confirm(self.saved(record['id']))
+        self.assertEqual(caught.exception.code,'FORBIDDEN')
+        self.assertEqual(self.saved(record['id'])['status'],'ACTIVE')
+        self.assertNotIn('pendingOutcome',self.saved(record['id'])['payload'])
+        self.assert_no_commerce()
+
+    def test_review_http_session_csrf_scope_and_snapshot(self):
+        record=self.unresolved(); router=Router(self.company)
+        token,csrf,_=self.company.login('customer','customer-demo')
+        headers={'Host':'127.0.0.1:5770','Content-Type':'application/json','Cookie':f'beauty_session={token}'}
+        path=f"/api/consultations/{record['id']}/request-review"
+        payload=json.dumps({'contextRevision':record['revision'],'consent':True,'issue':'Product question'}).encode()
+        self.assertEqual(router.handle('POST',path,headers,payload).status,403)
+        headers['X-CSRF-Token']=csrf
+        response=router.handle('POST',path,headers,payload)
+        self.assertEqual(response.status,200)
+        self.assertEqual(json.loads(response.body)['status'],'REVIEW_PENDING')
+        with self.company.store.transaction() as db: db.execute('DELETE FROM sessions')
+        self.assertEqual(router.handle('POST',path,headers,payload).status,401)
+
+
+for _helper in ('setUp','start','confirm','saved','no_effects'):
+    setattr(BaConditionalReviewTests, _helper, getattr(BaNeedsTests, _helper))

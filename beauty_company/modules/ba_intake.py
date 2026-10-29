@@ -36,17 +36,25 @@ class BaIntake:
     def _history(record):
         payload = record["payload"]
         prior = {"revision": record["revision"], "status": record["status"]}
-        for key in ("messages", "proposedNeeds", "needs", "needsConfirmed", "result", "errorCode", "simulated"):
+        for key in ("messages", "proposedNeeds", "needs", "needsConfirmed", "result", "errorCode", "simulated", "approvalId", "decisionId", "decision",
+                    "reviewContext", "reviewConsent", "reviewReason"):
             if key in payload:
                 prior[key] = deepcopy(payload[key])
         payload.setdefault("history", []).append(prior)
         for key in ("result", "proposedNeeds", "questions", "needsReady", "needs", "needsConfirmed", "errorCode", "message",
-                    "pendingOutcome", "recordedRevision"):
+                    "pendingOutcome", "recordedRevision", "approvalId", "reviewContext", "reviewConsent",
+                    "decisionId", "decision", "reviewReason", "reviewError"):
             payload.pop(key, None)
         record["revision"] += 1
         record["status"] = "ACTIVE"
 
-    def _begin(self, record):
+    @staticmethod
+    def _invalidate_review(db, record):
+        from .approval import Approval
+        Approval.supersede(db, record["payload"].get("approvalId"))
+
+    def _begin(self, record, db):
+        self._invalidate_review(db, record)
         self._history(record)
         record["payload"].update(needsReady=False, simulated=self.advisor.simulated)
 
@@ -89,7 +97,7 @@ class BaIntake:
             messages = record["payload"]["messages"]
             if len(messages) >= 8 or sum(map(len, messages)) + len(message) > 8000:
                 raise DomainError("This bounded consultation is full. Start a new consultation.", 409, "CONVERSATION_LIMIT")
-            self._begin(record)
+            self._begin(record, db)
             messages.append(message)
             Store.save(db, record)
         return self._extract(record)
@@ -101,9 +109,9 @@ class BaIntake:
         message = text_value(data["message"], "Your replacement request")
         with self.store.transaction() as db:
             record = self._owned(db, actor, rid, revision)
-            if record["status"] not in {"ACTIVE", "CLARIFYING", "INCOMPLETE", "COMPLETED"}:
+            if record["status"] not in {"ACTIVE", "CLARIFYING", "INCOMPLETE", "COMPLETED", "REVIEW_PENDING"}:
                 raise DomainError("A cancelled consultation requires a new consultation.", 409, "INVALID_STATE")
-            self._begin(record)
+            self._begin(record, db)
             # A replacement is a new scope, not an implicit inheritance of old constraints.
             record["payload"]["messages"] = [message]
             Store.save(db, record)
@@ -119,9 +127,10 @@ class BaIntake:
                 record = self._owned(db, actor, rid, revision)
                 if record["status"] == "CANCELLED":
                     return record
-                if record["status"] not in {"ACTIVE", "CLARIFYING", "INCOMPLETE"}:
+                if record["status"] not in {"ACTIVE", "CLARIFYING", "INCOMPLETE", "REVIEW_PENDING"}:
                     raise DomainError("Completed advice may be revised; it cannot be cancelled retroactively.",
                                       409, "INVALID_STATE")
+                self._invalidate_review(db, record)
                 self._history(record)
                 record["status"] = "CANCELLED"
                 record["payload"].update(needsReady=False, message="Consultation cancelled. Late results are suppressed. "
@@ -144,7 +153,7 @@ class BaIntake:
             if record["payload"].get("pendingOutcome"):
                 raise DomainError("A saved result is available. Recover it or explicitly revise the request.",
                                   409, "RECOVERY_AVAILABLE")
-            self._begin(record)
+            self._begin(record, db)
             Store.save(db, record)
             Store.event(db, rid, "BA", "CONSULTATION_RETRY_REQUESTED", {"revision": record["revision"]})
         # Explicit new read-only inference, not storage recovery or an automatic retry.
@@ -171,30 +180,47 @@ class BaIntake:
         value = {"errorCode": error.code, "message": str(error)} if error else {"extracted": result}
         return self._stage(record, "NEEDS", value)
 
-    def confirm(self, actor, rid, data):
+    def confirm(self, actor, rid, data, authenticate=None):
         require_role(actor, "CUSTOMER")
         self._input(data, ("contextRevision", *FIELDS))
         revision = revision_value(data["contextRevision"])
+        from .ba_review import current_customer, check_review_scope
         with self.store.transaction() as db:
+            current_customer(db, actor, authenticate)
             record = self._owned(db, actor, rid, revision)
+            if record["payload"].get("approvalId"):
+                from .approval import Approval
+                review = Approval.get(db, record["payload"]["approvalId"])
+                check_review_scope(record, review)
+                if (review["decision"] != "APPROVE" or not review["decision_id"]
+                        or review["delivery"] != "DELIVERED"
+                        or record["payload"].get("decisionId") != review["decision_id"]):
+                    raise DomainError("A current delivered decision permitting reassessment is required.",
+                                      409, "REVIEW_NOT_APPROVED")
             if record["status"] != "CLARIFYING" or not record["payload"].get("needsReady"):
                 raise DomainError("Answer the missing questions before confirming needs.", 409, "NEEDS_NOT_READY")
             # These are explicit Customer-reviewed fields, not trusted model authority.
             needs = validated_needs({"message": record["payload"]["messages"][0],
                                      **{key: data[key] for key in FIELDS}})
-            self._begin(record)
+            self._begin(record, db)
             record["payload"].update(needs=needs, needsConfirmed=True, needsReady=False)
             Store.save(db, record)
             Store.event(db, rid, "BA", "CUSTOMER_NEEDS_CONFIRMED", {"revision": record["revision"]})
         with self.store.read() as db:
-            result = self.advisor.recommend(db, needs)
-        return self._stage(record, "ADVICE", result)
+            products = catalogue(db)
+        result = self.advisor.recommend_from_catalogue(needs, products)
+        return self._stage(record, "ADVICE", result, actor, authenticate)
 
-    def _stage(self, record, kind, value):
+    def _stage(self, record, kind, value, actor=None, authenticate=None):
         """Persist a non-authoritative draft before attempting its final recording."""
         try:
             with self.store.transaction() as db:
                 current = Store.get(db, record["id"], "BA")
+                if actor:
+                    from .ba_review import current_customer
+                    current_customer(db, actor, authenticate)
+                    if current["owner_id"] != actor.id or current["payload"] != record["payload"]:
+                        raise DomainError("The current advice source changed. Old output was discarded.", 409, "STALE_SCOPE")
                 if current["revision"] != record["revision"] or current["status"] != "ACTIVE":
                     raise DomainError("A newer or cancelled revision exists. Old output was discarded.", 409, "STALE_SCOPE")
                 current["payload"]["pendingOutcome"] = {

@@ -13,6 +13,7 @@ from .contracts import Actor, DomainError, require_role, revision_value, text_va
 from .modules.approval import Approval
 from .modules.beauty_advisor import BeautyAdvisor, catalogue, validated_needs
 from .modules.ba_intake import BaIntake
+from .modules.ba_review import BaReview
 from .modules.coordination import Coordination
 from .modules.customer_service import CustomerService
 from .modules.cs_flow import CsFlow
@@ -31,6 +32,7 @@ class Company:
         self.ba = BeautyAdvisor(self.llm)
         self.ba_intake = BaIntake(self.store, self.ba)
         self.ap = Approval()
+        self.ba_review = BaReview(self.store, self.ba_intake, self.ap)
         self.co = Coordination()
         self.cs = CustomerService(self.store, self.ba, self.co, self.ap, MockAfterSales(self.store))
         self.cs_flow = CsFlow(self.store, self.cs, self.llm)

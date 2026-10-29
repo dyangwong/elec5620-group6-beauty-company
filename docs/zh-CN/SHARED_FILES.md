@@ -18,6 +18,14 @@
 
 可添加归属明确的模块内 helper/测试。不为本地便利擅自搬共享商品函数；先列影响的导入/契约，另做集成。
 
+## BA conditional review checkpoint · 30 October 2026
+
+Danny／M1明确授权KAN-15自然BA复核最小共享例外：新增ba_review.py；ba_intake范围／历史和连接边界；
+approval.py最小BA来源／投递钩子；Company接线、HTTP复核路由／会话回调及原网页视图。
+测试在test_ba.py，双语契约／指南及选定BA／AP／GR追溯同步。
+不改schema、provider签名／客户端、依赖／配置／模型安装、CS／MC／CO规则或业务效果adapter。
+保留Jiaxuan Ren／M4 AP及全部原贡献，不领取或改派starter；相关AP／共享评审待办，不将本人例外／CI当真人Approve。
+
 ## CS 意图／真实换货共享例外 · 2026-10-29
 
 Danny／M1明确授权KAN-15 CS／CO共享集成、AI辅助：新adapters/cs_intent.py、modules/cs_flow.py，

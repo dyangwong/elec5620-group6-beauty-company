@@ -2,6 +2,64 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/VERIFICATION.md).
 
+## BA conditional review checkpoint · 30 October 2026
+
+New verification in this round (not historical PR #8/#14/#15 evidence):
+
+- Source baseline b5f496ea7e1f9ad46a3afff7e995bb86e56f536b, independent task branch
+  KAN-15-ba-conditional-review; implementation/checkpoint files form this PR's
+  source tree. Publication SHA/tree and CI are recorded on the PR after creation.
+- Windows 11 Pro 10.0.26200, app Python 3.14.5, Node 22.19.0. Existing Strata 0.2.1,
+  terminal/build 0.1.46.1, model Python 3.12.15 and
+  qwen3.8-flash-next-gyro-gyro-s reused without install/download/upgrade. Existing
+  local 8080 config: 120-second timeout /512 output tokens; no MC live/media opt-in.
+- Before edits: full Windows Verify passed **264 /85.362 s**. After implementation:
+  **281 /93.948 s**, model actually stopped; provenance 124 files /41 case groups,
+  source hashes/five-member handoff and JavaScript syntax passed. The 17 added tests
+  are controlled local fixtures, not actual model evidence. First focused run had
+  nine failures from one new helper expecting ORD-1001=P-102; inspected seed is P-103.
+  Corrected only that new expectation; 63 BA tests then passed /10.275 s.
+- Mock app 5770, independent `var/ba-review-20261030/mock.sqlite3`: actual Customer
+  browser BA-81d4bb03d2a4 r2 (AUD10 no match), explicit consent, AP-5d21cf1b60cc,
+  Founder REQUEST_REVISION /DEC-f9f2a1951307 DELIVERED. Consultation CLARIFYING,
+  no successful advice, no effect. No mocked output was presented as live.
+- Live app 5771, independent `strata.sqlite3` in the same ignored directory:
+  actual browser BA-87b0434b3bd5 r1 interpreted hydration/AUD60/fragrance-free using
+  the real model. Stopped only owned instance 70118e93fb34491faa5f521618baacd9;
+  Customer confirmation saved r2 INCOMPLETE /LLM_UNAVAILABLE /simulated:false.
+  Explicit consent created AP-124e20c5ffa0 r2. Founder APPROVE committed
+  DEC-a26f82afb678 /DELIVERED while model stayed off. Database readback then showed
+  CLARIFYING with the earlier INCOMPLETE result, not successful advice.
+- Restarted the saved model as own instance c6618103cad34cd099eca0c74d4881d8.
+  Actual Customer browser reconfirmation caused fresh inference: r3 COMPLETED,
+  simulated:false, P-101 Daily Hydration Cream /AUD48, reasons “Moisturises dry skin”
+  and “Fragrance-free”, catalogue:P-101:v1, AVAILABLE. Independent read-only SQLite
+  verification matched ID/name/price/version/tone/facts/fragrance and needs constraints.
+  P-101 stock remained12; ORD-1001 remained P-103; one AP decision and zero effects.
+  Three old-r2 confirmations returned STALE_SCOPE; old-decision redelivery was STALE
+  and produced no inference/effect or second decision. Old approval is historical,
+  never authority on the new revision.
+- Controlled coverage additionally exercises unavailable/no-ack review, atomic
+  receipt/origin/audit rollback, exact consent/ownership/CSRF/session requirements,
+  REJECT/revision, pending/no-decision guards, medical/draft/missing-needs stops,
+  conflicting evidence/stock/invalid output, changed current Customer during
+  inference, no open DB during inference, cancelled/stale delivery, concurrent
+  repeated submission, AP failed recording/restart/recovery and repeated delivery.
+- Only owned 5770/5771 apps and exact owned model instances stopped. Ports closed;
+  original config/database SHA-256 and 56 model-file size/mtime records matched.
+  Raw captures/logs/databases remain ignored under var/ba-review-20261030; no session,
+  model, config or private log is part of this PR. Browser screenshots remain local.
+
+Source-model inspection: physical PDF pages28/36/42/48 visually checked for the
+ReviewPort, acknowledged receipt, correlated decision and no direct success from
+review. This is selected-model inspection, not a full report/UML audit.
+
+Not newly verified: actual medical-quality/Chinese/general semantic breadth,
+real distributed review-service outage or full disk loss, queue/notification/expiry,
+long-running/concurrent-user GPU stability, Mac live, legacy structured BA review,
+current-source ZIP/Canvas/venue rehearsal. All touched broad case rows remain PARTIAL; untouched NOT_STARTED rows are preserved.
+Affected AP-owner review is pending; self-check/CI is not a human Approve.
+
 ## Live CS exchange integration · 29 October 2026 — new evidence
 
 Danny / M1 explicitly authorised this AI-assisted KAN-15 / GR-INT-02 shared

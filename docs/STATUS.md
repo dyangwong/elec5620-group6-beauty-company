@@ -2,6 +2,41 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
 
+## BA conditional review checkpoint · 30 October 2026
+
+Danny / M1 authorised this bounded AI-assisted KAN-15 / GR-INT-02 continuation
+from clean, fetched main **b5f496ea7e1f9ad46a3afff7e995bb86e56f536b** (PR #15),
+branch `KAN-15-ba-conditional-review`. Jira was actually observed on 30 October:
+Verification / Danyang Wang. No starter claim or teammate attribution changed.
+
+Natural BA consultations now offer Customer-consented Founder review for a saved,
+unresolved product assessment with confirmed needs. Routine valid advice still
+completes without AP. Medical-scope stops, missing needs and uncommitted drafts
+cannot use this route. A persisted exact-scope AP receipt and BA state share one
+transaction; unavailable/failed recording is not REVIEW_PENDING. Only confirmed
+constraints, the explicit product question, a bounded outcome category and the
+originating advice mode enter review evidence, not raw chat or rejected output.
+
+APPROVE reopens Customer confirmation only; fresh inference/catalogue/stock and
+independent checks remain mandatory. REJECT stays INCOMPLETE; REQUEST_REVISION
+requires correction. Changed/cancelled revisions supersede old review; decision
+recording recovery/redelivery reuse AP without model or commerce calls. Natural
+BA inference now holds no database connection and rechecks current Customer/session,
+owned source and revision before staging. Existing CS/MC/AP effects remain unchanged.
+
+**281 Windows tests / 93.948 s passed** (264 baseline +17 new), source checks
+124 files /41 groups and JS passed. Actual mock browser request/revision decision
+and real browser model-off failure → consented AP → reassessment → live P-101
+advice passed; three old-revision replays refused, one decision and zero effects.
+Full evidence and remaining boundaries: VERIFICATION.md. Only owned test apps/model
+stopped; original config/database hashes and 56 model-file metadata records matched.
+
+This closes the bounded natural-route conditional-review gap, not all BA/AP or
+Stage 2. Legacy structured-route review/lifecycle, general medical/semantic safety,
+broader service/NFR/queue/expiry acceptance, final release ZIP/Canvas/venue and
+affected-owner human review remain. Publication/CI/merge/Jira receipts belong on
+the resulting PR; older dated gap statements below are historical.
+
 ## Bounded live CS exchange checkpoint · 29 October 2026 — current
 
 Danny / M1 explicitly authorised this AI-assisted KAN-15 / GR-INT-02 shared

@@ -2,6 +2,26 @@
 
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../../modules/BA.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
+## BA conditional review checkpoint · 30 October 2026
+
+使用全新虚构数据库和空闲回环端口，保留原演示数据。mock示例：
+scripts/windows.ps1 -Action Start -Mode mock -Port 5770 -Database var/ba-review-demo-new.sqlite3。
+客户进入Product advice，输入 A moisturiser for dry skin. Budget AUD 10. Fragrance-free required.，
+确认需求，观察INCOMPLETE无匹配。展开Ask Founder to review an unresolved product question，填写纯产品问题，
+明确勾选共享同意后提交；必须看到AP回执／REVIEW_PENDING，不能当成功。
+退出并以Founder登录Review queue，核对Unresolved BA product question、咨询ID／版本与最小证据，
+填写理由后选择要求修改／拒绝／批准。批准只允许客户再确认和重新评估，原AUD10仍不能匹配。
+改成AUD60必须客户显式修改新范围，不能默增预算；普通有效建议不需AP。
+
+真实模式按WINDOWS_LLM.md复用原模型与配置，以另一个空闲端口／新库、-Mode strata -LlmConfig var/llm.strata.json启动。
+不增加provider或下载模型。模型关闭导致的失败可以复核，但批准不能让关闭的模型成功。
+恢复自己启动的准确模型实例后，客户再确认才重新验证模型和证据。仅停止自己启动的应用／模型。
+均为虚构测试，不授权订单／库存／支付／结算或发布效果。
+
+新增ba_review.py并最小接入自然ba_intake／Company／HTTP／UI及AP的BA投递。
+test_ba.py新增17项边界测试，完整281项和真实网页证据见VERIFICATION.md。
+BA-T-05／07仍PARTIAL；广泛语义、结构化入口和最终交付仍有缺口，不领取BA-START-01。
+
 ## BA 生命周期检查点 · 2026-10-29
 
 当前分支 KAN-15-ba-lifecycle-recovery，起点 478d522694ca381b2ba3c3c5e3711a77fb04133a；

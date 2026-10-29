@@ -110,3 +110,7 @@ GitHub for Jira 只显示开发关联，不给编程 Agent Jira 读写权。通�
 Danny 明确继续 GR-INT-02 时走该指南及共享任务，不自动切到 BA-START-01。BA／MC 有界真实路径已有证据；
 有界 CS 意图／真实换货已验证；更广 CS、BA 条件审批和最终发布验收仍待完成。先读 STATUS／VERIFICATION 和 STAGE2_READINESS
 最新检查点，区分已有切片、历史缺口及各版本的 Windows／模型证据。
+
+自然语言 BA 已接入客户同意后的未解决产品问题 AP 复核；先读10月30日 STATUS／VERIFICATION
+及BA／AP契约，不重复实现。普通建议仍直接完成，批准复核后须客户再确认和新验证；
+更广BA／结构化入口及最终交付验收仍有缺口。

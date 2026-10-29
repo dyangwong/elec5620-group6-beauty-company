@@ -2,6 +2,44 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/CONTRACTS.md).
 
+## BA conditional review checkpoint · 30 October 2026
+
+Additive natural-route BA-UC-01 E4 contract; no schema/provider change:
+
+`POST /api/consultations/{id}/request-review` accepts exactly
+`{contextRevision: positive integer, consent: true, issue: nonempty product question <=1000 chars}`.
+Session Customer/CSRF/record ownership/current stored Customer role are required.
+Natural confirmed-needs INCOMPLETE advice only, no pending draft or medical stop.
+Duplicate identical scope returns its receipt; changed issue requires a new revision.
+No arbitrary review ID, role, result, action, evidence, authority or decision accepted.
+
+Server action is `{type: REASSESS_ADVICE, consultationId, contextRevision}` with
+null actionRef. Evidence is exactly `{needs:{concern,budget,fragranceFree}, issue,
+outcomeCode, adviceSimulated}`; budget uses integer cents. Outcome codes are bounded
+server classifications, not raw provider exceptions. Raw chat/invalid proposals,
+orders, profiles, credentials and session fields are excluded. Consent is recorded
+for this revision. AP receipt, BA REVIEW_PENDING and acknowledgement audit commit
+atomically; unavailable/unacknowledged/storage failure is BA_REVIEW_UNAVAILABLE,
+not success or claimed submission. This local SQLite ReviewPort is not a new remote service.
+
+AP now accepts BA alongside CS/MC. Existing Founder decision intent/atomic commit/
+storage recovery/delivery are reused; BA validates current action/revision/consent/
+confirmed constraints and stored evidence, including intent evidence on recovery.
+APPROVE delivery makes BA CLARIFYING/needsReady, with failed advice still incomplete;
+Customer uses existing confirm-needs route for a new revision and fresh assessment.
+REJECT ->INCOMPLETE; REQUEST_REVISION ->CLARIFYING/needsReady:false. Neither allows
+direct confirm. Ordinary valid advice requires no review. Medical scope and invalid
+product/fact/stock cannot be overridden by a decision. Approval does not execute
+anything or itself invoke a model. No automatic inference/retry on delivery.
+
+Natural confirm-needs optionally receives a trusted session-recheck callback from
+Router; snapshots close before inference, then current Customer/session, owner,
+source payload and revision are checked before staging; existing final evidence
+validation and draft recovery remain. Correction/retry/confirmation/cancellation
+supersede prior review and retain decision/history; old delivery/recovery cannot
+grant new-revision authority. Legacy structured consult signature remains unchanged
+and has no conditional review endpoint in this slice.
+
 ## CS intent v1 and staged live handoff · 29 October 2026
 
 The additive shared `interpret_service_request(message: str) -> dict` reuses

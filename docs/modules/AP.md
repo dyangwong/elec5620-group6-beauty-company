@@ -16,6 +16,19 @@ Founder-only APPROVE/REJECT/REQUEST_REVISION with reason; decision/request/audit
 one commit; delivery separate. Duplicate delivery retains one decisionId. Stale
 scope cannot alter current work. Receiving services retain independent checks.
 
+## BA conditional review checkpoint · 30 October 2026
+
+Danny authorised this KAN-15 shared exception, preserving Jiaxuan Ren / M4 AP
+attribution and KAN-13/starter ownership. AP accepts the new BA REASSESS_ADVICE
+origin using existing tables/intent/decide/recover/deliver. A module-local BA receiver
+checks current consented exact scope/evidence; it never calls a model or business
+effect. Approved BA returns for Customer confirmation/fresh validation, rejection
+stays incomplete and revision requests require correction. Existing CS/MC mapping
+and AP decision-save recovery remain; full 281-test regression passed. Affected-owner
+human review remains pending, not inferred from this authorised integration/CI.
+See CONTRACTS/VERIFICATION and BA guide. Unknown-risk classification/expiry/queue/
+notifications and full AP acceptance remain separate.
+
 ## Recording failure and recovery · KAN-13 / AP-START-01 · 24 October 2026
 
 A **decision intent** is a durable, identifiable proposal to decide. It holds the

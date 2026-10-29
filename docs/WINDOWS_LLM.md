@@ -6,6 +6,33 @@ The installation-blocked sections below retain the earlier attempt as history.
 
 English primary. [中文阅读副本](zh-CN/WINDOWS_LLM.md).
 
+## BA conditional review checkpoint · 30 October 2026
+
+Use a new synthetic database and a free loopback port; preserve existing demo data.
+Start default mock with `scripts/windows.ps1 -Action Start -Mode mock -Port 5770 -Database var/ba-review-demo-new.sqlite3`.
+Customer → Product advice: `A moisturiser for dry skin. Budget AUD 10. Fragrance-free required.`
+Confirm needs, observe INCOMPLETE/no match, expand **Ask Founder to review an unresolved
+product question**, enter a product-only question and tick explicit sharing consent.
+**Send consented review request** must show a saved AP ID/REVIEW_PENDING, not success.
+Sign out/in as Founder, open Review queue, inspect **Unresolved BA product question**
+and exact consultation/revision/evidence. Choose Request revision/Reject/Approve with
+a reason. Approval only permits Customer reconfirmation/fresh assessment; unchanged
+AUD10 still cannot match. Correcting to AUD60 is explicit new scope, never an implied
+budget increase. Routine supported advice still completes without AP.
+
+For live evidence, reuse the installed model/config as WINDOWS_LLM.md; use another
+free port/new database with `-Mode strata -LlmConfig var/llm.strata.json`. Start no
+second provider/install/download. A service-off assessment can be reviewed, but
+approval cannot make inference succeed while the service remains off. Restore only
+your owned runtime, then Customer reconfirms for fresh evidence/model validation.
+Stop only app/model instances you started. Tests/review decisions here are synthetic;
+no order, stock, payment, settlement or publication effect is authorised.
+
+This round used isolated 5770/5771 databases; actual stopped-model review then
+restored-model BA passed, with stock/orders unchanged and no effects. See the
+30 October VERIFICATION checkpoint. Existing model/config/database fingerprints
+were preserved; all run-owned instances stopped.
+
 ## Current real CS exchange steps · 29 October 2026
 
 Use current source from this CS checkpoint, not old frozen ZIP/standalone-only

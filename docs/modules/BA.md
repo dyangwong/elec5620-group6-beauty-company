@@ -2,6 +2,34 @@
 
 English is the maintained primary version. [中文阅读副本](../zh-CN/modules/BA.md).
 
+## BA conditional review checkpoint · 30 October 2026
+
+Use a new synthetic database and a free loopback port; preserve existing demo data.
+Start default mock with `scripts/windows.ps1 -Action Start -Mode mock -Port 5770 -Database var/ba-review-demo-new.sqlite3`.
+Customer → Product advice: `A moisturiser for dry skin. Budget AUD 10. Fragrance-free required.`
+Confirm needs, observe INCOMPLETE/no match, expand **Ask Founder to review an unresolved
+product question**, enter a product-only question and tick explicit sharing consent.
+**Send consented review request** must show a saved AP ID/REVIEW_PENDING, not success.
+Sign out/in as Founder, open Review queue, inspect **Unresolved BA product question**
+and exact consultation/revision/evidence. Choose Request revision/Reject/Approve with
+a reason. Approval only permits Customer reconfirmation/fresh assessment; unchanged
+AUD10 still cannot match. Correcting to AUD60 is explicit new scope, never an implied
+budget increase. Routine supported advice still completes without AP.
+
+For live evidence, reuse the installed model/config as WINDOWS_LLM.md; use another
+free port/new database with `-Mode strata -LlmConfig var/llm.strata.json`. Start no
+second provider/install/download. A service-off assessment can be reviewed, but
+approval cannot make inference succeed while the service remains off. Restore only
+your owned runtime, then Customer reconfirms for fresh evidence/model validation.
+Stop only app/model instances you started. Tests/review decisions here are synthetic;
+no order, stock, payment, settlement or publication effect is authorised.
+
+Implementation: new modules/ba_review.py, existing natural ba_intake.py, additive
+Company/HTTP/UI and minimal AP BA dispatch. 17 boundary tests in tests/test_ba.py;
+281 full tests and actual Windows mock/live browser evidence in VERIFICATION.md.
+BA-T-05/07 remain PARTIAL; broad semantics, structured-route parity and final
+release acceptance remain. BA-START-01 is not newly claimed.
+
 ## BA lifecycle checkpoint · 29 October 2026
 
 Current branch `KAN-15-ba-lifecycle-recovery`, starting at

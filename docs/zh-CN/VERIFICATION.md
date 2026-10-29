@@ -2,6 +2,41 @@
 
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../VERIFICATION.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
+## BA conditional review checkpoint · 30 October 2026
+
+本次新验证（不复用 PR #8／#14／#15 为新证据）：
+
+- 基线 b5f496ea7e1f9ad46a3afff7e995bb86e56f536b；独立 KAN-15-ba-conditional-review。
+  实现与记录构成本次 PR 源码树，发布提交／树及 CI 在创建后记入 PR。
+- Windows 11 Pro 10.0.26200，应用 Python 3.14.5、Node 22.19.0；复用 Strata 0.2.1、
+  terminal/build 0.1.46.1、模型 Python 3.12.15、qwen3.8-flash-next-gyro-gyro-s。
+  原 8080 本地配置超时120秒／输出512 tokens，不安装、下载或升级，不启用 MC 真实／媒体。
+- 改动前完整 Verify：264／85.362秒；实现后模型确实关闭时281／93.948秒，来源124文件／41组、
+  来源哈希／成员交接和 JS 通过。17项新增为受控夹具，不能当真实模型证据。
+  初次聚焦运行9个失败来自同一新增助手把原订单 P-103 误写为 P-102；核实种子后仅修正该期待，
+  随后63项 BA 测试／10.275秒通过。
+- mock 5770 独立 mock.sqlite3：真实客户网页 BA-81d4bb03d2a4 r2，AUD10 无匹配后同意复核，
+  AP-5d21cf1b60cc；Founder REQUEST_REVISION／DEC-f9f2a1951307 DELIVERED，咨询 CLARIFYING，
+  没有成功建议或业务效果。
+- live 5771 独立 strata.sqlite3：真实网页 BA-87b0434b3bd5 r1 完成模型需求解释。仅停止本轮
+  70118e93fb34491faa5f521618baacd9 实例；客户确认保存 r2 INCOMPLETE／LLM_UNAVAILABLE／simulated:false。
+  同意后生成 AP-124e20c5ffa0 r2，Founder APPROVE 为 DEC-a26f82afb678／DELIVERED。
+  模型仍停机时独立数据库读取为 CLARIFYING，旧结果仍 INCOMPLETE，没有直接成功。
+- 恢复原模型为本轮 c6618103cad34cd099eca0c74d4881d8；客户网页再确认后真实推理，r3 COMPLETED／
+  simulated:false：P-101／AUD48，Moisturises dry skin、Fragrance-free，catalogue:P-101:v1／AVAILABLE。
+  独立只读 SQLite 核对 ID／名称／价格／版本／tone／事实／无香和约束；库存仍12，ORD-1001仍P-103，
+  一个决定、零效果。3次旧r2确认返回STALE_SCOPE，旧决定重送STALE，无第二次推理或效果。
+- 受控测试覆盖无同意／越权／CSRF／会话／缺需求／医疗／草稿、无回执／不可用和原子回滚、
+  待定／拒绝／要求修改、变化的身份／来源／版本／库存／无效输出、推理无数据库连接、取消／并发重复，
+  以及AP保存失败后的重启恢复／重复重送。它们不是每一分支的真实模型验收。
+- 仅停本轮5770／5771应用与准确模型实例，端口关闭；原配置／数据库SHA-256及56个模型文件元数据一致。
+  原始日志、测试库和捕获在忽略目录 var/ba-review-20261030，不进入公开仓库。
+
+视觉核对PDF物理页28／36／42／48的 ReviewPort、回执、精确决定和复核不能直接成功；不是完整UML审计。
+未新验证：一般医疗／中文／语义质量、分布式复核服务真实故障或整盘丢失、队列／通知／过期、
+长期多人GPU、Mac真实调用、旧结构化BA复核及最新版ZIP／Canvas／现场。
+本次涉及的大验收组保持PARTIAL，未涉及的NOT_STARTED行保留；AP负责人评审待办；自测／CI不等于人工Approve。
+
 ## 真实 CS 换货集成 · 2026-10-29 — 本次新证据
 
 Danny／M1 明确授权 KAN-15／GR-INT-02 本切片，AI 辅助。从已获取的干净 main

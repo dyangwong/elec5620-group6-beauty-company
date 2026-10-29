@@ -2,6 +2,19 @@
 
 English primary. [中文阅读副本](zh-CN/STAGE2_READINESS.md).
 
+## BA conditional review checkpoint · 30 October 2026
+
+The bounded natural BA conditional-review gap is now implemented and verified:
+consent/acknowledged receipt, no pending-as-success, exact human decisions,
+correction/cancellation invalidation and fresh post-approval advice checks.
+281 Windows tests plus actual mock/live browser evidence passed; see current
+STATUS/VERIFICATION rather than historical audit gaps below. This is a BA/AP slice,
+not a completion percentage or all-module acceptance. Broader CS/CO/NFR, general
+semantics/medical quality, structured-route parity, human affected-owner review,
+latest-source ZIP/Canvas/venue and genuine Agile/contribution evidence still require
+closeout. Next bounded work: freeze the reviewed main source and rehearse delivery;
+do not keep adding approval options.
+
 ## Current CS checkpoint after the audit · 29 October 2026
 
 The current KAN-15-cs-live-handoff source supersedes the historical CS
