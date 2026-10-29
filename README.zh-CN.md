@@ -1,6 +1,6 @@
 # Beauty Company · ELEC5620 Stage 2
 
-中文阅读副本，依据 2026-10-21 英文主版同步。以[英文主版](README.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](README.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
 Group 6 的 **AI-Powered One-Person Beauty Commerce and Content Company** 初始本地原型。
 包含 BA/CS/MC 三个业务能力，以及 AP 人工审批和 CO 协调/恢复。旧原型仅供参考，
@@ -10,10 +10,12 @@ Group 6 的 **AI-Powered One-Person Beauty Commerce and Content Company** 初始
 说明自己的完整姓名、成员编号或模块后，Agent 可按任务包推进已授权的本地工作。
 真实/本地模型部署暂缓，不影响首批任务开工。
 
-**当前是能运行的初始模拟版本，尚非完整 Stage 2 提交。** 默认模型回复为确定性 mock；
-KAN-15 新增可选独立 BA 传输，已验证一条真实模型 BA 路径，见 [运行修复与证据](docs/zh-CN/WINDOWS_LLM_RUNTIME.md)及 [Windows 安装](docs/zh-CN/WINDOWS_LLM.md)。
-媒体只是分镜占位，没有视频文件、真实结算、发货或公开发布。设计仍为 PROPOSED，
-须由团队记录是否采纳，不能把实现当成正式批准。
+**当前已有可演示的有界原型，尚非完整Stage2提交。** 默认适配器仍是确定性mock；
+独立BA及有界MC文字已有真实本地模型证据，可选FFmpeg生成可播放静音模板MP4并精确审批，
+MC生成保存恢复也已验证。CS意图／真实CS→BA尚未连接；无生产结算、发货或公开发布，
+Stage1设计采纳仍PROPOSED。见[当前就绪盘点](docs/zh-CN/STAGE2_READINESS.md)、
+[验证证据](docs/zh-CN/VERIFICATION.md)及[Windows步骤](docs/zh-CN/WINDOWS_LLM.md)。
+最新本地实现与较早冻结ZIP／main覆盖不同。
 
 ## 本地启动
 

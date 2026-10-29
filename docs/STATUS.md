@@ -1,6 +1,26 @@
 # Current implementation status
 
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
+## Stage 2 readiness audit · 29 October 2026
+
+Current implementation assessed at a6833c3bf9cef94aae700c49e90a1b0cc6278242;
+fetched main remains 515bfa5 (eight implementation/history commits behind), frozen
+ZIP remains eb8f0de. See [current rubric/case/NFR audit](STAGE2_READINESS.md).
+Read this before older broad backlog statements: BA/MC live bounded paths, actual
+template MP4 and generation recovery are already evidenced. Existing MC committed-
+decision redelivery also passed a new disposable mock origin-save-failure/restart
+diagnostic; the full browser/live matrix remains open, not a mandate to reimplement it.
+
+The concrete next implementation priority is CO invalid/unavailable/malformed
+handoff handling, newly reproduced without changing existing runtime/data. CS
+intent/live handoff, conditional BA review and broader core acceptance remain gaps.
+35 PARTIAL / 6 NOT_STARTED are broad registry groups, not a completion percentage.
+Latest full suite remains 210 tests at identical implementation code; this round
+is docs/diagnostics only. No business changes/task claims, Jira access/update,
+push/PR/merge/Canvas or model/process changes. The audit defines bounded next work
+and release/material checks; complete Stage 2 readiness is not claimed.
+
+
 ## MC generation recovery checkpoint · 29 October 2026
 
 Danny / M1 authorised this bounded KAN-15 increment on KAN-15-mc-save-recovery,
