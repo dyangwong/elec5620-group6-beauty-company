@@ -7,6 +7,17 @@ Jira mappings are identified explicitly; unmapped labels are not Jira issues. ST
 Jira keys. `tasks.json` currently contains only the five executable starter briefs.
 Finishing a starter does not automatically authorise every later item below.
 
+## Current CO slice closed locally · 29 October 2026
+
+The first CO priority in the older audit/order below has now been implemented and
+verified for existing synchronous read-only CS-to-BA only: 237 full tests and
+independent mock browser failure/restart/correction evidence. See STATUS.md and
+VERIFICATION.md. Do not restart that slice or generalise it into a queue framework.
+Generic CO lifecycle/retry remains open. Next separate choices remain conditional
+BA review or a bounded CS gap, then current-source review/release and remaining
+case/NFR/media/Agile evidence; no new module scope is automatically authorised by
+this checkpoint. Historical planning/order below is retained for provenance.
+
 ## Current audit and bounded priorities · 29 October 2026
 
 [STAGE2_READINESS.md](STAGE2_READINESS.md) supersedes the broad initial planning

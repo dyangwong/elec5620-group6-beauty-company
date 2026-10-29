@@ -16,8 +16,21 @@ context and handoff result; coordination waits for the CS outcome. AP commitment
 does not complete work. Unknown response triggers same-action lookup, failed
 result saving has storage-only recovery, final completion requires saved outcome.
 
-Remaining: generic BA/CS/MC role adapters, target unavailability, fuller saved
-context/revision correlation, every failure/cancellation/escalation path and
-optional bounded retry. No blind retry after uncertain execution; a read-only
-lookup never grants new authority. Model types/records are partially realised;
-the complete UML participant/receiver audit has not been performed.
+Current bounded failure slice (29 October 2026, Danny-authorised KAN-15,
+AI-assisted): invalid context, target unavailable/timeout/failure, malformed and
+independently unverifiable result now retain safe failed attempts. Minimal scope
+correlates saved CS origin/current revision; same-revision replay never redispatches.
+Customer correction creates a new revision; prior failed attempts remain. Valid
+read-only advice does not complete the workflow. SQLite intent/result/audit failures
+return truthful storage errors with caller-transaction rollback. See CONTRACTS.md
+and VERIFICATION.md for 27 new CO tests / 237 full tests and actual mock browser
+failure -> restart -> correction -> pending review evidence. No model needed.
+
+Remaining: generic BA/CS/MC role adapters, independent durable external dispatch,
+every cancellation/escalation/intervention/result-save recovery path and optional
+bounded retry. No blind retry after uncertain execution; a read-only lookup never
+grants new authority. This call remains synchronous inside the existing caller
+transaction, not a durable queue/staged recovery framework. Real CS intent/handoff
+remains unconnected/blocked. CO-T-02/03 now PARTIAL; all relevant case groups retain
+unverified breadth. Full UML participant/receiver and Stage 2 acceptance remain
+open. Guiyu Liu attribution/task claims unchanged; affected-owner review pending.

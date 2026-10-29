@@ -2,6 +2,27 @@
 
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../CONTRACTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
+## CO 只读建议失败边界 · 2026-10-29
+
+`Coordination.advice_handoff(db, rid, needs, advisor)` 签名及调用方事务不变。
+要求当前同归属 CS 关联；新调用需 ASSESSING。仅转 message／concern／budget／fragranceFree，
+预算已是整数 AUD 分。有效范围与当前已存范围不同返回 409 STALE_SCOPE；同来源／修订复用已存
+结果，不新增调用／事件；再次尝试必须明确修订 CS。未改 HTTP／数据库结构。
+
+payload.handoffs 保存 handoffId／fromRole／toRole／originId／contextRevision／handoffTime／
+operation／authorisedContext／status／dispatched／result；payload.originRevision 和 CO 版本跟随 CS。
+operation=READ_ONLY_ADVICE。上下文无效→安全 INCOMPLETE／CO_INVALID_CONTEXT，CO
+CLARIFICATION_REQUIRED，dispatched=false。缺失／无效目标、超时、不可用／异常、无依据／未完成
+结果→安全 INCOMPLETE、交接 FAILED、CO ESCALATED，保存白名单原因／恢复、businessExecution=false。
+只保留安全上游代码，不保存异常原文或任意目标说明。既有 CS 保存 UNRESOLVED，无 actionRef／客户
+确认／AP 审批；保留有效原始模式，不回退。
+
+成功需商品与当前目录一致、库存可用、明确需求／预算／事实有据、证据引用／约束正确、观测时间带时区。
+目标自由说明替换为安全 CO 文案。仅只读建议交接 COMPLETED；CO PENDING_VALIDATION 仍等 CS 结果。
+HANDOFF_SENT 在调用前写，HANDOFF_FAILED／ADVICE_RESULT_RECORDED 保存结果；随既有 CS 事务
+提交，非外部效果独立日志。SQLite 保存失败→503 CO_STORAGE_UNAVAILABLE、回滚且不声称证据已存。
+不代表新增持久分阶段 CO 恢复／通用调度／自动重试，详见 VERIFICATION.md。
+
 ## MC 生成恢复检查点 · 2026-10-29
 
 依据 MC-ACT-01／MC-STM-01（公开 PDF 第 39、51–52 页）及 MC-T-06，Danny 授权共享例外。

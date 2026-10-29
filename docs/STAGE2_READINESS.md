@@ -2,6 +2,22 @@
 
 English primary. [中文阅读副本](zh-CN/STAGE2_READINESS.md).
 
+## Current-source update after this audit · 29 October 2026
+
+The audit below describes historical a6833c3 code and its then-reproduced CO gap.
+The subsequent KAN-15-co-handoff-failures increment from d8d1826 now covers the
+bounded synchronous CS-to-BA invalid/unavailable/malformed-result failures,
+origin/revision/replay and truthful audit-write errors. **237 tests**, provenance
+and JS pass; actual independent mock browser failures/restart/correction passed.
+See current STATUS.md / VERIFICATION.md / modules/CO.md; do not treat the historical
+CO next-step wording as a mandate to implement this slice again. CO remains PARTIAL,
+no generic dispatcher/retry/full recovery or real CS integration is claimed.
+Registry now has 37 PARTIAL / 4 NOT_STARTED broad groups, not a completion percentage.
+Current local implementation still needs authorised review/current remote CI and a
+new frozen-source rehearsal; eb8f0de ZIP does not include either recovery increment.
+The other gaps and historical source/rubric evidence below remain in scope for
+later bounded work. Jira unverified/update pending, no external update this round.
+
 ## Audited baseline and conclusion
 
 Danyang Wang (Danny / M1) authorised this local KAN-15 shared assessment, with AI

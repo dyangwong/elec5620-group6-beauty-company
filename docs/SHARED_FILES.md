@@ -22,6 +22,17 @@ New module-local helpers/tests may be added when their ownership is explicit.
 Do not move shared catalogue functions merely to make a local task easier: record
 the affected imports/contracts and integrate that change separately.
 
+## CO failure boundary exception · 29 October 2026
+
+Danny / M1 explicitly authorised this bounded KAN-15 shared increment, AI-assisted:
+modules/coordination.py and new tests/test_co.py, plus exactly two existing
+web/app.js null guards for missing saved CS needs. Shared contracts, relevant
+CO-T rows and bilingual guides record the additive handoff/failure evidence.
+No CS business/AP/BA/MC service, HTTP signature, schema, provider, dependency,
+task registry or ownership change. Guiyu Liu / M5 remains the original CO owner;
+this is not a KAN-14/CO-START-01 claim. Affected CO/CS/shared-owner review pending,
+not inferred from tests. No Jira read/write, push/PR/merge this round.
+
 ## MC generation recovery checkpoint · 29 October 2026
 
 Danny / M1 authorised this bounded MC generation-save recovery exception under

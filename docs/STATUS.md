@@ -1,6 +1,40 @@
 # Current implementation status
 
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
+
+## CO retained handoff failures · 29 October 2026 — current checkpoint
+
+Danny / M1 explicitly authorised the bounded CO shared exception under KAN-15,
+AI-assisted, branch KAN-15-co-handoff-failures, from clean
+d8d1826cd8e0edbe3899f9d68a4da6b90b2c5987. Fetched main remains
+515bfa537e31a01b9e9a24400a7112f8103babb3. This checkpoint supersedes the next-CO-gap
+statement in the historical readiness audit below. Guiyu Liu / M5 attribution and
+all task claims remain; no KAN-14/CO-START-01 or BA starter claim is made.
+
+The existing synchronous, read-only CS-to-BA handoff now retains invalid-context,
+unavailable/timeout/failed target and invalid/incomplete-result failures. It binds
+minimal scope to the current CS origin/revision, independently checks successful
+product/fact/evidence, and reuses one saved attempt rather than automatically
+retrying. Failed storage returns an explicit 503 without claiming saved evidence.
+Two existing UI null guards allow correction of missing saved needs; CS business,
+AP, schema, provider and HTTP contracts are unchanged.
+
+**237 full Windows tests passed** (210 baseline + 27 new CO tests), provenance
+120 files / 41 groups and JavaScript syntax passed. Actual independent mock browser:
+timeout -> restart with retained failure -> unavailable -> malformed result ->
+invalid saved context -> Customer correction r5 -> supported P-101 advice ->
+Customer confirmation -> one pending review. Four failed attempts remain in history;
+zero committed decisions/effects, stock unchanged. See [evidence](VERIFICATION.md).
+Only this round's test app was stopped; original configs/DBs/model inventory matched.
+No model was started, downloaded or upgraded; no new live-model evidence is claimed.
+
+This slice is complete locally; CO remains PARTIAL. Generic role dispatch, external
+durable intent, full escalation/cancellation/storage-recovery lifecycle and optional
+retry are open. CS intent/live handoff and conditional BA review remain separate
+gaps. Old eb8f0de ZIP excludes this change; current-source release rehearsal is still
+needed. Jira unverified / update pending (no access by instruction); no push, PR,
+merge or Canvas. Affected-owner review remains pending.
+
 ## Stage 2 readiness audit · 29 October 2026
 
 Current implementation assessed at a6833c3bf9cef94aae700c49e90a1b0cc6278242;

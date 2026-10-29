@@ -2,6 +2,36 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/CONTRACTS.md).
 
+## CO read-only advice failure boundary · 29 October 2026
+
+`Coordination.advice_handoff(db, rid, needs, advisor)` retains its signature and
+caller-owned transaction. It requires the linked, same-owner current CS origin;
+new dispatch requires ASSESSING. Only message/concern/budget/fragranceFree pass,
+with budget already integer AUD cents. Different valid saved scope returns 409
+STALE_SCOPE. Same origin/revision reuses its saved result without target/events;
+an explicit CS revision is required for another attempt. No HTTP/schema changes.
+
+Each payload.handoffs entry retains handoffId/fromRole/toRole/originId/
+contextRevision/handoffTime/operation/authorisedContext/status/dispatched/result;
+payload.originRevision and CO revision follow CS. Operation is READ_ONLY_ADVICE.
+Invalid context returns safe INCOMPLETE/CO_INVALID_CONTEXT and CO
+CLARIFICATION_REQUIRED, dispatched=false. Missing/invalid receiver, timeout,
+unavailable/unexpected failure or unverifiable/incomplete result returns safe
+INCOMPLETE, FAILED handoff and CO ESCALATED with allowlisted reason/recovery,
+businessExecution=false. Only safe upstream codes are retained; no raw exception
+or untrusted result prose. CS existing caller saves UNRESOLVED, without actionRef,
+Customer confirmation or AP review. Valid originating mode is retained, no fallback.
+
+Success requires current catalogue product equality, available stock, explicit
+needs/budget/fact support, correct evidence reference/constraints and timezone-aware
+observation. Receiver prose becomes a safe CO control message. Only the read-only
+handoff is COMPLETED; CO PENDING_VALIDATION still awaits downstream CS outcome.
+HANDOFF_SENT precedes target call; HANDOFF_FAILED/ADVICE_RESULT_RECORDED saves its
+outcome. These writes commit with existing CS transaction, not an independent
+external-effect journal. SQLite persistence failure returns 503
+CO_STORAGE_UNAVAILABLE, rolls back and claims no saved trace. No durable staged
+CO recovery/new dispatcher/automatic retry is implied. See VERIFICATION.md.
+
 ## MC generation recovery checkpoint · 29 October 2026
 
 MC-ACT-01 / MC-STM-01 (public PDF pages 39, 51–52), MC-T-06, Danny-authorised

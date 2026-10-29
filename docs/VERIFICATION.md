@@ -2,6 +2,56 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/VERIFICATION.md).
 
+## CO retained handoff failures · 29 October 2026 — new evidence
+
+Branch KAN-15-co-handoff-failures; clean source base
+d8d1826cd8e0edbe3899f9d68a4da6b90b2c5987, fetched main unchanged at
+515bfa537e31a01b9e9a24400a7112f8103babb3. The commit containing this checkpoint
+identifies the exact final source; this is local evidence, not remote CI/review.
+Danny / M1 authorised this AI-assisted KAN-15 exception; Guiyu Liu attribution and
+starter claims unchanged. CO-CL/ACT/SEQ/STM physical PDF pages 27/47/48/53 visually
+checked this round; prior selected-page audit remains historical, not a full UML audit.
+
+| This run | Observed result |
+|---|---|
+| Before edits | Full Windows Verify: **210 passed / 66.927 s**. |
+| Final code | **237 passed / 82.653 s**, including **27 new tests in tests/test_co.py**; CO-only 27 / 11.444 s. Existing workflow subset 29 / 4.786 s. No existing test changed/removed. Provenance **120 source files / 41 tracked groups**, source hashes/five-member handoff and JS syntax passed. |
+| Context/origin | Missing/non-object/invalid fields and budget types rejected without dispatch; canonical AUD cents preserved; only four needs fields forwarded. Saved CS link/owner/current revision, stale scope, mutation and invalid replay covered. |
+| Target/outcome | Missing/noncallable/broken lookup/bad mode, timeout/unavailable/unexpected errors, malformed/failed/incomplete output covered. Original valid mode retained; no fallback or raw exception text. Product/version/availability/budget/need/facts/current evidence independently checked. Arbitrary receiver prose replaced by a safe control message. |
+| Replay/storage | Repeated/concurrent calls retain one attempt/target dispatch. Corrected CS revision retains failure history. Real SQLite audit ABORT before dispatch, after result and after failed outcome, plus query_only outage, verify atomic rollback and 503 CO_STORAGE_UNAVAILABLE with no saved-trace claim. Existing successful exchange/AP/once-only/reconcile/storage recovery regressions still pass. |
+| Actual browser / loopback 5750 | New browser.sqlite3, actual current Company/HTTP/UI and an explicit scratch-only mock receiver double. CS-e6a20b8dc2e0 / CO-a5e41e057102: r1 timeout -> UNRESOLVED/ESCALATED; own app restart retains it. Three further authenticated coordinate calls retain exactly one attempt. r2 unavailable -> CO_TARGET_UNAVAILABLE; r3 malformed -> CO_INVALID_RESULT; both UNRESOLVED/ESCALATED. No Customer confirmation or review offered on failures. |
+| Invalid context / browser | Only this disposable CS r4 needs was deliberately set to null by test harness. Page stayed usable; handoff saved CO_INVALID_CONTEXT/CLARIFICATION_REQUIRED, dispatched=false, CS UNRESOLVED. No original DB targeted. This is controlled corruption evidence, not a production fault toggle. |
+| Explicit correction / browser | Customer revised to r5, Founder initiated fresh handoff -> P-101 AUD48, catalogue:P-101:v1, AVAILABLE, mock-labelled advice. Customer confirmed -> CS REVIEW_PENDING, CO AWAITING_APPROVAL, one AP-700222059d80 PENDING. All four failed attempts retained plus one completed read-only advice attempt. No Founder approval or exchange execution this browser run. |
+| Effects/environment | Independent DB zero committed decisions/effects; stocks 12/8/0 unchanged. Only owned fixture process restarted/stopped. Original config/database SHA-256 and 56 model-file size/mtime inventory matched. Model port8080 stayed off; no original service terminated, model/tool install/download/upgrade, dependency/schema change or credential access. |
+
+Same laptop: Windows 11 Pro build 26200; app Python 3.14.5; Node v22.19.0.
+Existing Strata 0.2.1 / engine 0.1.46 CUDA13 / model Python3.12.15 /
+qwen3.8-flash-next-gyro-gyro-s are historical installed-version evidence, not rerun
+inference or model-readiness claims. BA/MC default MOCK, commerce simulated, CS
+intent NOT_CONNECTED and production live CS handoff still blocked.
+
+Reproduce automated checks from repository root:
+`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/windows.ps1 -Action Verify`.
+No model service is needed. The browser fault receiver and null-needs injection are
+scratch-only test harnesses, not supported application switches. Unit tests recreate
+controlled targets and actual SQLite failures without touching existing data.
+Normal mock correction uses the existing Customer **Correct the needs and request a
+new proposal**, then a fresh Founder **Start advice handoff**; no blind retry control.
+
+Raw logs/readbacks/independent DB/owned-process receipt remain ignored under
+var/co-handoff-20261029; screenshots remain local outputs. No raw sessions, config,
+DB, model or receiver fixture enters Git. Evidence boundaries: this synchronous
+read-only call writes intent before dispatch **inside the caller's existing SQLite
+transaction**; it does not independently commit durable intent for external effects.
+No async callback/provider cancellation guarantee, general role dispatcher, queue,
+full CO cancellation/escalation/recovery lifecycle or optional retry was added.
+Audit-write failure has truthful rollback/error evidence; generic CO storage-only
+recovery is not newly implemented. CO case groups stay PARTIAL (CO-T-02/03 now
+PARTIAL rather than NOT_STARTED); no full Stage 2 completion claim. Frozen eb8f0de
+ZIP predates this source; fresh current release/live-model/other-machine/venue
+regressions remain open. Jira unverified / update pending; no read/write, push,
+PR, merge or Canvas. Shared-owner review pending.
+
 ## MC generation recovery checkpoint · 29 October 2026
 
 New MC generation-persistence evidence; historical ZIP/media/AP evidence below

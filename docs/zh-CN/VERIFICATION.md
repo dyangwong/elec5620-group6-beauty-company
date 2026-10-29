@@ -2,6 +2,44 @@
 
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../VERIFICATION.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
+## CO 交接失败保留 · 2026-10-29 — 本次新证据
+
+分支 KAN-15-co-handoff-failures；干净起点 d8d1826cd8e0edbe3899f9d68a4da6b90b2c5987；
+获取后 main 仍 515bfa537e31a01b9e9a24400a7112f8103babb3。包含本节的提交标识最终源码；
+这是本地证据，非远程 CI／评审。Danny／M1 授权 KAN-15 共享例外、AI 辅助，Guiyu Liu 归属及认领不变。
+本次目视核对 CO-CL／ACT／SEQ／STM 的 PDF 实际页 27／47／48／53；旧选页盘点属历史，非完整 UML 审计。
+
+| 本次检查 | 实际结果 |
+|---|---|
+| 修改前 | Windows Verify **210 项／66.927 秒**通过。 |
+| 最终源码 | **237 项／82.653 秒**通过；新增 tests/test_co.py **27 项**，CO 单测 27／11.444 秒；既有流程子集 29／4.786 秒。未改／删旧测试。来源 **120 文件／41 组**、哈希／五人交接及 JS 语法通过。 |
+| 上下文／来源 | 缺失／非对象／无效字段、错误预算类型不派发；保留整数 AUD 分，仅转四个需求字段。覆盖已存 CS 关联／归属／版本、过期范围、输入输出变异与无效重放。 |
+| 目标／结果 | 无目标／不可调用／属性异常／模式错误、超时／不可用／异常、畸形／失败／未完成结果均覆盖。保留有效原始模式，不回退、不泄漏异常原文。商品／版本／可用性／预算／需求／事实／当前证据独立校验；目标自由说明替换为安全控制文案。 |
+| 重复／保存 | 重复／并发保留一次尝试和一次目标调用，更正版本保留历史。真实 SQLite audit ABORT 分别作用于派发前、成功结果后、失败结果后，另验 query_only；原子回滚并返回 503 CO_STORAGE_UNAVAILABLE，不声称痕迹已存。既有换货／AP／一次性／核对／保存恢复回归仍通过。 |
+| 实际网页／5750 | 新 browser.sqlite3，实际当前 Company／HTTP／UI，使用明确的仅本地 scratch mock 目标替身。CS-e6a20b8dc2e0／CO-a5e41e057102：r1 超时→UNRESOLVED／ESCALATED，重启仍保留；再三次认证 coordinate 调用仍一次尝试。r2 不可用→CO_TARGET_UNAVAILABLE；r3 畸形→CO_INVALID_RESULT；均 UNRESOLVED／ESCALATED。失败时无确认或审批入口。 |
+| 空上下文／网页 | 仅本轮一次性测试库 CS r4 needs 被设为 null；网页仍可用，保留 CO_INVALID_CONTEXT／CLARIFICATION_REQUIRED、dispatched=false，CS UNRESOLVED。未操作原数据库；这是受控损坏测试，非产品开关。 |
+| 明确更正／网页 | 客户更正 r5，Founder 新交接→P-101 AUD48、catalogue:P-101:v1、AVAILABLE、mock 标签。客户确认→CS REVIEW_PENDING、CO AWAITING_APPROVAL，一项 AP-700222059d80 PENDING。保留四次失败与一次完成的只读建议。未点击 Founder 批准、未执行换货。 |
+| 效果／环境 | 测试库提交决定／效果均零，库存 12／8／0 不变。仅重启／停止本轮服务。原配置／数据库 SHA-256 及 56 个模型文件大小／时间清单一致。8080 模型未启动，未结束原服务、安装／下载／升级、增加依赖／结构或读取凭证。 |
+
+同一游戏本：Windows 11 Pro build 26200，应用 Python3.14.5，Node v22.19.0。
+Strata0.2.1／engine0.1.46 CUDA13／模型 Python3.12.15／qwen3.8-flash-next-gyro-gyro-s
+为历史安装版本证据，不代表本轮推理或模型就绪。BA／MC 默认 MOCK，交易模拟，CS 意图 NOT_CONNECTED，
+产品真实 CS 交接仍阻止。
+
+仓库根目录复现自动检查：
+`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/windows.ps1 -Action Verify`，不需模型。
+网页故障替身和 null 注入仅为 scratch 验收工具，非应用支持开关；单测独立复现目标和真实 SQLite 故障。
+正常 mock 更正沿用客户 **Correct the needs and request a new proposal**，再由 Founder
+**Start advice handoff**；未增加盲重试入口。
+
+原始日志／读回／测试库／进程收据留在忽略目录 var/co-handoff-20261029，截图留本地 outputs。
+会话／配置／库／模型／故障替身不入 Git。边界：同步只读调用在**调用方既有 SQLite 事务内**先写意图再
+调用，未为外部效果独立提交持久意图。未增加异步回调／提供方取消保证、通用调度、队列、完整 CO
+取消／升级／恢复或可选重试。审计保存失败有真实回滚／错误证据，未新实现通用 CO 仅保存恢复。
+用例仍 PARTIAL，CO-T-02／03 从 NOT_STARTED 改 PARTIAL，不能据此声称 Stage2 完成。
+冻结 eb8f0de ZIP 早于本源码，当前新包／真实模型／其他电脑／现场回归待验。Jira 未核实／更新待办，
+未读写／推送／PR／合并／Canvas；相关负责人评审待办。
+
 ## MC 生成恢复检查点 · 2026-10-29
 
 本轮为 MC 生成持久化新证据，下方历史 ZIP／媒体／AP 证据保持原范围。Danny / M1、AI 辅助，

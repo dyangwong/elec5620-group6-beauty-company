@@ -18,6 +18,14 @@
 
 可添加归属明确的模块内 helper/测试。不为本地便利擅自搬共享商品函数；先列影响的导入/契约，另做集成。
 
+## CO 失败边界共享例外 · 2026-10-29
+
+Danny／M1 明确授权 KAN-15 有界增量，AI 辅助：modules/coordination.py、新 tests/test_co.py，
+及 web/app.js 既有 CS needs 显示的两处空值保护。共享合约、相关 CO-T 行和双语文档记录新增证据。
+未改 CS 业务／AP／BA／MC 服务、HTTP 签名、结构、提供方、依赖、任务登记或归属。
+Guiyu Liu／M5 保留 CO 原归属，不是 KAN-14／CO-START-01 认领。
+CO／CS／共享负责人评审待办，不能由测试推断；本轮未读写 Jira、推送／PR／合并。
+
 ## MC 生成恢复检查点 · 2026-10-29
 
 Danny / M1 授权 KAN-15 下 MC 生成保存恢复有界例外：新增 modules/mc_generation.py、复用抽出的

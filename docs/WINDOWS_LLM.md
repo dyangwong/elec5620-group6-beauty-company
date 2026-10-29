@@ -5,6 +5,22 @@ ACL repair. See [current runtime evidence and recovery commands](WINDOWS_LLM_RUN
 The installation-blocked sections below retain the earlier attempt as history.
 
 English primary. [中文阅读副本](zh-CN/WINDOWS_LLM.md).
+
+## CO failure checkpoint — no model setup required · 29 October 2026
+
+Current KAN-15-co-handoff-failures source adds bounded mock CS-to-BA failure handling.
+Run the existing Windows Verify; it passes 237 offline tests, source and JS checks.
+Start a new ignored DB on a free loopback port with the normal mock instructions
+below. Customer correction creates a new revision; Founder must explicitly start
+the new handoff. Failed advice cannot offer confirmation/review. No automatic retry.
+The 5750 browser failure double/null injection used in this run is scratch-only,
+not a production setting; automated tests reproduce those failure boundaries.
+No new software/config/model install is needed. Real CS intent/handoff remains
+unconnected/blocked; this run did not start or test the model. Existing live BA/MC
+evidence is historical. Only this run's test process was stopped, original data
+preserved. See VERIFICATION.md for exact evidence/limits. Frozen eb8f0de ZIP predates
+this increment; perform a current-source release rehearsal after review.
+
 ## MC generation recovery checkpoint · 29 October 2026
 
 Current source adds MC generation recovery; the frozen eb8f0de ZIP below does not
