@@ -1,6 +1,6 @@
 # Beauty Company · ELEC5620 Stage 2
 
-中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](README.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
+中文阅读副本，依据 2026-10-30 英文主版同步。以[英文主版](README.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
 Group 6 的 **AI-Powered One-Person Beauty Commerce and Content Company** 初始本地原型。
 包含 BA/CS/MC 三个业务能力，以及 AP 人工审批和 CO 协调/恢复。旧原型仅供参考，
@@ -16,6 +16,10 @@ MC生成保存恢复也已验证。有界CS自然换货意图／真实CS→CO→
 Stage1设计采纳仍PROPOSED。见[当前就绪盘点](docs/zh-CN/STAGE2_READINESS.md)、
 [验证证据](docs/zh-CN/VERIFICATION.md)及[Windows步骤](docs/zh-CN/WINDOWS_LLM.md)。
 最新本地实现与较早冻结ZIP／main覆盖不同。
+
+**Danny 回游戏本继续：**先读 [GitHub 交付交接](docs/zh-CN/RELEASE_HANDOFF.md)。
+在新目录克隆仓库，保留已有模型工作区，再使用文中的 Agent prompt。
+无需复制本地交接包；最终源码 ZIP 及实际 Canvas 下载后的部署仍须单独验收。
 
 ## 本地启动
 

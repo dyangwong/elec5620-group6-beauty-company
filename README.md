@@ -22,6 +22,11 @@ See the [current readiness audit](docs/STAGE2_READINESS.md),
 [verification evidence](docs/VERIFICATION.md) and [Windows steps](docs/WINDOWS_LLM.md).
 The latest local implementation and older frozen ZIP/main have different coverage.
 
+**Danny continuing on the gaming laptop:** use the [GitHub release handoff](docs/RELEASE_HANDOFF.md).
+Clone into a fresh directory, preserve the existing model workspace, and follow
+the copyable agent prompt. This replaces copying a local handoff kit; final ZIP
+and actual Canvas-download deployment still require their own acceptance.
+
 ## Run locally
 
 Python **3.9+**, standard library only. No package installation, API key, Node,
