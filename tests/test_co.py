@@ -291,3 +291,51 @@ class CoordinationHandoffTests(unittest.TestCase):
         checked=self.handoff(target=SimpleNamespace(simulated=True,recommend=Mock(return_value=result)))
         self.assertEqual(checked['status'],'COMPLETED')
         self.assertNotIn('SYNTHETIC-PRIVATE',json.dumps(self.saved()));self.no_effects()
+
+    def test_co_t_02_non_assessing_origin_cannot_start_a_new_handoff(self):
+        for status in ('CANCELLED', 'RESOLVED', 'UNRESOLVED', 'AWAITING_CONFIRMATION'):
+            with self.subTest(status=status):
+                self.fresh()
+                with self.company.store.transaction() as db:
+                    origin = Store.get(db, self.request['id'])
+                    origin['status'] = status
+                    Store.save(db, origin)
+                target = SimpleNamespace(simulated=True, recommend=Mock())
+                with self.assertRaises(DomainError) as caught:
+                    self.handoff(target=target)
+                self.assertEqual(caught.exception.code, 'INVALID_STATE')
+                target.recommend.assert_not_called()
+                self.assertEqual(self.saved()['payload']['handoffs'], [])
+                self.no_effects()
+
+    def test_co_t_02_invalid_saved_needs_cannot_be_replaced_by_valid_caller_context(self):
+        with self.company.store.transaction() as db:
+            origin = Store.get(db, self.request['id'])
+            origin['payload']['needs'] = None
+            Store.save(db, origin)
+        target = SimpleNamespace(simulated=True, recommend=Mock())
+        result = self.handoff(target=target)
+        self.assertEqual(result['errorCode'], 'CO_INVALID_CONTEXT')
+        target.recommend.assert_not_called()
+        record = self.saved()
+        self.assertEqual(record['status'], 'CLARIFICATION_REQUIRED')
+        self.assertFalse(record['payload']['handoffs'][0]['dispatched'])
+        self.no_effects()
+
+    def test_co_t_04_unknown_current_stock_rejects_previously_valid_advice(self):
+        with self.company.store.read() as db:
+            advice = self.company.ba.recommend(db, self.needs)
+        with self.company.store.transaction() as db:
+            db.execute('UPDATE products SET stock=NULL WHERE id=?', (advice['product']['id'],))
+        target = SimpleNamespace(simulated=True, recommend=Mock(return_value=advice))
+        result = self.handoff(target=target)
+        self.assertEqual(result['errorCode'], 'CO_INVALID_RESULT')
+        self.assertNotIn('product', result)
+        record = self.saved()
+        self.assertEqual(record['status'], 'ESCALATED')
+        self.assertEqual(record['payload']['handoffs'][0]['status'], 'FAILED')
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute('SELECT count(*) FROM effects').fetchone()[0], 0)
+            self.assertEqual(db.execute('SELECT count(*) FROM approvals').fetchone()[0], 0)
+            self.assertIsNone(db.execute('SELECT stock FROM products WHERE id=?',
+                                        (advice['product']['id'],)).fetchone()[0])
