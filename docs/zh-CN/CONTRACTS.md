@@ -1,5 +1,16 @@
 # 共享接口约定与实现映射
 
+## BA/MC 有界失败修复 · 2026-10-31
+
+KAN-10 结构化字段为 message/concern/budget（澳元）/fragranceFree。续办用显式字段子集和正整数
+contextRevision；全量替换丢弃遗漏的旧约束。保留同一归属 ID，修订递增，旧建议仅作历史；取消抑制晚到结果。
+Company.consult 增加可选 rid 用于续办；revise_consultation、cancel_consultation、recover_consultation
+及 BeautyAdvisor 的对应操作仅服务层。低层方法仍使用调用方事务；Company 复用 BaIntake ADVICE 暂存/恢复、
+当前证据校验。所有 BA 快照隐藏 pendingOutcome.value。已有结构化 HTTP 创建推理后复核会话；无新增路由、
+结构化卡片按钮或结构化 AP 审批。
+KAN-12 在生成和已存文本校验前要求非空事实字符串列表；无效来源返回 DomainError INCOMPLETE，现有保留型
+草稿/修订/Company 流程在存储可用时保存安全失败。无 schema、模型接口、媒体格式或 AP 权限规则变化。
+
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../CONTRACTS.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
 ## 广告模板渲染 · 2026-10-30

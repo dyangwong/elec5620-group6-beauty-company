@@ -1,5 +1,14 @@
 # Stage 2 readiness audit · 29 October 2026
 
+## Current BA/MC repair boundary · 31 October 2026
+
+KAN-10/KAN-12 adds structured BA service lifecycle/recovery and MC required-facts
+validation; **305 Mac tests passed (36.000 s)**. See STATUS/VERIFICATION. Legacy
+structured service operations now exist; additional HTTP/UI lifecycle controls and
+conditional review remain unimplemented. Natural BA stays the demo route. No case
+group changes to PASSED; current Windows BA/CS/MC/media and fresh submitted-source
+deployment remain pending. Older dated counts/baselines below are historical.
+
 English primary. [中文阅读副本](zh-CN/STAGE2_READINESS.md).
 
 ## Reviewed source closeout · 30 October 2026

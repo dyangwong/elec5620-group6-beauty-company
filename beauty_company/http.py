@@ -150,7 +150,7 @@ class Router:
                 if parts[3] == "reconcile":
                     return json_response(self.company.cs.reconcile(actor, parts[2]))
             if path == "/api/consultations":
-                return json_response(self.company.consult(actor, data), 201)
+                return json_response(self.company.consult(actor, data, authenticate=authenticate), 201)
             with self.company.store.transaction() as db:
                 if path == "/api/after-sales":
                     return json_response(self.company.cs.assess(db, actor, data), 201)

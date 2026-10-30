@@ -2,6 +2,24 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
 
+## BA/MC acceptance-gap repair · 31 October 2026
+
+Danny explicitly authorised AI-assisted KAN-10/KAN-12 repair, PR and merge from
+clean main e6bd1b4. BA now has same-ID structured service resumption/replacement/
+cancellation, historical invalidation and current-revision guards. Company reuses
+natural-route durable advice recording/recovery and independently rechecks current
+evidence/Customer; both-role snapshots hide uncommitted structured advice. Existing
+structured HTTP creation also rechecks its session. New structured operations are
+service-only; natural HTTP/UI/AP remains unchanged. MC checks required source facts
+before generation, retaining INCOMPLETE instead of crashing on empty/invalid facts.
+Original owners/contributions remain; no model install, new provider, schema,
+dependency, UI redesign or commerce action. Shared scope is recorded in SHARED_FILES.
+
+All 41 case-group statuses remain unchanged (37 PARTIAL /4 NOT_STARTED). Structured
+HTTP/UI lifecycle/review, broad source/semantic/NFR acceptance and current Windows
+real-model/media/clean-ZIP/Canvas rehearsal remain pending. See VERIFICATION for
+executed checks; later PR/Jira receipts are separate from implementation evidence.
+
 ## Reviewed integration closeout · 30 October 2026
 
 Danny explicitly authorised repair/review/merge and publication of current work.

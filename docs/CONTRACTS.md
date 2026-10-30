@@ -2,6 +2,27 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/CONTRACTS.md).
 
+## BA/MC bounded failure repair · 31 October 2026
+
+KAN-10: explicit structured consultation fields are message/concern/budget (AUD)/
+fragranceFree. New structured resumption accepts their supplied subset plus required
+positive integer contextRevision; explicit replacement drops omitted old constraints.
+Same owned ID / revision+1 / historical old result; cancellation suppresses late
+output and requires a new session afterwards. Company.consult remains creation-
+compatible and adds optional rid for resume; Company.revise_consultation,
+cancel_consultation and recover_consultation are service-only. Low-level
+BeautyAdvisor submit/resume/revise/cancel remain caller-transaction operations.
+Company uses existing BaIntake durable ADVICE save/recovery and shared independent
+evidence checks; all BA snapshots withhold pendingOutcome.value. Existing structured
+HTTP creation rechecks the trusted session callback after inference. No new routes,
+structured UI controls or structured AP review are added.
+
+KAN-12: required catalogue facts must be a nonempty list of nonblank strings.
+Invalid/missing facts raise DomainError INCOMPLETE before provider calls. Existing
+retaining draft/revision and Company generation paths persist that safe outcome
+where storage works; saved-result validation applies the same guard. No schema,
+provider signature, media format or AP authority contract changes.
+
 ## Advert-template rendering · 30 October 2026
 
 The optional renderer uses source-bundled PNG illustrations (editable SVG sources),

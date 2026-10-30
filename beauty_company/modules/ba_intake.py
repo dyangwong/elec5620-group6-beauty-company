@@ -5,8 +5,8 @@ import sqlite3
 from ..adapters.llm import ModelError
 from ..adapters.needs import FIELDS, validate_extraction
 from ..contracts import DomainError, require_role, revision_value, text_value
-from ..store import Store, now
-from .beauty_advisor import catalogue, validated_needs
+from ..store import Store
+from .beauty_advisor import catalogue, validated_needs, retain_revision, checked_advice
 
 QUESTIONS = {
     "concern": "Are you looking for hydration for dry skin, or a cleanser?",
@@ -32,21 +32,7 @@ class BaIntake:
             raise DomainError("The consultation changed. Refresh its current questions.", 409, "STALE_SCOPE")
         return record
 
-    @staticmethod
-    def _history(record):
-        payload = record["payload"]
-        prior = {"revision": record["revision"], "status": record["status"]}
-        for key in ("messages", "proposedNeeds", "needs", "needsConfirmed", "result", "errorCode", "simulated", "approvalId", "decisionId", "decision",
-                    "reviewContext", "reviewConsent", "reviewReason"):
-            if key in payload:
-                prior[key] = deepcopy(payload[key])
-        payload.setdefault("history", []).append(prior)
-        for key in ("result", "proposedNeeds", "questions", "needsReady", "needs", "needsConfirmed", "errorCode", "message",
-                    "pendingOutcome", "recordedRevision", "approvalId", "reviewContext", "reviewConsent",
-                    "decisionId", "decision", "reviewReason", "reviewError"):
-            payload.pop(key, None)
-        record["revision"] += 1
-        record["status"] = "ACTIVE"
+    _history = staticmethod(retain_revision)
 
     @staticmethod
     def _invalidate_review(db, record):
@@ -84,6 +70,41 @@ class BaIntake:
                 "naturalNeeds": True, "messages": [message], "simulated": self.advisor.simulated,
                 "history": [], "needsReady": False})
         return self._extract(record)
+
+    def structured(self, actor, data, rid=None, replace=False, authenticate=None):
+        """Explicit fields confirm their own needs; reuse the same durable advice recorder."""
+        from .ba_review import current_customer
+        try:
+            with self.store.transaction() as db:
+                current_customer(db, actor, authenticate)
+                record = self.advisor.begin_structured(db, actor, data, rid, replace)
+        except sqlite3.Error:
+            raise self._storage_error() from None
+        if record["status"] != "ACTIVE":
+            return record
+        with self.store.read() as db:
+            products = catalogue(db)
+        result = self.advisor.recommend_from_catalogue(deepcopy(record["payload"]["needs"]), products)
+        return self._stage(record, "ADVICE", result, actor, authenticate)
+
+    def cancel_structured(self, actor, rid, data):
+        from .ba_review import current_customer
+        try:
+            with self.store.transaction() as db:
+                current_customer(db, actor)
+                return self.advisor.cancel(db, actor, rid, data)
+        except sqlite3.Error:
+            raise DomainError("Cancellation could not be recorded. It is not confirmed; refresh before retrying.",
+                              503, "BA_CANCELLATION_NOT_RECORDED") from None
+
+    def recover_structured(self, actor, rid, data):
+        from .ba_review import current_customer
+        self._input(data, ("contextRevision",))
+        revision = revision_value(data["contextRevision"])
+        with self.store.read() as db:
+            current_customer(db, actor)
+            self.advisor.owned_structured(db, actor, rid, revision)
+        return self._finish(rid, revision, actor)
 
     def clarify(self, actor, rid, data):
         require_role(actor, "CUSTOMER")
@@ -244,7 +265,14 @@ class BaIntake:
     def _finish(self, rid, revision, actor=None):
         try:
             with self.store.transaction() as db:
-                current = self._owned(db, actor, rid, revision) if actor else Store.get(db, rid, "BA")
+                current = Store.get(db, rid, "BA")
+                if actor:
+                    if current["payload"].get("structuredNeeds"):
+                        from .ba_review import current_customer
+                        current_customer(db, actor)
+                        current = self.advisor.owned_structured(db, actor, rid, revision)
+                    else:
+                        current = self._owned(db, actor, rid, revision)
                 if current["revision"] != revision or current["status"] == "CANCELLED":
                     raise DomainError("This output belongs to a stale or cancelled revision.", 409, "STALE_SCOPE")
                 p = current["payload"]
@@ -291,25 +319,7 @@ class BaIntake:
                     else:
                         if not p.get("needsConfirmed") or value.get("status") not in {"COMPLETED", "INCOMPLETE"}:
                             raise DomainError("The saved advice has no confirmed scope.", 409, "INVALID_SAVED_RESULT")
-                        if value["status"] == "COMPLETED":
-                            supplied = value.get("product")
-                            if not isinstance(supplied, dict) or not isinstance(value.get("evidence"), dict):
-                                raise DomainError("The saved advice evidence is invalid.", 409, "INVALID_SAVED_RESULT")
-                            product = next((item for item in catalogue(db) if item["id"] == supplied.get("id")), None)
-                            needs = p["needs"]
-                            fact = "Moisturises dry skin" if needs["concern"] == "HYDRATION" else "Cleanses the skin"
-                            if (not product or product != supplied or product["availability"] != "AVAILABLE"
-                                    or product["price"] > needs["budget"] or fact not in product["facts"]
-                                    or (needs["fragranceFree"] and not product["fragrance_free"])
-                                    or not isinstance(value.get("reasons"), list) or not value["reasons"]
-                                    or any(reason not in product["facts"] for reason in value["reasons"])
-                                    or value["evidence"].get("catalogueRef") != f"catalogue:{product['id']}:v{product['version']}"
-                                    or value["evidence"].get("constraints") != {key: needs[key] for key in FIELDS}):
-                                value = {"status": "INCOMPLETE", "errorCode": "LLM_STALE_EVIDENCE",
-                                         "message": "Catalogue or stock changed. Retry with fresh evidence.",
-                                         "simulated": pending["simulated"]}
-                            else:
-                                value["evidence"].update(inventoryObservation=now(), availability=product["availability"])
+                        value = checked_advice(db, p["needs"], value, pending["simulated"])
                         current["status"] = value["status"]
                         value["simulated"] = pending["simulated"]
                         p.update(result=value)

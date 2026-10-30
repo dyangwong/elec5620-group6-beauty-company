@@ -2,6 +2,20 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/SHARED_FILES.md).
 
+## BA/MC repair exception · 31 October 2026
+
+Danny explicitly authorised KAN-10/KAN-12 fixes and GitHub PR/checks/merge. Besides
+BA/MC modules and their own tests, the bounded shared exception is Company.consult
+and additive structured facade operations, BA snapshot pending-result filtering,
+and one existing HTTP creation call passing its trusted session-recheck callback.
+BaIntake shares history/evidence helpers with structured BA and reuses its existing
+durable advice recorder. No new route/UI, schema, AP/CS/CO authority, model port,
+provider/configuration/dependency or owner change. Paired guides/contracts/status/
+verification/readiness/release handoff and BA/MC traceability document that limit.
+Affected MC/shared-owner review should be requested on the PR; no independent human
+endorsement is inferred. Danny's existing own-PR exception applies only after all
+required checks, never as a self-Approve or a teammate-PR bypass.
+
 Defaults follow the five Stage 1 chains at Danny's request. They express task scope,
 not repository access control, formal member acceptance or evidence of contribution.
 The initial scaffold was prepared with AI assistance; no member is credited with

@@ -27,6 +27,67 @@ class MarketingTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.company = Company(Path(self.temp.name) / "test.sqlite3")
 
+    def test_mc_t_02_missing_or_invalid_required_facts_retains_incomplete_without_generators(self):
+        for facts in ([], None, {}, "Moisturises dry skin", [""], ["   "], [None]):
+            with self.subTest(facts=facts):
+                with self.company.store.transaction() as db:
+                    db.execute("UPDATE products SET facts=? WHERE id='P-101'", (json.dumps(facts),))
+                with patch.object(self.company.llm, 'generate_script') as text, patch.object(self.company.mc.media, 'generate') as media:
+                    with self.company.store.transaction() as db:
+                        record = self.company.mc.submit_draft(db, FOUNDER, {'brief': 'Promote skincare', 'productId': 'P-101'})
+                    text.assert_not_called(); media.assert_not_called()
+                self.assertEqual(record['status'], 'INCOMPLETE')
+                self.assertEqual(record['payload']['failure']['code'], 'INCOMPLETE')
+                for key in ('script', 'media', 'approvalId'):
+                    self.assertNotIn(key, record['payload'])
+                with self.company.store.read() as db:
+                    self.assertEqual(Store.get(db, record['id'])['status'], 'INCOMPLETE')
+                    self.assertEqual(db.execute('SELECT count(*) FROM approvals').fetchone()[0], 0)
+                    self.assertEqual(db.execute('SELECT count(*) FROM effects').fetchone()[0], 0)
+
+    def test_mc_t_02_missing_facts_revision_keeps_history_and_requires_new_review_after_correction(self):
+        first = self.company.campaign(FOUNDER, {'brief': 'Promote skincare', 'productId': 'P-101'})
+        with self.company.store.transaction() as db:
+            db.execute("UPDATE products SET facts='[]',version=version+1 WHERE id='P-101'")
+            failed = self.company.mc.revise(db, FOUNDER, first['id'], {
+                'brief': 'Corrected brief', 'productId': 'P-101', 'contextRevision': 1})
+        self.assertEqual((failed['revision'], failed['status']), (2, 'INCOMPLETE'))
+        self.assertEqual(failed['payload']['history'][0]['payload']['script'], first['payload']['script'])
+        old_review = first['payload']['approvalId']
+        with self.company.store.transaction() as db:
+            self.assertEqual(self.company.ap.get(db, old_review)['status'], 'SUPERSEDED')
+            db.execute("UPDATE products SET facts=?,version=version+1 WHERE id='P-101'", (json.dumps(['Moisturises dry skin']),))
+            fixed = self.company.mc.revise(db, FOUNDER, first['id'], {
+                'brief': 'Corrected brief', 'productId': 'P-101', 'contextRevision': 2})
+        self.assertEqual((fixed['id'], fixed['revision'], fixed['status']), (first['id'], 3, 'REVIEW_PENDING'))
+        self.assertNotEqual(fixed['payload']['approvalId'], old_review)
+        self.assertEqual(fixed['payload']['history'][1]['status'], 'INCOMPLETE')
+
+    def test_mc_t_02_company_generation_retains_missing_facts_in_both_originating_modes(self):
+        for simulated in (True, False):
+            with self.subTest(simulated=simulated):
+                self.company.llm.mc_simulated = simulated  # Controlled fake; no actual model is claimed.
+                with self.company.store.transaction() as db:
+                    db.execute("UPDATE products SET facts='[]' WHERE id='P-101'")
+                with patch.object(self.company.llm, 'generate_script') as text:
+                    record = self.company.campaign(FOUNDER, {'brief': 'Promote skincare', 'productId': 'P-101'})
+                    text.assert_not_called()
+                self.assertEqual(record['status'], 'INCOMPLETE')
+                self.assertIs(record['payload']['textSimulated'], simulated)
+                self.assertNotIn('approvalId', record['payload'])
+                self.assertNotIn('pendingGeneration', record['payload'])
+
+    def test_mc_t_02_missing_fact_failure_storage_abort_does_not_claim_saved_outcome(self):
+        with self.company.store.transaction() as db:
+            db.execute("UPDATE products SET facts='[]' WHERE id='P-101'")
+            db.execute("""CREATE TRIGGER reject_mc_failure BEFORE INSERT ON events
+                WHEN NEW.event='DRAFT_GENERATION_FAILED' BEGIN SELECT RAISE(ABORT,'test write failure'); END""")
+        with self.assertRaises(sqlite3.Error), self.company.store.transaction() as db:
+            self.company.mc.submit_draft(db, FOUNDER, {'brief': 'Promote skincare', 'productId': 'P-101'})
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM records WHERE kind='MC'").fetchone()[0], 0)
+            self.assertEqual(db.execute('SELECT count(*) FROM approvals').fetchone()[0], 0)
+
     def test_failed_generation_retains_record(self):
         with patch.object(self.company.llm, "generate_script", return_value={"script": "Invalid claim", "claims": ["Cures eczema"]}):
             with self.company.store.transaction() as db:

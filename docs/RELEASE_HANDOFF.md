@@ -1,5 +1,18 @@
 # GitHub handoff to the gaming laptop
 
+## Include the BA/MC repair · 31 October 2026
+
+The next Windows candidate must include the merged KAN-10/KAN-12 repair linked
+from Jira: structured BA service lifecycle/current-evidence storage recovery, MC
+missing-facts guard, regression tests and paired evidence. Bounded shared changes
+include application.py, BaIntake and the existing structured HTTP creation session
+recheck; no UI, model, schema or dependency change. This supersedes the older
+advert/CO-only candidate boundary below. Inspect current main, pin the full commit
+and generate a new ZIP/hash; do not replay old branches or reuse prior archives.
+Structured lifecycle remains service-only; exercise the existing natural BA UI.
+Current expectation is **305 tests** (286 prior +19 new), provenance133 files/41
+case groups and JS; actual current Windows results must be recorded separately.
+
 English is the maintained primary version. [中文阅读副本](zh-CN/RELEASE_HANDOFF.md).
 
 Danny / Danyang Wang / M1 authorised this AI-assisted repository-maintenance

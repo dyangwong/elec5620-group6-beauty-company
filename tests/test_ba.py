@@ -920,3 +920,266 @@ class BaConditionalReviewTests(unittest.TestCase):
 
 for _helper in ('setUp','start','confirm','saved','no_effects'):
     setattr(BaConditionalReviewTests, _helper, getattr(BaNeedsTests, _helper))
+
+
+class BaStructuredLifecycleTests(unittest.TestCase):
+    """KAN-10 legacy explicit-field parity; all providers/data are isolated fakes."""
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.path = Path(self.temp.name) / 'structured.sqlite3'
+        self.company = Company(self.path)
+        self.fields = {'message': 'Hydration please', **CONFIRM}
+
+    def saved(self, rid):
+        with self.company.store.read() as db:
+            return Store.get(db, rid, 'BA')
+
+    def assert_no_effects(self):
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute('SELECT count(*) FROM effects').fetchone()[0], 0)
+            self.assertEqual(db.execute('SELECT count(*) FROM approvals').fetchone()[0], 0)
+            self.assertEqual([r[0] for r in db.execute('SELECT stock FROM products ORDER BY id')], [12, 8, 0])
+
+    def test_ba_t_01_structured_resume_same_id_after_restart_rechecks_evidence(self):
+        with patch.object(self.company.llm, 'propose') as provider:
+            record = self.company.consult(CUSTOMER, {'message': 'Hydration please', 'concern': 'HYDRATION'})
+            provider.assert_not_called()
+        self.assertEqual(record['status'], 'CLARIFYING')
+        self.assertNotIn('needs', record['payload'])
+        self.company = Company(self.path)
+        with self.company.store.transaction() as db:
+            db.execute("UPDATE products SET stock=0,version=version+1 WHERE id='P-101'")
+        final = self.company.consult(CUSTOMER, {'contextRevision': 1, 'budget': 60, 'fragranceFree': True}, record['id'])
+        self.assertEqual((final['id'], final['revision'], final['status']), (record['id'], 2, 'INCOMPLETE'))
+        self.assertNotIn('product', final['payload']['result'])
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM records WHERE kind='BA'").fetchone()[0], 1)
+
+    def test_ba_t_07_structured_replacement_invalidates_advice_and_never_inherits_constraints(self):
+        first = self.company.consult(CUSTOMER, self.fields)
+        revised = self.company.revise_consultation(CUSTOMER, first['id'], {'contextRevision': 1, 'message': 'Cleansing please'})
+        self.assertEqual((revised['revision'], revised['status']), (2, 'CLARIFYING'))
+        self.assertNotIn('result', revised['payload'])
+        self.assertNotIn('needs', revised['payload'])
+        self.assertEqual(revised['payload']['history'][0]['result'], first['payload']['result'])
+        final = self.company.consult(CUSTOMER, {'contextRevision': 2, 'concern': 'CLEANSING', 'budget': 40, 'fragranceFree': False}, first['id'])
+        self.assertEqual((final['id'], final['revision'], final['status']), (first['id'], 3, 'COMPLETED'))
+        self.assertEqual(final['payload']['result']['product']['id'], 'P-102')
+        self.assert_no_effects()
+
+    def test_ba_t_07_structured_low_level_submit_resume_revise_cancel_compatibility(self):
+        with self.company.store.transaction() as db:
+            first = self.company.ba.submit(db, CUSTOMER, {'message': 'Hydration please', 'concern': 'HYDRATION'})
+            final = self.company.ba.resume(db, CUSTOMER, first['id'], {'contextRevision': 1, 'budget': 60, 'fragranceFree': True})
+            self.assertEqual((final['id'], final['revision'], final['status']), (first['id'], 2, 'COMPLETED'))
+            changed = self.company.ba.revise(db, CUSTOMER, first['id'], {'contextRevision': 2, 'message': 'Something else'})
+            cancelled = self.company.ba.cancel(db, CUSTOMER, first['id'], {'contextRevision': changed['revision']})
+        self.assertEqual(cancelled['status'], 'CANCELLED')
+        self.assert_no_effects()
+
+    def test_ba_t_07_structured_cancel_persists_and_requires_new_consultation(self):
+        record = self.company.consult(CUSTOMER, {'message': 'Hydration please'})
+        result = self.company.cancel_consultation(CUSTOMER, record['id'], {'contextRevision': 1})
+        self.company = Company(self.path)
+        repeat = self.company.cancel_consultation(CUSTOMER, record['id'], {'contextRevision': 2})
+        self.assertEqual(repeat, result)
+        for operation in (self.company.consult,):
+            with self.assertRaises(DomainError):
+                operation(CUSTOMER, {'contextRevision': 2, **self.fields}, record['id'])
+        with self.assertRaises(DomainError):
+            self.company.revise_consultation(CUSTOMER, record['id'], {'contextRevision': 2, **self.fields})
+        self.assertNotEqual(self.company.consult(CUSTOMER, self.fields)['id'], record['id'])
+        self.assert_no_effects()
+
+    def test_ba_t_07_structured_owner_revision_role_and_exact_input_guards(self):
+        record = self.company.consult(CUSTOMER, {'message': 'Hydration please'})
+        for actor in (OTHER, FOUNDER):
+            for op in (self.company.revise_consultation, self.company.cancel_consultation, self.company.recover_consultation):
+                with self.subTest(actor=actor.id, operation=op.__name__), self.assertRaises(DomainError):
+                    op(actor, record['id'], {'contextRevision': 1})
+        for data in ({'contextRevision': True}, {'contextRevision': 0}, {'contextRevision': 9},
+                     {'contextRevision': 1, 'result': {'status': 'COMPLETED'}}, {'contextRevision': 1, 'password': 'unrelated'}):
+            with self.subTest(data=data), self.assertRaises(DomainError):
+                self.company.consult(CUSTOMER, data, record['id'])
+        with self.assertRaises(DomainError):
+            self.company.consult(FOUNDER, self.fields)
+        self.assertEqual(self.saved(record['id']), record)
+        self.assert_no_effects()
+
+    def test_ba_t_07_structured_late_output_after_cancel_or_revision_is_discarded(self):
+        for action in ('cancel', 'revise'):
+            with self.subTest(action=action):
+                record = self.company.consult(CUSTOMER, {'message': 'Hydration please'})
+                entered, release = threading.Event(), threading.Event()
+                propose = self.company.llm.propose
+                def delayed(needs, products):
+                    entered.set()
+                    self.assertTrue(release.wait(10))
+                    return propose(needs, products)
+                with patch.object(self.company.llm, 'propose', side_effect=delayed), ThreadPoolExecutor(1) as pool:
+                    future = pool.submit(self.company.consult, CUSTOMER,
+                        {'contextRevision': 1, **CONFIRM}, record['id'])
+                    try:
+                        self.assertTrue(entered.wait(5))
+                        if action == 'cancel':
+                            self.company.cancel_consultation(CUSTOMER, record['id'], {'contextRevision': 2})
+                        else:
+                            self.company.revise_consultation(CUSTOMER, record['id'], {'contextRevision': 2, 'message': 'Cleansing instead'})
+                    finally:
+                        release.set()
+                    with self.assertRaises(DomainError) as caught:
+                        future.result(10)
+                self.assertEqual(caught.exception.code, 'STALE_SCOPE')
+                current = self.saved(record['id'])
+                self.assertEqual(current['revision'], 3)
+                self.assertEqual(current['status'], 'CANCELLED' if action == 'cancel' else 'CLARIFYING')
+                self.assertNotIn('result', current['payload'])
+        self.assert_no_effects()
+
+    def test_ba_t_07_structured_failed_save_recovery_after_restart_is_same_result_once(self):
+        self.company.set_fault(FOUNDER, 'ba_recording')
+        with self.assertRaises(DomainError) as caught:
+            self.company.consult(CUSTOMER, self.fields)
+        self.assertEqual(caught.exception.code, 'BA_RECORDING_FAILED')
+        snapshot = self.company.snapshot(CUSTOMER)
+        record = snapshot['records'][0]
+        self.assertEqual(record['status'], 'INCOMPLETE')
+        self.assertNotIn('result', record['payload'])
+        self.assertNotIn('value', record['payload']['pendingOutcome'])
+        self.assertNotIn('value', self.company.snapshot(FOUNDER)['records'][0]['payload']['pendingOutcome'])
+        self.company = Company(self.path)
+        with patch.object(self.company.llm, 'propose') as provider:
+            one = self.company.recover_consultation(CUSTOMER, record['id'], {'contextRevision': 1})
+            two = self.company.recover_consultation(CUSTOMER, record['id'], {'contextRevision': 1})
+            provider.assert_not_called()
+        self.assertEqual((one['id'], one['revision'], one['status'], one['payload']),
+                         (two['id'], two['revision'], two['status'], two['payload']))
+        self.assertEqual(one['status'], 'COMPLETED')
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM events WHERE entity_id=? AND event='CONFIRMED_ADVICE_RECORDED'", (record['id'],)).fetchone()[0], 1)
+        self.assert_no_effects()
+
+    def test_ba_t_03_structured_recovery_rechecks_stock_and_has_no_model_fallback(self):
+        self.company.set_fault(FOUNDER, 'ba_recording')
+        with self.assertRaises(DomainError):
+            self.company.consult(CUSTOMER, self.fields)
+        record = self.company.snapshot(CUSTOMER)['records'][0]
+        with self.company.store.transaction() as db:
+            db.execute("UPDATE products SET stock=NULL,version=version+1 WHERE id='P-101'")
+        with patch.object(self.company.llm, 'propose') as provider:
+            result = self.company.recover_consultation(CUSTOMER, record['id'], {'contextRevision': 1})
+            provider.assert_not_called()
+        self.assertEqual(result['status'], 'INCOMPLETE')
+        self.assertEqual(result['payload']['result']['errorCode'], 'LLM_STALE_EVIDENCE')
+        self.assertNotIn('product', result['payload']['result'])
+
+    def test_ba_t_07_structured_actual_audit_failure_rolls_back_completion_then_recovers(self):
+        with self.company.store.transaction() as db:
+            db.execute("""CREATE TRIGGER fail_structured_audit BEFORE INSERT ON events
+                WHEN NEW.event='CONFIRMED_ADVICE_RECORDED' BEGIN SELECT RAISE(ABORT,'test disk failure'); END""")
+        with self.assertRaises(DomainError) as caught:
+            self.company.consult(CUSTOMER, self.fields)
+        self.assertEqual(caught.exception.code, 'BA_STORAGE_UNAVAILABLE')
+        record = self.company.snapshot(CUSTOMER)['records'][0]
+        self.assertNotEqual(record['status'], 'COMPLETED')
+        self.assertNotIn('result', record['payload'])
+        with self.company.store.transaction() as db:
+            db.execute('DROP TRIGGER fail_structured_audit')
+        with patch.object(self.company.llm, 'propose') as provider:
+            final = self.company.recover_consultation(CUSTOMER, record['id'], {'contextRevision': 1})
+            provider.assert_not_called()
+        self.assertEqual(final['status'], 'COMPLETED')
+        self.assert_no_effects()
+
+    def test_ba_t_07_structured_no_draft_or_failed_cancel_never_claims_success(self):
+        save = Store.save
+        def fail_stage(db, item):
+            if item['payload'].get('pendingOutcome'):
+                raise sqlite3.OperationalError('test disk failure')
+            return save(db, item)
+        with patch.object(Store, 'save', side_effect=fail_stage), self.assertRaises(DomainError):
+            self.company.consult(CUSTOMER, self.fields)
+        record = self.company.snapshot(CUSTOMER)['records'][0]
+        self.assertEqual(record['status'], 'ACTIVE')
+        with self.assertRaises(DomainError) as caught:
+            self.company.recover_consultation(CUSTOMER, record['id'], {'contextRevision': 1})
+        self.assertEqual(caught.exception.code, 'NO_PENDING_RESULT')
+        with patch.object(Store, 'save', side_effect=sqlite3.OperationalError('test disk failure')), self.assertRaises(DomainError) as caught:
+            self.company.cancel_consultation(CUSTOMER, record['id'], {'contextRevision': 1})
+        self.assertEqual(caught.exception.code, 'BA_CANCELLATION_NOT_RECORDED')
+        self.assertEqual(self.saved(record['id'])['status'], 'ACTIVE')
+        final = self.company.revise_consultation(CUSTOMER, record['id'], {'contextRevision': 1, **self.fields})
+        self.assertEqual((final['revision'], final['status']), (2, 'COMPLETED'))
+
+    def test_ba_t_07_structured_rechecks_current_identity_after_model_and_payload_is_minimal(self):
+        propose = self.company.llm.propose
+        def revoked(needs, products):
+            self.assertEqual(set(needs), {'message', 'concern', 'budget', 'fragranceFree'})
+            self.assertNotIn('customer', json.dumps([needs, products]))
+            with self.company.store.transaction() as db:
+                db.execute("UPDATE users SET role='FOUNDER' WHERE id='customer'")
+            return propose(needs, products)
+        with patch.object(self.company.llm, 'propose', side_effect=revoked), self.assertRaises(DomainError) as caught:
+            self.company.consult(CUSTOMER, self.fields)
+        self.assertEqual(caught.exception.code, 'FORBIDDEN')
+        record = self.company.snapshot(CUSTOMER)['records'][0]
+        self.assertEqual(record['status'], 'ACTIVE')
+        self.assertNotIn('result', record['payload'])
+        self.assert_no_effects()
+
+    def test_ba_t_07_structured_http_session_revoked_during_inference_withholds_advice(self):
+        token, csrf, _ = self.company.login('customer', 'customer-demo')
+        propose = self.company.llm.propose
+        def logout(needs, products):
+            with self.company.store.transaction() as db:
+                db.execute('DELETE FROM sessions')
+            return propose(needs, products)
+        headers = {'host': '127.0.0.1', 'content-type': 'application/json',
+                   'cookie': 'beauty_session='+token, 'x-csrf-token': csrf}
+        with patch.object(self.company.llm, 'propose', side_effect=logout):
+            response = Router(self.company).handle('POST', '/api/consultations', headers, json.dumps(self.fields).encode())
+        self.assertEqual(response.status, 401)
+        record = self.company.snapshot(CUSTOMER)['records'][0]
+        self.assertEqual(record['status'], 'ACTIVE')
+        self.assertNotIn('result', record['payload'])
+        self.assert_no_effects()
+
+    def test_ba_t_07_structured_cancel_invalidates_saved_draft_and_old_recovery(self):
+        self.company.set_fault(FOUNDER, 'ba_recording')
+        with self.assertRaises(DomainError):
+            self.company.consult(CUSTOMER, self.fields)
+        record = self.company.snapshot(CUSTOMER)['records'][0]
+        cancelled = self.company.cancel_consultation(CUSTOMER, record['id'], {'contextRevision': 1})
+        self.assertNotIn('pendingOutcome', cancelled['payload'])
+        self.assertNotIn('result', cancelled['payload'])
+        for revision in (1, 2):
+            with self.assertRaises(DomainError):
+                self.company.recover_consultation(CUSTOMER, record['id'], {'contextRevision': revision})
+        self.assert_no_effects()
+
+    def test_ba_t_07_pre_marker_structured_record_resume_preserves_budget_units(self):
+        with self.company.store.transaction() as db:
+            rid = Store.create(db, 'BA', CUSTOMER.id, 'INCOMPLETE', {
+                'needs': {'message': 'Hydration please', 'concern': 'HYDRATION', 'budget': 6000, 'fragranceFree': True},
+                'result': {'status': 'INCOMPLETE', 'message': 'Earlier failure', 'simulated': True}, 'simulated': True}, 'BA')
+        record = self.company.consult(CUSTOMER, {'contextRevision': 1}, rid)
+        self.assertEqual((record['id'], record['revision'], record['status']), (rid, 2, 'COMPLETED'))
+        self.assertEqual(record['payload']['needs']['budget'], 6000)
+        self.assertEqual(record['payload']['structuredInput']['budget'], 60)
+        self.assertEqual(record['payload']['history'][0]['status'], 'INCOMPLETE')
+        self.assert_no_effects()
+
+    def test_ba_t_07_structured_concurrent_recovery_is_single_recording(self):
+        self.company.set_fault(FOUNDER, 'ba_recording')
+        with self.assertRaises(DomainError):
+            self.company.consult(CUSTOMER, self.fields)
+        record = self.company.snapshot(CUSTOMER)['records'][0]
+        with patch.object(self.company.llm, 'propose') as provider, ThreadPoolExecutor(3) as pool:
+            results = list(pool.map(lambda _: self.company.recover_consultation(
+                CUSTOMER, record['id'], {'contextRevision': 1}), range(3)))
+            provider.assert_not_called()
+        self.assertTrue(all(result['status'] == 'COMPLETED' for result in results))
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM events WHERE entity_id=? AND event='CONFIRMED_ADVICE_RECORDED'", (record['id'],)).fetchone()[0], 1)
+        self.assert_no_effects()

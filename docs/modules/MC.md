@@ -2,6 +2,24 @@
 
 English is the maintained primary version. [中文阅读副本](../zh-CN/modules/MC.md).
 
+## Required-source-facts repair · 31 October 2026
+
+Danny authorised this AI-assisted KAN-12 repair from main e6bd1b4; Zhengdu Wei's
+original work, ownership and task assignment are preserved. Marketing now verifies
+that required catalogue facts are a nonempty list of nonblank strings **before**
+calling text or media providers, and before validating saved text. Empty/missing/
+malformed fact collections produce INCOMPLETE rather than an uncaught IndexError.
+`submit_draft` and failed revisions retain that failure, without script/media/AP;
+the current Company/HTTP generation lifecycle retains its originating mode as well.
+Authorised correction rechecks current source and requires a fresh revision/review;
+old history/review remains superseded. Genuine storage failure still rolls back or
+reports unavailable storage; the guard never invents a saved trace.
+
+This is structural source validation, not a general contradiction/semantic detector.
+The legacy `submit` method still uses a caller transaction and can reject before
+creating an identity; HTTP uses Company.campaign's durable lifecycle. Broader source
+conflict, live/visual quality and full MC/AP/NFR acceptance remain open.
+
 ## Advert-template polish · 30 October 2026
 
 Danny's KAN-9 visual increment replaces the optional renderer's plain text cards

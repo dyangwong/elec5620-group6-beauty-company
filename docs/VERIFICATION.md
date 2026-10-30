@@ -1,5 +1,43 @@
 # Local verification record
 
+## KAN-10 / KAN-12 repair · 31 October 2026
+
+Danny authorised this AI-assisted repair/PR/merge from clean fetched main
+e6bd1b4bc00522becd5f7d9c39e5b299f12143dc, branch
+KAN-10-KAN-12-ba-mc-failure-lifecycle. Jira KAN-10/12 were observed Verification,
+with Danyang Wang / ZHENGDU WEI respectively, then moved In Progress for actual
+repair; owners and original teammate work remain. No new live model evidence.
+
+- **305 full Mac Python3.9.6 tests /36.000s passed**, 286 baseline +19 new (15 BA,
+  4 MC). `python3 -m unittest discover -s tests -v`; local evidence under ignored
+  output/ba-mc-fix-20261031/full-tests-final.txt. The restricted run had9 server-bind
+  PermissionErrors; the same suite was rerun allowing local loopback. One earlier
+  new cancellation test exposed a stale returned update timestamp; cancellation
+  now returns its actual saved record, and the final complete run passes.
+- BA: same-ID structured clarification/resume after restart with fresh unavailable
+  stock; full replacement invalidates prior advice and does not inherit omitted
+  constraints; low-level submit/resume/revise/cancel compatibility; old pre-marker
+  record budget conversion; owner/role/exact-input/stale guards; in-flight cancel
+  and replacement both discard late output; cancelled records cannot restart.
+- BA: one-shot final-save failure hides uncommitted advice from Customer/Founder;
+  restart/concurrent recovery records once without model; unknown stock withholds
+  stale saved advice; real SQLite audit abort rolls back completion then recovers;
+  no-draft and failed-cancel paths disclose failure; changed Customer role or actual
+  HTTP session revocation during inference prevents staging. No effect/AP created.
+- MC: empty/null/wrong-shaped/nonstring/blank fact collections stop both generators,
+  persist INCOMPLETE/no script/media/AP; failed revision retains original history
+  and supersedes review, corrected source gets a new revision/review. Company mock
+  and controlled fake-live modes retain originating labels, without actual inference.
+  A real SQLite failure-audit abort rolls back the low-level identity and approvals.
+- Repository provenance:133 source files/41 original groups; unchanged source hashes.
+  JavaScript syntax checked with the installed bundled Node; diff whitespace checked.
+  State panels inspected in the existing public reference PDF physical48/49/51/52.
+
+No new structured HTTP lifecycle routes/buttons or structured AP review. Existing
+structured HTTP creation and natural BA/CS/MC regressions pass; no actual new browser,
+Windows live/media/ZIP/Canvas deployment claim. All37 PARTIAL /4 NOT_STARTED case
+groups remain. Public PR/CI/merge/Jira receipts are recorded after they happen.
+
 English is the maintained primary version. [中文阅读副本](zh-CN/VERIFICATION.md).
 
 ## Reviewed integration closeout · 30 October 2026
