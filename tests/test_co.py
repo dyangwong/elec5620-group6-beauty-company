@@ -292,8 +292,8 @@ class CoordinationHandoffTests(unittest.TestCase):
         self.assertEqual(checked['status'],'COMPLETED')
         self.assertNotIn('SYNTHETIC-PRIVATE',json.dumps(self.saved()));self.no_effects()
 
-    def test_co_t_02_terminal_origin_cannot_start_a_new_handoff(self):
-        for status in ('CANCELLED', 'COMPLETED', 'UNRESOLVED', 'AWAITING_CONFIRMATION'):
+    def test_co_t_02_non_assessing_origin_cannot_start_a_new_handoff(self):
+        for status in ('CANCELLED', 'RESOLVED', 'UNRESOLVED', 'AWAITING_CONFIRMATION'):
             with self.subTest(status=status):
                 self.fresh()
                 with self.company.store.transaction() as db:

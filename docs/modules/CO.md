@@ -2,6 +2,18 @@
 
 English is the maintained primary version. [中文阅读副本](../zh-CN/modules/CO.md).
 
+## Maintainer review closeout · 30 October 2026
+
+Danny explicitly authorised small fixes and reviewed integration of Guiyu Liu's
+PR #17. It adds three regression tests, not new coordination implementation;
+KAN-15's original work and authorship remain. Current main1ad1101 is incorporated,
+the Chinese reading copy is restored, and the non-ASSESSING test uses the actual
+CS terminal name RESOLVED without calling every non-ASSESSING state terminal.
+The authorised Jira browser observed KAN-14 Verification / GuiyuLiu on 30 October;
+retain that owner/state until the complete starter acceptance is reconciled.
+Fresh tests, CI, exact-head review and merge receipts belong on PR #17; an earlier
+approval is not evidence for the repaired head. No production, schema or API change.
+
 ## Current staged live read-only handoff · 29 October 2026
 
 Danny-authorised KAN-15 exception, preserving Guiyu Liu / M5 attribution. The
@@ -45,8 +57,8 @@ Remaining: generic BA/CS/MC role adapters, independent durable external dispatch
 every cancellation/escalation/intervention/result-save recovery path and optional
 bounded retry. No blind retry after uncertain execution; a read-only lookup never
 grants new authority. This call remains synchronous inside the existing caller
-transaction, not a durable queue/staged recovery framework. Real CS intent/handoff
-remains unconnected/blocked. CO-T-02/03 now PARTIAL; all relevant case groups retain
+transaction, not a durable queue/staged recovery framework. The staged path above
+now supports bounded live CS intent/handoff. CO-T-02/03 stay PARTIAL; case groups retain
 unverified breadth. Full UML participant/receiver and Stage 2 acceptance remain
 open. Guiyu Liu attribution/task claims unchanged; affected-owner review pending.
 
@@ -67,11 +79,11 @@ Traceability remains PARTIAL: test_co_t_02 and test_co_t_04 include these new ca
 CO-T-01/03/08 retain their existing tests. No shared schema, module implementation,
 UI, HTTP, provider, optional retry or task-claim changes are included. This is
 verification of the bounded starter, not full CO/model-diagram/Stage 2 acceptance.
-Jira access returned HTTP 403; live assignment/status is unverified. Jira update
-pending: reconcile KAN-14 ownership/status, attach this verification and the PR,
-then request verification of this starter subset; do not automatically mark Done.
-The user explicitly prohibits merging. PR publication and CI must be reported
-separately from local checks; no teammate approval is claimed.
+The original author reported Jira HTTP403 and an instruction to leave the PR
+unmerged. These are historical receipts; Danny's later explicit repair/review/merge
+instruction and the current observed Jira state are recorded above. Keep full
+starter acceptance separate and do not automatically mark Done. Publication/CI/
+exact-head review/merge must be reported separately from local checks.
 
-Final increment validation: all 284 tests passed on Python 3.12.14; repository
+Original author validation: all 284 tests passed on Python 3.12.14; repository
 checks, JavaScript syntax and git diff whitespace checks also passed.
