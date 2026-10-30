@@ -3,6 +3,9 @@
 English is the maintained primary version. [中文阅读副本](AGENTS.zh-CN.md).
 
 This is an initial implementation of ELEC5620 Group 6 Stage 2.
+For Danny's GitHub-to-gaming-laptop release rehearsal, use
+`docs/RELEASE_HANDOFF.md` instead of selecting a new starter. It contains the
+bounded continuation prompt and pending acceptance; no local handoff ZIP is needed.
 Start with `START_HERE.md`. Before feature implementation, resolve the human's
 explicit full name/member ID/module against `docs/team.json` and select only that
 member's task in `docs/tasks.json`. Never infer identity from Git/system login,
