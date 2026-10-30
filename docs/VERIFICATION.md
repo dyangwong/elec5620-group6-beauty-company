@@ -1,5 +1,27 @@
 # Local verification record
 
+## Post-merge response-consistency repair · 31 October 2026
+
+Preserve the actual PR #20 success and subsequent main failure separately:
+required PR run41093217688 passed at d88bb48; normal own-PR-exception squash merged
+as5b83cda. Main run41093577366 Python3.13 passed; Python3.9 failed the new
+structured_owner_revision_role_and_exact_input_guards whole-record assertion.
+The returned CLARIFYING record had its earlier updated timestamp; persisted business
+scope did not change. The failed public job124193419028 log is retained locally.
+No claim that the first main run passed, and no retry hiding the failure.
+
+Follow-up branch KAN-10-saved-record-response returns Store.get after structured
+preparation, low-level completed advice and shared final advice recording. A new
+regression gives every storage operation a distinct instant and checks returned vs
+stored clarification, completed advice, replacement, cancellation and low-level
+submit. In an isolated copy of unchanged5b83cda this fails deterministically;
+it passes on the repaired code. Existing ownership/lifecycle assertions are retained.
+**306 full Mac Python3.9.6 tests /36.240s passed**; provenance133 files/41 groups,
+installed Node JS syntax and whitespace passed. Local logs:
+output/ba-mc-fix-20261031/response-regression-before-fix.txt and
+full-tests-response-fix.txt. This is response consistency, not a new authority,
+state-machine, schema, provider or UI feature. PR/CI/merge/Jira receipts follow.
+
 ## KAN-10 / KAN-12 repair · 31 October 2026
 
 Danny authorised this AI-assisted repair/PR/merge from clean fetched main

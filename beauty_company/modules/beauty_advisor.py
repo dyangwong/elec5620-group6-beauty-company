@@ -160,7 +160,7 @@ class BeautyAdvisor:
             record["payload"].update(needs=needs, needsConfirmed=True)
         Store.save(db, record)
         Store.event(db, record["id"], "BA", "STRUCTURED_NEEDS_RECORDED", {"revision": record["revision"], "status": record["status"]})
-        return record
+        return Store.get(db, record["id"], "BA")
 
     def submit(self, db, actor, data, rid=None, replace=False):
         """Caller-owned transaction compatibility; Company.consult stages durable recovery."""
@@ -176,7 +176,7 @@ class BeautyAdvisor:
         current["payload"].update(result=result, simulated=result["simulated"], recordedRevision=current["revision"])
         Store.save(db, current)
         Store.event(db, current["id"], "BA", "CONFIRMED_ADVICE_RECORDED", {"revision": current["revision"], "status": current["status"]})
-        return current
+        return Store.get(db, current["id"], "BA")
 
     def resume(self, db, actor, rid, data):
         return self.submit(db, actor, data, rid)
