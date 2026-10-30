@@ -2,6 +2,33 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/VERIFICATION.md).
 
+## Reviewed integration closeout · 30 October 2026
+
+- Danny authorised actual repair/review/merge/publication. PR #17 retains its
+  original GuiyuLiu0035 authorship; current-main integration and repaired test/docs
+  head c41a76e passed284 Mac tests/34.173s, provenance126/41, JS/links/whitespace
+  and required Python3.9/3.13 PR CI41045067082. New dyangwong non-author review
+  5711332295 anchors that exact head; normal squash merge91281dc succeeded.
+- Read-only GitHub identity checks confirmed distinct accounts: PR author
+  GuiyuLiu0035/316942998 and reviewer dyangwong/226655466. The authorised review
+  explicitly records AI assistance and does not claim human endorsement. No owner
+  bypass, administrator merge, forged human review or protection change was used.
+- Integrated video branch based on main91281dc passed **286 full Mac tests in
+  34.446s**, provenance133 files/41 case groups and JS/whitespace/links. Its CO test/
+  guide files exactly match merged main. MC renderer/assets remain byte-identical
+  to tested8f39046; earlier actual film/browser/recovery receipts below retain
+  their exact source scope, not a new LLM/Windows run.
+- Active teammate review ruleset was read back: one approval, stale dismissal,
+  resolved threads, squash only; last-push approval false. Classic protection API
+  was inaccessible to the integration (403); no settings were changed. Normal
+  protected PR merge and required checks were used. Final integration head/CI,
+  packaging/startup checks and merge/Jira receipts are on the integration PR.
+
+No case status promoted, member reassigned or task auto-completed. Current-source
+Windows/live-model/FFmpeg9.0.2, cross-computer tunnel, actual Canvas-download/venue
+deployment and human-confirmed contribution remain unverified in this closeout.
+
+
 ## MC advert-template polish · 30 October 2026
 
 Baseline main1ad1101; Danny-authorised AI-assisted KAN-9 / GR-INT-03, independent

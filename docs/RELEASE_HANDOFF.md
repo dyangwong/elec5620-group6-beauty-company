@@ -10,12 +10,15 @@ VERIFICATION: original packaged artwork, renderer and two guard tests, with pair
 guidance/MC traceability. No model/provider or ownership change. Use a merged
 main containing that increment for its next Windows acceptance; if it is still
 local/unmerged, report the missing publication rather than testing old main as new.
+Danny subsequently authorised PR #17's repair/review/merge: it is now merged as
+91281dc, with three CO regression tests and paired documentation only. Do not
+replay its old branch; the next candidate includes that reviewed increment.
 
 ## Baseline and evidence
 
 The earlier application baseline is merged PR #16, commit
-`7c862341fe914b33b7dadcd56784288b50fb0436`. PR #17 is excluded and must not be
-merged as part of this continuation. It is a separately assessed teammate PR.
+`7c862341fe914b33b7dadcd56784288b50fb0436`. Historical RC1 excluded PR #17;
+the current candidate also includes its repaired, reviewed merge 91281dc.
 
 The Mac prepared a local RC1 source ZIP at that exact commit: 124 files,
 SHA-256 `7f954baab3ab90872f9b648deca0587cf2716bc032491d7d4ef0dac0d1c78369`.
@@ -56,7 +59,8 @@ git diff --name-only 7c862341fe914b33b7dadcd56784288b50fb0436 HEAD
 The intended difference from 7c86234 includes PR #18's six documentation paths
 and the current bounded advert-template increment: template_video.py, assets/advert,
 test_mc.py, paired contract/module/status/verification/shared-scope/handoff guides
-and selected MC traceability evidence. Inspect the actual diff and merged PR
+and selected MC traceability evidence, plus PR #17's three CO tests/paired guides.
+Inspect the actual diff and merged PR
 receipts; do not silently include another PR or reset old work. No BA/CS/AP/CO
 business, HTTP/UI, provider, dependency or schema change belongs to this increment.
 Pin and record this new checkout's **full HEAD**, not a moving `main` name.
@@ -94,8 +98,8 @@ node --check beauty_company/web/app.js
 ```
 
 The printed interpreter/venv/module paths must all belong to the new extraction.
-Expected application regression is 283 tests (281 baseline + two renderer guards),
-with PR #17 still excluded. Verify also
+Expected application regression is 286 tests (281 baseline + three CO regression
+tests + two renderer guards). Verify also
 runs provenance; it skips JS when Node is absent, so record JS separately and
 use already-installed Node rather than claiming a skipped check passed.
 
@@ -141,7 +145,7 @@ report PASS / FAIL / NOT RUN honestly. Existing tests are not all 41 case groups
 
 | Check | Required observation |
 |---|---|
-| Source/startup | Archive and extraction byte checks; fresh venv/import origins; 283 tests, provenance and JS; bundled PNG assets present. |
+| Source/startup | Archive and extraction byte checks; fresh venv/import origins; 286 tests, provenance and JS; bundled PNG assets present. |
 | Mock BA | Missing budget/fragrance clarifies on the same ID; explicit Customer confirmation precedes grounded advice. |
 | Live CS/CO/BA | Owned ORD-1001 natural exchange -> Founder starts handoff -> grounded BA -> Customer proposal confirmation -> exact Founder AP -> final Customer confirmation. |
 | Effect boundary | Independently check current evidence/policy/actionRef: zero effects before final confirmation, one afterwards; repeat confirmation stays one; P-101 stock 12 -> 11. |
@@ -167,7 +171,7 @@ reading copy under ignored output, with PASS/FAIL/NOT RUN and remaining conditio
 Recheck source and archive hashes after the run. If a source fix is needed, preserve
 this candidate, use a separate task branch/PR, and create/retest a new archive;
 do not edit an extraction and claim the unchanged old ZIP passed. No new business
-features or PR #17 merge in this task. Publish only safe evidence through the
+features or replay of PR #17's already merged branch in this task. Publish only safe evidence through the
 normal protected PR/check workflow; owner exception is not a human Approve.
 
 With authorised Jira access, add one brief KAN-9 checkpoint with exact revision,
@@ -183,7 +187,7 @@ under KAN-9 / internal GR-INT-03. Preserve the gaming laptop's existing dirty wo
 branches, model, tools, configs, databases and processes. Fetch the repository's
 main and read docs/RELEASE_HANDOFF.md (or git show origin/main:docs/RELEASE_HANDOFF.md
 without changing the old branch); follow its new-clone/new-ZIP/new-extraction route.
-Do not merge PR #17 or add features. Record the actual full source SHA and new ZIP
+PR #17 is already merged; do not replay its old branch or add features. Record the actual full source SHA and new ZIP
 hash; RC1 is historical. Reuse prepared model/media tooling and run the pending
 combined mock/live/recovery acceptance, saving honest English/Chinese receipts.
 Only touch synthetic new demo data; stop only owned processes. Keep Jira to one

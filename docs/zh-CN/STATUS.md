@@ -1,5 +1,19 @@
 # 当前实现状态
 
+## 审阅集成收口 · 2026-10-30
+
+Danny明确授权小修／复核／合并并发布当前工作。队友PR #17恢复中文、修正测试／状态表述，
+新CI与c41a76e上的dyangwong非作者AI辅助Approve通过后，正常合入91281dc。
+只新增三项CO测试，保留KAN-15生产实现与Guiyu Liu归属；KAN-14实见Verification／GuiyuLiu。
+
+视频分支已集成该main及下方广告打磨。Mac Python3.9.6组合 **286项／34.446秒通过**，
+来源133文件／41组，JS／空白／链接已检查。不改BA／CS／AP／CO、HTTP／UI、provider、依赖或schema。
+准确源码／发布／CI／合并及最小Jira收据在集成PR记录；旧“排除#17”交接已被替代，指南现包含已审阅合并、预期286项。
+
+37组PARTIAL／4组NOT_STARTED不变。当前Windows统一真实模型／媒体、实际Canvas下载／现场、
+人工确认贡献表仍待完成；绿色CI／本次收口不等于完整Stage2完成。
+
+
 ## MC 广告模板打磨 · 2026-10-30
 
 Danny／M1 授权这次 AI 辅助 KAN-9／GR-INT-03 增量，基线 main1ad1101，

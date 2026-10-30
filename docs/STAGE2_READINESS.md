@@ -2,6 +2,23 @@
 
 English primary. [中文阅读副本](zh-CN/STAGE2_READINESS.md).
 
+## Reviewed source closeout · 30 October 2026
+
+Current STATUS/VERIFICATION supersede the historical audit below. PR #17's repaired
+CO regression increment merged as91281dc with renewed non-author review/current CI;
+the integrated advert-template branch passes286 Mac tests/34.446s and retains133
+source files/41 groups. New original PNG artwork travels with source; models,
+FFmpeg/font, private configs/DBs and output remain separate. The source guide no
+longer excludes the now-merged #17. Publication/exact-head CI and final packaging
+receipts are recorded on the integration PR, not inferred here.
+
+The bounded demo is ready for final rehearsal; broad37 PARTIAL/4 NOT_STARTED remain.
+Next: same frozen source in Windows with existing real model and all three roles/
+template media, then authorised actual Canvas-download/venue rehearsal and honest
+Agile/contribution evidence. No new video model, provider/network exposure or
+complete Stage2 acceptance is claimed by this closeout.
+
+
 ## BA conditional review checkpoint · 30 October 2026
 
 The bounded natural BA conditional-review gap is now implemented and verified:

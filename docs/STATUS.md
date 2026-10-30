@@ -2,6 +2,26 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
 
+## Reviewed integration closeout · 30 October 2026
+
+Danny explicitly authorised repair/review/merge and publication of current work.
+Teammate PR #17 merged normally as 91281dc after restored Chinese documentation,
+accurate test/state wording, new required CI and a renewed non-author AI-assisted
+dyangwong review at c41a76e. It adds three CO tests; existing KAN-15 production code
+and Guiyu Liu attribution remain. KAN-14 was observed Verification / GuiyuLiu.
+
+The video branch incorporates that main and the advert polish below. Combined
+Mac Python3.9.6: **286 tests /34.446 s passed**, provenance133 files/41 groups,
+JS/whitespace/links checked. No BA/CS/AP/CO, HTTP/UI, provider, dependency or schema
+change. Reviewed source, publication/CI/merge and minimal Jira receipts belong on
+the integration PR. Old “exclude PR #17” handoff instructions are superseded;
+the guide now includes its reviewed merge and expects286 tests.
+
+All37 PARTIAL /4 NOT_STARTED case groups remain unchanged. Current Windows combined
+live/model/media acceptance, actual Canvas download/venue and human contribution
+confirmation remain open; neither green CI nor this closeout claims full Stage2.
+
+
 ## MC advert-template polish · 30 October 2026
 
 Danny / M1 authorised this AI-assisted KAN-9 / GR-INT-03 increment from main
