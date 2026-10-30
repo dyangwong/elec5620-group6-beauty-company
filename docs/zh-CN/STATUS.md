@@ -1,5 +1,15 @@
 # 当前实现状态
 
+## BA/MC 验收缺口修复 · 2026-10-31
+
+Danny 授权从干净 main e6bd1b4 修复 KAN-10/KAN-12，并提交 PR、检查后合并，使用 AI 辅助。
+BA 补同 ID 结构化续办/替换/取消、旧建议失效与当前修订保护；Company 复用持久化建议/恢复并复核当前证据和
+Customer，双方快照隐藏未提交结果。已有结构化 HTTP 创建复核会话；新增生命周期操作仅服务层，自然语言
+HTTP/UI/AP 保留。MC 在生成前检查必需产品事实，空/无效事实保留 INCOMPLETE 而不是崩溃。
+保留原负责人和贡献；无模型安装、新客户端、schema/依赖/UI 重构或交易。共享例外见 SHARED_FILES。
+41 个用例组仍为 37 PARTIAL /4 NOT_STARTED。结构化 HTTP/UI/审批、广泛语义/NFR 和当前 Windows 真实
+模型/视频/新 ZIP/Canvas 部署演练仍待完成。实际测试见 VERIFICATION；PR/Jira 回执单独记录。
+
 ## 审阅集成收口 · 2026-10-30
 
 Danny明确授权小修／复核／合并并发布当前工作。队友PR #17恢复中文、修正测试／状态表述，

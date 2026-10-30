@@ -1,5 +1,21 @@
 # BA 模块交接
 
+## 结构化咨询修复 · 2026-10-31
+
+Danny 授权在 main e6bd1b4 基础上以 AI 辅助修复 KAN-10，保留 Danyang Wang 负责人。
+BeautyAdvisor.submit 保持创建兼容；新增 resume（合并显式补充字段）、revise（全量替换）和 cancel。
+均使用调用方事务；参数为 db、actor、ID 和含 contextRevision 的字段，submit 创建无需 ID/修订。
+Company.consult(actor, fields, rid=None) 创建或续办同一咨询；revise_consultation、cancel_consultation、
+recover_consultation 接收 actor、ID 和当前修订参数。续办/修改递增修订，保留旧建议历史并使其失效；
+全量替换不继承遗漏条件。旧结构化记录可续办，预算从已存分正确转换为输入澳元。
+Company 在推理前保存范围、推理期间关闭数据库连接，之后复核 Customer/归属/范围/修订，复用现有
+ADVICE 暂存与存储恢复；取消或新修订抑制晚到结果。恢复不调用模型，复核当前商品/事实/库存并只记录一次。
+两种角色的快照均隐藏未提交建议。拒绝越权、过期修订、额外权限/密码/结果字段；取消后须新建，已完成建议只可修改。
+
+已有结构化 HTTP 创建会在推理后复核会话；新增续办/修改/取消/恢复仍仅服务层，无新增 HTTP 路由或旧卡片按钮。
+自然语言 HTTP/UI/AP 流程保留且仍为推荐演示入口。结构化条件审批、通用语义/医疗安全及完整 BA/NFR 待验收；
+BA-T-01/03/07 保持 PARTIAL。无交易副作用、新模型接口或数据库迁移。
+
 中文阅读副本，依据 2026-10-29 英文主版同步。以[英文主版](../../modules/BA.md)为维护依据；若有歧义，按英文主版及其来源优先级处理。编号、状态、路径和命令保持原值。正文中的代码路径均相对仓库根目录。
 
 ## BA conditional review checkpoint · 30 October 2026

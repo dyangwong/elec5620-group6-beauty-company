@@ -11,7 +11,7 @@ from .adapters.after_sales import MockAfterSales
 from .adapters.mock import MockLlm, MockMedia
 from .contracts import Actor, DomainError, require_role, revision_value, text_value
 from .modules.approval import Approval
-from .modules.beauty_advisor import BeautyAdvisor, catalogue, validated_needs
+from .modules.beauty_advisor import BeautyAdvisor, catalogue
 from .modules.ba_intake import BaIntake
 from .modules.ba_review import BaReview
 from .modules.coordination import Coordination
@@ -78,24 +78,18 @@ class Company:
                 raise DomainError("No template video is available for this revision.", 404, "NOT_FOUND")
             return self.mc.media.read(media)
 
-    def consult(self, actor, data):
-        """BA first live slice: no write lock during inference; recheck before save."""
-        require_role(actor, "CUSTOMER")
-        try:
-            needs = validated_needs(data)
-        except DomainError as error:
-            with self.store.transaction() as db:
-                return self.ba._record(db, actor, "CLARIFYING", {"message": str(error), "simulated": True})
-        with self.store.read() as db:
-            result = self.ba.recommend(db, needs)
-        with self.store.transaction() as db:
-            if result["status"] == "COMPLETED":
-                current = next((p for p in catalogue(db) if p["id"] == result["product"]["id"]), None)
-                if current != result["product"]:
-                    result = {"status": "INCOMPLETE", "message": "Catalogue or stock changed during advice. Submit a fresh consultation.",
-                              "errorCode": "LLM_STALE_EVIDENCE", "simulated": self.ba.simulated}
-            return self.ba._record(db, actor, result["status"],
-                                   {"needs": needs, "result": result, "simulated": result["simulated"]})
+    def consult(self, actor, data, rid=None, authenticate=None):
+        """Create or explicitly resume the same structured consultation."""
+        return self.ba_intake.structured(actor, data, rid, authenticate=authenticate)
+
+    def revise_consultation(self, actor, rid, data):
+        return self.ba_intake.structured(actor, data, rid, replace=True)
+
+    def cancel_consultation(self, actor, rid, data):
+        return self.ba_intake.cancel_structured(actor, rid, data)
+
+    def recover_consultation(self, actor, rid, data):
+        return self.ba_intake.recover_structured(actor, rid, data)
 
     def session(self, cookie):
         jar = SimpleCookie()
@@ -118,7 +112,7 @@ class Company:
             ids = [r["id"] for r in db.execute(query, (actor.id,) if actor.role != "FOUNDER" else ())]
             records = [Store.get(db, rid) for rid in ids]
             records = [self.ba_intake.public_record(record) if record["kind"] == "BA"
-                       and record["payload"].get("naturalNeeds") else self.mc_generation.public_record(record) if record["kind"] == "MC"
+                       else self.mc_generation.public_record(record) if record["kind"] == "MC"
                        else record for record in records]
             approval_ids = [r["id"] for r in db.execute("SELECT id,origin_id FROM approvals ORDER BY created DESC") if actor.role == "FOUNDER" or r["origin_id"] in ids]
             approvals = []

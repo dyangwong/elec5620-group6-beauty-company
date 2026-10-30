@@ -24,6 +24,7 @@ class Marketing:
         product = next((p for p in catalogue(db) if p["id"] == data.get("productId")), None)
         if not product:
             raise DomainError("Choose an authorised catalogue product.", 409, "INCOMPLETE")
+        self.validate_source(product)
 
         try:
             script = self.llm.generate_script(brief, deepcopy(product))
@@ -56,7 +57,16 @@ class Marketing:
                 "evidence": {"catalogueRef": f"catalogue:{product['id']}:v{product['version']}", "facts": product["facts"]}}
 
     @staticmethod
+    def validate_source(product):
+        facts = product.get("facts")
+        if (not isinstance(facts, list) or not facts
+                or any(not isinstance(fact, str) or not fact.strip() for fact in facts)):
+            raise DomainError("Required authorised product facts are missing or invalid. Correct the source before generating.",
+                              409, "INCOMPLETE")
+
+    @staticmethod
     def validate_script(script, brief, product, simulated):
+        Marketing.validate_source(product)
         if not simulated:
             try:
                 validate_live_script(script, brief, product)

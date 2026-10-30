@@ -2,6 +2,39 @@
 
 English is the maintained primary version. [中文阅读副本](../zh-CN/modules/BA.md).
 
+## Structured consultation repair · 31 October 2026
+
+Danny explicitly authorised this AI-assisted KAN-10 repair from main e6bd1b4;
+Danyang Wang remains the owner. The natural workflow and its consented AP review
+are preserved. Structured service lifecycle parity is now implemented:
+
+- `BeautyAdvisor.submit(db, actor, fields)` remains compatible; `resume(db, actor,
+  id, {contextRevision, ...answers})` merges only explicit answers into saved fields.
+  `revise(db, actor, id, {contextRevision, ...replacement})` replaces the full scope.
+  `cancel(db, actor, id, {contextRevision})` cancels only nonterminal advice.
+  These low-level operations retain the caller-owned transaction; a failed write
+  rolls it back and cannot promise a separately durable intermediate result.
+- `Company.consult(actor, fields, rid=None)` creates or resumes the same owned ID;
+  `revise_consultation`, `cancel_consultation` and `recover_consultation` take actor,
+  ID and an exact-revision body. Revision/resumption increments context revision,
+  retains history and invalidates previous applicable advice. A replacement never
+  inherits omitted constraints. Old pre-marker structured records can resume;
+  existing stored budgets are correctly converted from cents to AUD input units.
+- Company persists scope before inference, closes its database connection during
+  model work, rechecks current Customer/owner/source/revision, and uses the existing
+  durable ADVICE staging/recording/recovery. Cancel/new revision discards late output.
+  Recovery revalidates catalogue/facts/stock, calls no model and records once.
+  Snapshot output for either role withholds uncommitted advice.
+- Unknown authority/credential/result fields, stale revisions and other Customers
+  are refused. Cancelled sessions require a new ID; completed advice can be revised,
+  not cancelled retroactively. No commerce effect, new LLM capability or schema.
+
+The existing structured HTTP creation now rechecks its session after inference.
+New structured resume/revise/cancel/recover are **service-only**: no new HTTP route
+or structured-card controls are claimed. Natural HTTP/UI remains the recommended
+demo route. Structured conditional AP review, general semantics/medical safety and
+complete BA/NFR acceptance remain open. BA-T-01/03/07 stay PARTIAL.
+
 ## BA conditional review checkpoint · 30 October 2026
 
 Use a new synthetic database and a free loopback port; preserve existing demo data.
