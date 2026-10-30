@@ -1,5 +1,17 @@
 # Current implementation status
 
+## Saved-record response consistency · 31 October 2026
+
+PR #20 merged as5b83cda after its required Python3.9/3.13 jobs passed. Its subsequent
+main run41093577366 exposed an intermittent timestamp mismatch in a new BA guard
+test: structured preparation returned the pre-save updated value. Business payload,
+revision and failed-authority guards were unchanged. The bounded follow-up returns
+actual persisted records from structured preparation/low-level completion and the
+shared final advice recorder. A deterministic ticking-clock test fails on unchanged
+5b83cda and passes after repair. **306 Mac tests /36.240s passed**; provenance133/41,
+JS and whitespace passed. No dependency/schema/HTTP/UI/model/authority change.
+Current Windows expectations are306; actual combined release acceptance is pending.
+
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
 
 ## BA/MC acceptance-gap repair · 31 October 2026

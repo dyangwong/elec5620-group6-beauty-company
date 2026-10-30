@@ -1,5 +1,16 @@
 # 本地验证记录
 
+## 合并后返回一致性修复 · 2026-10-31
+
+PR #20 的必需检查41093217688 在 d88bb48 通过，并正常以本人 PR 例外 squash 为5b83cda。
+随后 main 检查41093577366：Python3.13通过，3.9在新结构化权限回归的整条记录比较中失败；返回的
+CLARIFYING 记录 updated 比实际保存值早，业务范围未变。失败日志124193419028 已保留；不重跑掩盖失败。
+KAN-10-saved-record-response 补准备/低层成功结果/共享最终记录的 Store.get 返回。新增递增时钟测试：
+澄清、完成、替换、取消、低层 submit 返回均须等于存储；独立复制原5b83cda稳定失败，修复后通过，原断言保留。
+Mac Python3.9.6 全量306项/36.240秒通过；来源133文件/41组、已装Node JS/空白通过。
+日志见 output/ba-mc-fix-20261031/response-regression-before-fix.txt 与 full-tests-response-fix.txt。
+只是返回一致性修复，无新增权限/状态/schema/模型/UI 功能；PR/CI/合并/Jira 回执随后记录。
+
 ## KAN-10 / KAN-12 修复验证 · 2026-10-31
 
 Danny 授权从 main e6bd1b4 在 KAN-10-KAN-12-ba-mc-failure-lifecycle 修复并提交 PR、检查后合并。

@@ -1183,3 +1183,22 @@ class BaStructuredLifecycleTests(unittest.TestCase):
         with self.company.store.read() as db:
             self.assertEqual(db.execute("SELECT count(*) FROM events WHERE entity_id=? AND event='CONFIRMED_ADVICE_RECORDED'", (record['id'],)).fetchone()[0], 1)
         self.assert_no_effects()
+
+    def test_ba_t_07_saved_response_matches_storage_across_distinct_write_times(self):
+        # Every persistence operation gets a distinct instant; no wall-clock luck or sleep.
+        counter = iter(range(1, 100))
+        def ticking():
+            return f'2026-10-31T00:00:00.{next(counter):03d}+00:00'
+        with patch('beauty_company.store.now', side_effect=ticking):
+            record = self.company.consult(CUSTOMER, {'message': 'Hydration please'})
+            self.assertEqual(record, self.saved(record['id']))
+            final = self.company.consult(CUSTOMER, {'contextRevision': 1, **CONFIRM}, record['id'])
+            self.assertEqual(final, self.saved(record['id']))
+            changed = self.company.revise_consultation(CUSTOMER, record['id'], {'contextRevision': 2, 'message': 'Cleansing please'})
+            self.assertEqual(changed, self.saved(record['id']))
+            cancelled = self.company.cancel_consultation(CUSTOMER, record['id'], {'contextRevision': 3})
+            self.assertEqual(cancelled, self.saved(record['id']))
+            with self.company.store.transaction() as db:
+                low_level = self.company.ba.submit(db, CUSTOMER, self.fields)
+                self.assertEqual(low_level, Store.get(db, low_level['id'], 'BA'))
+        self.assert_no_effects()

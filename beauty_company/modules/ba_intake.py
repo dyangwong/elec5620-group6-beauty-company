@@ -329,6 +329,7 @@ class BaIntake:
                     Store.save(db, current)
                     Store.event(db, rid, "BA", event, {"status": current["status"], "revision": revision,
                                 "simulated": p["simulated"], "recovered": actor is not None})
+                    current = Store.get(db, rid, "BA")
             if fixture:
                 raise DomainError("The final advice save failed. Refresh and recover the saved draft; no completion is claimed.",
                                   503, "BA_RECORDING_FAILED")
