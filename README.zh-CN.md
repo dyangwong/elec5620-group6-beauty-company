@@ -15,7 +15,7 @@ Group 6 的 **AI-Powered One-Person Beauty Commerce and Content Company** 初始
 MC生成保存恢复也已验证。有界CS自然换货意图／真实CS→CO→BA已验证，更广CS仍待验；无生产结算、发货或公开发布，
 Stage1设计采纳仍PROPOSED。见[当前就绪盘点](docs/zh-CN/STAGE2_READINESS.md)、
 [验证证据](docs/zh-CN/VERIFICATION.md)及[Windows步骤](docs/zh-CN/WINDOWS_LLM.md)。
-最新本地实现与较早冻结ZIP／main覆盖不同。
+验证收据各自对应具体版本；以最新STATUS及交付指南为准，不把旧冻结ZIP视为包含后续改动。
 
 **Danny 回游戏本继续：**先读 [GitHub 交付交接](docs/zh-CN/RELEASE_HANDOFF.md)。
 在新目录克隆仓库，保留已有模型工作区，再使用文中的 Agent prompt。

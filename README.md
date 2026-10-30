@@ -20,7 +20,8 @@ Bounded CS natural exchange intent and live CS-to-CO-to-BA are now verified; bro
 or public posting exists; Stage 1 design acceptance remains PROPOSED.
 See the [current readiness audit](docs/STAGE2_READINESS.md),
 [verification evidence](docs/VERIFICATION.md) and [Windows steps](docs/WINDOWS_LLM.md).
-The latest local implementation and older frozen ZIP/main have different coverage.
+Verification receipts are version-specific. Use the latest STATUS and release
+handoff rather than assuming an older frozen ZIP includes subsequent changes.
 
 **Danny continuing on the gaming laptop:** use the [GitHub release handoff](docs/RELEASE_HANDOFF.md).
 Clone into a fresh directory, preserve the existing model workspace, and follow

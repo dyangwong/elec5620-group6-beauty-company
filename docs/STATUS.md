@@ -2,6 +2,44 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
 
+## Reviewed integration closeout · 30 October 2026
+
+Danny explicitly authorised repair/review/merge and publication of current work.
+Teammate PR #17 merged normally as 91281dc after restored Chinese documentation,
+accurate test/state wording, new required CI and a renewed non-author AI-assisted
+dyangwong review at c41a76e. It adds three CO tests; existing KAN-15 production code
+and Guiyu Liu attribution remain. KAN-14 was observed Verification / GuiyuLiu.
+
+The video branch incorporates that main and the advert polish below. Combined
+Mac Python3.9.6: **286 tests /34.446 s passed**, provenance133 files/41 groups,
+JS/whitespace/links checked. No BA/CS/AP/CO, HTTP/UI, provider, dependency or schema
+change. Reviewed source, publication/CI/merge and minimal Jira receipts belong on
+the integration PR. Old “exclude PR #17” handoff instructions are superseded;
+the guide now includes its reviewed merge and expects286 tests.
+
+All37 PARTIAL /4 NOT_STARTED case groups remain unchanged. Current Windows combined
+live/model/media acceptance, actual Canvas download/venue and human contribution
+confirmation remain open; neither green CI nor this closeout claims full Stage2.
+
+
+## MC advert-template polish · 30 October 2026
+
+Danny / M1 authorised this AI-assisted KAN-9 / GR-INT-03 increment from main
+1ad1101, branch KAN-9-mc-advert-template. Original MC owner/work and Jira claims
+remain. The optional CPU renderer now composes original fictional jar/pump artwork,
+studio light/plinth, gentle camera movement and timed product/fact/closing captions.
+It remains a silent 15 s 720x1280/24 fps H.264 template, not photography or a video
+model. Mock default, catalogue claims, metadata/hash bindings, AP and recovery
+contracts are unchanged. Bundled PNGs are required; no new runtime library/model.
+
+283 Mac tests passed (33.771 s), provenance 133 files/41 groups and JS passed.
+Actual three-style/three-product files decoded; the browser played all 15 seconds
+and its download hash matched. Real-render save failure -> app restart -> same
+revision/file recovery retained one review for that origin, no extra media, zero
+effects and stock 12/8/0. Details: VERIFICATION.md. Publication/Jira receipts are
+separate; no new Windows/live-model/Canvas/venue acceptance or full MC completion.
+
+
 ## BA conditional review checkpoint · 30 October 2026
 
 Danny / M1 authorised this bounded AI-assisted KAN-15 / GR-INT-02 continuation

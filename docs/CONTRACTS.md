@@ -2,6 +2,18 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/CONTRACTS.md).
 
+## Advert-template rendering · 30 October 2026
+
+The optional renderer uses source-bundled PNG illustrations (editable SVG sources),
+fixed studio composition, bounded CALM/ENERGETIC/INFORMATIVE motion/accent and
+validated caption textfiles. Captions remain data, not filter expressions; packaging
+is explicitly fictional. No user-selected asset path/URL, new provider, audio or
+claim is accepted. Missing artwork -> MEDIA_UNAVAILABLE without fallback/review.
+Format, label, kind, metadata schema, file/script hashes and AP scope are unchanged;
+old saved artifacts remain readable/recoverable using their original bytes. Asset
+changes only affect new renders; recovery never substitutes a freshly rendered file.
+
+
 ## BA conditional review checkpoint · 30 October 2026
 
 Additive natural-route BA-UC-01 E4 contract; no schema/provider change:

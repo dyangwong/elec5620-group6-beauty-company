@@ -1,5 +1,33 @@
 # 当前实现状态
 
+## 审阅集成收口 · 2026-10-30
+
+Danny明确授权小修／复核／合并并发布当前工作。队友PR #17恢复中文、修正测试／状态表述，
+新CI与c41a76e上的dyangwong非作者AI辅助Approve通过后，正常合入91281dc。
+只新增三项CO测试，保留KAN-15生产实现与Guiyu Liu归属；KAN-14实见Verification／GuiyuLiu。
+
+视频分支已集成该main及下方广告打磨。Mac Python3.9.6组合 **286项／34.446秒通过**，
+来源133文件／41组，JS／空白／链接已检查。不改BA／CS／AP／CO、HTTP／UI、provider、依赖或schema。
+准确源码／发布／CI／合并及最小Jira收据在集成PR记录；旧“排除#17”交接已被替代，指南现包含已审阅合并、预期286项。
+
+37组PARTIAL／4组NOT_STARTED不变。当前Windows统一真实模型／媒体、实际Canvas下载／现场、
+人工确认贡献表仍待完成；绿色CI／本次收口不等于完整Stage2完成。
+
+
+## MC 广告模板打磨 · 2026-10-30
+
+Danny／M1 授权这次 AI 辅助 KAN-9／GR-INT-03 增量，基线 main1ad1101，
+分支 KAN-9-mc-advert-template；保留 MC 原负责人、原工作及 Jira 认领。
+可选 CPU 渲染器加入原创虚构罐／泵瓶、影棚光影与展示台、轻微镜头运动、产品／事实／收尾字幕。
+仍是静音15秒720×1280／24fps H.264模板，非实拍或视频模型。
+默认mock、目录事实、元数据／哈希审批绑定及恢复接口不变；PNG随源码提供，无新增运行库／模型。
+
+Mac283项测试通过（33.771秒），来源133文件／41组及JS通过。
+三种风格／三个产品实际文件均解码；网页完整播放15秒，下载哈希匹配。
+真实渲染后保存失败→重启→同版本／同文件恢复，目标仅一个审批、不增媒体、0效果，库存12／8／0。
+详见VERIFICATION；发布／Jira收据另记，未新增Windows／真实模型／Canvas／现场验收，不代表完整MC完成。
+
+
 ## BA conditional review checkpoint · 30 October 2026
 
 Danny / M1 授权本次 AI 辅助 KAN-15 / GR-INT-02 收尾，从已获取且干净的 main

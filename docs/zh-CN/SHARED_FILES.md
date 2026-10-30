@@ -18,6 +18,14 @@
 
 可添加归属明确的模块内 helper/测试。不为本地便利擅自搬共享商品函数；先列影响的导入/契约，另做集成。
 
+## MC 广告模板例外 · 2026-10-30
+
+Danny／M1授权KAN-9／GR-INT-03视觉打磨，基线main1ad1101：adapters/template_video.py、
+原创assets/advert、tests/test_mc.py，以及配套双语接口／模块／状态／验证／交付指南和指定MC追溯。
+不改Marketing／AP／CO／CS／BA业务、HTTP／UI、schema、provider签名、依赖、任务注册或模型安装。
+保留Zhengdu Wei的MC原归属／工作，不认领KAN-12；自检不等于负责人认可或已发布。
+
+
 ## BA conditional review checkpoint · 30 October 2026
 
 Danny／M1明确授权KAN-15自然BA复核最小共享例外：新增ba_review.py；ba_intake范围／历史和连接边界；
