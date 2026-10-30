@@ -2,6 +2,47 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/VERIFICATION.md).
 
+## MC advert-template polish · 30 October 2026
+
+Baseline main1ad1101; Danny-authorised AI-assisted KAN-9 / GR-INT-03, independent
+KAN-9-mc-advert-template branch. No teammate starter claim or inferred endorsement.
+
+- Mac Python3.9.6: **283 tests /33.771 s passed**, including two new guards for
+  missing bundled artwork and conflicting scene timing/boolean shot IDs. Source
+  provenance133 files/41 groups, JS and whitespace passed. Cases remain PARTIAL.
+- Actual native FFmpeg/ffprobe6.1.1 used only from ignored var/media-tools;
+  ffmpeg-static b6.1.1 ARM64 archives matched GitHub asset SHA-256 digests.
+  No system installation, Windows tool upgrade or new application library.
+  Existing local DejaVuSans font; Windows configured fonts/tools need rehearsal.
+- Original paired SVG/PNG studio/jar/pump assets included in source; runtime reads
+  only PNGs. Actual CALM/P-101 mock-text film and INFORMATIVE/P-102 plus ENERGETIC/
+  P-103 controlled validated-plan films passed H.264/720x1280/24fps/360-frame/15s,
+  silent-stream, full-decode, size and file/script-hash checks. The latter are
+  deterministic test plans, **not actual LLM runs**. Mac frame sampling covered
+  three caption stages and both vessels, not general visual-quality acceptance.
+- Isolated actual browser at loopback5790, fresh browser.sqlite3: MC-a91aa5c8133f r1,
+  AP-a2dec0aafa17 REVIEW_PENDING. HTML video readyState4, 720x1280, then currentTime15/
+  ended=true/error=null. Actual downloaded file SHA-256 matched saved/review scope:
+  ce4c13c4eecd50eb2af6b222f2a39946ce7e4d3bac1a5d6df4dd68a7068b82b2.
+- Actual MC final-save fixture on P-102: MC-65cdca3d844b r1 RECORDING_FAILED, no
+  preview or approval for that origin. Restarted only this run's app with same
+  DB/config; browser recovery -> REVIEW_PENDING /AP-09c1344feaa2, same revision,
+  byte-identical staged media metadata, unchanged five-MP4 inventory, exactly one
+  TEXT_GENERATION_STARTED and one review for that origin. Recovered file hash:
+  f65a3666e0c97bd254e716da4905850f7c8647a8f5501f3e71037b3227f9f673.
+  Independent SQLite confirmed exact review file/script hashes, zero effects,
+  stock12/8/0. No approval/publication or generation replay occurred on recovery.
+- First actual render exposed FFmpeg6 rejecting fade duration `.4`; corrected to
+  `0.4`, then actual films passed. Initial diagnostic queries used incorrect review
+  table names; corrected against approvals. Final checks use read-only SQLite.
+  No application schema/approval change was made to accommodate a diagnostic.
+
+Raw configs/DBs/tool binaries/logs and preview videos remain ignored. Exact source/
+publication/PR/Jira receipts are recorded when they occur. No new live model,
+Windows9.0.2 rendering, new-source ZIP/Canvas-download/venue rehearsal, arbitrary
+photography/audio/video diffusion or broad MC/Stage2 completion is claimed.
+
+
 ## BA conditional review checkpoint · 30 October 2026
 
 New verification in this round (not historical PR #8/#14/#15 evidence):

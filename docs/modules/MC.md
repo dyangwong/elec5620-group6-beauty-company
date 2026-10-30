@@ -2,6 +2,18 @@
 
 English is the maintained primary version. [中文阅读副本](../zh-CN/modules/MC.md).
 
+## Advert-template polish · 30 October 2026
+
+Danny's KAN-9 visual increment replaces the optional renderer's plain text cards
+with original fictional packaging/studio artwork, subtle motion and timed grounded
+captions. It preserves MC ownership, text/model/evidence checks, 15s silent format,
+hash-bound AP and same-artifact recovery. No audio, video model or public posting.
+PNGs ship in source; no new app dependency. See beauty_company/assets/advert/README.md
+and current VERIFICATION for actual Mac playback/download, three-style/three-product
+renders and failed-save/restart recovery. 283 tests passed; Windows/live-model/final
+ZIP/Canvas and general creative/visual quality remain pending.
+
+
 ## MC generation recovery checkpoint · 29 October 2026
 
 Danny explicitly authorised MC generation persistence/recovery/cancellation under

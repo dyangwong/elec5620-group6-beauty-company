@@ -3,12 +3,14 @@
 中文阅读副本，依据 2026-10-30 [英文主版](../RELEASE_HANDOFF.md)同步。
 
 Danny / Danyang Wang / M1 已授权这次 AI 辅助的仓库维护，关联 KAN-9／内部
-GR-INT-03（不是新 Jira key）。只增加本指南及中文副本、README／AGENTS 双语入口；
-不改应用、测试、接口、模型、任务归属或验收状态。
+GR-INT-03（不是新 Jira key）。PR #18／1ad1101最初只增加交接文档；随后Danny授权
+当前STATUS／VERIFICATION记录的有界广告模板打磨：原创随包素材、渲染器、两项保护测试、
+配套双语指南与MC追溯，不改模型／provider或归属。
+下轮Windows验收应使用已合入该增量的main；若仍只在本地／未合并，应明确缺少发布，不能把旧main当新版本验收。
 
 ## 基线与已有证据
 
-应用基线为已合并 PR #16：`7c862341fe914b33b7dadcd56784288b50fb0436`。
+较早应用基线为已合并 PR #16：`7c862341fe914b33b7dadcd56784288b50fb0436`。
 **本轮不合并 PR #17**，它是另行评估的队友 PR。
 
 Mac 的原 RC1 源码 ZIP 固定在该提交，共 124 文件，SHA-256 为
@@ -20,7 +22,7 @@ STATUS／VERIFICATION 的旧 Windows 结果各自对应当时版本；当前候�
 
 保留原 RC1 与本地收据；它们在被忽略的输出目录，不会随 GitHub 自动同步。
 **这条路线无需复制那个交接包。** 通过 GitHub 取指南，在 Windows 生成新源码候选包，
-记录其完整提交、文件数与 ZIP 哈希。文档提交也改变源码字节，因此新包不要仍叫 RC1、
+记录其完整提交、文件数与 ZIP 哈希。文档和广告模板增量改变源码字节，因此新包不要仍叫 RC1、
 期待旧哈希，或把旧包测试结果直接填成新包 PASS。
 
 ## 保留旧工作区，在新目录取源码
@@ -41,10 +43,10 @@ git status --short --branch
 git diff --name-only 7c862341fe914b33b7dadcd56784288b50fb0436 HEAD
 ```
 
-相对 7c86234，预期只有六个文档路径：`AGENTS.md`、`AGENTS.zh-CN.md`、
-`README.md`、`README.zh-CN.md`、`docs/RELEASE_HANDOFF.md`、
-`docs/zh-CN/RELEASE_HANDOFF.md`。如果 main 还有其他差异，先检查、报告，
-再决定能否纳入候选；不要静默带入其他 PR 或覆盖旧工作。
+相对7c86234，预期包括PR #18的六个文档路径及当前广告模板增量：template_video.py、
+assets/advert、test_mc.py、双语接口／模块／状态／验证／共享范围／交接指南及指定MC追溯。
+核对真实diff和已合并PR收据，不静默带入其他PR或覆盖旧工作。
+本增量不含BA／CS／AP／CO业务、HTTP／UI、provider、依赖或schema变更。
 固定记录新 checkout 的**完整 HEAD**，不能只写会移动的 main。
 读 AGENTS、本指南、STATUS／VERIFICATION 最新检查点及 Windows 指南；旧记录不是新验收证据。
 
@@ -60,7 +62,7 @@ Get-FileHash output/elec5620-source-rc2.zip -Algorithm SHA256
 文件名已占用就换名，不能覆盖旧候选。核对 ZIP 路径集合等于 `git ls-files`，每项字节等于
 干净 checkout 的对应文件，并且不含运行／私有文件。私有收据记录每文件大小／SHA-256、
 完整源码提交及 ZIP SHA-256。Windows 换行差异会进入实际字节；之后始终保留同一个 ZIP。
-若仅合入本次文档增量，跟踪文件为 126 个；以实际检查为准，不能硬填通过。
+若仅含所述增量，跟踪文件为133个；以实际检查为准，不能硬填通过。
 模型、工具、字体、配置、会话、数据库、生成媒体都不能打入源码包。
 
 解压到另一个**不存在的新目录**，建议路径带空格；逐文件核对解压内容与 ZIP。
@@ -74,7 +76,7 @@ Get-FileHash output/elec5620-source-rc2.zip -Algorithm SHA256
 node --check beauty_company/web/app.js
 ```
 
-解释器、venv、模块路径都应在新解压目录。预期仍为 281 项测试，不是 #17 的 284 项。
+解释器、venv、模块路径都应在新解压目录。预期283项（281基线＋两项渲染保护），仍排除#17。
 Verify 包括来源检查，但 Node 缺失会跳过 JS，因此单独记录 JS 实际结果；使用已安装 Node，
 不能把跳过写成通过。
 
@@ -113,7 +115,7 @@ MC 是独立营销路径，不硬塞进换货链。看实际推理／渲染，�
 
 | 检查 | 必须观察到 |
 |---|---|
-| 源码／启动 | ZIP 与解压字节一致，新 venv／导入路径，281 项测试、来源及 JS。 |
+| 源码／启动 | ZIP与解压字节一致，新venv／导入路径，283项测试、来源及JS，随包PNG素材齐全。 |
 | Mock BA | 缺预算／香味要求会澄清，同 ID 继续；客户明确确认后才产生有依据建议。 |
 | 真实 CS／CO／BA | 归属 ORD-1001 的自然换货 → Founder 发起交接 → 有依据 BA → 客户确认方案 → Founder 精确 AP → 客户最终确认。 |
 | 效果边界 | 独立核实当前证据／政策／actionRef；最终确认前 0 效果、后 1 效果，重复仍 1；P-101 库存 12→11。 |

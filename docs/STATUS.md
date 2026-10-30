@@ -2,6 +2,24 @@
 
 English is the maintained primary version. [中文阅读副本](zh-CN/STATUS.md).
 
+## MC advert-template polish · 30 October 2026
+
+Danny / M1 authorised this AI-assisted KAN-9 / GR-INT-03 increment from main
+1ad1101, branch KAN-9-mc-advert-template. Original MC owner/work and Jira claims
+remain. The optional CPU renderer now composes original fictional jar/pump artwork,
+studio light/plinth, gentle camera movement and timed product/fact/closing captions.
+It remains a silent 15 s 720x1280/24 fps H.264 template, not photography or a video
+model. Mock default, catalogue claims, metadata/hash bindings, AP and recovery
+contracts are unchanged. Bundled PNGs are required; no new runtime library/model.
+
+283 Mac tests passed (33.771 s), provenance 133 files/41 groups and JS passed.
+Actual three-style/three-product files decoded; the browser played all 15 seconds
+and its download hash matched. Real-render save failure -> app restart -> same
+revision/file recovery retained one review for that origin, no extra media, zero
+effects and stock 12/8/0. Details: VERIFICATION.md. Publication/Jira receipts are
+separate; no new Windows/live-model/Canvas/venue acceptance or full MC completion.
+
+
 ## BA conditional review checkpoint · 30 October 2026
 
 Danny / M1 authorised this bounded AI-assisted KAN-15 / GR-INT-02 continuation

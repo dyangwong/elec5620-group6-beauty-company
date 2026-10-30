@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="720" viewBox="0 0 600 720">
+  <defs>
+    <linearGradient id="glass" x1="0" x2="1"><stop stop-color="#bdbdb1"/><stop offset=".13" stop-color="#f5f4e9"/><stop offset=".38" stop-color="#fffff8"/><stop offset=".76" stop-color="#eeede2"/><stop offset="1" stop-color="#c8cbbd"/></linearGradient>
+    <linearGradient id="lid" x1="0" x2="1"><stop stop-color="#354d42"/><stop offset=".16" stop-color="#6c8171"/><stop offset=".45" stop-color="#9bac98"/><stop offset=".8" stop-color="#617762"/><stop offset="1" stop-color="#304b3a"/></linearGradient>
+    <linearGradient id="top" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#b6c2ae"/><stop offset="1" stop-color="#6b806e"/></linearGradient>
+    <radialGradient id="shadow"><stop stop-color="#293c30" stop-opacity=".22"/><stop offset="1" stop-color="#293c30" stop-opacity="0"/></radialGradient>
+    <linearGradient id="base" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f9f7ec"/><stop offset="1" stop-color="#aeb9a8"/></linearGradient>
+  </defs>
+  <ellipse cx="306" cy="616" rx="268" ry="50" fill="url(#shadow)"/>
+  <path d="M108 327 Q108 301 151 296 H449 Q492 301 492 327 V526 Q490 584 432 591 H169 Q110 584 108 526Z" fill="url(#glass)"/>
+  <ellipse cx="300" cy="534" rx="192" ry="57" fill="url(#base)" opacity=".6"/>
+  <path d="M109 355 V524 Q113 574 168 581 H431 Q487 575 491 524 V355" fill="none" stroke="#fffef5" stroke-opacity=".7" stroke-width="4"/>
+  <path d="M132 349 V509 Q132 546 151 553" fill="none" stroke="#ffffff" stroke-opacity=".72" stroke-width="12" stroke-linecap="round"/>
+  <path d="M464 351 V512" stroke="#8e9d87" stroke-opacity=".22" stroke-width="8" stroke-linecap="round"/>
+  <rect x="102" y="264" width="396" height="76" rx="12" fill="url(#lid)"/>
+  <ellipse cx="300" cy="335" rx="198" ry="45" fill="url(#lid)"/>
+  <ellipse cx="300" cy="264" rx="198" ry="56" fill="url(#top)"/>
+  <ellipse cx="300" cy="257" rx="176" ry="39" fill="none" stroke="#e1e7d7" stroke-opacity=".55" stroke-width="2"/>
+  <path d="M119 292 Q300 345 481 292" fill="none" stroke="#e8eddd" stroke-opacity=".38" stroke-width="2"/>
+  <g fill="#314b3d" text-anchor="middle" font-family="Georgia,serif">
+    <text x="300" y="447" font-size="61" letter-spacing="3">bc.</text>
+    <text x="300" y="481" font-size="13" letter-spacing="4">BEAUTY COMPANY</text>
+  </g>
+  <path d="M251 504 H349" stroke="#87967d" stroke-width="1"/>
+  <text x="300" y="529" fill="#6f7e68" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" letter-spacing="2">DEMO COLLECTION</text>
+</svg>

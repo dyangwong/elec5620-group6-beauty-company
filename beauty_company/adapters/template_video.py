@@ -1,4 +1,4 @@
-"""Opt-in CPU FFmpeg template renderer. No diffusion, product photos, voice or publishing."""
+"""CPU-composed product advert with original illustrative assets; no video model/audio."""
 import hashlib
 import json
 import re
@@ -14,6 +14,7 @@ from ..contracts import DomainError
 
 LABEL = "Template-composed MP4; fictional product, no video model or audio used."
 MAX_BYTES = 20 * 1024 * 1024
+ASSET_ROOT = Path(__file__).resolve().parent.parent / "assets" / "advert"
 
 
 def digest(value):
@@ -73,39 +74,71 @@ class TemplateVideo:
             frames = deepcopy(script["storyboard"])
             if len(frames) != 3:
                 raise failed("MEDIA_CONTENT_REJECTED")
+            for i, frame in enumerate(frames):
+                if (set(frame) != {"shot", "duration", "caption", "direction"}
+                        or type(frame["shot"]) is not int or frame["shot"] != i+1
+                        or frame["duration"] != ("0–5 s", "5–10 s", "10–15 s")[i]
+                        or any(not isinstance(frame[k], str) or not frame[k].strip()
+                               or len(frame[k]) > limit for k, limit in (("caption", 120), ("direction", 140)))):
+                    raise failed("MEDIA_CONTENT_REJECTED")
+            # Fixed bundled illustrations only, never caller-selected files/URLs.
+            # Packaging is fictional art, not evidence of a real product's appearance.
+            vessel = "pump" if "cleanser" in frames[0]["caption"].casefold() else "jar"
+            assets = {"studio.png": ASSET_ROOT / "studio.png", "product.png": ASSET_ROOT / (vessel + ".png")}
+            if any(not path.is_file() for path in assets.values()):
+                raise failed("MEDIA_UNAVAILABLE")
             self.root.mkdir(parents=True, exist_ok=True)
             artifact_id = uuid.uuid4().hex
             job = self.root/artifact_id
             job.mkdir(exist_ok=False)
             shutil.copyfile(self.config.font, job/"font.ttf")
-            palette = {"CALM": "0xeaf0e5", "ENERGETIC": "0xffe6ce", "INFORMATIVE": "0xe8edf3"}
-            color = palette.get(script.get("textPlan", {}).get("style"), "0xeaf0e5")
-            filters = ["drawbox=x=42:y=40:w=636:h=1200:color=white:t=fill",
-                       "drawbox=x=70:y=220:w=580:h=4:color=0x426356:t=fill"]
+            for filename, source in assets.items():
+                shutil.copyfile(source, job / filename)
+            style = script.get("textPlan", {}).get("style", "CALM")
+            accent, speed = {"CALM": ("0x45624b", .35), "ENERGETIC": ("0xa45532", .8),
+                             "INFORMATIVE": ("0x354d5b", .2)}.get(style, ("0x45624b", .35))
+            baseline = 280 if vessel == "pump" else 330
+            filters = [f"[0:v]scale=744:1322,crop=720:1280:x='12+8*sin(t*.25)':y='21+10*sin(t*.2)',setsar=1[studio]",
+                       "[1:v]format=rgba,scale=w='600*(1+.035*sin(PI*t/15))':h=-1:eval=frame:flags=lanczos[product]",
+                       f"[studio][product]overlay=x='(W-w)/2+8*sin(t*{speed})':"
+                       f"y='{baseline}-(h-720)*.85+5*sin(t*{speed})':eval=frame:shortest=1[composed]"]
+            finishing = ["drawbox=x=56:y=119:w=608:h=1:color=0x40583d@0.25:t=fill",
+                         f"drawbox=x=56:y=154:w=28:h=3:color={accent}:t=fill",
+                         "drawbox=x=0:y=1140:w=720:h=140:color=0x273e30@0.94:t=fill"]
 
-            def text(filename, value, size, y, when=None, color="0x203b31"):
+            def text(filename, value, size, y, when=None, color="0x273e30", x="56"):
                 with (job/filename).open("w", encoding="utf-8", newline="\n") as output:
                     output.write(value)
                 f = (f"drawtext=fontfile=font.ttf:textfile={filename}:expansion=none:fontsize={size}:"
-                     f"fontcolor={color}:line_spacing=16:x=70:y={y}")
-                filters.append(f + (f":enable='gte(t,{when[0]})*lt(t,{when[1]})'" if when else ""))
+                     f"fontcolor={color}:line_spacing=12:x='{x}'")
+                if when:
+                    start, end = when
+                    # Only fixed numeric timing enters the filter language; all copy is textfile data.
+                    f += (f":y='{y}+14*(1-min(1,max(0,(t-{start})/.5)))':"
+                          f"alpha='if(lt(t,{start}),0,if(lt(t,{start}+.4),(t-{start})/.4,"
+                          f"if(lt(t,{end}-.3),1,if(lt(t,{end}),({end}-t)/.3,0))))'")
+                else:
+                    f += f":y={y}"
+                finishing.append(f)
 
-            text("header.txt", "BEAUTY COMPANY\nCONTENT STUDIO", 26, 100)
-            text("watermark.txt", "TEMPLATE VIDEO / SILENT\nFICTIONAL PRODUCT\nDRAFT - FOUNDER REVIEW", 20, 1080)
+            text("header.txt", "BEAUTY COMPANY", 25, 66)
+            text("studio.txt", "CONTENT STUDIO", 12, 75, x="w-text_w-56")
+            text("watermark.txt", "FICTIONAL PACKAGING  /  SILENT TEMPLATE", 17, 1171, color="0xf0f1df")
+            text("review.txt", "DRAFT  /  FOUNDER REVIEW REQUIRED", 15, 1205, color="0xc3cfb9")
             for i, frame in enumerate(frames):
-                if set(frame) != {"shot", "duration", "caption", "direction"} or frame["shot"] != i+1:
-                    raise failed("MEDIA_CONTENT_REJECTED")
-                caption, direction = frame["caption"], frame["direction"]
-                if not isinstance(caption, str) or not isinstance(direction, str) or len(caption)>120 or len(direction)>140:
-                    raise failed("MEDIA_CONTENT_REJECTED")
                 when = (i*5, (i+1)*5)
-                text(f"shot-{i}.txt", f"SHOT {i+1:02d} / 03", 24, 300, when)
-                text(f"caption-{i}.txt", "\n".join(textwrap.wrap(caption, width=23)), 45, 420, when)
-                text(f"direction-{i}.txt", "\n".join(textwrap.wrap(direction, width=33)), 24, 790, when)
-            filters.extend(["fade=t=in:st=0:d=0.3", "fade=t=out:st=14.7:d=0.3"])
-            self.run(self.config.ffmpeg, ["-nostdin", "-v", "error", "-n", "-f", "lavfi", "-i",
-                f"color=c={color}:s=720x1280:r=24:d=15", "-vf", ",".join(filters), "-an", "-c:v", "libx264",
-                "-preset", "veryfast", "-crf", "23", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "draft.mp4"], job)
+                text(f"stage-{i}.txt", ("01  /  THE PRODUCT", "02  /  THE DETAILS", "03  /  EXPLORE")[i],
+                     15, 176, when, color=accent)
+                caption = frame["caption"]
+                text(f"caption-{i}.txt", "\n".join(textwrap.wrap(caption, width=25)),
+                     45 if len(caption) < 65 else 33, 232, when)
+            finishing.extend(["fade=t=in:st=0:d=0.4", "fade=t=out:st=14.6:d=0.4", "format=yuv420p"])
+            graph = ";\n".join(filters + ["[composed]" + ",".join(finishing) + "[out]"])
+            (job / "render.ffgraph").write_text(graph, encoding="utf-8")
+            self.run(self.config.ffmpeg, ["-nostdin", "-v", "error", "-n", "-filter_complex_threads", "1",
+                "-loop", "1", "-framerate", "24", "-i", "studio.png", "-loop", "1", "-framerate", "24", "-i", "product.png",
+                "-filter_complex_script", "render.ffgraph", "-map", "[out]", "-t", "15", "-r", "24", "-an", "-c:v", "libx264",
+                "-preset", "veryfast", "-crf", "21", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "draft.mp4"], job)
             probe = json.loads(self.run(self.config.ffprobe, ["-v", "error", "-show_streams", "-show_format",
                                                              "-of", "json", "draft.mp4"], job).stdout)
             streams = probe["streams"]

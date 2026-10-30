@@ -22,6 +22,17 @@ New module-local helpers/tests may be added when their ownership is explicit.
 Do not move shared catalogue functions merely to make a local task easier: record
 the affected imports/contracts and integrate that change separately.
 
+## MC advert-template exception · 30 October 2026
+
+Danny / M1 authorised KAN-9 / GR-INT-03 visual polish from main1ad1101:
+adapters/template_video.py, original assets/advert, tests/test_mc.py and paired
+contract/module/status/verification/release-handoff guidance plus selected MC
+traceability evidence. No Marketing/AP/CO/CS/BA business rule, HTTP/UI, schema,
+provider signature, dependency, task registry or model installation change.
+Zhengdu Wei's original MC ownership/work remains; no KAN-12 starter claim.
+Affected-owner endorsement/publication is not inferred from self-checks.
+
+
 ## BA conditional review checkpoint · 30 October 2026
 
 Danny / M1 explicitly authorised the bounded KAN-15 natural BA review integration:

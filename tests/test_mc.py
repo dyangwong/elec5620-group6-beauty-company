@@ -6,6 +6,7 @@ import threading
 import tempfile
 import unittest
 from concurrent.futures import ThreadPoolExecutor
+from copy import deepcopy
 from pathlib import Path
 from unittest.mock import patch
 
@@ -577,6 +578,36 @@ class TemplateVideoTests(unittest.TestCase):
         record=self.draft(); self.assertTrue(record['payload']['textSimulated'])
         self.assertFalse(record['payload']['mediaSimulated'])
         self.assertEqual(record['payload']['media']['kind'],'TEMPLATE_VIDEO')
+
+    def test_mc_t_04_missing_bundled_art_withholds_output_and_review(self):
+        from beauty_company.adapters.template_video import TemplateVideo, VideoConfig
+        for name in ('ffmpeg', 'ffprobe', 'font'):
+            (self.root / name).touch()
+        adapter = TemplateVideo(VideoConfig(*(str(self.root / x) for x in ('ffmpeg', 'ffprobe', 'font')),
+                                           str(self.root / 'render')))
+        self.company.mc.media = adapter
+        with patch('beauty_company.adapters.template_video.ASSET_ROOT', self.root / 'absent'), \
+                patch.object(adapter, 'run', side_effect=AssertionError('No encoder without bundled art')):
+            record = self.company.campaign(FOUNDER, self.data)
+        self.assertEqual(record['status'], 'GENERATION_FAILED')
+        self.assertEqual(record['payload']['failure']['code'], 'MEDIA_UNAVAILABLE')
+        self.assertNotIn('media', record['payload'])
+        self.assertNotIn('approvalId', record['payload'])
+
+    def test_mc_t_05_conflicting_scene_timing_or_boolean_shot_is_withheld(self):
+        from beauty_company.adapters.template_video import TemplateVideo, VideoConfig
+        for name in ('ffmpeg', 'ffprobe', 'font'):
+            (self.root / name).touch()
+        adapter = TemplateVideo(VideoConfig(*(str(self.root / x) for x in ('ffmpeg', 'ffprobe', 'font')),
+                                           str(self.root / 'render')))
+        script = self.draft()['payload']['media']['frames']
+        for key, bad in (('duration', '5–99 s'), ('shot', True)):
+            frames = deepcopy(script)
+            frames[0 if key == 'shot' else 1][key] = bad
+            with self.subTest(key=key), patch.object(adapter, 'run', side_effect=AssertionError('Invalid scene')):
+                with self.assertRaises(DomainError) as caught:
+                    adapter.generate({'storyboard': frames})
+            self.assertEqual(caught.exception.code, 'MEDIA_CONTENT_REJECTED')
 
 
     def test_mc_t_05_wrong_probe_format_cannot_create_review(self):

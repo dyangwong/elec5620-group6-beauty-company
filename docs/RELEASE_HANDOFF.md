@@ -4,12 +4,16 @@ English is the maintained primary version. [中文阅读副本](zh-CN/RELEASE_HA
 
 Danny / Danyang Wang / M1 authorised this AI-assisted repository-maintenance
 increment on 30 October 2026, under KAN-9 / internal GR-INT-03 (not a new Jira key).
-Scope: this guide, its translation, and paired README/AGENTS pointers only.
-No application, test, contract, model, ownership or acceptance-status change.
+PR #18 at 1ad1101 originally added this documentation-only route. Danny then
+authorised the bounded advert-template polish described in current STATUS and
+VERIFICATION: original packaged artwork, renderer and two guard tests, with paired
+guidance/MC traceability. No model/provider or ownership change. Use a merged
+main containing that increment for its next Windows acceptance; if it is still
+local/unmerged, report the missing publication rather than testing old main as new.
 
 ## Baseline and evidence
 
-The application baseline is merged PR #16, commit
+The earlier application baseline is merged PR #16, commit
 `7c862341fe914b33b7dadcd56784288b50fb0436`. PR #17 is excluded and must not be
 merged as part of this continuation. It is a separately assessed teammate PR.
 
@@ -26,7 +30,7 @@ RC1 and its local receipts stay unchanged. They are ignored local artifacts,
 not files that GitHub automatically transfers. **You do not need that kit for
 this route.** Fetch the guide through GitHub and create a new source candidate
 on Windows, recording its own full commit, file count and archive hash. The
-documentation commit changes source bytes; do not call the new ZIP RC1, expect
+documentation and advert-template increments change source bytes; do not call the new ZIP RC1, expect
 the old hash, or copy RC1's results into a new candidate's PASS column.
 
 ## Get a clean source without changing the old workspace
@@ -49,11 +53,12 @@ git status --short --branch
 git diff --name-only 7c862341fe914b33b7dadcd56784288b50fb0436 HEAD
 ```
 
-The intended difference from 7c86234 is exactly six documentation paths:
-`AGENTS.md`, `AGENTS.zh-CN.md`, `README.md`, `README.zh-CN.md`,
-`docs/RELEASE_HANDOFF.md`, `docs/zh-CN/RELEASE_HANDOFF.md`.
-If fetched main differs beyond these, inspect and report that delta before using
-it as this candidate; do not silently include another PR or reset the old work.
+The intended difference from 7c86234 includes PR #18's six documentation paths
+and the current bounded advert-template increment: template_video.py, assets/advert,
+test_mc.py, paired contract/module/status/verification/shared-scope/handoff guides
+and selected MC traceability evidence. Inspect the actual diff and merged PR
+receipts; do not silently include another PR or reset old work. No BA/CS/AP/CO
+business, HTTP/UI, provider, dependency or schema change belongs to this increment.
 Pin and record this new checkout's **full HEAD**, not a moving `main` name.
 Read AGENTS, this guide, current STATUS/VERIFICATION and the current Windows guides.
 Historical commands/counts in older checkpoints are not new acceptance evidence.
@@ -72,7 +77,7 @@ that the ZIP's path list equals `git ls-files`, all entry bytes equal the clean
 checkout's files, and no runtime/private files appear. Record each file's size and
 SHA-256, the full source commit and archive SHA-256 in a local receipt. Windows
 checkout line endings are reflected in these bytes; keep the exact ZIP thereafter.
-There are 126 tracked source files after this documentation-only increment, if
+There are 133 tracked source files including this advert-template increment, if
 no other changes entered main; determine the actual count rather than hardcoding
 a pass. Models, tools, fonts, configs, sessions, DBs and generated media stay out.
 
@@ -89,7 +94,8 @@ node --check beauty_company/web/app.js
 ```
 
 The printed interpreter/venv/module paths must all belong to the new extraction.
-Expected application regression remains 281 tests, not PR #17's 284. Verify also
+Expected application regression is 283 tests (281 baseline + two renderer guards),
+with PR #17 still excluded. Verify also
 runs provenance; it skips JS when Node is absent, so record JS separately and
 use already-installed Node rather than claiming a skipped check passed.
 
@@ -135,7 +141,7 @@ report PASS / FAIL / NOT RUN honestly. Existing tests are not all 41 case groups
 
 | Check | Required observation |
 |---|---|
-| Source/startup | Archive and extraction byte checks; fresh venv/import origins; 281 tests, provenance and JS. |
+| Source/startup | Archive and extraction byte checks; fresh venv/import origins; 283 tests, provenance and JS; bundled PNG assets present. |
 | Mock BA | Missing budget/fragrance clarifies on the same ID; explicit Customer confirmation precedes grounded advice. |
 | Live CS/CO/BA | Owned ORD-1001 natural exchange -> Founder starts handoff -> grounded BA -> Customer proposal confirmation -> exact Founder AP -> final Customer confirmation. |
 | Effect boundary | Independently check current evidence/policy/actionRef: zero effects before final confirmation, one afterwards; repeat confirmation stays one; P-101 stock 12 -> 11. |
