@@ -10,6 +10,7 @@ import json
 from ..contracts import DECISIONS, DECISION_STATES, DomainError, require_role, revision_value, text_value
 from ..store import Store, encode, new_id, now
 from .coordination import Coordination
+from .approval_policy import validate as validate_request, validate_review
 
 # A decision intent may be proposed, committed, or left failed after a recording
 # error. Only COMMITTED carries a decision id; the others grant no authority.
@@ -21,18 +22,24 @@ RECORDING_FAILED = "RECORDING_FAILED"
 class Approval:
     @staticmethod
     def submit(db, role, origin_id, revision, action, evidence, action_ref=None, predecessor=None):
-        if role not in {"BA", "CS", "MC"} or not action or not evidence:
-            raise DomainError("Review requires a supported origin, exact action and evidence.")
-        existing = db.execute("SELECT id FROM approvals WHERE origin_role=? AND origin_id=? AND revision=?",
+        risk_class = validate_request(db, role, origin_id, revision, action, evidence, action_ref)
+        existing = db.execute("SELECT * FROM approvals WHERE origin_role=? AND origin_id=? AND revision=?",
                               (role, origin_id, revision)).fetchone()
         if existing:
+            if (json.loads(existing["action"]) != action or json.loads(existing["evidence"]) != evidence
+                    or existing["action_ref"] != action_ref):
+                raise DomainError("An existing review cannot acknowledge a different action or evidence.",
+                                  409, "STALE_SCOPE")
             return existing["id"]
         rid = new_id("AP")
         db.execute("""INSERT INTO approvals
             (id,origin_role,origin_id,revision,action_ref,action,evidence,status,delivery,created,predecessor)
             VALUES(?,?,?,?,?,?,?,'PENDING','NOT_READY',?,?)""",
                    (rid, role, origin_id, revision, action_ref, encode(action), encode(evidence), now(), predecessor))
-        Store.event(db, rid, "AP", "REVIEW_REQUEST_PERSISTED", {"originId": origin_id, "contextRevision": revision})
+        Store.event(db, rid, "AP", "REVIEW_REQUEST_PERSISTED",
+                    {"originId": origin_id, "contextRevision": revision,
+                     "policyVersion": "AP-REGISTERED-v1", "riskClass": risk_class,
+                     "requiresFounderReview": True, "businessExecution": False})
         return rid
 
     @staticmethod
@@ -95,6 +102,7 @@ class Approval:
         origin = Store.get(db, review["origin_id"], review["origin_role"])
         if revision != review["revision"] or origin["revision"] != revision or origin["payload"].get("approvalId") != rid:
             raise DomainError("This action or context revision has changed. Fresh review is required.", 409, "STALE_SCOPE")
+        validate_review(db, review)
         if existing:
             if existing["kind"] != kind or existing["reason"] != reason:
                 raise DomainError("A recorded decision intent cannot be replaced by a different decision.", 409, "DECISION_CONFLICT")
@@ -158,8 +166,11 @@ class Approval:
         origin = Store.get(db, intent["origin_id"], intent["origin_role"])
         if (review["revision"] != intent["revision"] or origin["revision"] != intent["revision"]
                 or origin["payload"].get("approvalId") != review["id"]
-                or review["action"] != intent["action"] or review["action_ref"] != intent["action_ref"]):
+                or review["origin_id"] != intent["origin_id"] or review["origin_role"] != intent["origin_role"]
+                or review["action"] != intent["action"] or review["action_ref"] != intent["action_ref"]
+                or review["evidence"] != intent["evidence"]):
             raise DomainError("This action or context revision has changed. Fresh review is required.", 409, "STALE_SCOPE")
+        validate_review(db, review)
         if Store.fault(db, "approval_recording"):
             # The decision is not recorded. Expose the failure without any committed envelope.
             self.mark_recording_failed(db, intent, {"reason": "Injected decision recording failure."})
@@ -210,6 +221,7 @@ class Approval:
         if origin["revision"] != review["revision"] or origin["payload"].get("approvalId") != rid:
             db.execute("UPDATE approvals SET delivery='STALE' WHERE id=?", (rid,))
             return self.get(db, rid)
+        validate_review(db, review)
         if review["origin_role"] == "BA":
             from .ba_review import check_review_scope
             check_review_scope(origin, review)

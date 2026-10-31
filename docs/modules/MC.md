@@ -1,5 +1,18 @@
 # MC handoff
 
+## Bounded source-conflict guard · 31 October 2026
+
+Danny-authorised KAN-9 repair adds known fragrance-fact/metadata contradiction
+checks before generation and saved-result validation. Creation/revision retains
+INCOMPLETE / SOURCE_CONFLICT, no new output/review. Correction needs new revision/
+review; legacy staged conflict cannot recover into review. AP's new origin check
+also requires legacy revise to save its revision inside the same transaction
+before requesting review. Four new MC tests; full319 tests passed. This supersedes
+only the known-fragrance part of the source-conflict gap below. General semantics,
+media quality and Windows acceptance of this change remain. See
+[contracts](../CONTRACTS.md) and [evidence index](../EVIDENCE_INDEX.md).
+Original Zhengdu Wei attribution remains; affected-owner review pending.
+
 English is the maintained primary version. [中文阅读副本](../zh-CN/modules/MC.md).
 
 ## Required-source-facts repair · 31 October 2026

@@ -1,5 +1,18 @@
 # File ownership and integration rules
 
+## MC/AP core-boundary exception · 31 October 2026
+
+Danny / M1 explicitly authorised KAN-9 integration from d30dc019: marketing.py,
+mc_generation.py, approval.py and new AP-local approval_policy.py; own MC/AP
+tests and paired contract/module/status/verification/evidence docs plus MC-T-02/
+AP-T-01/02 trace rows. AP submission signature/schema/HTTP/UI/model ports are
+unchanged. The legacy MC revise caller now saves the new revision before AP
+inside its existing transaction. Current CS policy is rechecked from the existing
+SQLite order source at review boundaries; CS retains its independent effect checks.
+This is not full risk routing or a teammate starter claim. Zhengdu Wei/Jiaxuan Ren
+ownership remains; their shared-boundary review is requested in the handoff,
+not claimed. Publication/CI/merge/Jira remain pending for this local task.
+
 English is the maintained primary version. [中文阅读副本](zh-CN/SHARED_FILES.md).
 
 ## BA/MC repair exception · 31 October 2026

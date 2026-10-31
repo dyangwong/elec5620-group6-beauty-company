@@ -1,5 +1,16 @@
 # MC 模块交接
 
+## 已知来源矛盾保护 · 2026-10-31
+
+Danny 授权 KAN-9 修复，在生成与保存结果校验前检查已知香精事实／元数据矛盾。
+创建／修订保留 INCOMPLETE／SOURCE_CONFLICT，不产生新输出／review；
+纠正后需新修订／review，旧暂存矛盾不能恢复为可审阅草稿。
+AP 新来源校验也要求低层 revise 在同一事务内先保存新修订再申请 review。
+新增4项 MC 测试，全量319项通过。仅补下方来源矛盾缺口中的已知香精部分，
+通用语义／媒体质量及本次 Windows 验收仍待补。
+见[契约](../CONTRACTS.md)和[证据索引](../EVIDENCE_INDEX.md)。
+保留 Zhengdu Wei 原归属，负责人审阅待完成。
+
 ## 必需产品事实修复 · 2026-10-31
 
 Danny 授权 AI 辅助修复 KAN-12，保留 Zhengdu Wei 原实现、负责人及贡献。

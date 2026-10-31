@@ -1,5 +1,18 @@
 # Current implementation status
 
+## Local MC/AP core-boundary repair · 31 October 2026
+
+Local KAN-9 branch from main d30dc019: known MC fragrance contradictions are
+withheld before generators; AP has server-registered review classes, exact receipt
+matching, current CS policy checks and evidence-bound recovery. 319 Mac tests /
+37.185s passed (307 baseline +12). Owners unchanged; no new model or effect path.
+[Evidence index](EVIDENCE_INDEX.md) separates old Windows real-flow/package receipts
+from this unsubmitted repair. Danny confirms raw IDs/screenshots remain on the
+gaming laptop and genuine retrospective/contribution confirmation is pending.
+All41 groups stay37 PARTIAL/4 NOT_STARTED; no new PR/remote CI/merge/Jira update.
+Earlier306/pending-package snapshots below are historical: PR22 final receipt
+establishes d30dc019's307-test Windows package, not new-branch acceptance.
+
 ## Saved-record response consistency · 31 October 2026
 
 PR #20 merged as5b83cda after its required Python3.9/3.13 jobs passed. Its subsequent

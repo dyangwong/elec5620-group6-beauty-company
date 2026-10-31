@@ -89,7 +89,7 @@ class McGeneration:
                 payload = self.mc.generate(db, {"brief": scope["brief"], "productId": scope["productId"]})
         except DomainError as error:
             payload = {"failure": {"code": error.code, "reason": str(error)}}
-            status = "INCOMPLETE" if error.code == "INVALID_REQUEST" else error.code if error.code in {"INCOMPLETE", "CONTENT_REJECTED", "GENERATION_FAILED"} else (
+            status = "INCOMPLETE" if error.code in {"INVALID_REQUEST", "SOURCE_CONFLICT"} else error.code if error.code in {"INCOMPLETE", "CONTENT_REJECTED", "GENERATION_FAILED"} else (
                 "CONTENT_REJECTED" if error.code == "LLM_INVALID_OUTPUT" else "GENERATION_FAILED")
         else:
             status = "READY"
