@@ -135,9 +135,11 @@ class TemplateVideo:
             finishing.extend(["fade=t=in:st=0:d=0.4", "fade=t=out:st=14.6:d=0.4", "format=yuv420p"])
             graph = ";\n".join(filters + ["[composed]" + ",".join(finishing) + "[out]"])
             (job / "render.ffgraph").write_text(graph, encoding="utf-8")
+            # Pass the fixed graph as one argv item; FFmpeg 9 removed -filter_complex_script.
+            # Captions remain textfile data, never interpolated into the filter language.
             self.run(self.config.ffmpeg, ["-nostdin", "-v", "error", "-n", "-filter_complex_threads", "1",
                 "-loop", "1", "-framerate", "24", "-i", "studio.png", "-loop", "1", "-framerate", "24", "-i", "product.png",
-                "-filter_complex_script", "render.ffgraph", "-map", "[out]", "-t", "15", "-r", "24", "-an", "-c:v", "libx264",
+                "-filter_complex", graph, "-map", "[out]", "-t", "15", "-r", "24", "-an", "-c:v", "libx264",
                 "-preset", "veryfast", "-crf", "21", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "draft.mp4"], job)
             probe = json.loads(self.run(self.config.ffprobe, ["-v", "error", "-show_streams", "-show_format",
                                                              "-of", "json", "draft.mp4"], job).stdout)

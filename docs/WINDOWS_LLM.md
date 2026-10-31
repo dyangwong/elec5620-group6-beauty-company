@@ -1,5 +1,18 @@
 # Windows deployment and KAN-15 handoff
 
+## FFmpeg 9 compatibility · 31 October 2026
+
+The new-directory Windows rehearsal of c55ce78 passed 306 offline tests but actual
+MC rendering failed: installed FFmpeg 9.0.2 rejected `-filter_complex_script`.
+The bounded repair passes the same fixed graph as one `-filter_complex` argument;
+caption/font/assets remain local data files, without shell interpolation. No media
+dependency upgrade, new model, policy, UI or ownership change. The added offline
+transport/injection guard is not playback evidence. A direct diagnostic render on
+9.0.2 succeeded; the repaired committed source still needs its own new ZIP/hash,
+fresh extraction, full checks and real combined acceptance. Preserve the failed
+candidate and record the new run in ignored bilingual receipts. Do not edit an
+extraction or claim that its original ZIP passed after patching.
+
 Current update: the local model and one actual BA HTTP path now pass after runtime
 ACL repair. See [current runtime evidence and recovery commands](WINDOWS_LLM_RUNTIME.md).
 The installation-blocked sections below retain the earlier attempt as history.

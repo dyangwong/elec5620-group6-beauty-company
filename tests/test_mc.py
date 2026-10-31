@@ -634,6 +634,39 @@ class TemplateVideoTests(unittest.TestCase):
         for text_file in adapter.root.rglob('*.txt'):
             self.assertNotIn(b'\r', text_file.read_bytes())
 
+    def test_mc_t_04_filter_graph_transport_keeps_caption_data_out_of_arguments(self):
+        import subprocess
+        from beauty_company.adapters.template_video import TemplateVideo, VideoConfig
+        for name in ('ffmpeg', 'ffprobe', 'font'):
+            (self.root / name).touch()
+        adapter = TemplateVideo(VideoConfig(*(str(self.root / x) for x in ('ffmpeg', 'ffprobe', 'font')),
+                                           str(self.root / 'render with spaces')))
+        frames = deepcopy(self.draft()['payload']['media']['frames'])
+        caption = "Quoted ': [out]; movie=private-file, 50 ml"
+        frames[1]['caption'] = caption
+        probe = {'streams': [{'codec_type': 'video', 'codec_name': 'h264', 'width': 720,
+                 'height': 1280, 'pix_fmt': 'yuv420p', 'nb_frames': '360'}], 'format': {'duration': '15'}}
+        calls = []
+        def run(executable, arguments, cwd):
+            calls.append((executable, arguments, cwd))
+            if executable == adapter.config.ffprobe:
+                return subprocess.CompletedProcess([], 0, json.dumps(probe).encode(), b'')
+            if 'libx264' in arguments:
+                (cwd / 'draft.mp4').write_bytes(b'OFFLINE STUB - NOT PLAYBACK EVIDENCE')
+            return subprocess.CompletedProcess([], 0, b'', b'')
+        with patch.object(adapter, 'run', side_effect=run):
+            media = adapter.generate({'storyboard': frames})
+        args, job = calls[0][1:]
+        self.assertNotIn('-filter_complex_script', args)
+        graph = args[args.index('-filter_complex') + 1]
+        self.assertEqual(graph, (job / 'render.ffgraph').read_text(encoding='utf-8'))
+        self.assertIn('textfile=caption-1.txt', graph)
+        self.assertNotIn('movie=private-file', graph)
+        self.assertTrue(all('movie=private-file' not in arg for arg in args))
+        self.assertEqual((job / 'caption-1.txt').read_text(encoding='utf-8').replace('\n', ' '), caption)
+        self.assertEqual(media['frames'], frames)
+        self.assertEqual(len(calls), 3)  # encode, probe and full decode validation
+
     def test_mc_t_04_mock_text_can_explicitly_render_without_a_live_model(self):
         self.company=Company(self.root/'mock.sqlite3',media=self.media)
         record=self.draft(); self.assertTrue(record['payload']['textSimulated'])
