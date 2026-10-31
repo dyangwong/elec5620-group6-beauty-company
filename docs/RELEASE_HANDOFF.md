@@ -1,5 +1,17 @@
 # GitHub handoff to the gaming laptop
 
+## Windows media compatibility follow-up · 31 October 2026
+
+Actual c55ce78 Windows acceptance exposed FFmpeg 9.0.2 rejecting the removed
+`-filter_complex_script` option; offline 306-test success did not detect this.
+The minimal renderer repair uses the same fixed graph through `-filter_complex`,
+with text retained in data files and one additional offline boundary regression
+(307 tests expected). No provider/config/schema/business/UI change. Direct local
+diagnostic rendering succeeded, but full repaired-candidate acceptance must use
+a new committed source ZIP and a new extraction. Record both candidates separately;
+do not reuse the original ZIP/hash or overwrite its failed evidence. See
+WINDOWS_LLM.md. Current run receipts belong under ignored output, in both languages.
+
 ## Include the BA/MC repair · 31 October 2026
 
 The next Windows candidate must include the merged KAN-10/KAN-12 repair linked
