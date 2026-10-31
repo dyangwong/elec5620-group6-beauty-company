@@ -1,5 +1,29 @@
 # Shared contracts and implementation map
 
+## Registered review policy and MC source conflicts · 31 October 2026
+
+Danny-authorised KAN-9 bounded repair; see [evidence index](EVIDENCE_INDEX.md).
+MC rejects known fragrance-fact/metadata contradictions before generation and on
+saved-result validation: SOURCE_CONFLICT, retained INCOMPLETE on creation/revision,
+no generators or new AP. Saved corrupt/legacy output is withheld as CONTENT_REJECTED.
+Vocabulary is limited to fragrance-free/fragrance free versus contains fragrance/
+contains added fragrance (case/space/nonbreaking-hyphen normalised), not general prose.
+
+AP-REGISTERED-v1 admits only BA REASSESS_ADVICE, CS SIMULATED_EXCHANGE and MC
+REVIEW_MOCK_DRAFT/REVIEW_TEXT_DRAFT, with exact origin/revision/actionRef and the
+declared mock/live/template hash envelopes. Extra action fields/caller risk,
+unknown roles/actions and malformed scopes return AP_ACTION_UNSUPPORTED before
+receipt. The server-derived CONTENT_REVIEW/CONSENTED_REASSESSMENT/DISPUTED_EXCHANGE
+class and requiresFounderReview=true are audited, not caller options. All three
+classes require Founder review. No routine no-review CS path or monetary risk
+threshold is added. Missing/conflicting/changed authoritative CS policy blocks
+receipt, new intent, uncommitted commit/recovery and delivery. Unknown/stale
+requests grant no authority. Identical existing receipts remain idempotent;
+changed action/evidence/ref returns STALE_SCOPE. Recovery binds evidence and both
+origin fields as well as action/revision/ref. Failed delivery preserves its commit.
+The legacy MC revision caller saves the new origin inside the same transaction
+before AP validates it. No schema/provider/HTTP contract or execution change.
+
 English is the maintained primary version. [中文阅读副本](zh-CN/CONTRACTS.md).
 
 ## BA/MC bounded failure repair · 31 October 2026

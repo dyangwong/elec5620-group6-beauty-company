@@ -63,6 +63,16 @@ class Marketing:
                 or any(not isinstance(fact, str) or not fact.strip() for fact in facts)):
             raise DomainError("Required authorised product facts are missing or invalid. Correct the source before generating.",
                               409, "INCOMPLETE")
+        # Bounded catalogue vocabulary, independently checked before either provider.
+        # This is not a general natural-language contradiction detector.
+        normalised = {" ".join(fact.casefold().replace("\u2011", "-").split()) for fact in facts}
+        free = bool(normalised & {"fragrance-free", "fragrance free"})
+        scented = bool(normalised & {"contains fragrance", "contains added fragrance"})
+        flag = product.get("fragrance_free")
+        if ((free and scented) or (free and flag is not True)
+                or (scented and flag is not False)):
+            raise DomainError("Authorised product facts conflict with each other or fragrance metadata. "
+                              "Correct the source before generating.", 409, "SOURCE_CONFLICT")
 
     @staticmethod
     def validate_script(script, brief, product, simulated):
@@ -187,6 +197,10 @@ class Marketing:
         payload["history"] = history
         record["payload"] = payload
         if status == "DRAFTING":
+            # Publish the new origin revision inside this same transaction so AP
+            # can validate its registered action against current stored scope.
+            record["status"] = status
+            Store.save(db, record)
             self._review(db, record)
         else:
             record["status"] = status

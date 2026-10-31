@@ -1,5 +1,28 @@
 # Local verification record
 
+## Local MC/AP core-boundary repair · 31 October 2026
+
+Branch KAN-9-mc-ap-core-boundaries from d30dc019; **319 full Mac Python3.9.6
+tests /37.185s PASS** (307 +12). New MC cases cover conflicts between facts/
+metadata in mock/controlled fake-live modes, no generator/review/effect, failed
+revision history/corrected fresh review, consistent scented source and conflicting
+legacy staged output rejected on restart without inference/render. New AP cases
+cover unknown/extra/malformed action refusal, derived review-class audit, identical
+receipt reuse/different evidence refusal, wrong CS target/policy/ref, unknown stored
+action at intent/recovery, policy changes at intent/recovery/delivery, immutable
+saved evidence and preservation of committed decision after blocked redelivery.
+Existing BA/CS/MC/CO, HTTP authentication and once-only effect tests pass unchanged.
+
+First targeted MC run exposed three legacy revised-origin save-order errors and
+one new test incorrectly expecting a return from the deliberately failed final
+save. Corrected the caller's atomic save ordering and test's actual exception
+expectation; the final full suite passed. Original targeted log remains.
+Local logs/hashed evidence: output/core-boundaries-20261031/.
+[Evidence index](EVIDENCE_INDEX.md) distinguishes observed files/CI, Windows-reported
+execution and pending human records. No new real inference/Windows/browser/Canvas
+acceptance or independent human review. Source/JS/whitespace checks accompany the
+local handoff; all41 group statuses remain unchanged.
+
 ## Post-merge response-consistency repair · 31 October 2026
 
 Preserve the actual PR #20 success and subsequent main failure separately:

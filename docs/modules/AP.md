@@ -1,5 +1,18 @@
 # AP handoff
 
+## Registered action/policy boundary · 31 October 2026
+
+Danny-authorised KAN-9 repair, not a new KAN-13 starter claim: AP-local
+approval_policy.py registers existing BA reassessment, CS disputed exchange and
+MC draft review envelopes; every class requires Founder review. Unknown actions/
+caller risk fields fail before receipt. Server class/version is audited. Exact
+duplicate receipts require unchanged evidence/ref; intent recovery binds evidence.
+Current CS order/policy is rechecked before receipt/new intent/uncommitted commit/
+delivery. Eight new AP tests; full319 passed. No routine no-review CS, generic
+risk scoring/expiry/queue/notification, schema, model or execution addition.
+See [contracts](../CONTRACTS.md) and [evidence index](../EVIDENCE_INDEX.md).
+Jiaxuan Ren ownership unchanged; affected-owner review pending.
+
 English is the maintained primary version. [中文阅读副本](../zh-CN/modules/AP.md).
 
 Default Stage 2 continuation: Jiaxuan Ren, at Danny's request; no shared claim is

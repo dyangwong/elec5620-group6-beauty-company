@@ -27,6 +27,83 @@ class MarketingTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.company = Company(Path(self.temp.name) / "test.sqlite3")
 
+    def test_mc_t_02_conflicting_fragrance_sources_stop_both_generators_in_both_modes(self):
+        cases = [(['Fragrance-free', 'Contains added fragrance'], True),
+                 (['  FRAGRANCE-FREE  '], False), (['Contains fragrance'], True)]
+        for simulated in (True, False):
+            for facts, flag in cases:
+                with self.subTest(simulated=simulated, facts=facts, flag=flag):
+                    self.company.llm.mc_simulated = simulated  # Controlled mode; no live inference.
+                    with self.company.store.transaction() as db:
+                        db.execute("UPDATE products SET facts=?,fragrance_free=? WHERE id='P-101'",
+                                   (json.dumps(facts), flag))
+                    with patch.object(self.company.llm, 'generate_script') as text, patch.object(self.company.mc.media, 'generate') as media:
+                        record = self.company.campaign(FOUNDER, {'brief': 'Promote skincare', 'productId': 'P-101'})
+                        text.assert_not_called(); media.assert_not_called()
+                    self.assertEqual(record['status'], 'INCOMPLETE')
+                    self.assertEqual(record['payload']['failure']['code'], 'SOURCE_CONFLICT')
+                    self.assertIs(record['payload']['textSimulated'], simulated)
+                    for key in ('script', 'media', 'approvalId', 'pendingGeneration'):
+                        self.assertNotIn(key, record['payload'])
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute('SELECT count(*) FROM approvals').fetchone()[0], 0)
+            self.assertEqual(db.execute('SELECT count(*) FROM effects').fetchone()[0], 0)
+
+    def test_mc_t_02_conflict_revision_preserves_history_and_correction_needs_new_review(self):
+        first = self.company.campaign(FOUNDER, {'brief': 'Promote skincare', 'productId': 'P-101'})
+        with self.company.store.transaction() as db:
+            db.execute("UPDATE products SET facts=?,version=version+1 WHERE id='P-101'",
+                       (json.dumps(['Fragrance-free', 'Contains added fragrance']),))
+        failed = self.company.campaign(FOUNDER, {
+            'brief': 'New brief', 'productId': 'P-101', 'contextRevision': 1}, first['id'])
+        self.assertEqual((failed['revision'], failed['status']), (2, 'INCOMPLETE'))
+        self.assertEqual(failed['payload']['history'][0]['payload']['script'], first['payload']['script'])
+        with self.company.store.transaction() as db:
+            self.assertEqual(self.company.ap.get(db, first['payload']['approvalId'])['status'], 'SUPERSEDED')
+            db.execute("UPDATE products SET facts=?,version=version+1 WHERE id='P-101'",
+                       (json.dumps(['Moisturises dry skin', 'Fragrance-free']),))
+        fixed = self.company.campaign(FOUNDER, {
+            'brief': 'New brief', 'productId': 'P-101', 'contextRevision': 2}, first['id'])
+        self.assertEqual((fixed['revision'], fixed['status']), (3, 'REVIEW_PENDING'))
+        self.assertNotEqual(fixed['payload']['approvalId'], first['payload']['approvalId'])
+        self.assertEqual(fixed['payload']['history'][1]['status'], 'INCOMPLETE')
+
+    def test_mc_t_02_saved_legacy_conflict_cannot_recover_into_a_review(self):
+        self.company.set_fault(FOUNDER, 'mc_recording')
+        with self.assertRaises(DomainError) as caught:
+            self.company.campaign(FOUNDER, {'brief': 'Promote skincare', 'productId': 'P-101'})
+        self.assertEqual(caught.exception.code, 'MC_RECORDING_FAILED')
+        with self.company.store.read() as db:
+            rid = db.execute("SELECT id FROM records WHERE kind='MC'").fetchone()[0]
+            record = Store.get(db, rid)
+            self.assertEqual(record['status'], 'RECORDING_FAILED')
+        # Inject an old inconsistent source plus matching staged snapshot; source
+        # equality alone must not let a pre-guard/altered draft become reviewable.
+        with self.company.store.transaction() as db:
+            saved = Store.get(db, record['id'])
+            pending = saved['payload']['pendingGeneration']['payload']
+            facts = ['Fragrance-free', 'Contains added fragrance']
+            db.execute("UPDATE products SET facts=? WHERE id='P-101'", (json.dumps(facts),))
+            pending['product']['facts'] = facts
+            pending['evidence']['facts'] = facts
+            Store.save(db, saved)
+        self.company.set_fault(FOUNDER, 'none')
+        restarted = Company(self.company.store.path)
+        with patch.object(restarted.llm, 'generate_script') as text, patch.object(restarted.mc.media, 'generate') as media:
+            result = restarted.mc_generation.recover(FOUNDER, record['id'], {'contextRevision': 1})
+            text.assert_not_called(); media.assert_not_called()
+        self.assertEqual(result['status'], 'CONTENT_REJECTED')
+        self.assertEqual(result['payload']['failure']['code'], 'SOURCE_CONFLICT')
+        self.assertNotIn('approvalId', result['payload'])
+        with restarted.store.read() as db:
+            self.assertEqual(db.execute('SELECT count(*) FROM approvals').fetchone()[0], 0)
+            self.assertEqual(db.execute('SELECT count(*) FROM effects').fetchone()[0], 0)
+
+    def test_mc_t_02_consistent_fragranced_catalogue_remains_reviewable(self):
+        record = self.company.campaign(FOUNDER, {'brief': 'Product introduction', 'productId': 'P-103'})
+        self.assertEqual(record['status'], 'REVIEW_PENDING')
+        self.assertIn('Contains fragrance', record['payload']['claims'])
+
     def test_mc_t_02_missing_or_invalid_required_facts_retains_incomplete_without_generators(self):
         for facts in ([], None, {}, "Moisturises dry skin", [""], ["   "], [None]):
             with self.subTest(facts=facts):

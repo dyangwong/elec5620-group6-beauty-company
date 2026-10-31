@@ -1,5 +1,15 @@
 # 文件归属与集成规则
 
+## MC／AP 核心边界共享例外 · 2026-10-31
+
+Danny／M1 授权从 d30dc019 修复 KAN-9：marketing.py、mc_generation.py、
+approval.py、新增 AP 本地 approval_policy.py、各自 MC／AP 测试、中英文契约／模块／
+状态／验证／证据文档及 MC-T-02／AP-T-01/02 对照行。不改 AP submit 签名、
+schema／HTTP／UI／模型接口。低层 MC revise 在既有同一事务内先保存新修订再申请 AP；
+AP 在审阅边界从已有 SQLite 订单源复核当前 CS 策略，CS 仍独立校验业务 effect。
+不是完整风险分流，不认领队友 starter；保留 Zhengdu Wei／Jiaxuan Ren 归属，
+待请两位审阅共享边界，不冒充已获认可。本地任务的发布／CI／合并／Jira 均待后续授权操作。
+
 ## BA/MC 修复共享例外 · 2026-10-31
 
 Danny 明确授权 KAN-10/KAN-12 修复及 PR/检查/合并。模块和各自测试外，例外限于 Company.consult 和新增

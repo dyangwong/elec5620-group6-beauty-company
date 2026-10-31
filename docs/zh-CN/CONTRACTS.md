@@ -1,5 +1,23 @@
 # 共享接口约定与实现映射
 
+## 登记审阅策略与 MC 来源矛盾 · 2026-10-31
+
+Danny 授权的 KAN-9 有限修复，见[证据索引](EVIDENCE_INDEX.md)。
+MC 在生成与保存结果校验时拒绝已知香精事实／元数据矛盾：SOURCE_CONFLICT；
+创建／修订保留 INCOMPLETE，不调用生成器、不新建 AP；旧／暂存坏结果恢复为 CONTENT_REJECTED。
+仅识别 fragrance-free／fragrance free 与 contains fragrance／contains added fragrance，
+规范大小写／空白／不换行连字符，不是通用语义检测。
+
+AP-REGISTERED-v1 只登记 BA REASSESS_ADVICE、CS SIMULATED_EXCHANGE、
+MC REVIEW_MOCK_DRAFT／REVIEW_TEXT_DRAFT，以及其精确来源／修订／actionRef、
+mock／live／模板hash字段。额外动作字段／调用方 risk、未知角色／动作或畸形范围在回执前返回
+AP_ACTION_UNSUPPORTED。审计记录服务端 CONTENT_REVIEW／CONSENTED_REASSESSMENT／
+DISPUTED_EXCHANGE 与 requiresFounderReview=true，三类均须 Founder review，不是客户端选择。
+不新增免审普通 CS 或金额阈值。CS 当前权威策略缺失／矛盾／变化会阻止回执、新意图、未提交决策恢复和投递。
+未知／过时请求没有权限。重复回执必须动作／证据／ref 一致，否则 STALE_SCOPE；
+恢复同时绑定 evidence 和两个 origin 字段。投递失败保留已提交决策。
+低层 MC revise 在同一事务内先保存新来源修订再接受 AP 校验，不改 schema／provider／HTTP／执行路径。
+
 ## BA/MC 有界失败修复 · 2026-10-31
 
 KAN-10 结构化字段为 message/concern/budget（澳元）/fragranceFree。续办用显式字段子集和正整数

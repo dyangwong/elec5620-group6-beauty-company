@@ -6,10 +6,13 @@ Company instance over the same database file.
 """
 import tempfile
 import unittest
+import json
+from copy import deepcopy
 from pathlib import Path
 
 from beauty_company.application import Company
 from beauty_company.contracts import Actor, DomainError
+from beauty_company.store import Store, encode
 
 CUSTOMER = Actor("customer", "CUSTOMER", "Alex")
 FOUNDER = Actor("founder", "FOUNDER", "Founder")
@@ -252,6 +255,172 @@ class RecordingFailureTests(unittest.TestCase):
         self.assertEqual(again["decision_id"], recovered["decision_id"])
         self.assertEqual(self.events(approval_id).count("DECISION_COMMITTED"), 1)
         self.assertEqual(self.effects(), 0)
+
+
+class RegisteredActionTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.company = Company(Path(self.temp.name) / 'registry.sqlite3')
+
+    pending_approval = RecordingFailureTests.pending_approval
+
+    def assert_no_authority(self, approval_count=0):
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute('SELECT count(*) FROM approvals').fetchone()[0], approval_count)
+            self.assertEqual(db.execute('SELECT count(*) FROM approvals WHERE decision_id IS NOT NULL').fetchone()[0], 0)
+            self.assertEqual(db.execute('SELECT count(*) FROM effects').fetchone()[0], 0)
+            self.assertEqual(db.execute("SELECT stock FROM products WHERE id='P-101'").fetchone()[0], 12)
+
+    def test_ap_t_01_unknown_or_malformed_actions_cannot_obtain_a_receipt(self):
+        with self.company.store.transaction() as db:
+            origin = Store.create(db, 'MC', FOUNDER.id, 'DRAFTING', {}, 'MC')
+        valid = {'kind': 'REVIEW_MOCK_DRAFT', 'draftId': origin, 'draftRevision': 1}
+        evidence = {'catalogueRef': 'catalogue:P-101:v1', 'facts': ['Fragrance-free']}
+        cases = [('MC', {'kind': 'UNREGISTERED_ACTION', 'risk': 'UNKNOWN'}, evidence, None, 1),
+                 ('MC', {**valid, 'risk': 'LOW'}, evidence, None, 1),
+                 ('MC', {**valid, 'kind': []}, evidence, None, 1),
+                 ('MC', {**valid, 'draftRevision': True}, evidence, None, 1),
+                 ('MC', valid, evidence, None, True),
+                 ('MC', valid, evidence, 'unregistered-ref', 1),
+                 ('MC', valid, {}, None, 1), ('MC', [], evidence, None, 1),
+                 ('CO', valid, evidence, None, 1), ('CS', valid, evidence, None, 1),
+                 ('BA', {'type': 'REASSESS_ADVICE', 'consultationId': origin,
+                         'contextRevision': 1}, {'needs': 'unknown'}, None, 1)]
+        for role, action, facts, ref, revision in cases:
+            with self.subTest(role=role, action=action, revision=revision):
+                with self.assertRaises(DomainError) as caught, self.company.store.transaction() as db:
+                    self.company.ap.submit(db, role, origin, revision, action, facts, ref)
+                self.assertEqual(caught.exception.code, 'AP_ACTION_UNSUPPORTED')
+                self.assert_no_authority()
+        with self.company.store.read() as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM events WHERE event='REVIEW_REQUEST_PERSISTED'").fetchone()[0], 0)
+
+    def test_ap_t_01_registered_routes_record_server_owned_review_classes(self):
+        _, cs_id = self.pending_approval()
+        mc = self.company.campaign(FOUNDER, {'brief': 'Product introduction', 'productId': 'P-101'})
+        for rid, expected in ((cs_id, 'DISPUTED_EXCHANGE'), (mc['payload']['approvalId'], 'CONTENT_REVIEW')):
+            with self.company.store.read() as db:
+                row = db.execute("SELECT detail FROM events WHERE entity_id=? AND event='REVIEW_REQUEST_PERSISTED'", (rid,)).fetchone()
+                detail = json.loads(row['detail'])
+                self.assertEqual(detail['riskClass'], expected)
+                self.assertTrue(detail['requiresFounderReview'])
+                self.assertFalse(detail['businessExecution'])
+                self.assertEqual(detail['policyVersion'], 'AP-REGISTERED-v1')
+        self.assert_no_authority(2)
+
+    def test_ap_t_01_existing_receipt_only_acknowledges_identical_scope(self):
+        record = self.company.campaign(FOUNDER, {'brief': 'Product introduction', 'productId': 'P-101'})
+        with self.company.store.transaction() as db:
+            rid = record['payload']['approvalId']
+            review = self.company.ap.get(db, rid)
+            self.assertEqual(self.company.ap.submit(db, 'MC', record['id'], 1,
+                review['action'], review['evidence']), rid)
+        changed = deepcopy(review['evidence']); changed['facts'] = ['50 ml']
+        with self.assertRaises(DomainError) as caught, self.company.store.transaction() as db:
+            self.company.ap.submit(db, 'MC', record['id'], 1, review['action'], changed)
+        self.assertEqual(caught.exception.code, 'STALE_SCOPE')
+        self.assert_no_authority(1)
+
+    def test_ap_t_01_registered_exchange_rejects_forged_target_before_receipt(self):
+        record, rid = self.pending_approval()
+        with self.company.store.read() as db:
+            review = self.company.ap.get(db, rid)
+        for action, evidence, ref in (({**review['action'], 'productId': 'P-102'}, review['evidence'], review['action_ref']),
+                (review['action'], {**review['evidence'], 'policyRef': 'invented'}, review['action_ref']),
+                (review['action'], review['evidence'], 'different-ref')):
+            with self.subTest(action=action, evidence=evidence, ref=ref):
+                with self.assertRaises(DomainError) as caught, self.company.store.transaction() as db:
+                    self.company.ap.submit(db, 'CS', record, 1, action, evidence, ref)
+                self.assertEqual(caught.exception.code, 'STALE_SCOPE')
+        self.assert_no_authority(1)
+
+    def test_ap_t_01_unknown_stored_action_cannot_prepare_or_recover_a_decision(self):
+        _, rid = self.pending_approval()
+        with self.company.store.read() as db:
+            original = self.company.ap.get(db, rid)
+        unknown = encode({'kind': 'UNREGISTERED_ACTION', 'risk': 'UNKNOWN'})
+        with self.company.store.transaction() as db:
+            db.execute('UPDATE approvals SET action=? WHERE id=?', (unknown, rid))
+        with self.assertRaises(DomainError) as caught:
+            self.company.decide(FOUNDER, rid, {'decision': 'APPROVE', 'reason': REASON, 'contextRevision': 1})
+        self.assertEqual(caught.exception.code, 'AP_ACTION_UNSUPPORTED')
+        with self.company.store.read() as db:
+            self.assertIsNone(self.company.ap.intent(db, rid))
+        self.assert_no_authority(1)
+        with self.company.store.transaction() as db:
+            db.execute('UPDATE approvals SET action=? WHERE id=?', (encode(original['action']), rid))
+            self.company.ap.prepare_intent(db, FOUNDER, rid,
+                {'decision': 'APPROVE', 'reason': REASON, 'contextRevision': 1})
+        # Even a mutually matching but unregistered stored action is not authority.
+        with self.company.store.transaction() as db:
+            db.execute('UPDATE approvals SET action=? WHERE id=?', (unknown, rid))
+            db.execute('UPDATE approval_intents SET action=? WHERE approval_id=?', (unknown, rid))
+        with self.assertRaises(DomainError) as caught:
+            Company(self.company.store.path).recover_decision(FOUNDER, rid)
+        self.assertEqual(caught.exception.code, 'AP_ACTION_UNSUPPORTED')
+        self.assert_no_authority(1)
+
+    def test_ap_t_01_current_policy_must_support_review_before_founder_intent(self):
+        _, rid = self.pending_approval()
+        with self.company.store.read() as db:
+            original = json.loads(db.execute("SELECT policy FROM orders WHERE id='ORD-1001'").fetchone()[0])
+        cases = [({**original, 'requiresApproval': False}, 'POLICY_MISSING'),
+                 ({**original, 'conflictingRefs': ['OTHER']}, 'POLICY_CONFLICTING'),
+                 ({**original, 'id': 'NEW-POLICY'}, 'STALE_POLICY')]
+        for policy, code in cases:
+            with self.subTest(policy=policy):
+                with self.company.store.transaction() as db:
+                    db.execute("UPDATE orders SET policy=? WHERE id='ORD-1001'", (encode(policy),))
+                with self.assertRaises(DomainError) as caught:
+                    self.company.decide(FOUNDER, rid, {'decision': 'APPROVE', 'reason': REASON, 'contextRevision': 1})
+                self.assertEqual(caught.exception.code, code)
+                with self.company.store.read() as db:
+                    self.assertIsNone(self.company.ap.intent(db, rid))
+                self.assert_no_authority(1)
+
+    def test_ap_t_01_recovery_rechecks_policy_and_refuses_changed_evidence(self):
+        _, rid = self.pending_approval()
+        self.company.set_fault(FOUNDER, 'approval_recording')
+        with self.assertRaises(DomainError):
+            self.company.decide(FOUNDER, rid, {'decision': 'APPROVE', 'reason': REASON, 'contextRevision': 1})
+        self.company.set_fault(FOUNDER, 'none')
+        with self.company.store.transaction() as db:
+            original = self.company.ap.get(db, rid)
+            changed = {**original['evidence'], 'policyRef': 'changed'}
+            db.execute('UPDATE approvals SET evidence=? WHERE id=?', (encode(changed), rid))
+        with self.assertRaises(DomainError) as caught:
+            Company(self.company.store.path).recover_decision(FOUNDER, rid)
+        self.assertEqual(caught.exception.code, 'STALE_SCOPE')
+        with self.company.store.transaction() as db:
+            db.execute('UPDATE approvals SET evidence=? WHERE id=?', (encode(original['evidence']), rid))
+            policy = json.loads(db.execute("SELECT policy FROM orders WHERE id='ORD-1001'").fetchone()[0])
+            policy['requiresApproval'] = False
+            db.execute("UPDATE orders SET policy=? WHERE id='ORD-1001'", (encode(policy),))
+        with self.assertRaises(DomainError) as caught:
+            Company(self.company.store.path).recover_decision(FOUNDER, rid)
+        self.assertEqual(caught.exception.code, 'POLICY_MISSING')
+        self.assert_no_authority(1)
+
+    def test_ap_t_01_delivery_rechecks_policy_preserving_committed_decision(self):
+        _, rid = self.pending_approval()
+        self.company.set_fault(FOUNDER, 'approval_delivery')
+        committed = self.company.decide(FOUNDER, rid, {'decision': 'APPROVE', 'reason': REASON, 'contextRevision': 1})
+        self.assertEqual(committed['delivery'], 'FAILED')
+        self.company.set_fault(FOUNDER, 'none')
+        with self.company.store.transaction() as db:
+            policy = json.loads(db.execute("SELECT policy FROM orders WHERE id='ORD-1001'").fetchone()[0])
+            policy['requiresApproval'] = False
+            db.execute("UPDATE orders SET policy=? WHERE id='ORD-1001'", (encode(policy),))
+        with self.assertRaises(DomainError) as caught:
+            self.company.redeliver(FOUNDER, rid)
+        self.assertEqual(caught.exception.code, 'POLICY_MISSING')
+        with self.company.store.read() as db:
+            current = self.company.ap.get(db, rid)
+            self.assertEqual(current['decision_id'], committed['decision_id'])
+            self.assertEqual(current['delivery'], 'FAILED')
+            self.assertEqual(db.execute('SELECT count(*) FROM effects').fetchone()[0], 0)
+            self.assertEqual(db.execute("SELECT stock FROM products WHERE id='P-101'").fetchone()[0], 12)
 
 
 if __name__ == "__main__":
