@@ -5,7 +5,8 @@
 这是 ELEC5620 Group 6 Stage 2 的初始本地实现。
 Danny 从 GitHub 转到游戏本做交付验收时，先读 `docs/RELEASE_HANDOFF.md`
 及其[中文副本](docs/zh-CN/RELEASE_HANDOFF.md)，不要重新选择首批任务。
-其中包含有界续接 prompt 和待验条件，无须复制本地交接 ZIP。
+当前入口为 `docs/FINAL_HANDOFF.md`（2026-11-01）；先读它，再读历史计数／发布待办。
+源码通过 GitHub 同步；课程原件和部分忽略证据另放 Danny 的私有转移包。
 其他开工默认读取英文 `START_HERE.md`。
 开始成员功能前，将用户明确声明的完整姓名、成员编号或模块与 `docs/team.json` 对照，
 只选择 `docs/tasks.json` 中该成员的任务。不得从 Git、系统登录、演示账号或旧档案猜身份。

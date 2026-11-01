@@ -1,5 +1,11 @@
 # Stage 2 readiness audit · 29 October 2026
 
+> **Current delivery entry · 1 November:** Read [FINAL_HANDOFF.md](FINAL_HANDOFF.md)
+> before this chronological audit. Application main12054e4 includes PR #23 MC/AP
+> guards;319 Mac tests/current required CI passed. Earlier gap/count/publication
+> statements below describe their own versions, not new work instructions or
+> current Windows acceptance. Broad completeness and evidence limits remain.
+
 ## Current BA/MC repair boundary · 31 October 2026
 
 KAN-10/KAN-12 adds structured BA service lifecycle/recovery and MC required-facts
