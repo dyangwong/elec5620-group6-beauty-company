@@ -1,5 +1,43 @@
 # Final delivery handoff · 1 November 2026
 
+## Current closeout checkpoint — 1 November 2026
+
+Danny now authorises bounded PR/Jira closeout and a timed technical rehearsal.
+Features are frozen: improve an existing demo path only for an observed defect.
+The five F-03 options remain unimplemented/OFF and are deferred from this delivery;
+this scope decision does not establish a course exemption or full Stage 1 coverage.
+
+**New Windows evidence:** the committed application `12054e43697024eb7e5c0047f30711d43115d9f0`
+was packaged and run from a fresh extraction with its own venv, private configs
+and fictional database. **319 tests passed (104.228 s)**, provenance and JavaScript
+checks passed. Real BA clarification/advice/lifecycle; real CS→CO→BA with exact
+Customer/Founder gates and one simulated effect; real MC text plus playable,
+downloadable 15-second template MP4; final-save failures and same-DB/config
+model-off restart recovery passed. MC recovery preserved text/media hashes,
+sizes and mtimes; repeats did not duplicate review/effect. Actual model-off
+BA/CS/MC requests failed explicitly without mock fallback. Conditional BA review
+was not rerun live in that acceptance; existing regression coverage remains separate.
+
+Source ZIP: `ELEC5620_Group6_Source_12054e4_Windows_20261101.zip`,
+6,068,746 bytes / 136 tracked files.
+SHA256: `5fe6dea4f0a2e91f3d61fe20d45a1b43e3aa834164ab4000ee7327c471400794`.
+Environment: Windows11 Pro25H2/build26200.9711, Python3.14.5,
+Strata v0.2.1 / Terminal0.1.46.1, `qwen3.8-flash-next-gyro-gyro-s`,
+FFmpeg9.0.2. Existing model/tools were reused. The private laptop acceptance
+receipt, raw logs, record IDs and screenshots are preserved outside public source.
+
+**Agile:** Danny confirms WeChat discussions on 17, 23 and 30 October with all five
+members; [PR #24](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/24)
+records attributed recollections. Exact later decisions/actions remain unconfirmed;
+these are not contemporaneous minutes or independent participant endorsements.
+Danny has confirmed the existing contribution form is completed; do not recreate it.
+
+A timed technical rehearsal and exact task-condition reconciliation are being
+performed separately. Do not equate them with five-member speaking rehearsal,
+Canvas download, on-site acceptance or all 41 case groups passing. Documentation
+merges do not change the already accepted ZIP; record any new submission package
+separately. Earlier checkpoint text below is retained as history.
+
 English is maintained primary. [中文阅读副本](zh-CN/FINAL_HANDOFF.md).
 Prepared for Danyang Wang (Danny / M1), continuing AI-assisted integration and
 delivery under KAN-9 / KAN-21. This is the current continuation entry point;
