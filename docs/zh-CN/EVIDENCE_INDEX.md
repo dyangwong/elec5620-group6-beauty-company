@@ -1,5 +1,9 @@
 # 证据索引与有限安全修复 — 2026-10-31
 
+> **11月1日续接：** 当前交付入口为 [FINAL_HANDOFF.md](FINAL_HANDOFF.md)。
+> #23 已合并为12054e4，319项 Mac 测试及必需 CI 通过。下文“未发布”属历史本地检查点。
+> 最新源码的 Windows／真实模型／打包及人工确认的 Agile／贡献收口仍待核实，保留版本对应关系。
+
 [English primary](../EVIDENCE_INDEX.md)。本页为中文阅读副本。
 
 Danny／M1 授权从 main `d30dc019ec6830e727a66db28c0a06effc7d0663`

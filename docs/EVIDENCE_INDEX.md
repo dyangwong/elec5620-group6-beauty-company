@@ -1,5 +1,11 @@
 # Evidence index and bounded safety repair — 31 October 2026
 
+> **1 November continuation:** [FINAL_HANDOFF.md](FINAL_HANDOFF.md) is the current
+> delivery entry. PR #23 is merged as12054e4; its319 Mac tests and required CI passed.
+> The pre-publication language below is a historical local checkpoint. Latest-source
+> Windows/real-model/package and human-confirmed Agile/contribution closure remain
+> unverified; preserve the version-specific receipts below.
+
 English is maintained primary. [中文阅读副本](zh-CN/EVIDENCE_INDEX.md).
 
 Danny / M1 authorised this AI-assisted KAN-9 integration from main
