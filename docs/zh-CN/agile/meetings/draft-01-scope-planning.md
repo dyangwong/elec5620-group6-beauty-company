@@ -1,31 +1,25 @@
-# 草稿 1 — 范围与协作分工
+# 第一次讨论 — 分工与工作方式
 
-[English primary](../../../agile/meetings/draft-01-scope-planning.md)
+[英文主版](../../../agile/meetings/draft-01-scope-planning.md)
 
-**状态：未确认草稿，不证明会议已经发生。**
-整理：2026年10月31日，依据仓库 `12054e4`，使用 AI 辅助。
-实际会议日期／时间：**[待确认]**；参与者：**[实际姓名]**。
+**项目：**ELEC5620 Group 6 Stage 2
+**形式：**微信在线团队讨论
+**会议日期：**2026 年 10 月 17 日（Danny 于 2026 年 11 月 1 日确认）；具体时间未记录。
+**参与者：**Danyang Wang（M1）、Siyuan Lei（M2）、Zhengdu Wei（M3）、Jiaxuan Ren（M4）、Guiyu Liu（M5）；Danny 于 2026 年 11 月 1 日确认五人均参与。
+**整理日期：**2026 年 11 月 1 日（悉尼时间），AI 根据 Danyang Wang（Danny / M1）当日提供的回忆辅助整理。
 
-## 已有项目背景
+## 讨论与据述决定
 
-Stage 1 定义 BA／CS／MC 三个 AI 业务角色，由 AP 审批、CO 协调支持。
-仓库已有模块责任、共享契约和统一 LLM 集成任务。
+Danny 回忆，团队确认了工作分工与协作方式，决定本地部署 LLM，并使用 GitHub 进行 CI/CD。
 
-## 建议讨论摘要，须按真实讨论确认
+本次回忆未提供逐人的具体分工或原话。“CI/CD”记录回忆中的决策方向，不等于已实现生产环境自动部署。
 
-- 实现范围对齐 Stage 1，为实际参与的成员确定下一个小交付。
-- 复用统一 LLM 接口，避免重复接入 provider。
-- 使用任务分支、PR 检查及适用审阅规则；Jira 关联开发证据，实现与完成验收分开记录。
+## 相关实现证据
 
-**实际决定／与草稿不同之处：**[待确认]。
+[PR #5](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/5) 记录共享 LLM 集成边界；[PR #8](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/8) 记录 Windows 模型适配器与运行工具。这些证明实现，不证明会议日期、出席或团队同意了全部技术细节。
 
-## 建议后续行动，须确认负责人及结果
+## 记录依据
 
-| 行动 | 建议负责人 | 结果／证据 |
-|---|---|---|
-| 确认模块边界及下一项任务 | 实际参与的模块负责人 | [任务／确认] |
-| 明确共享集成依赖 | Danny | [Jira／PR] |
+本记录依据 Danny 的回忆事后整理，尚未查阅原微信消息，也未经其他参与者确认。会议日期由 Danny 提供，尚未核对原消息时间戳。
 
-依据：[需求](../../REQUIREMENTS.md)、[协作规范](../../COLLABORATION.md)、
-[KAN-21](https://uni-team6-elec5620.atlassian.net/browse/KAN-21)。
-日期、出席、决定与行动确认后再作为会议记录；事后整理须注明整理日期及依据。
+**当时分配的行动负责人及期限：**[待确认]。后续实现不能证明行动是在本次讨论中分配的。

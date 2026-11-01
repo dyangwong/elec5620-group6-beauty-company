@@ -1,34 +1,29 @@
-# Draft 3 — Release readiness and retrospective
+# Discussion 3 — Further progress and implementation choices
 
-[中文阅读副本](../../zh-CN/agile/meetings/draft-03-release-retrospective.md)
+[中文副本](../../zh-CN/agile/meetings/draft-03-release-retrospective.md)
 
-**Status: unconfirmed draft, not evidence that a meeting occurred.**
-Prepared: 31 October 2026, AI-assisted, from repository records at `12054e4`.
-Actual meeting date/time: **[to confirm]** · Attendees: **[actual names]**.
+**Project:** ELEC5620 Group 6 Stage 2
+**Format:** online WeChat team discussion
+**Meeting date:** 30 October 2026 (confirmed by Danny on 1 November 2026); time not recorded.
+**Participants:** Danyang Wang (M1), Siyuan Lei (M2), Zhengdu Wei (M3), Jiaxuan Ren (M4), Guiyu Liu (M5); all five confirmed by Danny on 1 November 2026.
+**Prepared:** 1 November 2026 (Australia/Sydney), AI-assisted, from Danyang Wang (Danny / M1)'s recollection reported that day.
 
-## Background from project records
+## Discussion
 
-The d30dc019 source ZIP has an existing clean-deployment receipt but excludes the
-latest repair. PR/CI/Jira records exist. Current-source Windows/package acceptance,
-Canvas download rehearsal and human contribution confirmation remain pending.
+Danny recalls that the team again checked progress and discussed implementation trade-offs.
 
-## Suggested retrospective prompts — not recorded participant opinions
+The detailed content cannot currently be distinguished from discussion 2. The account supports a third progress/scope discussion, not a claim that a formal release retrospective or a successful group demonstration occurred.
 
-- What helped: did shared contracts, small PRs and failure checks reduce integration problems?
-- What needs improvement: were Jira status and raw evidence kept current?
-- Proposed improvement: each completed increment gets one short Jira note linking
-  its PR, validation and next condition; keep detailed evidence in one index.
+## Outcomes and follow-up
 
-**Actual participant feedback / agreed improvement:** [to confirm].
+**Specific decisions, participant feedback and assigned actions:** [to confirm].
 
-## Proposed follow-up — confirm owner and outcome
+No feature waiver, group acceptance, approval or contribution share is inferred. Current implementation and deployment results remain separate engineering evidence.
 
-| Action | Proposed owner | Outcome / evidence |
-|---|---|---|
-| Validate current source, freeze a new ZIP and rehearse Canvas-based startup | Danny | [commit / ZIP hash / receipt] |
-| Confirm specific contributions and AI assistance privately | Each actual contributor | [confirmation status; no public student IDs] |
+## Record basis
 
-References: [evidence index](../../EVIDENCE_INDEX.md),
-[KAN-9](https://uni-team6-elec5620.atlassian.net/browse/KAN-9),
-[KAN-21](https://uni-team6-elec5620.atlassian.net/browse/KAN-21).
-Confirm actual feedback and follow-up results before claiming an Agile feedback loop.
+This is a retrospective account; original messages have not been inspected and other participants have not confirmed it. The filename is retained for compatibility with the existing PR #24 worksheet; it does not classify the actual discussion as a release retrospective.
+
+Meeting dates are supplied by Danny; original message timestamps have not been checked. Add recoverable facts from original messages or participant recollection while retaining this preparation date and source attribution.
+
+[Existing worksheets: PR #24](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/24).

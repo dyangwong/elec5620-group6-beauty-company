@@ -1,35 +1,27 @@
-# Draft 2 — Integration review
+# Discussion 2 — Progress and feature trade-offs
 
-[中文阅读副本](../../zh-CN/agile/meetings/draft-02-integration-review.md)
+[中文副本](../../zh-CN/agile/meetings/draft-02-integration-review.md)
 
-**Status: unconfirmed draft, not evidence that a meeting occurred.**
-Prepared: 31 October 2026, AI-assisted, from repository records at `12054e4`.
-Actual meeting date/time: **[to confirm]** · Attendees: **[actual names]**.
+**Project:** ELEC5620 Group 6 Stage 2
+**Format:** online WeChat team discussion
+**Meeting date:** 23 October 2026 (confirmed by Danny on 1 November 2026); time not recorded.
+**Participants:** Danyang Wang (M1), Siyuan Lei (M2), Zhengdu Wei (M3), Jiaxuan Ren (M4), Guiyu Liu (M5); all five confirmed by Danny on 1 November 2026.
+**Prepared:** 1 November 2026 (Australia/Sydney), AI-assisted, from Danyang Wang (Danny / M1)'s recollection reported that day.
 
-## Background from project records
+## Discussion
 
-PR #22 records Windows real BA/CS/MC workflows and the FFmpeg compatibility fix.
-PR #23 adds known MC fragrance-conflict guards and AP registered-action/policy
-validation. The merged source passed 319 local tests and required CI. Raw Windows
-IDs/screenshots remain on the gaming laptop; this is not new-source Windows acceptance.
+Danny recalls that the team checked progress and discussed which functionality to implement.
 
-## Suggested review points — record actual feedback
+This supports a progress and implementation-scope discussion. Particular features, individual feedback and final scope decisions were not recalled. No feature is recorded as accepted, deferred or completed on this basis.
 
-- Show the normal BA/CS flow and explain the separation between approval and execution.
-- Review an MC conflict and an AP unsupported-action/policy failure.
-- Inspect the evidence and identify any remaining deployment or demonstration issue.
+## Outcomes and follow-up
 
-**Actual feedback and decision:** [who observed what; accepted / change required].
-Do not record a passed group demonstration unless it was actually shown.
+**Specific decisions, assigned actions and deadlines:** [to confirm].
 
-## Proposed follow-up — confirm owner and outcome
+The earlier integration-review worksheet in PR #24 proposed reviewing BA/CS workflows, MC conflicts and AP boundaries. Danny's recollection does not establish that those specific demonstrations or reviews took place during this discussion.
 
-| Action | Proposed owner | Outcome / evidence |
-|---|---|---|
-| Verify the new guards and normal live flow on Windows | Danny | [run IDs / screenshots] |
-| Resolve one actual review finding, if raised | [agree owner] | [Jira / PR / verification] |
+## Record basis
 
-References: [PR #22](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/22),
-[PR #23](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/23),
-[evidence index](../../EVIDENCE_INDEX.md).
-Human review/acceptance and action assignment remain unconfirmed.
+This is a retrospective account; original messages have not been inspected and other participants have not confirmed it. Dates are supplied by Danny. Repository changes and CI results may document engineering work but cannot supply attendance or participant feedback.
+
+[Existing worksheets: PR #24](https://github.com/dyangwong/elec5620-group6-beauty-company/pull/24).
